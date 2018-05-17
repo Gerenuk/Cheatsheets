@@ -1,0 +1,24 @@
+== Settings for software
+
+* Atom Editor:
+
+    # from folder ...\Atom\resources\app\apm\bin
+    apm.cmd config set https-proxy <host>:<port>
+    apm.cmd config set http-proxy <host>:<port>
+    apm.cmd config set strict-ssl false
+
+    npm.cmd config set https-proxy <host>:<port>
+    npm.cmd config set http-proxy <host>:<port>
+    npm.cmd config set strict-ssl false
+
+
+* Conda:
+
+    # file ~/.condarc
+    proxy_servers:
+        http: http://<host>:<port>
+        https: http://<host>:<port>
+
+* Git:
+
+    git config http.proxy <host>:<port>      # use --global if needed
