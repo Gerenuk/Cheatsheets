@@ -1,0 +1,89 @@
+= Basics
+
+    import scrapy
+	class Scraper(scrapy.Spider):
+		start_urls = []             # Iterable of initial requests
+		
+		def parse(self, response):  # response instance of TextResponse
+			yield {..}              # JSON data
+			yield response.follow(.., self.parse)
+			
+	!scrapy runspider scraper.py -o data.json
+	
+* difficulty or plain wget: few features (e.g. no content-type filter, no parallel downloading)
+* requests scheduled in parallel
+* https://docs.scrapy.org/en/latest/topics/request-response.html#scrapy.http.TextResponse[`TextResponse`]
+* https://docs.scrapy.org/en/latest/intro/overview.html#what-else[Features]
+* https://docs.scrapy.org/en/latest/topics/settings.html#topics-settings-ref[Settings]
+
+|===
+| response.css(..)							| CSS selector
+| response.xpath(..)						| XPath selector
+| def start_requests(self):					| Iterator of start requests (which takes start_urls) by default
+| response.follow(_next_, self.parse)		| `next` is URL (relative possible) or selector. Use class methods for callback
+| response.urljoin(..)						| Also handles relative links for raw `scrapy.Requests` objects
+| Request(.., errback..)					| Callback for exceptions
+| Response(_url_)							| https://docs.scrapy.org/en/latest/topics/request-response.html#response-objects[Ref]
+| TextResponse.text							| For str data (instead of bytes from req.body)
+|===
+
+= Scrapy Project
+
+	scrapy startproject <name>                  # creates directory structure
+	scrapy genspider <namespider> <starturl>    # creates template in /spiders
+	
+|===
+| scrapy crawl <namespider>					|
+| scrapy shell <url>						| try selectors (e.g. `response.xpath(..)`)
+|===
+	
+* save spiders (subclass of `scrapy.Spider`) in /spiders
+* name 
+
+= On selected elements
+
+|===
+| el.extract_first()						|
+| el.re(_regex_)							|
+|===
+
+* https://docs.scrapy.org/en/latest/topics/selectors.html#topics-selectors[Selectors]
+* CSS converted to XPath under-the-hood
+
+= Link extractors
+	
+	from scrapy.linkextractors import LinkExtractor
+	
+* same as `LxmlLinkExtractor`
+
+|===
+| 
+|===
+
+= Settings
+
+* env var `SCRAPY_SETTINGS_MODULE` as Python dot syntax and in import search path
+* specifying https://docs.scrapy.org/en/latest/topics/settings.html#populating-the-settings[settings]:
+** command line: `-s SETTING=value`
+** per spider: `MySpider.custom_settings = { 'SETTING': 'value' }`
+** project: `settings.py`
+* accessible as `self.settings` in a `Spider` (however set after `__init__`)
+
+= Extras
+
+* https://docs.scrapy.org/en/latest/topics/autothrottle.html#topics-autothrottle[Autothrottle extension]
+* Passing additional data to callbacks https://docs.scrapy.org/en/latest/topics/request-response.html#topics-request-response-ref-request-callback-arguments[Ref]
+* Request meta special keys https://docs.scrapy.org/en/latest/topics/request-response.html#request-meta-special-keys[Ref]
+
+== Download whole page
+
+	import scrapy
+	class TestSpider(scrapy.Spider):
+		name = "test"
+
+		start_urls = [ ... ]
+
+		def parse(self, response):
+			filename = response.url.split("/")[-1] + '.html'
+			with open(filename, 'wb') as f:
+				f.write(response.body)
