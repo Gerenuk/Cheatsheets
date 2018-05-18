@@ -1,0 +1,316 @@
+= Machine Learning Summer School 2016 - Cadiz
+
+:toc:
+
+== Resources
+* Youtube channel: https://www.youtube.com/channel/UCBOEQxX6zdihFB3VxxJdgHg
+* Slides and speakers: http://learning.mpi-sws.org/mlss2016/speakers/
+
+== Summary
+=== Multi-armed bandits
+* use Thompson sampling for simplicity
+
+=== Kernel methods
+* you can compare high dimensional distributions and check for independence (kernel methods provide smoothness to interpolate "gaps" in samples)
+* COCO for dependence check: X and Y mapped by an optimized function to produce the largest linear correlation
+* HSIC method for comparing distributions is similar to a summary of the COCO method
+* you can deal with the outer product of feature spaces in kernels by multiplying individual kernels: k(x,y,x',y')=k(x,x')k(y,y')  [for many purposes]
+
+=== Gaussian processes
+* assume the data is a sample of a function f(x) from a Gaussian process:
+** function mean form specified (can be flat zero; in that case data is just an "anomalous cases")
+** covariance function form specified (this specifies the correlation depending on the x distances; usually forces f to be smooth)
+** hyperparameters are optimized
+* Gaussian process has continous x, but we only need the marginal at specific x points (train+test data), which can be easily found by keeping only these values from the covariance function
+* probability of the test data conditioned on the training data determines the prediction
+* capacity control naturally included and no cross-validation needed
+* only for medium data size, since you need to invert an NxN matrix (N=#test+#train)-> O(N^3^)
+* not good for discontinuities, solutions can be too smooth in practice
+
+=== Submodularity
+* submodularity means costs functions on sets where the marginal gain is decreasing:
+** adding an element X to set A increases f more (or equal) than adding element X to set A+B (i.e. superset)
+* maximizing monotone submodular functions: greedy approaches work well and have guarantees of reaching ~60% of the optimal maximum
+* maximizing monotone submodular functions with constraints: greedy approaches still have guarantees if contraints are in matroid form
+* maximizing non-monotone submodular functions: double greedy approach has guarantees (start with empty set and add elements; same time have full set and remove items)
+* minimizing submodular functions (without constraints): can be done with Lovasz relaxation and ever better algorithms are developed (e.g. 2015); calculations similar to convex optimization
+* minimizing submodular function with constraints: no good approach with guarantees known
+
+=== Clustering with endless number of clusters
+* use Chinese Restaurant Process
+* Polya urn is conceptually same a CRP
+* each data point has a probability to be from a particular cluster (probability distribution modelled)
+* for clustering in space you further assume Gaussian density for each cluster index
+* use this for clustering if there is always more (yet smaller and becoming more unlikely) clusters; like infinite clusters [e.g. Wikipedia topics]
+* GEM(alpha) model will fit the best number of cluster (this model is like an infinite Dirichlet model)
+* fitting done iteratively by assigning clusters and sampling from the likelihood distribution by relabeling points
+
+=== Convex optimization
+* gradient descent has convergence guarantees depending on conditions of the cost function
+* smooth functions (upper bounded second derivative) usually required
+* strongly convex functions (lower bounded second derivative) also often important
+* usually same number of steps the order of the data size sufficient, since there is a statistical limit on generalization anyway
+* Nesterov momentum has better convergence than plain stochastic gradient descent
+* stochastic gradient descent:
+** same convergence as batch (on average), but faster
+** you may need to average the parameters while sampling, since at the minimum stochastic steps jump around the optimum
+** need a decaying learnign rate (1/n or 1/sqrt(n))
+* Newton method has different convergence class (not factor, but quadratic): very fast when near optimum, but requires a very demanding calculation if many dimensions (O(dim^3^))
+
+=== Machine learning at Criteo
+* Criteo bids for ad online and needs to judge quickly how much to pay to show an particular ad to a user with given qualities
+* Europes second largest cluster (~2600 machines)
+* use GBT to bucket continous features to categorical
+* hash categorical features and use logistic regression
+* add feature interactions by adding features hash(x_i,x_j) [hash on combination]
+* all hash sizes are limited and hence have collisions (esp. for feature pairs)
+* hashing pairs is similar to a x^T^Mx term
+* using matrix factorization x^T^UU^T^x can help small categories, but averages large categories undesirably
+
+=== Causality
+* one can reason about causality by use a notation similar to P_{do(X=a)}
+* to determine causality:
+** find a independencies (hard problem; can use HSIC for it)
+** construct a graph which is consistent with the independencies in the d-separation
+* causality direction between just two variables X and Y cannot be found, unless:
+** you assume additive noise f(X)+eps
+** however, it shouldnt be that f is linear and the noise is Gaussian
+* the ICP package in R can be used to find causal structure:
+** you need data from multiple environments (different situations) and pass in the environment label to the function
+    
+== Multi-armed bandits
+* there are many guarantees about optimal procedures (e.g. Gittins index), however they turn out to be too idealized for practice
+* Thompson sampling was mysterious for why it works, but now has multiple theoretical guarantees (also frequentists)
+* by pulling arms you can only get an amount of information limited by the entropy
+
+== Kernel methods
+=== Summary
+* kernels are functions on 2 parameters which are positive-definite
+* following are equivalent:
+** reproducing kernels
+** positive definite functions
+** Hilbert function spaces with bounded point evaluation(?)
+* kernels can be used to measure the similarity between multiple distributions, even for high dimensions (since they nicely smooth)
+* for product spaces, you can measure distances without needing the cross-kernel, i.e. by using
+  k(x,y,x',y')=k(x,x')k(y,y')
+* -> this method basically tries to match "correlation" patterns in the kernels of both feature spaces
+* for causality and interaction testing you need to compare distributions
+** 
+* for comparing distributions COCO is useful and interpretable:
+** it maps x and y to a space where there is a linear correlation (i.e. maximize covariance by smooth mapping)
+** the first singular values contain information about the interaction
+** but you still need a statistical test, since even random data shows some accidental correlation
+* HSIC method is similar to using the sum of COCO eigenvalues
+* "characteristic kernel" means HSIC=0 if the distribution factorizes
+* for additive noise you can determine the causality direction for two variables, but you need to fit really well; otherwise the residues are dependent
+
+=== Details
+* Kernels can map to higher dimensions and thereby make data linearly separable
+* Kernels can smooth data and avoid over-/underfitting
+* function XxX->R is a Kernel if there exists a real Hilbert space which the function maps to: k(x,x')=<phi(x),phi(x')>
+* the function if a Kernel iff it is positive-definite
+* a symmetric function is positive definite if for all coefficients and x values:
+  \sum a_i a_j k(x_i, x_j)>=0
+* also valid Kernels are:
+** linear sums of kernels (with positive coefficients) - corresponds to OR operation
+** maps of space within Kernel
+** products of Kernels - corresponds to AND operation, like outer product
+** not NOT differences between Kernels
+** hence also polynomials of Kernels: (k+c)^m^ with m>=1 and c>=0 
+* the exponential Kernel can be split into eigenfunctions
+** k(x,x')=\sum phi(x)phi(x')
+** phi(x)=\sqrt(lambda_i)e_i(x)
+** lambda_k \propto b^k^  (b<1)
+** e_k(x) \propto \exp(-(c-a)x^2^)H_k(x\sqrt{2c})
+** a,b,c are functions of \sigma; H_k is Hermite polynomial
+** enforces smoothing, since \lambda_k decay as e_k become rougher
+* notation:
+  f(x)=<f_i,x_i>=f(\cdot)^T^ phi(x)
+  f(\cdot)=[f_1,\ldots,f_n]^T^
+* the reproducing kernel Hilbert space (RKHS) is the mapping function implied by a Kernel
+* the RKHS is unique (Moore-Aronszajin); only kernel, not feature map
+*?p27 f(x)=\sum^m^ alpha_i k(x_i,x)=<alpha_i phi(x_i),phi(x)>=<f(\cdot),phi(x)>
+* -> k(x)=<k(\cdot,x),k(\cdot,y)>
+* -> reproducing property (kernel trick):
+** <f(\cdot),k(\cdot,x)>=f(x)
+** in particular k(x,y)=<k(\cdot,x),k(\cdot,y)>
+* if kernel takes a single argument k(x,y)=k(x-y) then you can define Fourier series
+  k(x)=\sum k_l \exp(ilx)
+* small RKHS norms results in smooth functions (e.g. kernel ridge regression)
+* ...
+
+== Deep neural networks
+* if you train on one image classification challenges and transfer to another, you can drop performance by 30%
+* the VGG-19 entworks is a very simple, yet powerful network for image classification (2nd price ImageNet'14); it only has 3x3 conv layers, 2x2 pool layers
+* deepart.io turns photographs into an artistic style
+* open challenges:
+** networks which are resistant to adversarial setting
+** can we have semantically meaningful intermediate layers?
+** can we build networks without supervised training?
+  
+== Gaussian processes
+* instead of modeling a prio function plus noice, Gaussian processes assume a special function and uncertainties/deviations are expressed only by uncertainty in the function parameters
+* -> does not need i.i.d. assumption
+* you can marginalize a multivariables Gaussian easily, if you work with the covariance (just drop other rows and columns)
+* you can choose the form of the covariance function, e.g.
+  k(x,x')=exp(-|x-x'|^2^/2l^2^)
+* the set covariance functions models the correlation between nearby points
+* Gaussian noise would mean adding a diagonal term
+* the prior is a zero mean Gaussian
+* for problems where intermediate steps are not Gaussian, it's best to reapproximate with a Gaussian to continue
+* in maxent optimization of the Gaussian, the normalizing factors serves as capacity control (determinant is basically the volumn spanned)
+* you need to set parameters yourself: noise level, length scale, signal strength(?)
+* a RBF network with infinite layers is a Gaussian process
+* many methods are a special case of Gaussian processes (e.g. Kalman filters)
+* Gaussian processes don't need to know how many basis functions are needed and where they are
+* limitations of GP:
+** only for medium data size, since you need to invert an NxN matrix -> O(N^3^)
+** not good for discontinuities
+** solutions can be too smooth in practice
+
+== Submodular functions
+* functions f from a set (hence \[0,1\]^n^) to a real number; empty set has value 0
+* when optimizing set functions, the submodularity constraint can help computation a lot
+* submodularity means that marginal gain is decreasing:
+** adding an element X to set A increases f more (or equal) than adding element X to set A+B (i.e. superset)
+* equivalently: F(S)+F(T)>=F(S or T)+F(S and T)
+* discrete entropy is submodular; log determinant is submodular (?)
+* \sum submodular = submodular
+* note that maximizing and minimizing this problem, is treated very differently
+* a function is also monotone if F(A)>=F(A+B)
+* also modular are:
+** restrictions to intersections with a constant set
+** union of the features sets with a constant set
+** substraction of the feature set for a constant set (reflection)
+* generalization to integer mapping possible (i.e. \[0..K\]^n^->R instead of [0,1]) but you lose some properties
+* can be used to optimize for clustering or sparsity in objects like graphs 
+=== Maximizing monotone submodular functions with constraints
+* generally this problem is NP-hard
+* however a greedy algorithm can be shown to yield at least factor (1-1/e) of the optimum
+* for constraints sum_e c(e)<=B a greedy algorithm which picks Delta/c yields at least factor (1-1/e)/2 of the optimum
+* for constraints that you have groups and you want exactly one item from each group, the greedy methods yields at least 1/2 of the optimum
+* greedy also has efficiency guarantees for general *matroid* constraints
+* matroids are some sort of independence for discrete sets; conditions are
+** down-monotone: subsets should also be feasible
+** exchange property: it is always possible to swap at least element
+** as a consequence, all maximally independent sets have the same size
+* problems can be solved with a relaxation: make continous interpolation, solve, round to binary
+* -> simple multi-linear relaxation to translate continous space to something based on the function values of the set (continous function value is weighted average of functions value on set elements [corners])
+* for more average bounds, rather than worst-case, look into "curvature" (see her website)
+=== Maximizing non-monotone submodular functions
+* double-greedy algorithm has guarantees:
+** either add to "inclusion set" (starting from empty set)
+** or remove from "guaranteed" set (starting from full set)
+* the guarantees is 1/2 of the optimum
+* this method also turns out to be optimal for polynomial time algorithms
+* a local search would have 1/3 guarantee
+=== Minimizing submodular functions without constraints
+* similar to convex optimization
+* multi-linear extension is NOT convex
+* need Lovasz extension to translate continous space to something based on the function values of the set:
+** see continous values as histogram bars -> calculate expected value of:
+  ** sample height and use function value of set elements where histogram above height
+* Lovasz extension is convex iff the set function is submodular
+* after relaxation take all elements for non-zero continous values as solution
+* for optimization use subgradient
+* minimizing this problem is an active area of research
+* current algorithms (2015) are n^3^Tlog n+n^4^log^2^(n)s
+=== Minimizing submoduar functions with constraints
+* difficult, not even constant factor guarantees exist
+
+== Non-parametric Bayesian methods
+* number of parameters may grow with size of data
+* -> "there is always more to discover"
+* de Finetti's theorem guarantees a particular representation for "infinitely exchangable" permutation settings
+* Dirichlet is a many variable generalization of the Beta (similar to Binomial on probabilities) distribution
+* for all a_i=0 the distribution samples one i to 100%
+* for all a_i\to\infty it samples all i with 1/N (equal probability)
+* generating a Dirichlet distribution can be done by sampling the a stick-breaking process since if rho_1..k~Dirichlet, then rho_1~Beta(a_1, sum a_k-a_1)
+* the distribution on (rho_2,..) is again Dirichlet
+* non-parametric Bayesian methods can be used when you expect a "never-ending" number of clusters
+* the GEM(alpha) model is similar to an infinite Dirichlet model:
+** it will adjust the number of clusters K to the data
+** for a finite number of clusters, it's better to use a fixed K Dirichlet instead
+** this distribution samples cluster probabilities with decreasing probability
+* the model assumes that each point is from a cluster i with some shape
+** e.g. Gaussian mu_i and sigma_i
+** probability of a cluster is from the GEM model
+* the fitting can be done by sampling; all points are assigned in some way and the points are iteratively relabeled; with this distribution sampling you hope that peaks in the distribution will be seen more often
+* Dirichlet is equivalent with the Polya urn:
+** you pick a ball and put two of those colors backs
+** the final distribution is colors will be a Beta distribution (hence not converge like the the central limit theorem)
+* GEM model is equivalent to the Hoppe urn:
+** like Polya urn
+** additional magic ball: if you pick this ball, then put it back and add a completely new color to the urn
+* the Chinese Restaurant Process is conceptually the same as the Hoppe urn; just some "marginalization"
+* Indian Buffet process: like CRP, but allows multi-label (i.e. feature allocation); pick from multiple dishes at the Buffet
+* these processes don't give empirically observed power law: Pitman-Yor process does however
+* you can model hierarchies by appropriate models
+* Kingman paintbox: every exchangeable clustering needs to be "colored bar":
+** points come from cluster with certain shape
+** each cluster has a certain probability
+* see Orbanz & Roy for exchangability and implications
+
+== Statistical machine learning and optimization
+* focus on theta^T^ phi(x) linear functions
+* min sum l(y_i, theta^T^ phi(x_i))+mu*Omega(theta)
+* minimize empirical risk (on training set) and expected risk (on test sets)
+* assume i.i.d.; all l_i are equal
+* depending on properties of the phi, different convergence guarantees are given for gradient descent
+* possible properties:
+** smooth function: second derivative upper bounded
+** strong convexity: second derivate lower bounded (this is a fairly strong assumption)
+* error on test set is O(1/sqrt(n))
+* see slides for guarantees
+* for gradient descent and strong convexity, convergence is linear in number of digits (factor alpha^t^)
+* Nesterov momentum introduces a second step in simple gradient descent and increases convergence from 1/t to 1/t^2^
+* Newton methods has different form of convergence:
+** not factor, but error goes down quadratically
+** this can be useful if you need high precision
+** however it can be slow due to expensive inversion of matrix with d^3^ complexity (d=dimension)
+* non-smooth function may not even converge (see example from Bertsekas'99: gradient descent converges to suboptimal points and gets stuck)
+* only O(n) [data size] necessary for gradient descent since generalization error doesn't get better from there
+* stochastic gradient descent:
+** usually modelled with doing one pass only, since you want independent updates for proofs
+** gives same convergence guarantees as batch, but has simpler calculation
+** you need a decaying step size (e.g. 1/n or 1/sqrt(n))
+** for constraints, you just project back into constraint regions during steps
+* you can average parameters obtained during steps (Polyak-Ruppert):
+** this converges slower at beginning, but is more precise later (since SGD jumps around optimum at the end)
+* logistic loss without constraints on theta is not strongly convex (since derivative gets arbitrary flat(?))
+* a couple of multipasses of OK, but danger of ovefitting
+
+== Machine learning at Criteo
+* use simple models (logistic regression)
+* man-power/cost needed to maintain models most important
+* hashing or categorical feature used for one-hot encoding
+* optimize w^T^x+x^T^ Mx where second term is matrix for hashes on feature pairs
+* matrix elements determined by hash(x1,x2) and a not all independent/unique!
+* could use factorization methods x^T^UU^T^x -> this helps learning small categories since the learn from the overall situation, but harms large categories which have already learned enough and are now averaged out; also now you need to calculate a feature map
+* continous feature are bucketized (e.g. weekend, ...)
+* GBT used (only) for bucketing -> one-hot encoding of continuous feature by leaf index; then combined with continuous features in logistic regression
+* SGD would be good, but requires a lot of human work (cost):
+** set step size (also adjust to new features)
+** distribute optimizer
+** need to weight data points (positive/negative)
+* model initialization doesn't matter since we start from last model
+* about 10000 ads for one sale
+
+== Causality
+* core is structural equation model (SEM), which is of form X_a=f(X_b,..,X_c,noise)
+* noise is assumed independent
+* we are interested in the probability P_{do(X=a)} meaning the probability what would happen if we set X to a
+* we can use that P_{do(T=a)}(R=r|T=t,S=s)=P(R=1|T=t,S=s)
+* conditional independence is not enough to determine intervention since multiple graphs can be the same)
+* causality important only for intervention, not for prediction
+* d-separation of A and B by:
+** only NON-block with S: ->S<-
+** only block without S: ->O<-
+* to make conclusions, we need assumptions:
+** Markov: if A and B d-separated by S, then they are independent given S
+** Faithfulness: Markov reversed (no accidental independencies(?)); this is debateable
+* Spires method is fast, clever way to find a graph for finding independencies
+* Pearl method works, but slow
+* usually you need a lot of data to confirm all independencies (best to use HSIC)
+* for additive noise Y=f(X)+eps you can determine the causality direction; unless f is linear and the noise is Gaussian (in which case both directions look the same)
+* ICP package in R: put in data points from different "environment" and add environment label -> algorithm finds minimal causal set

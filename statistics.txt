@@ -1,0 +1,18 @@
+Durbin-Watson:
+
+* Auto-correlation of residuals; 0..4
+* d=2 none; d<1 considerable positive corr; 
+* d<2 successive terms much different (-> possibly underestimation of statistical significance)
+* complex derivations for thresholds (depending on significance and num. of samples)
+* affects ability for statistical test:
+  * positive corr -> F-stat may be inflated (since MSE underestimated); OLS std. errors of coef. underestimated -> incorrectly reject Null
+  * for corr. -> use Cochrane-Orcutt procedure
+  * D-W stat not applicable if lagged dependent variables -> rather use Durbin's h-test if large samples
+  * D-W stat biased for autoregressive moving avg. models -> for large samples use normally distrib. h-statistic (which derives from d and estimated variance)
+
+Jarque-Bera:
+
+* test is skewness and kurtosis belong to normal
+* JB=(n-k)/6(S^2+(K-3)^2/4)
+* chi^2 with df=2 (for n>2000)
+* tests S=0, K-3=0; for small n rejects Null too much

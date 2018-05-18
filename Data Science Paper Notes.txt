@@ -1,0 +1,59 @@
+Random project ensemble classifiers - Schclar, Rokach
+* general johnson-lindenstrass: any metric with N points can be embedded by a bi-Lipschitz map into an Euclidean space of logN dimension with a bi-Lipschitz constant of logN [4]
+* single run of random projections unstable -> use ensemble [10]
+
+The separation plot - a new visual meothd for evaluation the fit of binary models - Greenhill
+* best cutoff and implications unclear
+* ROC curve tells little about actual model fit
+* evaluation calibration:
+  * Brier score
+  * Expected PCP [Herron99]: (sum_(y=1) p_i + sum_(y=0) (1-p_i))/N
+* plot rag-plot on probability as x-axis for all classes (mb with cumul too)
+
+On multi-class cost-sensitive learning - Zhou, Liu
+* example dependent cost-learning: [Zadrozny01]...[Maloof03]
+* cost-sensitive good for imbalanced: [Chawla02], [Weiss04]
+* rebalancing not helpful for multiclass [ZhouLiu06]
+* Elkan theorem: to make target prob threshold p* correspond to p0 -> number of 2nd class examples multiplied by p*/(1-p*)*(1-p0)/p0
+
+Cost-sensitive learning and the class imbalance problem - Ling, Sheng
+* theory of cost-sensitive learnign [Elkan01][ZadroznyElkan01]
+=> check ICET [Turney95], cost-sensitive decision tree [DummondHolte00, Ling04]
+
+Multiclass cost-sensitive classification
+* see refs [_1]
+=> check regs [4][5]
+
+Feature-weighted linear stacking - Sill, Lin
+* stack by linear model, where coef are linear of raw features again (-> actually linear model with interaction terms again)
+* sum (sum a_ij f_j)*p_i ; where p_i is prediction of model i and a_ij is raw feature j of model i
+* use non-negative weights for stacking [6]
+* netflix features: number of movies rated by user, number of users rated for a movie, log/binary versions, mean user rating with bayesian shrink to overall mean, norm of 10-factor SVD trained on residuals of global effects,
+  correlations, ... (see table 1)
+
+Class imbalance
+* different reason for problem possible [_2]
+* SVM-ensemble good if low imbalance; SVM-THR good if high imbalance and correlated features [_2]
+=> check [19] for effect of high dimensions with imbalance
+=> check [37] for threshold method (threshold change leaves accuracy same, but adjusts precision/recall)
+* one-class SVM good for high imbalance [27]
+* Meta Imbalanced Classification Ensemble (MICE) [40], good but requires algorithmic modification
+* feature selection described in [_3]
+* many sampling-based references in [_3]; many are similar, SMOTE good for large training, some ideas on imbalanced rules
+=> [_3]: [38-39] WE and RUS good
+* cost-sensitive references in [_3]
+=> cost-sensitive RF by sampling+thresholding [_3:61]
+* empirical thresholding [_4:ShenLing06]
+* references in [_5]; some comparisons
+* SMOTE-ENN (in sklearn/imbalanced-learn) good (?)
+* cost-sensitive SVM not so successful
+* C5 cost-sensitive was same as oversampling (both better than under-sampling(?))
+* some references in [_6]
+* balanced random forest and weighted random forest in [_6]
+
+[_1] Cost-sensitive classification - Status and beyond - Lin
+[_2] Class-imbalanced classifiers for high-dimensional data - Lin, Chen
+[_3] A review of class imbalance problem - Elrahman
+[_4] Cost-sensitive learning and the class imbalance problem - Ling, Sheng
+[_5] Analysis of preprocessing vs cost-sensitive learning for imbalanced classification - Lopz, Herrera
+[_6] Using random forest to learn imbalanced data - Chen

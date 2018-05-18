@@ -1,0 +1,1512 @@
+////
+Status: 0.21
+Skipped: Time series, Time deltas
+////
+
+
+= Pandas
+
+:toc: left
+
+== Writing reading large tables
+
+    df.to_pickle("file.pkl")
+    pd.read_pickle("file.pkl")
+    
+    feather.write_dateframe(df, "file.feather") # fast write
+    df=feather.read_dataframe("file.feather")
+    
+    df.to_hdf("test.hdf", "a")
+    df=pd.read_hdf("test.hdf", "a")
+
+== Data creation
+
+http://pandas.pydata.org/pandas-docs/stable/io.html
+
+[cols="m,d"]
+|===
+| pd.*read_csv*(file_or_path, sep=",")      | Path object, URL or file object
+| _sep_=None                                | automatic from `csv.Sniffer`
+| _index_col_=False                         | Do not guess index column (unlike index_col=None which will still guess an index_col!)
+| _converters_={"col":str}                  |
+| _nrows_=..                                | Limit rows read
+| for chunk in pd.read_csv(..., chunksize=..)   | read chunks
+| pd.read_csv("https://..csv")              | Directly from internet
+| pd.*read_table*(file_or_path, sep="\t")   |
+| _usecols_=..                              | Subset of columns to load
+| _squeeze_=True                            | Generate Series when only one column
+| _dtype_={..}                              | Column types
+| _convertes_={..}                          |
+| _nrows_=..                                | Limit number of rows read
+| _na_values_={..}                          |
+| _verbose_=True                            | Indicate number of NA values placed in non-numeric columns
+| _parse_dates_=True                        | Try parsing index
+| _parse_dates_=[1,2,3]                     | Try parsing all separate columns
+| _parse_dates_=[[1,3]]                     | Combine a parse columns
+| _parse_dates_={"name":[1,3]}              | Parse columns and call result "name" 
+| _dayfirst_=True                           | Assume day-first like `dd/mm/yyyy`
+| _chunksize_=..                            |
+| _thousands_=..                            |
+| _decimal_=..                              |
+| _error_bad_lines_=False                   | Drop lines with too many fields
+| pd.*read_fwf*(..)                         | Fixed-width columns
+| pd.*to_csv*(file_or_path)                 |
+| df.*to_string*(..)                        |
+| pd.*read_html*(file_or_path)              | Return list of tables
+| df.*to_html*(..)                          |
+| pd.*read_excel*(pd.ExcelFile(..), "Sheet1") | To work with multiple sheets; Also as context manager
+| HDFStore(..)                              |
+| pd.*to_excel*(_excel_writer_)             |
+| index=False                               | Do not output columns for index
+| merge_cells=False                         | Do not merge cell for hierarchical index
+| pd.*read_sql_table*(..)                   |
+| pd.*read_sql_query*(..)                   |
+| df.*to_sql*(..)                           |
+| pd.*read_sql*(..)                         | Will forward to other functions
+| from sqlalchemy import create_engine +
+  engine=create_engine("sqlite:///:memory:") +
+  conn=engine.connect() +
+  data=pd.read_sql_table("data", conn)      |
+| pd.*read_clipboard*(sep)                  | Read from clipboard http://pandas.pydata.org/pandas-docs/stable/generated/pandas.read_clipboard.html#pandas.read_clipboard[Ref]; On Linux needs `xclip` or `xsel`
+| **kwargs                                  | Passed to `read_table`
+| pd.*read_excel*(io)                       | Read from Excel table http://pandas.pydata.org/pandas-docs/stable/generated/pandas.read_excel.html#pandas.read_excel[Ref]; Needs `xlrd`
+| io=<excelfile>                            | Can be excel file for multiple parsing
+| pd.*read_feather*(path)                   | http://pandas.pydata.org/pandas-docs/stable/generated/pandas.read_feather.html#pandas.read_feather[Ref]s
+| nthreads=<num>                            | Number of CPU threads
+| pd.*read_parquet*(path)                   | http://pandas.pydata.org/pandas-docs/stable/generated/pandas.read_parquet.html#pandas.read_parquet[Ref]
+| engine="pyarrow"                          | Library to use; `"auto"` (default) means option `io.parquet.engine`
+| **kwargs                                  | Passed to engine
+| *to_latex*()                              | Render to LaTeX table
+| *to_string*()                             | Render to string http://pandas.pydata.org/pandas-docs/stable/generated/pandas.Series.to_string.html#pandas.Series.to_string[Ref]
+| _na_rep_=""                               | Use different string for NaNs
+| _float_format_=..                         | Formatter
+| *to_records*()                            | Convert to record array http://pandas.pydata.org/pandas-docs/stable/generated/pandas.DataFrame.to_records.html#pandas.DataFrame.to_records[Ref]
+| *to_dict*()                               | Convert to dictionary http://pandas.pydata.org/pandas-docs/stable/generated/pandas.DataFrame.to_dict.html#pandas.DataFrame.to_dict[Ref]
+| _orient_="dict"                           | "dict", "list", "series", "split", "records", "index"s
+| s.*to_frame*(name=None)                   | Convert to DataFrame
+|===
+
+* `sep` longer than 1 char (and different from  "\s+") interpreted as regex
+* most dict parameters also accept single value
+* default NA markers: `-1.#IND, 1.#QNAN, 1.#IND, -1.#QNAN, #N/A N/A, #N/A, N/A, NA, #NA, NULL, NaN, -NaN, nan, -nan, `
+* `na_filter=False` can improve performance
+* `infer_datetime_format=True` may speed up processing
+* compression infered from file ending
+* uses dateutil.parse.parse to parse dates (uses dayfirst=False and yearfirst=False -> use MM-DD-YY format)
+* guessed dates:
+** `20111230`
+** `2011/12/30`
+** `20111230 00:00:00`
+** `12/30/2011 00:00:00`
+** `30/Dec/2011 00:00:00`
+** `30/December/2011 00:00:00`
+* float_precision="round_trip" to do rounds with guarantees
+* `True, False, TRUE, FALSE` recognized as booleans
+* tries to use C-engine (unless regex for `sep` or `skip_footer` or `sep=None` with `delim_whitespace=False`)
+* writing excel: `XlsxWriter` for `.xlsx`, `openpyxl` for `.xlsm`, `xlwt` for `.xls`
+* hdf requires `PyTables`
+* HDF can also be queried
+* reading/writing formats: `msgpack pickle json sas`; also google bigquery, ...
+* SQL done with `SQLAlchemy` (without it, only sqlite)
+* `create_engine(mysql.mysqldb://user:pw@host:port)` (http://docs.sqlalchemy.org/en/latest/core/engines.html)
+* https://github.com/pydata/pandas-datareader for remote data access (e.g. stock prices)
+
+=== Create DataFrame
+
+[cols="m,d"]
+|===
+| pd.*DataFrame*({col1:iter1, ..}, index=.., columns=..)    |
+| pd.DataFrame.*from_dict*({row1:{col1:..},..}, orient="index") | orient can be changed
+| pd.DataFrame.*from_records*([rec1,..], index=colname)     | index is from rec
+| pd.DataFrame.*from_items*([(col1,[..]),..], orient="columns") | to generate particular order of columns
+| _dtype_=".."                              | as parameter http://pandas.pydata.org/pandas-docs/version/0.15.2/basics.html#basics-dtypes
+| _index_=pd.*date_range*()                 | create date index
+| pd.DataFrame.*from_csv*(..., index_col=None)  |
+|===
+
+* data:
+** dict of iter/dict/Series ; key are columns
+** list of dicts; dicts are the rows
+** 2D np.ndarray
+** Series
+** DataFrame
+** structured record (typed) http://docs.scipy.org/doc/numpy/user/basics.rec.html
+* passed index= or columns= guaranteed (i.e. drop or NaN)
+* .name assigned if taking slices
+* can do automatic multiindex from tuples in as key in dicts
+* to create missing values use `np.nan` value or `np.MaskedArray` input
+* index may be non-unique (but not all operations support that)
+
+=== Create Series
+
+[cols="m,d"]
+|===
+| pd.*Series*(iter,index=..,name="..")      |
+| pd.*Series*({k1:v1,..}, index=..)         | index may force order (or NaN values); without index ordered keys are used
+| pd.*Series*(scalar, index=..)             |
+| s.*rename*("newname")                     | will refer to new object
+|===
+
+=== Data types
+
+== Type conversion
+
+[cols="m,d"]
+|===
+| *infer_objects*()                         | Create new dataframe with `object` types converted to something more specific http://pandas.pydata.org/pandas-docs/stable/generated/pandas.DataFrame.infer_objects.html#pandas.DataFrame.infer_objects[Ref]
+| pd.api.types.*infer_dtype*(seq)           | Infer type of sequence http://pandas.pydata.org/pandas-docs/stable/generated/pandas.api.types.infer_dtype.html#pandas.api.types.infer_dtype[Ref]
+|===
+
+* http://pandas.pydata.org/pandas-docs/stable/api.html#data-types-related-functionality[Dtype introspection]
+
+== Categorical
+
+* many operations on categorical columns (e.g. counts, aggregation), will include as values specified by the type, even if they are not in the data
+
+[cols="m,d"]
+|===
+| pd.*Categorical*([c1,..])                 |
+| s.*astype*("category")                    |
+| _categories_=[..]                         | Specify own categories and their order; others will be NA
+| _ordered_=False                           | No order assumed
+| Series(.., dtype="category")              |
+| Categorical.*from_codes*([1,0,..], categories=[..,..]) | From integer codes
+| cat.*categories*                          | Returns Index([..], dtype="object")
+| cat.*ordered*                             | Bool whether ordered
+| s.cat.categories=[..]                     | Rename
+| cat.*codes*                               |
+| cat.*rename_categories*([..])             | Rename
+| cat.*add_categories*([..])                | Add categories
+| cat.*remove_categories*([..])             | Will be replaced by `np.nan`
+| cat.*remove_unused_categories*()          |
+| cat.*set_categories*([..])                | Remove/add categories
+| cat.*reorder_categories*([..])            | Change order; not the same as renaming
+| cat.*as_ordered*() +
+  cat.*as_unordered*()                      | Create new categorical data
+| hasattr(s, "cat")                         | Check if categorical type
+| pd.*to_numeric*(s, errors="raise")        | Convert (str) to numeric
+| Categorical.*from_codes*(codes, categories)   |
+| np.asarray(s)                             | Convert back to normal series
+| df[c]=df[c].astype("category")            |
+|===
+
+* API: http://pandas.pydata.org/pandas-docs/stable/api.html#api-categorical (add, remove, ...)
+* may be np.nan
+* int64 and float64 regardless of platform (unless initialized by numpy array)
+* if NaN introduced, integer upcast to float
+* numpy scalar hierarchy http://docs.scipy.org/doc/numpy/reference/arrays.scalars.html
+* all numpy dtypes subclass of np.generic (but category and datetime64 are from pandas)
+* by default new data not ordered
+* categoricals:
+** save memory
+** ordered -> min, max
+** signal to other functions
+* `s.unique()` is different from `s.cat.categories`: shows in order of appearance and only existing ones
+* comparison do checks; only possible (else TypeError):
+** == or != to array (column) of same length
+** all comparisons incl. `<` etc. to other ordered category column (need conversion if want to use raw list)
+** all comparisons to scalar
+* counters (value_count, groupby, pivot,...) will also show unused categories
+* only category values can be assigned
+* `.dt` and `.str` also work on categories (of appropriate type)
+* when merging, categories have to be the same
+* missing value code of NA is -1
+* currently Categorical implementation is python object, not numpy; -> numpy functions dont work
+* CategoricalIndex exists
+* `Series(cat)` does not copy, unless `copy=True`
+
+== IntervalIndex
+
+* http://pandas.pydata.org/pandas-docs/stable/api.html#intervalindex[IntervalIndex]
+* Created by `pd.cut`
+
+[cols="m,d"]
+|===
+| pd.*interval_range*(start, end, periods)  | Return fixed frequency IntervalIndex http://pandas.pydata.org/pandas-docs/stable/generated/pandas.interval_range.html#pandas.interval_range[Ref]
+| IntervalIndex.*from_arrays*(left, right)  | http://pandas.pydata.org/pandas-docs/stable/generated/pandas.IntervalIndex.from_arrays.html#pandas.IntervalIndex.from_arrays[Ref]
+| IntervalIndex.*from_tuples*(data)         | http://pandas.pydata.org/pandas-docs/stable/generated/pandas.IntervalIndex.from_tuples.html#pandas.IntervalIndex.from_tuples[Ref]
+| IntervalIndex.*from_breaks*(breaks)       | http://pandas.pydata.org/pandas-docs/stable/generated/pandas.IntervalIndex.from_breaks.html#pandas.IntervalIndex.from_breaks[Ref]
+| IntervalIndex.*from_intervals*(data)      | http://pandas.pydata.org/pandas-docs/stable/generated/pandas.IntervalIndex.from_intervals.html#pandas.IntervalIndex.from_intervals[Ref]
+|===
+
+=== Create index
+
+[cols="m,d"]
+|===
+| MultiIndex.*from_arrays*([(..), ..], names=[..])  | 
+| MultiIndex.*from_tuples*()                |
+| MultiIndex.*from_product*([[], ..], names=[..])   | Cross-product for index
+| pd.*DataFrame*(.., index=[np.*array*(..), ..])    | Convenience for multi-index
+| *Index*([..], dtype=.., name=..)          |
+|===
+
+== Meta data
+
+[cols="m,d"]
+|===
+| df.*index*                                |
+| df.*columns*                              |
+| df.*shape*                                |
+| *ndim*                                    | Number of array dimensions
+| df.*values*                               | Get Numpy array
+| s.*dtype*                                 |
+| df.*dtypes*                               |
+| df.*get_dtype_counts*()                   |
+| columns.*str*                             |
+| s.*nbytes*                                |
+| s.*memory_usage*(..)                      |
+| *rename_axis*(mapper)                     | Rename axis names (to set labels instead use `rename()`)
+| *itemsize*                                | Return size of items (Series, Index)
+|===
+
+* Metadata attributes can be assigned to
+
+=== Index information
+
+[cols="m,d"]
+|===
+| index.*get_level_values*(..)              | Get list of index values
+| df2.*reindex*(df.index, level=0)          | df2 with additional deeper level indices from df
+| df_a1, df_a2 = df.*align*(df2, level=0)   | broadcast values
+| s.*swaplevel*(i=-2, j=-1, copy=True)      |
+| df.*swaplevel*(0, 1, axis=0)              | Swap levels
+| df.*reorder_levels*([1,0], axis=0)        | General permutation with all levels
+| MultiIndex.*set_names*([..], inplace=True)    | Rename levels
+| index.*name*                              | set index name; referable in *query*(); column name can shadow index name
+| s.*set_axis*(labels)                      | Set desired index to given axis http://pandas.pydata.org/pandas-docs/stable/generated/pandas.Series.set_axis.html#pandas.Series.set_axis[Ref]
+|===
+
+Index types:
+
+* CategoricalIndex is efficient indexing when many duplicate values
+* RangeIndex is for monotonic ordered sets; Int64Index is less optimized superclass
+* Float64Index is for floats
+* indexing with list will return type according to list; so need to pass `Categorical` to get `CategoricalIndex`
+* reshaping and comparison on CategoricalIndex need to have same categories
+* indexing on integer index with floats: http://pandas.pydata.org/pandas-docs/stable/whatsnew.html#whatsnew-0180-float-indexers
+
+
+=== Multi-Index
+
+http://pandas.pydata.org/pandas-docs/stable/api.html#multiindex[MultiIndex]
+
+[cols="m,d"]
+|===
+| multiindex.*to_hierarchical*(n_repeat)    | http://pandas.pydata.org/pandas-docs/stable/generated/pandas.MultiIndex.to_hierarchical.html#pandas.MultiIndex.to_hierarchical[Ref]
+| multiindex.*is_lexsorted*()               | http://pandas.pydata.org/pandas-docs/stable/generated/pandas.MultiIndex.is_lexsorted.html#pandas.MultiIndex.is_lexsorted[Ref]
+| multiindex.*droplevel*(level=0)           | http://pandas.pydata.org/pandas-docs/stable/generated/pandas.MultiIndex.droplevel.html#pandas.MultiIndex.droplevel[Ref]
+| multiindex.*remove_unused_levels*()       | http://pandas.pydata.org/pandas-docs/stable/generated/pandas.MultiIndex.remove_unused_levels.html#pandas.MultiIndex.remove_unused_levels[Ref]
+|===
+
+* repr of MultiIndex shows all levels, even those that not used due to slicing (shown to avoid recomputation); to see values use `df.colums.values` 
+* any slicing possible; can use tuple for specific position or also high level; axis need to be lex-sorted
+* specify all axis for `.loc` like `df[..,:]`, or there might be mis-interpretation
+* in tuples you need to use `*slice*(None)` for `:`; but you could use `pd.IndexSlice[..]` for using the nicer `:` notation again
+* you can assign to selections with MultiIndex too; also with index alignment
+* you need to manually sort indices by e.g. `df.*sort_index*(level=1)`; otherwise operations might be slow and create unneccessary copies; you can check `MultiIndex.lexsort_depth`
+
+=== Reindex
+
+* reorder
+* insert NaN; fill if needed -> may change dtype
+* indices will be same Python object
+* sometimes manual reindex useful for performance!
+* strict label indexing only
+
+[cols="m,d"]
+|===
+| s.*reindex*([..])                         |
+| df.*reindex*(index=[..], columns=[..])    |
+| df.*reindex_axis*([..], axis=..)          | for convenience
+| df.*reindex_like*(df2)                    |
+| df3,df4=df.*align*(df2, join="left")      | other: "inner", "outer", "right"; axis=.. if only on special axis
+| s.*reindex*(s2, method="ffill")           | forward fill; other: "bfill", "nearest"; error if index not ordered
+| _limit_=                                  | max consecutive count in filling
+| _tolerance_=                              | max value distance in filling (e.g. "1 day"; see Timedelta)
+| df.*drop*([..], axis=..)                  | drop labels
+| s.*drop*(_labels_, errors="raise")        | 
+| s.*rename*(func, inplace=False)           | rename index (row names); if dict passed can use only values that are replaced
+| df.*rename*(index=.., columns=..)         |
+| s.*rename*(new_series_name, inplace=True) |
+| .*set_index*(..)                          | columns or list of columns
+| _append_=True                             | to add new levels
+| _drop_=False                              | don't drop column values
+| _inplace_=True                            |
+| .*reset_index*()                          |
+| _level_=..                                | remove only certain level
+| _drop_=True                               | do not create column values for removed index
+| df.index=..                               |
+|===
+
+* `*reindex*(.., method="ffill")` could also be done with `fillna` or `interpolate`, but only reindex makes order check
+
+== Display data
+
+[cols="m,d"]
+|===
+| df.*head*()                               |
+| df.*tail*()                               |
+| df.*describe*(percentiles=[..])           |
+| df.*describe*(include=["object"])         | otherwise if mixed will use numerical/catogorical only; other: "number", "string", "category" http://pandas.pydata.org/pandas-docs/version/0.15.2/basics.html#selecting-columns-based-on-dtype
+| df.*describe*(exclude=[..])               |
+| df.*info*()                               |
+| df.*get_dtype_counts*()                   |
+| s.*value_range*                           |
+| s.*value_counts*(sort=True, ascending=False, dropna=True) |
+| _normalize_=True                          | Give relative frequencies
+| _bins_=_int_                              | Group into half-open bins; convenience for `pd.cut`
+| df.*to_string*(na_rep="")                 | Nicer rendering
+|===
+
+=== Display options
+
+[cols="m,d"]
+|===
+| pd.options.display.                       |
+| * max_rows                                |
+| * max_columns                             |
+| * expand_frame_repr                       | print dataframe as one block and don't use paging view
+| * large_repr: use describe ("info") or rather "truncate" if large |
+| * max_columnwidth: use ellipsis           |
+| * max_info_columns: dont show info/dtype by column, but rather short col counts |
+| * max_info_rows, max_info_cols: limit size when number of unique values count is done in summary |
+| * precision: float precision              |
+| * chop_threshold: display round to zero   |
+| * colheader_justify: "left", "right"      |
+| * width                                   | wrap dataframe after so many characters
+| * max_colwidth                            | chop cell values after so many characters
+| pd.*set_eng_float_format*(accuracy=.., use_eng_prefix=True)   | float display for all
+| pd.*describe_option*(pat)                 |
+| with pd.option_context(pat1, val1, pat2, ..): |
+|===
+
+
+* to_string to force full table output
+** set_option("line_width",...) for broad tables
+** side_by_side() : print multiple DFs
+
+== Iterate data
+
+[cols="m,d"]
+|===
+| s                                         | values
+| df                                        | column names
+| s.*iteritems*()                           | (k,v)
+| df.*iteritems*()                          | iterate over rows; (col, Series)
+| df.*iterrows*()                           | iterate over rows; (index, SeriesRow); does not preserve dtypes; slow
+| df.*itertuples*(index=True, name="Pandas")    | iterate over rows as named tuples `*Pandas*(Index=.., col1=.., ..)` (faster than iterrows)
+|===
+
+* consider `.*apply*()` instead of iterating
+* don't modify iterator elements
+* `iterrows` does not preserve dtypes
+* for >255 columns in `itertuples`, regular tuples are used
+
+== Select data
+
+[cols="m,d"]
+|===
+| df.*select_dtypes*(include=[..], exclude=[..])    | select columns by dtype; "object" for string; numpy.number for numbers; "category"; http://docs.scipy.org/doc/numpy/reference/arrays.scalars.html
+| df.*lookup*([row1, ..], [col1, ..])       | look up individual values
+| df.*sample*(n=..)                         | each rows at most once
+| _frac_=..                                 |
+| _replace_=False                           |
+| _weights_=                                | sampling weights; NaN mean 0; will be renormalized if needed
+| _weight_="colname"                        | this column as sampling weights
+| _axis_=1                                  | sample columns
+| _random_state_=..                         |
+| df.*take*([..], axis=..)                  | Select elements; can be faster than fancy indexing
+| df.*filter*(regex=r"..")                  | Select column by name regex
+|===
+
+[cols="m,d"]
+|===
+| s.pipe(lambda s:s[s])                     | Select only where True
+|===
+
+=== Indexing
+
+[cols="m,d"]
+|===
+| s["label"]                                | return scalar
+| s.*label*                                 |
+| df["col"]                                 | return column
+| df[row1:row2]                             |
+| df.col                                    |
+| .loc["row"]                               |
+| .loc[["row1","row2"]]                     |
+| .loc["row1":"row2"]                       |
+| .loc[boolarr]                             |
+| .loc[func]                                | takes calling object and returns valid indexer
+| .iloc[..]                                 | same possibilities as `.loc`
+| .ix[..]                                   | accepts mixed labels and integer-based (unless index is integers)
+| df.loc[rows, columns]                     |
+| .at[..]                                   | fast scalar access; can also assign to
+| .iat[..]                                  |
+| .*get*(..)                                | with default value
+| df[boolvec]                               |
+| df.loc[..,..]                             |
+| df[["col1","col2"]]                       | multiple columns; can also be assigned to
+| df.*a*                                    | col access; only if no name conflict
+| s.a=3                                     |
+| df.a=arr                                  | only if "a" already exists
+| df["a"]=arr                               |
+| s[:3]=arr                                 | assign to slice
+| df[:3]                                    | df slicing on *rows*
+| df.*loc*(axis=0)[..]                      | all selections refer to single axis instead of (row, col) interpretation
+| df.*xs*("..", level="..", deop_level=True)    | select cross-section; similar to `df.loc[(*slice*(None),".."),:]`
+| df.*xs*(("..",..), level=("..",..))       | multiple keys
+| _axis_=1                                  | to do cross-section on columns
+| _drop_level_=False                        | to retain level that was selected
+|===
+
+[cols="m,d"]
+|===
+| .*rename*()                               |
+| .*set_names*()                            |
+| .*set_levels*()                           |
+| .*set_labels*()                           |
+| .*union*(i2)                              |
+| .*difference*(i2)                         |
+| .*symmetric_difference*(i2)               |
+|===
+
+* slicing always on values of index unless `iloc` where it is positional
+* slicing by floats on non-float index raises TypeError
+* don't use NaN in Index (do Index.fillna)
+
+* `__getitem__` version usually slower, since needs to detect what to do
+* df["a"] on MultiIndex defaults to df["a",:,:]
+* `df[["a", "b"]]=..` possible to set multiple columns (e.g. transform on subset of columns)
+* setting values by attribute access (df.a) works, but only if col a already exists
+* `df.iloc[1]={"col1":.., ..}` possible
+* for slicing:
+** KeyError if neither start or stop in index
+** start and stop included for `.loc`
+** stop excluded for `.iloc`
+** integers in slices always rows
+
+* reduces dimension
+* at least one of label must be in list; otherwise KeyError
+* .loc: label, end included
+* .iloc: position 0-based, end NOT included if slice
+* IndexError if any indexer out-of-bounds (unless slice)
+* assignment to non-existent label/index can enlarge/append data!
+
+
+== Row selection
+
+[cols="m,d"]
+|===
+| s.str.*contains*(regex)                   | `re.search()`; return boolean series
+| s.str.*match*(regex, as_indexer=True)     | return boolean series (kwarg to really enable this new sensible behaviour)
+| s.*isin*([..])                            | contains
+| s.index.*isin*([..])                      | when not sure which labels exists
+| MultiIndex.*isin*([..], level=..)         |
+| df.*isin*({col1:[..], col2:..})           | multiple checks
+| s.*where*(boolarr)                        | return same shape; NaN where not selected; if inplace= then modifies data
+| df.*where*(boolarr, other=falseval)       | falseval can be full df too
+| _try_cast_=True                           | Try to cast result back to input type (if possible)
+| _raise_on_error_=False                    | Do not raise error on invalid types (e.g. on strings)
+| df.*where*(.., axis=.., level=..)         |
+| df.*where*(func, otherwise_func)          | call func on caller and get condition; otherwise_func called on non-matching
+| .*mask*(..)                               | inverse bool of `where()`
+| df.*query*("(a < b) & (b < c)")           | see `pd.eval(..)`
+| df.*query*("index < b")                   |
+| df.*select*(boolfunc, axis=..)            |
+| df.*duplicated*([col1, ..], keep="first")     | return bool vec if rows duplicated; first row considered unique, other return True (unless take_last=True)
+| _keep_=False                              | Mark all duplicates as True
+| _keep_="first"                            | first in group not marked; other values: "last", False (mark all)
+| Index.*duplicated*(..)                    |
+| s.between(a, b, inclusive=False)          | Bool selection
+| s[lambda x:...]                           |
+|===
+
+`.query`:
+
+* "ilevel_0" or "index" possible
+* "and" or "&" possible
+* "not" or "~" to negate
+* comparison binds strong than "and"
+* can chain "a < b < c"
+* "a in b" to test if value from "a" in full column "b" ("in" uses Python since not in numexpr)
+* 'col == ["a", "b"]' uses contains (also "!="); same as '["a", "b"] in col'
+* *query*() slightly faster than Python version for large data (>200000 rows)
+* falls back on named index, if column doesnt exist
+* if index monotonic (can be tested with `.is_monotonic_increasting`, `.is_monotonic_decreasing`), then slice bounds can be outside existing values; otherwise has to be existing unique value
+* slice endpoints are inclusive
+
+== Reduce to value
+
+[cols="m,d"]
+|===
+| s.*searchsorted*(val)                     | Find indices where element should be inserted to maintain order
+| df.*equals*(df2)                          | can handle NaN; needs same (sorted) index
+| df.*empty*                                |
+|===
+
+== Extract parts
+
+[cols="m,d"]
+|===
+| dt.*day*                                  |
+| s.str.*split*(..)                         |
+| s.str.*split*(..)[..]                     |
+| _expand_=True                             | expand into new columns
+| _n_=1                                     | limit number of splits
+| s.str.*rsplit*(..)                        | split from right
+| s.str[pos]                                | char for strings; NaN if too short
+| s.str[pos]                                | list/tuple item; NaN if too short
+| s.str.*extract*(regex)                    | extract string (one col per group); NaN otherwise; named groups (?P<name>..); optional named groups
+| _expand_=True                             | return columns for matches (can use regex variable names)
+| s.str.*extractall*(regex)                 | returns new rows for every match; results in MultiIndex with new last name `match`
+|===
+
+== Convert format
+
+[cols="m,d"]
+|===
+| df.*astype*(..)                           |
+| df.*convert_objects*()                    | make object to dtype if all objects have a type
+| df.*convert_objects*(convert_numeric=True)    | try convert numbers; otherwise NaN
+| df.*convert_objects*(convert_dates="coerce")  | use NaT where not datetime/timestamp-like
+| s.dt.*strftime*(..)                       |
+| pd.*to_datetime*(nptime64).*strftime*("%b %y") | Returns `DatetimeIndex` if list, `datetime64` Series if `Series`, `Timestamp` if scalar
+| _exact_=False                             | match anywhere in target string
+| _unit_="second"                           | use seconds as unit for integer
+| _infer_datetime_format_=True              | Speed-ups (if not ISO8601)
+| pd.*to_datetime*(df[["year","month","day"]])  | Automatically combines date parts
+| s.*astype*("category")                    | Do categorical format
+|===
+
+== Add data
+
+[cols="m,d"]
+|===
+| df.*insert*(pos, colname, data)           | insert column at particular location
+| df.*assign*(newcol=expr,...)              | create a new column and return copy of dataframe; `expr` is series operation or a function on a dataframe (e.g. when no reference to df in chain)
+|===
+
+== Merge data sets
+
+[cols="m,d"]
+|===
+| pd.*concat*([df1,..])                     | On top of each other; Generates union of columns
+| pd.*concat*([df1,..], axis=1)             | Side by side
+| pd.*concat*([df1,..], join="outer")       | None dropped (but ValueError if all None)
+| pd.*concat*({"key1":df1,..})              | dict keys used as `keys=` (option `keys=` can still select which to take)
+| _axis_=                                   |
+| _join_="outer"                            | "outer", "inner"
+| _join_axes_=[df1.index,..]                | List of Index to use for other n-1 axes instead of inner/outer set logic
+| _ignore_index_=True                       | Do not use index values on concatention axis. Resulting total axis labels 0..n-1; esp. if concat axis does not have meaningful indexing information
+| _keys_=None                               | Sequence to construct hierarchical _extra_ index as _outmost_ level next to all existing indices (tuple for MultiIndex)
+| _levels_=None                             | Specify levels (unique values) to use for constructing MultiIndex (otherwise infered from keys)
+| _names_=None                              | Names for the levels in resulting hierarchical index
+| _verify_integrity_=False                  | check whether new concatenate axis contains duplicates (expensive)
+| _copy_=False                              | avoid data copying
+| df1.*append*(df2)                         | Return new df with both DF appended; like concat axis=0; Indices must be disjoint!
+| _ignore_index_=True                       | To ignore index (if not disjoint)
+| df1.*append*([df2, ..])                   | Append multiple
+| df.*append*(s, ignore_index=True)         | Append row (but not efficient)
+|===
+
+* `pd.concat` does all heavy-lifting, with optional union/intersection of indices
+* concat and append make full copy of data; use list comprehension??
+* if concat with Series -> will be transformed to DF with s.name as column name; unnamed Series will be numbered
+
+== Join data sets
+
+[cols="m,d"]
+|===
+| merge(left, right, how="inner", sort=True)    |
+| _on_=..                                   | Column names to join; If not specified (and left/right_index=False) -> inferred as intersection of columns
+| _left_on_=.. +
+  right_on                                  | Column name or Value-list (same length) to use for join
+| _left_index_=True +
+  right_index=True                          | Use index as join key
+| _how_="inner"                             | "inner", "left", "right", "outer"
+| _sort_=False                              | Do not sort resulting keys; Can improve performance!
+| _suffixes_=("_x", "_y")                   | Suffixes for overlapping column names
+| _copy_=False                              | Try (rarely) not to copy data, when re-indexing not necessary
+| _indicator_=True                          | Add categorical indicator column "_merge" with values "left_only", "right_only", "both"
+| df1.*merge*(df2, ..)                      | Same as `pd.merge`
+| pd.*merge_ordered*(left, right)           | http://pandas.pydata.org/pandas-docs/stable/generated/pandas.merge_ordered.html#pandas.merge_ordered[Ref]
+| pd.*merge_asof*(left, right)              | http://pandas.pydata.org/pandas-docs/stable/generated/pandas.merge_asof.html#pandas.merge_asof[Ref]
+| df1.*join*(df2)                           | Left-join merge on indices
+| df1.*join*([df2, ..])                     | Merge multiple
+| _on_=..                                   | Use these columns for left DF
+| _lsuffix_=.. +
+  _rsuffix_=..                              | Suffixes for same-name columns
+| *ordered_merge*(left, right, fill_method="ffill") | For combining time series/ordered data
+| df1.*combine_first*(df2)                  | To overwrite NA values from first by values of second
+| s1.*update*(s2)                           |
+| df1.*update*(df2)                         | Update all values from second in first
+|===
+
+* joining columns on columns will discard any indices
+* joining single index with multi-index possible (will use same index name)
+* joining on two multi-indices currently not with join -> need to reset_index() instead
+
+== Combine data
+
+[cols="m,d"]
+|===
+| df.*sub*(df2, axis=0, level=.., fill_value=..)    | for control on series operation; other: `add, sub, mul, div, radd, floordiv`..
+| df.*gt*(df2)                              | result same type as df; other: eq, ne, lt, gt, le, ge
+| df.*dot*(df2)                             | matrix multiplication
+| s.*dot*(s2)                               | dot product
+| df.*combine_first*(df2)                   | fill in NaN in first
+| df.*combine*(df2, lambda x,y:..)          | more general combiner
+| pd.*merge*(a.*reset_index*(), b.*reset_index*(), on='i') |
+| pd.*DataFrame*(b).*join*(pd.*DataFrame*(a), rsuffix='a') |
+|===
+
+* Indices automatically aligned (NaN if missing; dropna if unwanted)
+* df - s broadcasted row-wise (series index of dataframe columns)-> df-df.iloc[0] subtracts first row from all
+* df - s_time -> if both date index, broadcast col-wise; df-df["A"] will subtract colA from all
+* http://pandas.pydata.org/pandas-docs/version/0.15.2/basics.html#basics-binop
+* fill_value if only one NaN (NaN anyway if multiple)
+
+== Transform data
+
+[cols="m,d"]
+|===
+| s.str.*get_dummies*(sep="|")              | make dummy indicator 0/1 variables from e.g. "a|b" mean a=1 and b=1
+| Index.str.*get_dummies*(..)               | return MultiIndex
+| s.str.*split*("_").*apply*(Series)        |
+| s.str.*replace*(regex, new, case=False)   |
+| s.str.*findall*(regex)                    |
+| df.*T*                                    | transpose
+| df.*cumsum*()                             | preserve location of NaN
+| df.*cumprod*()                            |
+| df.*cummax*()                             |
+| df.*mad*()                                | http://pandas.pydata.org/pandas-docs/stable/generated/pandas.DataFrame.mad.html#pandas.DataFrame.mad[Ref]
+| [valbin1,..]=pd.*cut*(df, bins=..)        | Make categories; `bins` is number of equal width bins or a list of cutoffs; returns `Categorical`; can do np.inf as bounds in bins
+| _labels_=[..]                             | use as self-determined labels
+| _bins_=<IntervalIndex>                    |
+| ([valbin1,..], [binedge(1),..,binedge(n+1)])=pd.cut(df, retbins=True) | returns `(Categorical, np.array)`
+| pd.*qcut*(s, [quantile1, ..])             | by quantiles
+| df.str.*lower*()                          | and other str operations; handles NaN http://pandas.pydata.org/pandas-docs/version/0.15.2/text.html#text-string-methods
+| (df-df.*mean*())/df.*std*()               | standardize
+| pd.*get_dummies*(df)                      | encodes as object/category
+| _prefix_=".."                             | Use this prefix for column names
+| _prefix_={col1:"..",..}                   | Use list or dict if multiple columns to encode
+| _dummy_na_=True                           | Also include Null values as indicator column
+| _prefix_set_=".."                         | Separator between prefix and value
+| _drop_first_=True                         | To avoid multi-collinearity
+| _columns_=[..]                            | Specify columns to encode
+| s.*get_dummies*(sep="|")                  | Split each string on sep and return 0/1 encoding; e.g. "a|c" -> 1, 0, 1
+| labels, uniques = pd.*factorize*(s, na_sentinel=-1) | Return labels and the used order
+| _sort_=True                               | do sorting
+| _size_hint_=..                            | hint to the hash table sizer
+| s.*round*(_[decimals]_)                   |
+|===
+
+* `get_dummies` encodes all categoricals by default; others untouched
+
+=== Replacing values
+
+[cols="m,d"]
+|===
+| s.*replace*("a1","b1") +
+  s.*replace*(["a1",..],["b1",..]) +
+  s.*replace*({"a1":"b1",..})               | Replace values
+| _regex_=True                              | To use regex patterns; use "\1" for captures
+| df.*replace*({"col1":"a1",..}, new_val) +
+  df.*replace*({"col1":{"a1":"new_val"}}) +
+  df.*replace*({"col1":"a1",..}, {"col1":"b1",..})  | Replace values
+| df.*replace*({"col1":{r"regex1":"new_val",..},..})    | Replace values
+| s.*replace*(["a1",..], method="ffill")    | Treat given values as missing and interpolate over them
+| df.*replace*(regex=[..,..], value=..)     | (to avoid `regex=True`)
+| df[cols] = df[cols].fillna(val)           | Fill missing for only some columns
+|===
+
+* replacing done with `re.sub`
+
+=== Apply functions
+
+[cols="m,d"]
+|===
+| df.*pipe*(func)                           | pass/chain dataframe into function
+| df.*pipe*((func, "df_kw_dest"), param..)  | if function expects data in `df_kw_dest`
+| df.*apply*(func, axis=.., args=(posarg1,..), **kwargs)  | apply along axis; can be lower dim depending on function; http://pandas.pydata.org/pandas-docs/version/0.15.2/basics.html#function-application
+| _convert_dtype_=False                     | Don't convert type and leave `object`
+| _broadcast_=True                          | Return same size with value propagated
+| _raw_=True                                | Use `ndarray` instead of converting to `pd.Series` for better performance
+| _reduce_=True/False                       | Usually return value guessed by calling on empty dummy data; True: return series, False: return DataFrame
+| df.*applymap*(func)                       | value by value function (since isn't vectorized)
+| s.*map*(func)                             | map by function; but can also do use dicts or Series as maps
+| _na_action_="ignore"                      | Propagate NA values
+| pd.*eval*(_expr_)                         | Evaluate an expression using numexpr (arith
+|===
+
+* use `df.*apply*(.., raw=True)` if dont need Series/index and only use ndarray for performance
+* `df.*apply*(Series.interpolate)`
+
+=== Arithmetic
+
+[cols="m,d"]
+|===
+| *add*(other)                              | Add element-wise
+| *radd*(other)                             | Add element-wise (`radd`)
+| *gt*(other)                               | Greater-then element-wise
+| ...                                       |
+|===
+
+* http://pandas.pydata.org/pandas-docs/stable/api.html#binary-operator-functions[Binary operators]
+
+
+=== Pivoting data
+
+[cols="m,d"]
+|===
+| df.*pivot*(index=.., columns=.., values=..)   |
+| df.*pivot*(index=.., columns=..)          | Use remaining columns as (outside) level of hierarchical index (if multiple value columns left)
+| df.*stack*(..)                            | New inner-most level of row labels (return Series; if columns were MultiIndex, then DF)
+| df.*unstack*(..)                          | Pivot level of hierarchical row index to columns (default: last level)
+| s.*unstack*(level=-1, fill_value=None)    |
+| _fill_value_=..                           | Value for missing data
+| pd.*melt*(df, id_vars=[..])               | Keep only id_vars and "variable"/"value" columns
+| _var_name_="variable"                     | Alternative column name
+| _value_name_="value"                      | Alternative column name
+| pd.*wide_to_long*(..)                     | Panel data convenience function (?)
+| pd.*pivot_table*(data=.., values=.., index=.., columns=.., aggfunc=np.mean) | Aggregation pivoting; aggregate `values`; `index,columns` is (list of) column, Grouper, same-size array
+| __margins__=True                          | Add "All" column which adds marginals
+| pd.*pivot_table*(df, index=..,  columns=..)   | No `values=`. Include all aggregate-able columns in column hierarchy.
+| df.*pivot_table*(..)                      |
+| pd.*crosstab*(index=.., columns=.., values=.., aggfunc=<freq>) | Best for frequency tables; Like `pivot_table`, but can take multiple Series instead of DataFrame (and has default `aggfunc=len`, `fillvalue=0`)
+| _rownames_=.. +
+  colnames=..                               | Names to use (match number of list lengths passed)
+| _margins_=True                            | Add marginals
+| _normalize_=True                          | Divide all by sum; values "all", "index", "columns", 0, 1
+|===
+
+* stack und unstack implicitely sort
+* levels can be (list of) numbers or names, but not a mix
+
+== Sorting
+
+[cols="m,d"]
+|===
+| df.*sort_index*(axis=.., ascending=True)  |
+| df.*sort_index*(by="col")                 | use this column to sort; also takes list of cols
+| _sort_remaining_=False                    | Sort other multi-levels too
+| df.*sort_values*(columns=..)              | sorts
+| _na_position_="first"                     |
+| _kind_=..                                 | See `np.sort`; only `mergesort` is stable
+| s.*sort_values*()                         |
+| s.*searchsorted*([..], side="left", sorter=..)  | like np.ndarray.searchsorted
+| s.*nsmallest*(n)                          | faster than by sorting
+| s.*nlargest*(n)                           |
+|===
+
+* for multiindex specify tuple as full index
+* sort `inplace=False` by default
+
+== Aggregate data
+
+[cols="m,d"]
+|===
+| df.*drop_duplicates*([col1, ..], keep="first") |
+| _keep_=False                              | Drop all duplicates
+| df.*any*()                                | summarize bool result
+| df.*all*()                                |
+| df.*bool*()                               | get bool value if only this one element is DataFrame or Series
+| df.*any*().*any*() to collapse both axis  |
+| df.*sum*(axis=.., skipna=True, level=..)  | others: mean, quantil; http://pandas.pydata.org/pandas-docs/version/0.15.2/basics.html#descriptive-statistics
+| df.*idxmin*(axis=..)                      | returns first matching index of minimum value; like argmin in Numpy
+| df.*idxmax*(..)                           |
+| s.*nunique*(drop_na=True)                 | number of unique elements
+| s.*value_counts*()                        | make histogram counts
+| s.*mode*()                                | most frequent; returns series; use s.*mode*()[0]
+|===
+
+== Grouping data
+http://pandas.pydata.org/pandas-docs/stable/api.html#groupby
+
+[cols="m,d"]
+|===
+| gr = df.*groupby*(by=None, axis=0)        | Groupby
+| _level_=..                                | Group by the Index level
+| _as_index_=False                          | Keep group as normal columns, not index (like SQL)
+| _sort_=False                              | Don't sort (faster than default)
+| _squeeze_=True                            | Reduce dim of return type if possible(?)
+| df.groupby(col, _group_keys_=False).apply(lambda x:x[col2])   | Do not generate index for `col` during apply
+| gr.*size*()                               | Size of groups
+| gr.*describe*()                           | Information about groups
+| gr.*agg*(np.sum)                          | General aggregate (work on dataframe or passed to `DataFrame.apply`)
+| gr.*agg*([np.sum, np.mean])               | Multiple aggregations on single or multiple columns
+| gr.*agg*({"col1":np.sum,...])             | Different aggregations on diff columns
+| gr.*agg*({"col1":[np.sum,...,]...])       | Different aggregations on diff columns
+| gr.*groups*                               | dict from unique groups to values
+| len(gr)                                   | Number of groups
+| df.*groupby*(level=0)                     | Group by one level of the MultiIndex; can also use index names or list of indices
+| for name, gr in grouped                   | Iterate
+| gr.*get_group*("val")                     | Get a specific group
+| gr.*transform*(func)                      | Maps groups (e.g. to normalize)
+| gr.*filter*(boolfunc)                     | Filter groups which satisfy certain criterion
+| gr.*apply*(func)                          | If agg or transform not enough; or want to infer what to do
+| _dropna_=False                            | To keep NA values for dropped groups
+| gr.*nlargest*(n) +
+  gr.*nsmallest*(n)                         | Get largest/smallest values in group
+| gr.*head*() +
+  gr.*tail*()                               | Get first/last row
+| gr.*nth*(n)                               | Get n-th row of each group; negative index possible
+| gr.*nth*([n1, n2,..])                     | Get multiple n-th rows
+| _dropna_="any","all"                      | Don't count NA; for DataFrame with multiple columns
+| _dropna_=True                             | Don't count NA
+| gr.*cumcount*()                           | Get order/index of rows within groups (don't reorder rows to groups); "aaba" -> "0102"
+| pd.*Grouper*(key, level, timefreq)        | to provide more information on how to group http://pandas.pydata.org/pandas-docs/stable/generated/pandas.Grouper.html#pandas.Grouper[Ref]
+| gr.*boxplot*()                            | Get OrderedDict of plots
+| gr.*ngroup*()                             | Number each group http://pandas.pydata.org/pandas-docs/stable/generated/pandas.core.groupby.GroupBy.ngroup.html#pandas.core.groupby.GroupBy.ngroup[Ref]
+|===
+
+* Groupby also accepts Grouper https://pandas.pydata.org/pandas-docs/stable/groupby.html#groupby-specify[Ref]
+* `groupby(.., group_keys=False)` more applications for multi-index(?)
+* `pd.TimeGrouper` deprecated
+
+Possible cases:
+
+* aggregate by summary statistics on each group; N->1
+* transform each group and return like-indexed; N->N
+* filtration where some groups discarded; N->N/0
+
+Grouping by
+
+* Python function on each of axis labels
+* list or Numpy array of same length
+* dict or Series with {label:groupname,...}
+* column name
+* list of the above
+
+* Operation is lazy. Group keys sorted by default (use `sort=False` to disable). Order within groups preserved.
+* Tab-completition to column names works
+* strings as aggregation functions work, if same name on GroupBy
+* some operations (sum, mean, std, sem) specially optimized Cython
+* operations on GroupBy dispatched to underlying Pandas objects
+* `gr.apply` calls twice on first group to see if it should optimize
+* columns where some operation fails (e.g. sum on strings), will be dropped silently
+* NA group keys excluded
+
+== Text
+http://pandas.pydata.org/pandas-docs/stable/api.html#string-handling
+
+[cols="m,d"]
+|===
+| str.*cat*(others, sep, na_rep)            | Concat strings
+| str.*contain*(pat)                        | Substring or regex
+| str.*extract*(pat)                        | Extract groups from first regex match
+| str.extract("(?P<colname>...)")           | Use named column (instead of group index)
+| str.*extractall*(pat)                     | Extract groups from all regex matches
+| str.*join*(sep)                           | Join list
+| str.*partition*([pat, expand])            | Partition into (before, sep, after)
+| str.*slice*([start, stop, step])          |
+| str.*slice_replace*([start, stop, repl])  |
+| str.*translate*(table [, deletechars])    |
+| str.*isdigit*()                           |
+|===
+
+== Resampling
+http://pandas.pydata.org/pandas-docs/stable/api.html#resampling
+
+`Resampler` returned by `.resample()` .
+
+== Statistical computation
+
+[cols="m,d"]
+|===
+| df.*pct_change*(periods=1)                | Calculate percentage change
+| s1.*cov*(s2)                              | Covariance
+| df.*cov*()                                | Pairwise correlations among series
+| _min_periods_=..                          | Minimum number of observations required
+| s1.*corr*(s2, method="..")                | Methods "pearson", "kendall", "spearman"
+| df1.*corrwith*(df2)                       | Correlation between columns of same name
+| s.*rank*()                                | Ranking; ties are split; NaN excluded
+| _ascending_=True                          |
+| _method_="average"                        | "average", "min", "max", "first"
+| df.*rank*(axis=..)                        | Ranking
+| s.*autocorr*(_[lag]_)                     |
+| df.*groupby*("gr")["col"].rank(method="first") | Create group-rank values (to be joined)
+|===
+
+* pairwise covariance unbiased if missing values at random
+* estimate covariance matrix not guaranteed to be positive semi-definite (http://en.wikipedia.org/w/index.php?title=Estimation_of_covariance_matrices)
+
+== String operations
+
+* exclude NaN automatically
+* na=True parameter for .match, .contains, .startswith, .endswith to make NaN values as True
+* methods http://pandas.pydata.org/pandas-docs/version/0.15.2/text.html#method-summary
+* for low cardinality, use Categorical type and then do operations (but some limitations on operations)
+* most https://docs.python.org/3/library/stdtypes.html#text-sequence-type-str[Python string] operations work after `.str`
+
+[cols="m,d"]
+|===
+| .str.*repeat*(num_repeats)                | Repeat `num_repeats` times
+|===
+
+== Window functions
+http://pandas.pydata.org/pandas-docs/stable/api.html#window
+
+Can do fixed row number window or timedelta window (on index or column). `.expanding()` is window with infinite start. `.ewm()` is exponentially weighted mean/var/std/corr/cov.
+
+[cols="m,d"]
+|===
+| s.*rolling*(window=<num_rows>).*mean*()   | Rolling window; returns like-indexed object
+| s.rolling(*"<timedelta>"*).mean()         |
+| df.rolling(.., *on*=col)                  | Column to use for values instead of index
+| s.rolling(window=.., *center*=True)       | Output is from symmetric window
+| _min_periods_=..                          | Threshold on non-null data to require
+| _center_=False                            | whether to set labels at the center; otherwise right label used
+| *min*(), *max*(), *quantile*()            |
+| *sum*(), *count*()                        |
+| *mean*(), *median*()                      |
+| *std*(), *var*()                          |
+| *skew*(), *kurt*()                        |
+| *cov*(), *corr*()                         | Series/Series -> pair stats; DataFrame/Series -> each DF col to Series; DataFrame/DataFrame -> matching col names
+| *apply*(func)                             | Generic apply func on ndarray to give single values
+| s.*rolling*(window=.., win_type="boxcar").*sum*() | Weighting
+| s.*rolling*(.., win_type="..").*mean*()   | Weighting
+| s.*rolling*(.., win_type=[..]).*sum*()    | Custom weights; no normalization
+| s.*rolling*(..).*corr*(s2)                | Moving window; works on any combinations of types Series and DataFrame
+| s.*rolling*(..).*cov*(s2)                 | Moving window
+| df.*rolling*(..).*cov*(.., pairwise=True) | Yields Panel with moving-window covs
+| s.*rolling*(..).*agg*(npfunc)             | 
+| s.*rolling*(..).*agg*([func1, ..])        | Create multiple statistics; use function name for DataFrame column
+| s.*rolling*(..).*agg*({"name1":func1, ..})    | Create multiple statistics (DataFrame column name)
+| df.*rolling*(..).*agg*([..])              | Multiple statistics
+| df.*rolling*(..).*agg*({"col1":func1, ..})    | Different statistics to columns; func1 can be string name of windowed object
+| df.*rolling*(..).*agg*({"col1":[func11,..], ..}) | Multiple different statistics to columns
+| df.*expanding*().*mean*()                 | Infinite memory rolling window
+| df.*expanding*(min_periods=1, freq=None, center=False, axis=0) | Return Window sub-classed for particular operation
+| df.*ewm*(alpha=.., adjust=True).*mean*()  | Exponentially weighted (http://pandas.pydata.org/pandas-docs/stable/computation.html#exponentially-weighted-windows)
+| _span_=, com=, halflife=, alpha=          | Specifying factor by different methods
+| _ignore_na_=True                          | how intermediate NaN values affect result
+|===
+
+* replace `pd.rolling_*` etc.
+* obsolete options `freq=` and `how=` (use `.resample()` instead); use groupby like methods on rolling window instead
+* tab-completion for functions
+* win_types are boxcar, traing, .. (http://pandas.pydata.org/pandas-docs/stable/computation.html#rolling-windows)
+* some windows need parameter `s.*rolling*(window=.., win_type="gaussian").*mean*(std=0.1)` 
+* `*ewm*()` has methods mean, var, std, corr, cov
+
+== Pitfalls
+
+* NaN don't compare to equal (use df.*equals*(df2) instead)
+
+== Plotting
+
+[cols="m,d"]
+|===
+| colormap=..                               |
+| s.*plot*(kind="bar", color=[..])          |
+| label=".."                                | Label for legend
+| .plot.*area*(..)                          | Stacked by default. All columns must have same sign
+| .plot.*area*(stacked=False)               | Default alpha=0.5
+| .plot.*bar*(..)                           | On Series of DataFrames
+| .plot.*bar*(stacked=True)                 | Stacked
+| .plot.*barh*(..)                          |
+| .plot.*box*(..)                           |
+| .plot.*box*(by=<groups>)                  |
+| .plot.*box*(vert=False)                   |
+| .plot.*box*(return_type=..)               | Control return type (many options: dict, artists, ...)
+| .plot.*density*(..)                       |
+| .plot.*hist*(bins=..)                     |
+| .plot.*hist*(stacked=True)                | Stacked
+| .plot.*hist*(orientiation="horizontal")   |
+| .plot.*hist*(cumulative=True)             |
+| .plot.*hist*(by=<groups>)                 | Split into multiple by groups
+| .plot.*line*(..)                          |
+| s.plot.*pie*(..)                          | ValueError for negative values. Semi-circle if sum(vals)<1
+| df.plot.*pie*(y=<valcol>)                 |
+| df.plot.*pie*(subplots=True)              | Pie chart for each column
+| .plot.*pie*(legend=False)                 |
+| df.plot.pie(.., labels=.., colors=..)     | kwarg with "s" to conform to matplotlib
+| s.*hist*([by, ax, grid,...])              |
+| plot.*kde*(..)                            |
+| df.plot.*scatter*(x=.., y=.., c=<colors>) |
+| ax = df1.plot.scatter(..) +
+  df2.plot.scatter(.., ax=ax)               | Multiple groups
+| df.*hist*(data)                           |
+| df.*boxplot*(..)                          |
+| df.plot.*hexbin*(x=.., y=.., gridsize=100)    |
+| df.plot.*hexbin*(.., C=<vals>, reduce_C_function=..) | Alternative aggregation
+| .plot(table=True)                         | Add table of values below
+| s.plot(secondary_y=True)                  | Use secondary (rescaled) axis
+| df.plot(secondary_y=["col1",..])          |
+| _mark_right_=False                        | If dont want "(right)" comment in legend
+| s.plot(x_compat=True)                     | If time-series tick frequency goes wrong in inference
+| with pd.plot_params.use("x_compat", True): +
+    s1.plot(color=..) +
+    s2.plot(color=..)                       | Multiple time-series plots with alternative tick inference
+| df.plot(subplots=True)                    | Plot each column in separate plot
+| df.plot(subplots=True, layout=(<rows>, <cols>), sharedx=False) | `-1` for automatic
+| _ax_=[..,..]                              | Pass in multiple pre-configured axis
+|===
+
+All methods also accept matplotlib kwargs. Also `legend=False`, `logy=True`, `logx=True`, `loglog=True`, `figsize=(..,..)`.
+
+For NaNs:
+
+* leave gaps: Line
+* fill zeros: Stacked Line, Bar, Area, Pie
+* drop NaNs: scatter, histogram, box, KDE, hexbin
+
+Plotting with error-bars: http://pandas.pydata.org/pandas-docs/stable/visualization.html#plotting-with-error-bars
+
+Colormap: Use `colormap=..` and pandas will evenly space colors depending on number of columns.
+Unfortunately, default map hard-coded in `_get_stand_colors` (https://stackoverflow.com/questions/38761513/pandas-dataframe-plot-permanently-change-default-colormap[Stackoverflow]), but you could wrap `pandas.tools.plotting.plot_frame`
+
+[cols="m,d"]
+|===
+| pandas.tools.plotting.                    | Complex plotting tools
+| *scatter_matrix*(df)                      |
+| *andrews_curves*(df, <groupvar>)          | Sample attributes as Fourier coef
+| *parallel_coordinates*(df, <groupvar>)    |
+| *lag_plot*(s)                             | For time series; One value vs a lagged value
+| *autocorrelation_plot*(s)                 |
+| *bootstrap_plot*(df, size=.., samples=..) | Repeat `size` times by computing mean/median/midrange for samples of size `samples`
+| *radviz*(df, <groupvar>)                  | Sprint tension minimization in 2D with dimensions in different corners
+| *table*(..)                               | Helper function to add tables in plots (e.g. for statistics)
+|===
+
+Radviz: Each point is attribute. Each point attached to these by stiff spring.
+
+== General
+
+* all data structures value-mutable (values can be changed)
+* not always size mutable
+* axis in ["index", "columns"]
+* Derived from NDFrames
+* install bottleneck (cython for NaN values) and numexpr (smart chunking, caching, multiple cores)
+* Many operations faster with prealigned data (indexing)
+* Series is subclass of NDFrame
+* default column/index order is sorted unless specified
+* without index, a *range*(N) is generated
+* ndarray can be modified in-place only if all columns same dtype
+* Index subclasses `PandasObject`
+
+=== Options
+http://pandas.pydata.org/pandas-docs/version/0.15.2/options.html
+http://pandas.pydata.org/pandas-docs/version/0.15.2/options.html#list-of-options
+
+[cols="m,d"]
+|===
+| pd.*describe_option*(name)                | with no arg show all
+| pd.*get_option*(name)                     |
+| pd.*set_option*(name, val)                |
+| pd.*reset_option*(name)                   | can deal with multiple regex matches
+| with pd.*option_context*(name1, val1, name2, ..): | context manager
+|===
+
+* methods use regex search, therefore can pass substirng
+
+== Numpy 
+
+[cols="m,d"]
+|===
+| np.*concatenate*((a1, a2, ..), axis=0)    |
+| np.*vstack*((a1, a2,..))                  | stacks 1D rows or concatenates 2D arrays
+| np.*split*(arr, indices, axis=0)          | split at indices
+| np.*vsplit*(..)                           | like split axis=0
+| np.*append*(arr, [val1, ..], axis=None)   | append values; must be same dim
+|===
+
+== Missing values
+
+[cols="m,d"]
+|===
+| s.*isnull*()                              |
+| s.*notnull*()                             |
+| df.*fillna*(val)                          |
+| df.*fillna*(method="ffill")               | Filling methods (reindexing; ffill, bfill)
+| _limit_=1                                 | Only up to certain number
+| .ffill() +
+  .bfill()                                  | same as `.fillna(method="ffill")`
+| fillna(df2)                               | Fill by alignable DataFrame; e.g. fill mean
+| .dropna()                                 | Exclude with missing values
+| .interpolate()                            | Interpolate linearly values
+| _method_=                                 | Can by SciPy 1-d interpolation method name (LINK univariate interpolation)
+| _method_="time"                           | For time index aware
+| _method_="values"                         | For float index aware
+| _limit_=..                                | Keep NaN that are too far from known values
+| s.*reindex*(new_idx).interpolate(method=..)   | Create new values
+| s.*isna*() +
+  s.*notna*()                               | Test for NaN, None
+|===
+
+* currently np.nan used; not liked masked approach from scikits.timeseries
+* need better support from Numpy for better types; now casting int->float, bool->object if missing encountered
+* np.nan!=np.nan, but None==None
+* Pandas treats None like NaN
+* NaT sentinel value for np.datetime64[ns]
+* assign to None to set missing (might be converted to np.nan)
+* total result NaN if all values NaN
+* cumsum ignores NaN value, but preserves their spot
+* interpolation methods:
+** quadratic: changing rates
+** pchip: cumulative distributions
+** akima: smoothing
+  
+== Time series
+
+[cols="m,d"]
+|===
+| pd.Series(.., index=pd.date_range(start, periods=.., freq=..) |
+| ts.asfreq("..", method="pad")             | Change frequency; uses date_range and reindex
+| ts.resample("..").mean()                  | Like groupby
+| closed = "right"                          | Which end of interval is closed (when downsampling)
+| label = "left"                            | Where labels
+| ts.resample(..).ffill(limit=2)            | Upsampling with interpolation
+| Period("2011-11")                         | Frequency "M" infered
+| ts.to_period()                            | Index to period
+| ps.to_timestamp()                         | Index from period to timestamp
+| pd.to_datetime(..)                        | Parse into datetime suitable for Pandas
+| pd.to_datetime(pd.Series([.., ..]))       | Creates series of Datetime64
+| pd.to_datetime([.., ..])                  | Creates DatetimeIndex
+| pd.to_datetime(.., format="%Y%m%d")       | Can speed up!
+| pd.to_datetime(df)                        | DataFrame with "year", "month", "day" (or more) will be converted
+| pd.to_datetime([..], unit="s")            |
+| ts.loc["01/01/2011"]                      | Parses to dates (`.loc` to avoid confusion)
+| ts.loc[datetime(..)]                      |
+| ts["01/01/2011":"10/01/2011"]             | Endpoints included
+| t + DateOffset(months=4)                  | Similar arguments as `dateutil.relativedelta`
+| n * DateOffset(..)                        |
+| offset.rollforward(d) +
+  offset.rollback(d)                        | Move period
+| ts.shift(1)                               | Shift time series; keeps Index; introduces NaN
+| ts.tshift(1)                              | Modifies index
+| pd.to_pydatetime(tsidx)                   | Convert to Python native
+| dtidx.astype(int)                         | Convert to timestamp
+|===
+
+* careful, that `dayfirst=True` is not strict and will silently be inactive if the data format is not allowing it
+* attributes of timestamps: http://pandas.pydata.org/pandas-docs/stable/timeseries.html#time-date-components
+* uses `np.datetime64` and `np.timedelta64` (saved as nano-seconds)
+* `Timestamp` (from `Timestamp`or `to_datetime`) as Index `DatetimeIndex` (from `to_datetime`, `date_range`, `DatetimeIndex`)
+* `Period` (from `Period`) as Index `PeriodIndex` (from `period_range`, `PeriodIndex`)
+* period is a regular: http://pandas.pydata.org/pandas-docs/stable/timeseries.html#time-span-representation
+* pd.Timestamp.min in 1677, pd.Timestamp.max in 2262; but Period can be outside https://pandas.pydata.org/pandas-docs/stable/timeseries.html#timeseries-oob[Timeseries Out-of-bounds]
+* optimzations: `snap`, `shift`, align, `asof`
+* better sorted, or some methods will give wrong results
+* regular time periods translated to `DateOffset` object (http://pandas.pydata.org/pandas-docs/stable/timeseries.html#dateoffset-objects)
+* you can subclass `DateOffset` and define custom date increment logic
+* BusinessDay, BusinessHour, AbstractHolidayCalendar supported
+* resample cookbook: http://pandas.pydata.org/pandas-docs/stable/cookbook.html#cookbook-resample
+* time zone: http://pandas.pydata.org/pandas-docs/stable/timeseries.html#time-zone-handling
+
+* Time operations usually work on
+** http://pandas.pydata.org/pandas-docs/stable/api.html#datetimeindex[`DatetimeIndex`]
+** http://pandas.pydata.org/pandas-docs/stable/api.html#datetimelike-properties[`Series.dt` attribute]
+** http://pandas.pydata.org/pandas-docs/stable/api.html#timestamp[`pd.Timestamp`]
+** http://pandas.pydata.org/pandas-docs/stable/api.html#periodindex[`PeriodIndex`]
+** http://pandas.pydata.org/pandas-docs/stable/api.html#period[Period]
+** `DateOffset` is a regular interval size https://pandas.pydata.org/pandas-docs/stable/timeseries.html#dateoffset-objects[Ref]
+* Frequencies from `pandas/tseries/frequencies.py`:
+** year-end `Y`, year-start `YS`, quarter-end `Q`, week `W`
+** month-end `M`, month-start `MS`, day `D`, hour `H`, second `S`, minute `min`
+** millisecond `ms`, microsecond `us`, nanosecond `N`
+** and https://pandas.pydata.org/pandas-docs/stable/timeseries.html#offset-aliases[more]
+** and https://pandas.pydata.org/pandas-docs/stable/timeseries.html#anchored-offsets[anchored offsets]
+
+[cols="m,d"]
+|===
+| pd.*date_range*(..)                       | Regular frequency (default daily) date index
+| pd.*bdate_range*(..)                      | Business day date index (also custom holiday masks possible)
+| pd.*to_timedelta*(..)                     |
+| pd.*period_range*(..)                     |
+| pd.*timedelta_range*(..)                  |
+| pd.*infer_freq*(..)                       |
+| s.*asfreq*(freq)                          |
+| s.*asof*(_where_)                         | Return last good non-NA value
+| s.*shift*(period=1, freq=None)            |
+| s.*tz_convert*(_tz_)                      |
+| s.*tz_localize*(_tz_)                     |
+| dt.*weekday*                              | Monday=0, Sunday=6 (same as `dt.dayofweek`)
+| dt.*weekday_name*                         | e.g. `s"Friday"`
+| dt.*is_month_start*                       |
+| dt.*is_leap_year*                         |
+| dt.*tz*                                   |
+| dt.*freq*                                 |
+| dt.*days_in_month*                        |
+| dt.*freq*                                 | Get/set frequency
+| dt.*to_period*()                          |
+| dt.*to_pydatetime*()                      |
+| dt.*normalize*()                          |
+| dt.*round*()                              |
+| dt.*floor*() +
+  dt.*ceil*()                               |
+| dt.*components*                           | Return (days, hours, minutes, seconds, milliseconds, microseconds, nanoseconds)
+| dt.*to_pytimedelta*()                     |
+| dt.*total_seconds*()                      |
+| dt.*date*                                 | Return Numpy array of `datetime.date`
+| dt.*time*                                 | Return Numpy array of `datetime.times`
+| *inferred_freq*                           |
+| periodindex.*start_time*                  |
+| periodindex.*end_time*                    |
+|===
+
+* DatetimeIndex optimizations https://pandas.pydata.org/pandas-docs/stable/timeseries.html#indexing[Ref]:
+** Union and overlapping fast
+** Fast shifting
+** year/month/.. access
+** Regularization `snap` and fast `asof` function
+
+== Visualization
+
+=== Basic plotting
+
+[cols="m,d"]
+|===
+| df.*plot*()                               | Plot all columns with labels; basic wrapper for `plt.plot()`
+| df.*plot*(x="col1", y="col2")             | One col vs other
+| _kind_=..                                 | `bar, barh, hist, box, kde, area, scatter, hexbin, pie`
+| df.*plot*()                               |
+| _xerr_=.. +
+  yerr=..                                   | Error bars; column name, raw values or {"col":[..],..}
+| _table_=..                                | Create additional table; param True, DataFrame, Series
+| plot.*bar*                                | Easier to see plot arguments
+| plot.*bar*(stacked=True)                  | 
+| plot.*hist*(stacked=True)                 |
+| _orientation_="horizontal"                |
+| _cumulative_=True                         |
+| _by_=[..]                                 | group(?)
+| plot.*box*()                              |
+| _color_=..                                |
+| _color_={"boxes":.., "whiskers":.., "medians":.., "caps":..} |
+| _sym_=..                                  | Flier style
+| _by_=[..]                                 | Stratify to these grous
+| _column_=[..]                             | Columns to plot
+| df.*groupby*(..).boxplot()                |
+| plot.*area*()                             | Stacked area plot for all positive (or all negative) values
+| plot.*area*(stacked=False)                | Plot unstacked with alpha=0.5
+| plot.*scatter*(x=.., y=..)                |
+| _c_=..                                    | Colors
+| _s_=..                                    | Sizes
+| plot.*hexbin*(x=.., y=.., gridsize=100)   |
+| reduce_C_function =..                     | Alternative aggregation
+| plot.*pie*(figsize=(10,10))               |
+| plot.*pie*(y=..)                          |
+| plot.*pie*(subplots=True)                 |
+| _labels_=..                               |
+| _colors_=..                               |
+| plot.*kde*()                              |
+| df.*hist*()                               | Plots hist for each column
+| df.*boxplot*()                            | (old) shortcut?
+|===
+
+[cols="m,d"]
+|===
+| _legend_=False                            |
+| _logx_=True +
+  logy=True +
+  loglog=True                               |
+| _secondary_y_=True                        | Use secondary (right) axis for this plot
+| _mark_right_=False                        | Don't mark secondary axis in legend
+| right_ax.*set_ylabel*("..")               |
+| _x_compat_=True                           | ?
+| _layout_=(rows, cols)                     | Use `-1` to automatically recalc
+| ax.*get_xaxis*().set_visible(False)       | Hide axis
+| _colormap_=..                             |
+|===
+
+* `np.random` seeded with 123456
+* `gcf().autofmt_xdate()` called for dates
+* pass `return_type` to boxplot for more complex colorization
+* return type:
+** when `subplots=False` and `by` is None
+*** if return_type "dict", then mpl Lines for boxes etc. are returned
+*** if return_type "axes", then mpl Axes returned
+*** if return_type "both", namedtuple Axis and Lines returned
+** when `subplots=True` and `by` is set:
+*** dict or `return_type` where keys are columns of dataframe
+* use `ax=..` to plot multiple scatter plots
+* missing data:
+** gaps: line
+** fill zero: stacked-line, bar, area, pie
+** drop: scatter, hist, box, kde, hexbin
+* asymmetric errorbars possible when passing raw values (extra dimension)
+  
+=== Plotting tools
+
+`from pandas.tools.plotting import *`
+
+[cols="m,d"]
+|===
+| scatter_matrix(df)                        |
+| _diagonal_="kde"                          |
+| andrews_curves(df, class_var)             | Use attr. of sample as coef in Fourier; color by class
+| parallel_coordinates(df, class_var)       |
+| lag_plot(s)                               |
+| autocorrelation_plot(s)                   |
+| bootstrap_plot(s, size=.., samples=..)    | Recalc mean/median/midrange on samples and show distribution
+| radviz(df, class_var)                     | Attributes "corners" on unit circle; spring tension minimization; spring stiffness by attr. value
+| table(ax, df, loc=.., colWidths=[..])     | Create (auxiliary) table
+|===
+
+=== Style
+
+http://pandas.pydata.org/pandas-docs/stable/api.html#resampling
+
+Use `DataFrame.style` to apply conditional formatting for Jupyter notebook. Returns `pandas.Styler` object for CSS.
+
+* take scalars, `DataFrame`, `Series`
+* `Styler.applymap` (elementwise) or `Styler.apply(.., axis=0/1/None)` (column/row/table-wise)
+* return like-indexed `DataFrame` or `Series` with CSS `attribute:value` string
+
+[cols="m,d"]
+|===
+| df.*style*                                | Show DataFrame
+| style.*render*()                          | Show HTML
+| style.*apply*(func, **args)               |
+| style.*applymap*(func, **args)            |
+| _subset_=..                               | Subset application by Slice (any valid `.loc`)
+| style.*format*("{..}")                    | Format cell values to string; Can also use callable function
+| style.*format*({"col":"{..}",..})         | Format column values to string
+| style.*highlight_null*(null_color=..)     |
+| *background_gradient*(cmap=..)            | http://pandas.pydata.org/pandas-docs/stable/generated/pandas.io.formats.style.Styler.background_gradient.html#pandas.io.formats.style.Styler.background_gradient[Ref]
+| _low_=.., _high_=..                       |
+| style.*bar*(color=..)                     | Bar chart
+| style.*highlight_min*() +
+  style.*highlight_max*()                   |
+| style.*set_properties*(**props)           | If style does not depend on value
+| style.*use*(df1.style.export())           | Re-use style
+| style.*set_precision*(..)                 |
+| df.*set_caption*("..")                    | Add new caption
+| style.*set_table_style*(..)               |
+| style.*clear*()                           | Reset styler http://pandas.pydata.org/pandas-docs/stable/generated/pandas.io.formats.style.Styler.clear.html#pandas.io.formats.style.Styler.clear[Ref]
+|===
+
+* you can also do row highlight on hover (http://pandas.pydata.org/pandas-docs/stable/style.html#Table-Styles)
+* currently only for values, not columns or labels
+
+== Sparse data
+
+* some particular value left out (default NA)
+* `SparseIndex` tracks; saved as blocks and length (or alternatively as "integer" locations of non-NA)
+
+[cols="m,d"]
+|===
+| s.*to_sparse*(fill_value=..)              |
+| s.*to_dense*()                            |
+| pd.*SparseArray*()                        |
+| pd.*SparkList*()                          |
+| s.*to_coo*()                              | Transform to `scipy.sparse.coo_matrix`
+| s.*from_coo*(..)                          | Read from `scipy.sparse.coo_matrix`
+| *ftypes*                                  | Return sparse/dense, dtype infos
+| *get_ftype_counts*                        |
+|===
+
+
+== Performance
+
+* http://pandas.pydata.org/pandas-docs/stable/enhancingperf.html (Cython, Numa)
+* `pd.eval()` on whole DataFrames (through `numexpr`) for larger 10,000 rows
+
+== Other
+
+* http://pandas.pydata.org/pandas-docs/stable/gotchas.html#byte-ordering-issues
+* `pd.test()` to run tests (needs `nose`); but takes long and still has failures
+
+
+[cols="m,d"]
+|===
+| s.*between*(left, right, inclusive=True)  |
+| s.*clip*(lower=None, upper=None)          |
+| s.*clip_lower*(lower=None, upper=None) +
+  s.*clip_upper*(lower=None, upper=None)    | 
+| s.*is_unique*                             |
+| s.*diff*(_periods=1_)                     | 1st discrete difference
+| s.*last*(offset)                          | e.g. "5M" for 5 months
+| s.*truncate*(before=None, after=None)     | Trunacte sorted data before and/or after some date
+| s.*unique*()                              | Return unique values; includes NA values; faster than `np.unique()`
+| s.*argsort*()                             |
+| s.*sortlevel*()                           |
+| s.*first_valid_index*()                   |
+| s.*last_valid_index*()                    |
+| str.*capitalize*()                        |
+| df.*add_prefix*(..) +
+  df.*add_suffix*(..)                       |
+| Index.*is_unique*                         |
+| Index.*has_duplicates*                    |
+| Index.*is_all_dates*                      |
+| Index.*tolist*()                          |
+| Index.*to_series*()                       |
+| Index.*                                   | Many other normal values
+| DatetimeIndex.*snap*([freq])              | Snap to closest frequency
+| DatetimeIndex.*floor*(freq) +
+  DatetimeIndex.*ceil*(freq) | 
+| DatetimeIndex.*normalize*()               | Return with times to midnight
+| DatetimeIndex.*to_pydatetime*()           | Return ndarry of datetime.datetime
+| GroupBy.*ohlc*()                          |
+| s.str[i]                                  | Also select from list by index
+| df.*resample*("7d").sum()                 | Resample (http://pandas.pydata.org/pandas-docs/stable/timeseries.html#offset-aliases)
+|===
+
+[cols="m,d"]
+|===
+| df.div(df.sum(axis=1),axis=0)             | normalize rows
+| df.div(df.sum(axis=0),axis=1)             | normalize columns
+|===
+
+
+Delete duplicate column names: maybe select by dd.iloc[:, ...]
+
+== Speed
+
+* list index access faster than any .iloc access (even when slices); numpy fast but normal Python still faster
+* df._data.blocks: low-level info on how Pandas groups the data into numpy blocks
+* df._data.is_consolidated(): tells if numpy blocks are gathered
+* groupby: apply(np.mean) much slower than aggregate(np.mean); even transform(func) faster than .apply() -> apply() should be last choice on groupby
+* hdfs has a lot of overhead if you store small objects
+* multiindex on rows: -> .loc[(1,4),:] vs .loc[(1,):4]; tuples mean parts of same key
+
+== References
+
+* http://nbviewer.jupyter.org/github/justmarkham/pandas-videos/blob/master/pandas.ipynb[Example notebook Markham]
+
+== UNSORTED
+
+[cols="m,d"]
+|===
+| df.*pop*(col)                             | Return and drop columns from frames (`KeyError` if not found)
+| *is_monotonic*                            | Series, Index
+| *is_monotonic_increasing* +
+  *is_monotonic_decreaseing*                |
+| index.*repeat*(repeats)                   | Repeat elements of indexs
+| index.*identical*(other)                  | Check also other comparable attributes http://pandas.pydata.org/pandas-docs/stable/generated/pandas.Index.identical.html#pandas.Index.identical[Ref]
+| index.*inferred_type*                     |
+| dateindex.*inferred_freq*                 |
+| index.*putmask*(mask, val)                | http://pandas.pydata.org/pandas-docs/stable/generated/pandas.Index.putmask.html#pandas.Index.putmask[Ref]
+| index.*get_indexer*(target)               |
+| index.*get_indexer_non_unique*(target)    |
+| index.*get_loc*(key)                      | Get integer location, slice or boolean mask for requested label http://pandas.pydata.org/pandas-docs/stable/generated/pandas.Index.get_loc.html#pandas.Index.get_loc[Ref]
+| *argmax*()                                | Numpy array of max argument indexer
+| index.*slice_indexer*(..)                 | For ordered index http://pandas.pydata.org/pandas-docs/stable/generated/pandas.Index.slice_indexer.html#pandas.Index.slice_indexer[Ref]
+| index.*slice_locs*(..)                    | Compute slice http://pandas.pydata.org/pandas-docs/stable/generated/pandas.Index.slice_locs.html#pandas.Index.slice_locs[Ref]
+| ts.*resolution*                           | equal `datetime.timedelta(0, 0, 1)`
+| ts.*ctime*()                              | ctime string format; `pd.Timestamp(1e18).ctime() = "Sun Sep  9 01:46:40 2001"`
+| pd.Timestamp.*fromtimestamp*()            |
+| pd.Timestamp.*utcfromtimestamp*()         |
+| pd.Timestamp.*utcnow*()                   |
+| pd.Timestamp.*today*()                    | Current time in local timezone http://pandas.pydata.org/pandas-docs/stable/generated/pandas.Timestamp.today.html#pandas.Timestamp.today[Ref]
+| ts.*to_datetime64*()                      | Return `numpy.datetime64` with nanosecond precision
+| ts.*tzname*()                             |
+| year, weeknum, weekday = ts.*isocalendar*()   |
+| ts.*isoformat*()                          | ISO string format; `2001-09-09T01:46:40`
+| ts.*isoweekday*()                         | Monday=1, Sunday=7
+| ts.*today*()
+| sparsedf.*to_coo*()                       | Return as `scipy.sparse.spmatrix` http://pandas.pydata.org/pandas-docs/stable/generated/pandas.SparseDataFrame.to_coo.html#pandas.SparseDataFrame.to_coo[Ref]
+| ts.*strptime*()                           | http://pandas.pydata.org/pandas-docs/stable/generated/pandas.Timestamp.strptime.html#pandas.Timestamp.strptime[Ref]
+| DatetimeIndex.*indexer_at_time*(time)         | Select values which are exactly at this time(?) http://pandas.pydata.org/pandas-docs/stable/generated/pandas.DatetimeIndex.indexer_at_time.html#pandas.DatetimeIndex.indexer_at_time[Ref]
+| DatetimeIndex.*indexer_between_time*(start, end)  | Select values between those day times http://pandas.pydata.org/pandas-docs/stable/generated/pandas.DatetimeIndex.indexer_between_time.html#pandas.DatetimeIndex.indexer_between_time[Ref]
+| dateindex.*to_perioddelta*(freq)          | http://pandas.pydata.org/pandas-docs/stable/generated/pandas.DatetimeIndex.to_perioddelta.html#pandas.DatetimeIndex.to_perioddelta[Ref]
+| timedelta.*to_timedelta64*()              | Return `numpy.timedelta64` with nanosecond precision
+| periodindex.*qyear*                       |
+| pd.api.types.*union_categoricals*([cats1, cats2, ..]) | http://pandas.pydata.org/pandas-docs/stable/generated/pandas.api.types.union_categoricals.html#pandas.api.types.union_categoricals[Ref]
+|===
+
+* http://pandas.pydata.org/pandas-docs/stable/api.html#interval[pd.Interval]
+* pd.read_csv: parse_dates much faster than converters np.datetime; slightly faster with date_parser=ciso8601.parse_datetime
+

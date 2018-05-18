@@ -1,0 +1,111 @@
+* exponential distribution:
+  * lambda*exp(-lambda*x)
+  * usually waiting times
+  * only this continuous is "memory-less" (always as good as new)
+  * convenient maths
+  * constant hazard function
+* weibull:
+  * hazard function is power function
+  
+  regression:
+  * performance is combination of luck and skill
+  * pure luck might average out false effects
+  * to get coef in y=a+bx+eps -> take E(.) and Cov(x,.) on both sides
+  * residuals orthogonal to columns
+  * always plot residuals
+  * Var(y)=Var(Xb)+Var(e)
+  * R^2=Var(Xb)/Var/y)=sum (yhat_i-yavg)^2/ sum (y_i-yavg)^2
+  * adding more predictors can only increase R^2 - but not useful -> needs parameter penalty
+  * does not validate model (no generalization)
+  
+  regression paradox:
+  * fit y=a*x; x,y standardized -> no intercept
+  -> a is correlation; symmetric
+  -> y=r*x, x=r*y!
+  -> is also regression towards mean
+  
+  Normal distr:
+  * conditionals E(y|x) linear in x
+  
+  Gauss Markov theorem:
+  * y=X*b+eps
+  * errors mean 0 and same errors sigma^2
+  -> betahat=(X'X)^-1X' y (Best [] Linear [linear combination of y] Unbiased [on avg correct] Estimator - BLUE)
+  -> for normal errors als MLE
+  
+  Hat matrix:
+  H=X(X'X)^-1X'
+  
+  Logistic regression:
+  * simple interpretation: if you increase variable x_j but one unit -> multiply odds by exp(b_j) [multiplicative], makes more sense
+  
+  Stein's paradox:
+  * y_i ~ N(theta_i,1); completely different independent problems; k>=3
+  * would estimate them independently; but another estimator does better in sum of squared error loss
+  * thetahat_j = (1-(k-2)/sum(y_i^2))y_i
+  * shrink them towards mean
+  * combine even though independent problems!
+  
+  Trellis plots:
+  * many small plots combined by same scale (rescale diff variables)
+  
+  Parallel set:
+  * disjoined sets
+  * connecting categories
+  
+  Parallel coordinates with 2 vars: bump charts / slope graphs
+  
+  Glyph: do data points with encoding like starmap
+  Usually bar charts always better
+  
+  PCA:
+  * normalize
+  * find eigenvectors of covariance matrix S=X^TX/N
+  * precision issues possible with this naive calc
+  -> better SVD
+  * X=UDV' -> X'X=VD^2V' -> V are eigenvectors
+  * Screeplot: variance explained
+  * not clear which kind of normalization (sphered data, 0..1 norm, whiten [rotation and scaling such that indentity covariance])
+  * but can have negative numbers -> not physical; gard to interpret
+  
+  Pseudoinverse: X^+=VD^-1U'
+  
+  Eigenfaces: 50 for 90% variance
+  
+  Multidimensional scaling:
+  * when matrix of distances known
+  -> convert into matrix with coordinates of points
+  * with linear methods
+  * finally do PCA
+  
+  Nonlinear mapping to know:
+  * IsoMap
+  * Locally Linear Embeddings
+  
+  Discriminative: model P(y|x)
+  Generative: model P(x,y)=P(x)P(y|x)=P(y)P(x|y)
+  
+  Bayesian:
+  * everything is random variable
+  * all parameters too
+  * P(theta|y)
+  * usually hopeless integrals: P(theta|y)=P(y|theta)P(theta) / sum(P(y|theta')P(theta'))
+  * more and more papers (due to fast computation)
+  * MCMC: simulate in computer instead of integrals
+  * MLE would be problematic you if dont check posterior distribution
+  * decide:
+    * pure Bayesian: provide full posterior
+    * or use posterior mode
+  * non-informative priors (most uncertainty)
+    
+  Frequentist:
+  * parameters unknown but fixed constant
+  * P(y|theta) [known given unknown seems unnatural]
+  * look at hypothetical alternative in data (y) that did not occur
+  * need to be able to repeat experiments
+  * theorem: every frequentist approach (that isn't strictly dominated by some other approach) is equivalent to some Bayesian formulation
+  * MLE is not most likely value
+  * cannot say what distribution on parameters is
+  * results have no Bayesian statement (e.g. probabilities for a range of variables) -> frequentist probability mean "under hypothetical repetition)
+  
+  posterior = likelihood * prior

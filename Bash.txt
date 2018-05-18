@@ -1,0 +1,39 @@
+Ctrl A; Ctrl E  # Anfang, Ende of line
+Alt T  # Transpose last two words
+Ctrl W # Cut word before cursor
+Ctrl Y
+Ctrl L # clear screen
+Ctrl _ # undo
+Ctrl X # store & end macro
+Ctrl X e # execute macro
+
+Ctrl U # clear to beg. of line
+Ctrl K # clear to end of line
+Alt F/B # cursor word left/right
+Ctrl C # cancel command (?)
+Ctrl Y # recall deleted
+
+!-1 # exec last command
+!abc # exec command starting with abc (use ? for wildcards; but then also need end ?)
+
+!!:$  # last arg of last command
+!!:2  # second word of last command; can also use ranges x-y, -y, x*, x- (without last word)
+* = 1-$; - = 0-
+can leave out ":" if designators startings with ^$*-%
+!!:h # remove trailing path, leave rest
+!!:s/old/new/ # substitute, any delim instead of / possible; "&" to refer to old value
+
+xx{a,b,c}  # expanded to xxa xxb xxc
+for i in {a..z}
+for i in {1.10}
+
+variables:
+$OLDPWD
+cd -  # cd $OLDPWD
+$RANDOM
+
+. <file>   # include in bash script
+
+<cmd> | while read <var1> <var2> ..; do
+
+$@  # expand position arguments

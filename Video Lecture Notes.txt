@@ -1,0 +1,737 @@
+Airbnb Tech Talk: Randomness and Fraud
+======================================
+* https://www.youtube.com/watch?list=PLECD54527EBCE4021&v=rsiKd-zdb4g
+* distribution of user agents: (#distinct user agents)/(#distinct IPs)
+  * fraudster forget to randomize user agents when doing attacks by different IPs
+* brushfire:
+  * need better categorical variable treatment (not just dummy coding)
+  * need more customization (e.g. branch split)
+  * scala, scalding
+  * modular, customizable
+* need customization for unbalanced -> class sensitive adjusted (want more improvement on left of ROC)
+* otherwise split greedily moves up ROC curve
+* (odd fraud)*(cost ratio)*(recall/fpr)>1
+* if compare to first model: already some bias -> no idea what would happen if prev model weren't present
+* introduce randomness in action policy:
+  * soft threshold on score (-> exploration)
+  * weight average payoff by 1/probability
+  
+Understanding memory management in Spark
+========================================
+https://www.youtube.com/watch?v=dTR30Fy02Yo
+
+* container memory = JVM mem + memoryOverhead
+* OOM
+1) boost spark.yarn.executor.memoryOverhead? (mem other than JVM); e.g. Pyspark
+-> but may not be mem efficient (wastage)
+2) reduce side of shuffle (Java NIO channel buffers)
+-> fewer concurrent tasks that do shuffle? -> reduce number of executor-cores
+-> but now less CPU efficiency
+3) JVM = Heap (young + old) + Offheap (direct byte buffers + JVM internal)
+-> maybe Heap/OldGen filling up
+-> more aggressive GC?!
+--conf "spark.executor.extrJavaOptions=-XX:OldSize=100m -XX:MaxNewSize=100m"
+-> but degrade performance periodically by GC
+4) Exploit structure in data with data frames
+--class SortByKeyDF
+
+Experiment k-Means, sortByKey, PageRank:
+* executor memory:
+  * 1G fails
+  * 2G slow/variable (due to task failure)
+  * 4G fast (data fits in executor memory)
+  * 6G fast (but slightly slower; GC slightly higher)
+* spark.executor.memory:
+  * new Unified in 1.6; more dynamic pools
+  * cache on heap or off heap(Tachyon)?
+  * serialize?
+  * provision for data unrolling?
+  * try sortByKey vs kMeans (different storage usage; storage vs execution)
+  -> sortByKey good with unified
+  -> kMean with unified: executors OOM while receiving shuffle blocks; legacy fixed setting would be more reliable (reduce to 0.6)
+  => legacy memory might be better when OOM failures
+  * serialization always better due to better memory footprint
+  => but PageRank may be bad for serialized data
+  * execution management: Java or Tungsten?
+* JVM level mem mgmt (GC!):
+  * pool size, frequency, number of threads, ...
+  * recommended: JVM OldGen at least as big as RDD size
+
+Winning Data Science
+====================
+https://www.youtube.com/watch?v=ClAZQI_B4t8
+
+* Categorical: weight-of-evidence, TFIDF for text
+* timeseries: FFT, MFCC, ERP (EEG)
+* numerical to categorical: train RF/GBT and use leaf encoding (kaggle-2014 criteo)
+* Keras, Lasagne, MXNet
+* linear regression from CV score to leaderboard score -> don't include models which are too off
+* ensemble: finish with XGB, LR
+
+TensorFrames
+============
+https://www.youtube.com/watch?v=08mrnJxcIWw
+
+* with Spark: TensorFrames reduce much of the overhead of serializing
+* later improvement: remove Java object with direct write-through, columnar storage
+
+RDD, Dataframes, Datasets
+=========================
+https://www.youtube.com/watch?v=pZQsDloGB4w
+
+* filter more efficient than reduce since no network traffic (-> do filter first)
+* optimizer can for example push filter down a join
+* Row isn't typesafe since extends Serializable
+* Datasets are typed
+  => use Tungsten fast in-mem encoding, instead of JVM objects
+  * can use some more functions (e.g. count() instead of custom made .size function)
+  * use less memory; Spark understands data
+  * custom code generation (no serializing)
+  * limitation: currently changing API, some aggregators missing (sum, sortBy)
+
+CostCla
+=======
+https://www.youtube.com/watch?v=UUVRdRpPhJU
+* cost-sensitive classification
+
+Applied time series econometrics in Python and R
+================================================
+https://www.youtube.com/watch?v=tJ-O3hk1vRw
+https://github.com/silicon-valley-data-science/pydata-sf-2016-arima-tutorial
+
+* international-airline-passengers.csv popular data set, and others...
+* (weak) stationarity
+* (partial) autocorr
+* autocorr: only when fixed mean and variance
+* sm.graphics.tsa.plot_acf(..)
+* partial autocorr: conditioned on smaller-lag autocorr
+* omega_t: random noise
+* B: backward shift operator
+* integrated of order d if d-th difference is white noise
+* Box-Jenkins approach: difference enough times to make it stationary
+* determine degree of differences
+* ARMA(p,q): p if ACF has cutoff, q if PACF has cutoff; (otherwise 0)
+* theoretical autocorr functions known for these models
+* ACF similar to PACF of moving average and vice versa
+* arima=sm.tsa.SARIMAX(.., order=(.,.,.))
+  arima.fit()
+  arima.summary()
+* AIC, BIC: insample fit
+* error should be white noise if model correct -> see last box of summary (Ljung-Box, Jarque-Bera,...)
+* choose methods by lowest BIC/AIC?
+* arima.plot_diagnostics(figsize=(..))
+* also out-of-sample errors
+* sometimes transform to stabilize variance (e.g. log)
+* for extra variables would need prediction of explanatory variables as well!
+* seasonal arima model:
+  * purely seasonal: backshift op B multiplicative of order <period> (e.g. B^12)
+  * SARIMA(.,.,.,12)
+  * (p,d,q)x(P,D,Q); new parameters for seasonal components
+  
+* most tests on residuals
+* choose ARIMA, SARIMA, ARIMAX (external vars), ...
+* check for unit root stationarity -> differencing
+* find orders with ACF, PACF
+* choose model by AIC, BIC, residuals, out-of-sample forecast error
+
+Time series for Python with PyFlux
+==================================
+https://www.youtube.com/watch?v=JUctzSSAjG4
+
+* PyFlux for structural modes (score-drive, non-Gaussian state space, ...)
+* ARIMA: linear, Gaussian (error)
+* ARIMA limitations:
+  * no decomposition of latent processes
+  * sometimes non-Gaussian or non-linear
+=> structural: underneath a time series on a latent variable
+* for linear Gaussian case: _closed-form_ Kalman filter and Smoother (iterative adjustment with some Kalman gain "learning rate")
+* Kalman filter only for linear and Gaussian
+* latent variable can be seen as smoothed version
+* dynamic regression: laten variable is coef
+* but Gaussian State Space Models limited too: non-Gaussian, non-linear
+* score driven models (non-Gaussian):
+  * Kalman-like
+  => replace Kalman update with Newton-like score update
+  * lambda_t=exp(theta_t) -> nabla log p/-nabla^2 log p=1/lambda(y-lambda)
+  * but no simple way to get smoothed estimates
+* GAS Dynamic regression (generalized autoregressive score)
+* score of t-distr has nice properties (trims outliers)
+
+Time series workshop
+====================
+https://www.youtube.com/watch?v=vP8PyTLsegY
+
+* ARIMA: no learning guarantee, strong assumptions about noise terms
+* generalization bounds if stationary beta-mixing process(?)
+* stationary: invariant distribution for shift in time
+* beta-mixing assumption: dependency of past events decays over time (but very hard to estimate this decaying parameter)
+* stationarity or mixing often do not hold and are not testable
+* ... too theoretical
+
+Pattern in vector spaces
+========================
+http://videolectures.net/aop09_ricci_pivs/ (good)
+http://videolectures.net/site/normal_dl/tag=52374/aop09_ricci_pivs.pdf
+
+* relation between two paired data sets: Canonical Correlation Analysis, Partial Least Squares
+* ridge regression: |w|^2<=1 -> Lagrange coef w=2(XT*X+lambda*1)^-1*XT*y
+* Fisher DA, Linear DA: like ridge, but with y in {-1,1}
+  * max distance between Gaussian classes, max (mu1-mu2)^2/(sig1^2+sig2^2)
+* multi-way canonical correlation analysis
+* all are Eigenvalue problem: Av=lambda*Bv; A, B given; vi^T*B*vj=0 (i!=j) [with B metric]
+* PCA: max |X*w|=max wT*XT*X*w
+  * capacity control |w|^2=1
+  * equiv: max (wT*XT*X*w)/(wT*w)
+  * C=XT*X empirical cov matrix
+  * x'=VT*x (V has first k eigenvectors of C)
+* when data set small: PCA can be better than LCA
+* between pairs of data:
+  * PCA: max combined variance (combine x and y vectors into one)
+  * PLS: max covariance
+  * CCA: max correlation (max wxT*XT*Y*wy s.t. wxT*XT*X*wx+wyT*YT*Y*wy=1; equiv. max wxT*XT*Y*wy/sqrt(wxT*XT*X*wx*wyT*YT*Y*wy); eigenvalue problem)
+  => PCA and PLS: robust to small variance noise; CCA assumes that variance irrelevant, sensitive to noise -> need regularization
+  * FDA and Ridge Regr, special cases of regularized CCA
+* multi-way for more than 2 data sets (PLS, PCA, CCA)
+
+Convex optimization and SVM
+---------------------------
+* SVM: QP solvers possible, but other techniques better
+* in dual problem only inner products between data points needed
+* soft-margin: min 1/2|w|^2+C sum xi_i; s.t. ...>=1-xi_i
+* LibSVM (can automatically choose some hyperparam), SVM-Perf/SVMlight '06, Pegasos '07
+* Multi-class SVM:
+  * OvA; use argmax
+  * OvO; maybe fastest for training, since small set of data
+  * see slides for more ideas; performance usually very similar
+  * multiclass in single optimization approach; ... s.t. wT*x >= wT*x + 1 - xi
+* kernels: exp(-KL), strings exp(-Dist), chi^2 kernel for N-bin histograms
+=> any exp(-Distmetric) is kernel
+* MNIST SVM: linear 8.5%, polynomial 1%, translation invariance 0.56%
+* pedestrian: linear SVM with HOG
+* pyramid match kernel for image categorisation
+* Learning the kernel:
+  * Lanckriet '02; semi-supervised
+  * find embedding for maximal margin
+  * keep Trace of matrix constant; min max problem
+  * -> Semidefinite programming (SDP)
+  * Learning kernel combinations Bach'04; find convex combinations
+  * const function on kernel coef
+* Multi-kernel learning:
+  * best if some features have noise (otherwise just put features together)
+* Kernel Ridge/PCA/CCA
+
+Learning in structured output spaces
+------------------------------------
+* structured learning
+* more complex output spaces, interaction between outputs
+* usually need loss to decompose into local parts
+* multi-label; often argmax of scoring function
+* sequence parsing/alignment; with context grammars
+=> methods: CRFs, M3N, SVMISO, SEARN, SODA (see slides)
+* main phases:
+  * encoding:
+    * suitable feature map of joint input+output
+    * characterise output space; hard
+    * need to compute argmax efficiently
+    * decompose into parts
+  * optimization: suitable objective function
+    * dynamic programming
+* SODA: minimize number of output vectors that have higher score than correct pairs
+* CRF: minimize incorrect labels
+* SVMISO: multiple margin planes
+  * fast by Joachims'08
+  * sparse solution
+  * allows kernels
+=> simple test: little noise -> SVMISO; more noise -> SODA/CRF
+* object localization Blaschko&Lampert'08: optimized location search by branch-and-bound
+
+Pony - Language for lockless concurrency
+========================================
+https://www.youtube.com/watch?v=_nDQ38v0fdU
+* troubles of parallel: data race, non-atomicity, deadlock
+* solutions?
+  * synchronization: locks tasks -> reduces concurrency; needs thinking
+  * share nothing: dont share state; seems great, but only dont have to share
+  * share immutable state: frozen objects; but sometimes need mutable
+  * transfer isolated state: transfer exclusive access; exclusive owner; like message passing; but dont leak references
+  -> use all (apart from synchronization)
+* be explicit about what you are using
+* used in some commercial applications (finance, ...)
+* static (can check before runtime), compiled
+* fast since LLVM
+* type-safe
+* OOP + FP
+* Actor Language: pass messages, trigger behaviours, cannot see inside objects, messages have causal order
+-> causes and effect
+* uses worker threads and work stealing
+* no locks exist
+* actors may need to handle new messages while waiting
+* never-idle, always atomic
+* lambda "sendable"
+* pony runtime ensures, that actions that were triggered earlier in a line of code also happens earlier!
+  LA
+  ^
+  A***A
+       \
+        B***B
+        v
+        LB
+-> LA guaranteed to be before LB
+* security:
+  * unforgeable token; but revocable
+  * decentralized
+  * objects references unforgable, but can be attenuated
+* no re-assignment:
+  b=a
+  c=a  # compile error
+* sharing nothing: "tag", immutable state: "val", ... (6 types in total)
+-> dictate whether (see table in video):
+  * this ref can read and/or write
+  * other refs can read and/or write
+  * is sendable (e.g. no sendable can be written by other objects; if sendable can be read by other, then cannot be written to)
+
+PyMC3
+=====
+* around theano
+* advanced samplers for bigger models
+* flexibility on model
+* uncertainty estimates
+* NUTS: only continuous variables, but can be many
+* -> but can use both step=[Metropolis(), NUTS()] if there are discrete variables
+* missing values with Pandas NaN (integrate over)
+* GLMs
+* variational inference soon
+* has discrete variable, but STAN doesn't (STAN faster?)
+
+Datashader
+==========
+* aggregate into finite grid
+* transform
+* automatic color mapping; e.g. equalize histogram
+* send image to browser; embed in Bokeh (write function -> can zoom and re-aggregate in plot)
+* pure Python; Numba, Dask
+* scatter plots, time series, trajectories, rasters (rerasterize with Rasterio)
+* cvs=ds.Canvas(**)
+  agg=cvs.points(cvs, ...)
+  interpolate(agg, ...)
+* can show only top 90% of plot etc.; color top percent or by variable
+
+Gaussian processes
+==================
+https://www.youtube.com/watch?v=BS4Wd5rwNwE
+* handwritten...
+
+Holoviews
+=========
+* just pass dataset and variable names
+* can do drop-down menus
+* faceting (to Bokeh)
+* aggregate transformation; groupby
+* sorting
+* pair grids
+* can do grid based: numpy, xarray, iris
+
+Paddling up the stream - Ways of Spark streaming and typical stumbling-blocks
+=============================================================================
+https://www.youtube.com/watch?v=2_USi55SnmQ
+* message: Kafka
+* processing: Spark
+* state storage: HBase, Cassandra, Redis
+* Spark streaming:
+  * DStreams: RDD
+  * Structured Streaming (Spark 2.0+): Datasets, limited sources/sinks atm, aggregates/compactions/...
+* typical errors:
+  * incorrect library causes typ-mismatch later
+  * couldn't find leader offset: e.g. Kafka connector version mismatch in Spark
+  * toDF not member of RDD: need "import sqlContext.implicits"
+  * task not seralizable: object needs to be serializable; SparkSession.setActiveSession(_spark)
+  * how to push JSON records to Kafka streams?: df.toJSON.rdd
+* performance: spark.streaming.*
+  * receiver.maxRate
+  * kafka.maxRatePerPartition
+  * backpressure.enabled = true
+* see Spark streaming guide
+
+Data aware Spark - automatic repatition and data-skew-shuffle balancer
+======================================================================
+https://www.youtube.com/watch?v=aMh8KgaFWrY
+* Ericsson
+* data-skew possible -> need data-aware, automatic, batch/stream
+* -> solution plugged into Spark
+* system-aware: periodically send data stats to master -> new hash function
+* decides when and how to repartition
+* counts with histograms
+* -> limits biggest partitions
+* data points can be traced(?) -> detect bottleneck, new metrics in Spark REST API, new visualization tools
+
+Logistic regression behind the scenes
+=====================================
+https://www.youtube.com/watch?v=sp_AFEcf3gk
+* log(P(1)/P(0))=beta*x
+* tolerance >= 1e-5 might result in different signs
+* test multi-collinearity with condition number or Variance Inflation Factor (but both not great)
+* sklearn different from statsmodels (Logit -> test coef change, GLM -> test likelihood change): diff optimizer and diff convergence decisions
+* sklearn: emphasizes prediction stability instead of coef
+* sklearn always uses regularisation -> p-values calc yourself not correct
+* regularization -> not MLE anymore
+
+
+Bayesian Structure search
+
+Deep learning:
+http://www.youtube.com/watch?v=vShMxxqtDDs
+- progress: more labeled, faster computers, better initialization of weights (unsupervised)
+- good at object/speech recognition
+
+Unsupervised pretraining:
+- optimization easier
+- reduce overfitting (esp. when scarce labeled data)
+- however can be done by sensible adjustment
+
+Image recognition hard:
+- needs a lot of knowledge
+- translate a window over image
+
+Convolutional nets:
+- many weights have same value
+
+Fast approx:
+- rectified linear units learn faster and generalize better!
+- sum_k(sigmoid(x+b-k)) \sim ln(1+exp(x)) -> max(0, input)
+
+Averaging of probabilities:
+- arithmetic (but cant extend best model) or geometric
+- for neural network do drop-out (better than regularization since weights pulled towards other models)
+
+Naive Bayes:
+- form of drop out (leaving out all but one of inputs)
+
+Drop out:
+- less chance for co-adaption to neighbouring neurons
+- if it can work with different environment, it's good
+- kaggle predicting molecules won with neural nets, several big hidden layers, pretrain if little labels, rectified linear, drop-out
+- a lot of different units
+
+- if spatial structure: use convolution
+
+DREDNET:
+- Deep Rectified Dropout Net
+
+- Not known if dropout or huge ensemble better
+
+
+Pickle
+------
+* alternative to pickling: text, marshall (faster, but no Py version guarantees, no user defined classes saved), XML, google
+protocol buffers (faster, cross language, not built-in, static preallocation [need schema])
+* store arbitrary Python objects
+* protocol 3: support for bytes; protocol 0: was text
+* not meant to be secure; you need to embed it somewhere
+* recommendation: if storing dict, then pretty printed text more readable
+
+Interactive Visualization Widgets Using Chaco and Enable 
+--------------------------------------------------------
+* traits: notification
+* kiva: vector drawing
+* enable: interactive drawing; merges previous two
+* chaco: knows plotting
+* write new chaco tools to rule them all? -> better to use multiple simple tools
+* easy to write plots with drag capabilities
+
+Python Tools for Coding and Feature Learning
+--------------------------------------------
+* for easier classification
+* sparse vectors
+* cookbook (dictionary)
+* simplest way: project data (sub will preserve dimensionality of data)
+* skd.sparse_encode() [z=max(0,D^Tx-b)]
+* matching pursuit: recursively subtract best match (failing when codebook vectors not orthogonal)
+* some research says that u=argmin_w ||D*w-x||_2^2+lambda*||w||_1 is best [by skd.sparse_encode()]
+* learn codebook from data
+* PCA: maximal variable orthonormal vector space; never overcomplete (more codevectors that data dimension)! possible structure mismatch since PCA makes some assumptions
+* K-Means ok for codebook
+* Sparse encoding: optimize above loss function wrt to D and Z (much slower); skd.dict_learning()
+* important to whiten data!
+* restricted boltzmann machine (bipartite graph) [lmj.rbm(), MORB toolkit]
+* autoencoder: unfolded RBM (3 layer graph); x -> sigma(D^Tx) -> \hat{x}=Dz [lmj.nn.Autoencoder]; possible to do sparse autoencoder
+
+VisTrails: A Python-Based Scientific Workflow and Provenance System
+-------------------------------------------------------------------
+* workflow programming
+* provenance: say how you did it; version history; non-linear undo
+* windows, linux; opensource
+* can cache data (but only in memory [in 2010])
+* results gathered in "canvas cells"
+* one widget can do arbitrary python code
+* extensible: class, input_ports, output_ports, compute()
+* can also use only components (e.g. only provenance and version history for steps)
+* modules can be grouped
+
+Using Python for Structured Prediction
+--------------------------------------
+* need structured when context for classification important (e.g. text recognition)
+* PyCRFsuite (wrapper to CRFsuite); Python wrapper does only linear structure models
+* PyStruct (wrapper to many packages)
+* Conditional Random Field: model dependencies between features and labels (connect between different labels and input)
+* structured prediction: features on terms and local neighborhood (feature for a whole "area")
+* applications: text feature extraction, image segmentation
+* PyStruct can auto-generate features (unlike PyCRFsuite); less hacky stuff
+* 1-slack structural SVM works well
+
+Copperhead: Data Parallel Python 
+--------------------------------
+* want higher level data parallelism
+* embed data parallel language in python (subset of python)
+* at runtime compile to hardware
+* 1 developer; works but needs more work
+* @cu decorator
+* entry point model: first time a @cu is called -> everything subcall also in copperhead mode
+* very strict subset (homogeneous array, no classes, no metaclasses)
+* strong typing, type inference (Hindley-Milner), parametric polymorphism
+* side-effects forbidden (no loop structures)
+* can parallelise (e.g. map)
+* supported: CUDA, TBB, OpenMP, Sequential C++
+* commands like map, reduce, filter, scan, gather, scatter, sort, rotate, shift, zip, unzip, indices, replicate
+* code generated by "Thrust" (nvidia)
+* many optimizations (e.g. dont compute what's not necessary, lazy memory management)
+* types: float64, int64, bool, .., tuple (no subscript though), 1D flat sequence (can contain tuples)
+* has special copperhead arrays
+* generating C++ code (stored in __pycache__), overhead 0.1ms per function call, compile time can be long on compiler
+* faster than Cython, Weave, Numpy
+* tail recurse instead of loop
+* list comprehensions taken as maps
+
+Andrew Ng: Deep Learning, Self-Taught Learning and Unsupervised
+---------------------------------------------------------------
+* it takes a large team to hand-engineer features
+* NLP: parsers, name entity recognition, stemming, anaphora, part of seech, ontologies (wordnet)
+* one universal algorithm?
+* ICA and sparse coding mathematically related
+* hierarchical sparse coding (sparse DBN): differnent layers; learn edges, face parts, faces
+* unsupervised: those that scale to many features win
+* supervised: those with more data win
+
+Building data flows with Celery and SQLAlchemy
+----------------------------------------------
+* business intelligence: not much; Bubbles
+* SQLAlchemy: good for performance; pooling, ...
+* Celery: tasks; canvas to combine tasks (chains, groups,...); events view in ncurses
+* Celery flower: web based view but doesnt refresh that often
+
+Fast Data Mining with Pytables and pandas
+-----------------------------------------
+* Pytables: optimized for out of memory operations
+* Pytables:
+  * tables or numpy arrays
+  * optimized for IO
+  * good for math operations on data
+  * file-based
+  * concurrency for reading
+  
+ Skdata: Data sets and algorithm evaluation protocols in Python
+ ---------------------------------------------------------------
+* formalize protocoll
+* task, algo, protocol (steps)
+
+
+How to use the Twitter API v1.1 with Python to stream tweets
+------------------------------------------------------------
+* login to dev.twitter.com for API
+* create application; get consumer key/secret/access token
+* tweepy for demonstration used
+  * streamlistener, filter, ...
+  
+Tulip: Async I/O for Python 3
+-----------------------------
+* on Windows you'd need IOCP to scale
+* replace old asyncore
+* name tulip too fancy -> asyncio
+* different frameworks in same process space (share event loop)
+* non goals: replace other 3rd party, replace httplib/smtplib, kitchen sink
+* select, poll, ...
+* goals: tcp/udp, ssl, pipes, subprocess, ...
+* components: coroutines, futures, tasks; event loop/policy; transport protocol
+* there is also concurrent.futures; can be used with "yield from" (res=yield from f <=> res=f.result() [almost])
+* never instantiate Future; rather a function returns a future
+* task=coroutine wrapped in a future (subclass of future); works with yield from too
+* task can continue working unlike generator
+* event loop: multiplexes activities; .call_soon, .call_later, .call_at, .time
+
+Visualization:
+* bad at comparing curved line length -> no circular
+* no gradients (just confusing)
+* no useless 3D
+
+Awesome Big Data Algorithms
+---------------------------
+* Skiplistes, HyperLogLog count, Bloom filters, CountMin Sketches
+* Skiplists: alternativ to balanced trees; different levels of jumps saved as links
+* HyperLogLog cardinality counting (count different elements): example - longest run of heads; -> use hash value, use longest run of 0-bits; use multiple hash functions and take average; harmonic mean and low/high sampling adjustment
+* Bloom filter: no false negatives; memory efficient
+
+Maplotlib HTML5?
+IPython Javascript?
+WSGI?
+IPython parallel
+
+Blueyonder:
+Application Server App in C++
+* data handles; algorithms get numpy array
+* future, promise, delay pattern; für jobs; prios, parallelisierung
+* Zugriff von intern
+
+Luigi - Batch Data Processing in Python
+---------------------------------------
+* by Spotify; used by Foursquare; Bitly
+* Hadoop, Postgres (aggregated), Cassandra (time series)
+* specifying dependencies (like make)M task templating with OOP; atomic file operations
+* data flow visualization
+* command line
+* output(), requires(), run()
+* subclassing for: Hadoop streaming, Hive, Pig, Postgre
+* HDFS outputs
+* can send python libraries by hadoop
+* parameters: magic class variable; creates implicit __init__ from class variables
+* multiple parallel workers
+* error notifications
+* tasking data locking such that identical tasks dont interfer
+
+Continuum Data Analytics Stack
+------------------------------
+* analytics oft durch IO begrenzt
+* Terabytes übertragen schneller per UPS?
+* all data in one place; store first/structure later; keep raw data forever; modular infrastructure; let everyone party on data; data first/question later
+* Blaze: arrays for modern hardware (streaming, distributed, ...); numpy "weiterentwicklung"; flexibler datatypen; Blaze server (zwischen database/GPU/Files und Python/C++/JVM/Vizdata/...; einheitliches Array/Table view); für sehr große Daten
+* Numba: wie JIT, LLVM, optimiert für hardware; multicore, GPU; compatible with Blaze; auch mathematische funktionen hardware spezifisch optimiert; 7x schneller als pure numpy(?)
+* Bokeh: BokehJS demos, IPython integration; "matplotlib für web"; Pixels are bins, different layers
+* Wakari: cloud hosted Python analytics; full linux sandbox for everyone; IPython; interactive JS plitting; free plan 512 memory, 10GB dist; Premium: better machines, SSH access, cluster, more memory,...
+
+Data Agnosticism: Feature Engineering Without Domain Expert
+-----------------------------------------------------------
+* sources of overfitting
+* look at samples (not just aggregates)
+* be skeptical
+* how well does average of positives correlate with positives?
+* predict -> evaluate -> improve -> random walk through algorithms -> reloop
+* focus on putting better data into algorithm
+
+Bokeh: An Extensible Implementation of the Grammar of Graphic
+-------------------------------------------------------------
+* can add tools since based on Chaco(zoom, drag regression lines)
+* note as nice looking though
+* matplotlib: based on matlab/gnuplot; too verbose
+* later brushing, interactivity, HTML5, ...
+
+Data, Design, Meaning 
+---------------------
+* find one simple sentence as idea
+* avoid chart junk (fancy non-data)
+* proximity, similarity, enclosure, connection, continuity, closure
+* color: lightness, red/green, yellow/blue (no intermediate) -> Lab color space
+* HSL, HSV poormans version of Lab
+* Make visual hierarchy (remove some emphasis from parts; e.g. deemphasize range 8[/10])
+* Numerals: old-style (6/9 hoch tief -> in text; same height if numbers alone); proportional/tabular (fixed width)
+* Martini glass: start, guide/focus, start exploring (>-<<)
+
+Python in Excel
+---------------
+* DataNitro (new tab in excel)
+* replace VBA
+* shell
+
+Numba
+-----
+* Numpy+Mamba
+* 3x faster than Numpy
+* @autojit: type guessed; @jit: specify types
+* NumbaPro is Premium
+
+Cubes framework
+---------------
+* make OLAP with Webinterface
+* tables
+* brower breadcrump
+* stays light
+
+Wakari
+------
+* _collaborative analytics_; look at work
+* processing data that already in cloud
+* no need to download
+* multinode support; cluster
+* maybe R support
+* unix shell
+* most open source
+
+Skdata
+------
+* fills chain from URL to sklearn
+* downloader
+* also high level abstractions
+* Task: name space for communication
+* LearninAlgo: best_model(task), retrain, ...
+* Protocol: creates tasks
+-> no use
+
+Monoids in Python
+-----------------
+* 3 laws (for both a function and a type):
+  * takes type X and returns type X (closure) -> chain operators
+  * identity element, get back same object; (zero element is always a safe first value in a reduce sequence)
+  * grouping arbitrary (associativity); (can split a problem to smaller jobs)
+* map could map an object to monoid
+* can define positive integer powers
+* identity element must be unique from laws -> we could define x^0=1
+* if inverses exist for an element, they must be unique -> can define negative powers
+* monoids can have a*b == a != 1 and there be no group
+* may have cancellation: a*b == a*c -> b == c
+* commutative + cancellation -> can be embedded in group
+* commutative + no absorbing element -> group (with absorbing it would be trivial)
+* cancellation + finite -> group
+
+Bayesian or Frequentist, Which Are You?
+---------------------------------------
+* Bayesian:
+  * inferences made conditional on current data
+  * good in long-term projects with domain experts (prior, loss function)
+  * optimist: make best possible use of inferential tool (data as knowledge gathering)
+* Frequentist: 
+  * methods should give good answes in repeated use; unconditional performance on all possible data sets
+  * good when writing software used by many people with many data sets
+  * pessimist: protect from bad decisioncs given that inferential procedure is simplification of reality; dont get wrong answers too often
+* machine learning (vs statistics):
+  * care less about coverage (probability guarantees on results)
+  * focus on non-parametrics; less on asymptotic results
+  * Bayesian and frequentist mixed
+* subjective Bayesian:
+  * priors from domain experts
+  * many unknown
+  * often indepence assumption needed for prior estimation and computational tractability
+  * hard to assess prior tail behaviour; can be very sensitive to that
+  * SVM works, but doesnt have easy Bayesian interpretation
+* objective Bayes:
+  * priors that are not subjective (automatically); ideally minimal impact on postertior
+  * "reference priors" (maximize divergence variational between prior and postertior)
+  * often frequentists ideas for choosing priors
+  * can be very complex, multivariate, hierarchical models
+* frequentistist:
+  * any procedure admissable (boosting, methods with first-order logic, ...)
+  * general method: bootstrap
+  * proves: consistency, rates of convergence, sampling distributions, ...
+  * general tool: empirical process theory
+
+Hierarchical modelling with PyMC3 and PySTAN
+============================================
+https://www.youtube.com/watch?v=Jb9eklfbDyg
+
+* PySTAN thin wrapper on STAN
+* Stan: additional Sampling Metropolis-Hastings/Slice, L-BFGS max-likelihood; support from NumFOCUS; more robust(?), static language
+* PyMC3: better plotting, LOO-CV/WAIC/DIC; more pythonic code
+* slide for comparison of STAN vs PyMC3
+* start with PyMC3; for production maybe STAN?
+* 1st version: free parameter (intercept) for all categories
+* 2nd version: category intercept parameters come from a distribution with 2 free parameters -> helps under-represented categories
+* 3rd version: determined by parent
+* STAN model was faster
+* esp. trained model was quicker for STAN
+* 

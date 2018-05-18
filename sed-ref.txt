@@ -1,0 +1,29 @@
+------------- Examples -------------- 
+# insert a blank line above every line which matches "regex"
+sed '/regex/{x;p;x;}'
+
+# join pairs of lines side-by-side (like "paste")
+sed '$!N;s/\n/ /'
+
+# delete duplicate, nonconsecutive lines from a file. Beware not to
+# overflow the buffer size of the hold space, or else use GNU sed.
+sed -n 'G; s/\n/&&/; /^\([ -~]*\n\).*\n\1/d; s/\n//; h; P'
+
+# delete all lines except duplicate lines (emulates "uniq -d").
+sed '$!N; s/^\(.*\)\n\1$/\1/; t; D'
+
+sed '1p2~5s/abd/def${p}}'
+Line read into pattern space
+(also auxiliary hold space exists)
+
+1	for line 1
+2~5	for line 2-5
+$	for last line
+/ /	for regexp
+ADR,+3	ADR and 3 next lines
+ADR,~3	ADR and up to next multiple of 3
+
+s/ / /	replace
+q	print and quit
+d	(delete pattern space) start next cycle
+p	print (pattern space)

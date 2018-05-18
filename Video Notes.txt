@@ -1,0 +1,80 @@
+Making sense of JVM stack traces
+================================
+https://www.youtube.com/watch?v=LQHMMCf2ZWY
+* Python integration:
+  * Py4J + pickling
+  * pipes between Python and JVM
+* many logs returned -> rather guess what is going on first -> then check logs
+* logs:
+  * console (mixed with spark info)
+  * web ui: better since only logs
+  * jupyter: important parts missing -> check console instead (Spark-19094 can make cloud messages available in Jupyter)
+* -> use spark history server to get info after it has failed; 5 knobs
+* yarn.nodemanager.delete.debug-delay-sec -> higher number to ssh to container
+* use sc.setLogLevel interactively, otherwise too much or too little
+* JVM usually not interesting
+* web ui: click on error
+* Python pipelining opaque to Scala (only Scala map-map pipelining visible to debugging)
+* -> you could .cache() -> then required to go to JVM
+* could try take(1) or count()
+* functions with names better to debug than lambda
+* spark-testing-base provides examples for testing
+* don't put too much data in accumulators
+* accumulators may double-count, but good enough for debugging (counting errors)
+* "-mtrace" does not work (assumes PYSPARK_PYTHON points to a file and arg[0] has meaning)
+* OOM:
+  * JVM exception (OOM on joins, GC timelimit)
+  * Application Overhead exceeded (from YARN)
+  * Exceptions on Driver program
+  * Reasons:
+    * unbalanced shuffles (-> use more partitions)
+    * buffering of rows with Pyspark+UDF (-> use data subset selection more upstream)
+    * big records after pickling (esp. when forgot about references)
+    * too little memory for Python worker (YARN default 10% for Python -> increase)
+    * eager entire partition eval (e.g. sort + mapPartitions)
+    * too large partitions (unbalanced or too few)
+    * some low-level libs memory-leak
+* Debug:
+  * DAG in WebUI (less useful in Python)
+  * toDebugString (less useful in Python)
+  * Sample and run locally!
+  * try Python or JVM debugger (Python debugger: use broadcast +  singleton hack to start remote debugger on all interpreters!)
+* "Fast data processing with Spark" outdated!
+* "High performance Spark" good
+
+Spark and Parquet in Depth
+==========================
+https://www.youtube.com/watch?v=_0Wpwj_gvzg
+* Parquet Snappy fast with column selection (Snappy default)
+* Parquet Gzip fast with table scan
+* binary, columnar, encoded, compressed, machine-friendly
+* arbitrary nesting
+* spark.read.json for nested data
+* parquet-tools.jar can do parquet "cat"; "meta" for meta-data (some extra info)
+* files _SUCCESS, etc. off by default (in newer versions of Spark)
+* encodings:
+  * incremental encoding (e.g. only string changes)
+  * dictionary encoding (if only few distinct values)
+  * run length encoding, delta encoding, ..
+* parts of file:
+  * metadata
+  * group of rows (e.g. on nodes)
+  * each column as chunk; dont store null values
+  * shared "page" header in each column chunk
+  -> github.com/apache/parquet-format
+* pull only columns you need
+* .write.partitionBy(...).parquet(..)
+* spark.sql.parquet.filterPushdown = true (default) [PushedFilters]
+* -> only get what you get
+* PushedFilters limitations:
+  * doesnt work on nested column (SPARK-17636)
+  * doesnt work on strings (SPARK-17213) (only numeric)
+  * doesnt work on object stores (AWS S3) since no random access
+* cannot mutate Parquet on disk -> maybe partition folders instead, or combine with Cassandra, or write mode append
+* Tuning:
+  * S3A: df.read.option("mergeSchema", "false").parquet("s2a://..")
+  * coalesce changes number of compressed files produced
+  * make Parquet block size = HDFS block size
+  * sc.hadoopConfiguration.set("spark.sql.parquet.output.committer.class", "org.apace.spark.sql.parquet.DirectParquetOutputCommitter")
+  
+* 

@@ -1,0 +1,186 @@
+== Tree based models
+
+* great performance
+* BUT need to control for over-fitting
+* BUT need to improve training speed
+
+== Sklearn GBT
+
+=== Tree parameters
+
+* min_samples_split: over-fitting if too low; 0.5-2%
+* min_samples_leaf: choose low for imbalanced problems
+* min_weight_fraction_leaf: like min_samples_leaf, but as fraction of total samples
+* max_depth: over-fitting if too deep; 5-20
+* max_leaf_nodes: specify max leaves instead of max_depth if desired
+* max_features: use sqrt or fractions up to 40%; over-fitting if too many; better than subsample if more than 30 features
+
+=== Boosting parameters
+
+* learning_rate: lower is better for generalization, but might require more trees; high for tuning, low for final
+* n_estimators: can over-fit if too many
+* subsample: ~0.8 can reduce variance
+
+=== Other parameters
+
+* loss
+* init: for initial estimates if needed
+* verbose: 1 some output; >1 output for all trees
+* warm_start: continue fitting
+* presort
+
+=== Tuning procedure
+
+* use high learning rate; default 0.1; or 0.05-0.2; find optimum number of trees for this learning rate (should be 40-70)
+** n_estimators, learning_rate
+* tune important variables first:
+** max_depth, min_samples_split
+** min_samples_leaf
+** max_features
+
+Let GBT learn >1000 trees.
+
+== XGBoost
+
+* part of DMLC Distributed ML Common: academic contributors; also mxnet
+* eXtreme Gradient Boosting, C++
+* has regularization
+* has parallel processing
+* supports Hadoop
+* allows custom optimization objectives
+* handles missing values (learn path for missing value) (specify when constructing DMatrix)
+* instead of greedy stopping it learns up to max_depth and prunes
+* can do CV at each iteration to get optimum number of boosting iterations
+* supports `LambdaMART`
+* due to float point summation of thread order results can vary slightly
+* external memory: see FAQ
+* has custom data structure `DMatrix` (preprocessed training data, sorted, missing values, data weight)
+* pass custom objectives or evaluations as functions
+* classes start with 0
+* xgb.cv(..., nfold=...): do train/test split and get test performance
+* stop when gain smaller gamma
+* automatic sparse data optimization; can handle sparse data natively
+* extension: drop out in tree boosting (DART)
+* almost no dependencies
+* out-of-core capability; sharding, compression
+* faster than H20
+
+=== Inner workings
+
+==== Objective function
+Regularization
+
+\Omega=\gamma T + \frac{1}{2}\lambda\sum_{j=1}^T w_j^2
+
+T is number of leaves
+w_j^2 is score on j-th leaf
+
+Obj=Loss+\Omega
+
+Use gradient descent. Could be even better with 2nd derivative.
+2nd order Taylor for loss function.
+
+Optimize addition of additional tree -> need to find tree that is along gradient. Each leaf has a weight (score).
+-> Need to find tree structure and weight assignment. Write out objective with tree expression -> solve quadratic function for weights
+
+w_j=-\frac{\sum firstderiv}{\sum (secondderiv+\lambda)}
+
+Prune nodes with negative gains after fitting full tree.
+
+==== Find tree structure
+
+* how choose feature?
+* when to stop?
+* -> sort numbers, find best splitting point
+* -> change leaf into internal node and two new leaves (assign new weights too) -> measure gain by looking at full objective function
+
+==== Missing values
+
+* guide missing values to left or right to give larger gain
+
+=== Booster parameters
+
+There are two types, but `gbtree` mostly outperforms `gblinear`. Latter if most data continuous.
+
+* eta: 0.01-0.2; step size shrinkage
+* min_child_weight: min. sum of weights in children (similar to min_child_leaf)
+* max_depth: 3-10
+* max_leaf_nodes: instead of max_depth
+* gamma: min. required reduction for a split
+* max_delta_step: usually not used; max weight?
+* subsample: 0.5-1; reduce from 1 to prevent over-fitting; subsample every time new tree searched
+* colsample_bytree: 0.5-1; fraction similar to max_features
+* colsample_bylevel: author uses subsample and colsample_bytree instead
+* alpha: L1 term on weight; can be used on high dim to run faster when trained
+* scale_pos_weight: for imbalanced for faster convergence, sumneg/sumpos
+* for linear booster:
+** lambda: L2
+** alpha: L1
+** lambda_bias: L2 on bias
+* objective:
+** reg:linear
+** binary:logistic
+** multi:softmax; specify `num_class` (needed for cv)
+* evaluation:
+** rmse
+** logloss
+** ...
+
+=== Learning parameters
+
+* objective: loss function; "binary:logistic", "multi:softmax", "multi:softprob"
+* eval_metric: rmse, mae, logloss, error, merror, mlogloss, auc
+* seed: default 0
+
+=== XGBClassifier sklearn
+
+Parameters renamed
+
+* eta -> learning_rate
+* lambda -> reg_lambda
+* alpha -> reg_alpha
+
+`num_boosting_rounds` when calling `.fit()`.
+
+=== Tuning parameters
+
+* control overfitting
+* deal with imbalanced data
+* trust own CV
+
+Checking overfitting. Maybe decrease eta.
+
+* choose high learning rate and 0.1 and find optimum number of trees; function `cv` returns number of trees
+* model complexity:
+** max_depth, min_child_weight
+** gamma
+* robust to noise:
+** subsample, colsample_bytree
+** (to reduce overfitting can reduce stepsize eta, but then increase num_round)
+* tune regularization:
+** reg_lambda, reg_alpha
+* lower learning rate
+* use `early.stop.round` to detect continuously being worse on test set; stop when performance gets worse so many times
+
+==== For imbalanced data
+
+* if only need ranking order: balance with `scale_pos_weight` and score with `AUC`
+* if need probabilities: set `max_delta_step` to finite number (e.g. `1`) to help converge
+
+==== Approach
+
+* use xbg.cv to evaluate
+* early.stop.round if always worse on test
+* if overfit: reduce eta and increase nround
+
+=== Advanced features
+
+* customize objective and evaluation metric (also write grad and hessian; obj: pred/train => grad/hess; eval: pred/train => name/error)
+* cross-validtion
+* continue training on existing model
+* calculate and plot feature importance (sum of gain value every time we split on that feature)
+
+=== Distributed
+
+* works with any platform that supports `rabit`
+* can run directly on YARN

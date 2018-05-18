@@ -1,0 +1,4 @@
+== Weaknesses of deep learning - Connor
+
+* catastrophic forgetting: Nets forget previous task, when you teach a new
+

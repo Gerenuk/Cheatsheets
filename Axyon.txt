@@ -1,0 +1,12 @@
+Regression might be too noisy -> predicts mean only -> use classification (or multiclass)
+Maybe use same class for extreme deviation (both sides)
+
+Kerberos feature learning (proprietary):
+* time invariant
+* indep of clones
+* indep of order within one time period
+-> convolution + pooling
+
+Autoencoder on each "event"
+Learn aggregated representation
+

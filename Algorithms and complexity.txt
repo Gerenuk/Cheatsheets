@@ -1,0 +1,41 @@
+Linear Programming
+==================
+* Simplex usually pretty good; worst case exponential
+* Ellipsoid algorithm always polynomial (m+n^2)n^5
+log(n*U) (n dimension, m num. equations, U size of coef); but in practical not great
+  * only determines whether there is a solution
+  * bound solution set by ellipsoid
+  * if center not in solution set -> make hyperplane through center
+  * solution set must be on one side
+  * -> bound by new smaller ellipsoid
+  * ellipsoid doesn't need actual equation, but only separation oracle which finds hyperplane which doesn't cross set
+
+Dynamic programming
+===================
+* travelling sales man: n^2*2^n
+
+Heavy hitters
+=============
+* k most frequent items
+* space complexity k*log(n)
+* space log(n)
+* ApproxPointQuery: approx tell the frequency of an element so far
+
+Simple block:
+* for each element add C+=hash(x) where result is -1 or +1
+* final estimate of element x frequency is C*hash(x)
+-> show that expected value is unbiased and variance small
+* noise term hash(x)hash(y) has average zero since E[hash]=0
+* for variance use Chebyshev
+* variance = sum f^2 (frequency squared)
+* -> not necessarily small; depends on stream
+* -> works well for most frequent elements
+
+Algorithm:
+* hash into b disjunct substreams determined by hash(element value)
+* use ~log(n) of these substream bunches and take median when estimating one item
+* within each bunch use yet another fixed hash->+1/-1 hash function and add
+* (small items estimated from substreams where frequent element doesnt appear much)
+* see CountSketch screenshot for condition on how many buckets one needs (also depends on sequence frequency tail)
+* b at least 8*k (if search top k items)
+* 

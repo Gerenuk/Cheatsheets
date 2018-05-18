@@ -1,0 +1,303 @@
+HTML:
+* Noteworthy HTML tagds:
+* p paragraph, a link, span text, div division
+* list: ul, ol, li
+* attributes of tags
+* classes
+
+
+* exponential distribution:
+* lambda*exp(-lambda*x)
+* usually waiting times
+* only this continuous is "memory-less" (always as good as new)
+* convenient maths
+* constant hazard function
+* weibull:
+* hazard function is power function
+
+regression:
+* performance is combination of luck and skill
+* pure luck might average out false effects
+* to get coef in y=a+bx+eps -> take E(.) and Cov(x,.) on both sides
+* residuals orthogonal to columns
+* always plot residuals
+* Var(y)=Var(Xb)+Var(e)
+* R^2=Var(Xb)/Var/y)=sum (yhat_i-yavg)^2/ sum (y_i-yavg)^2
+* adding more predictors can only increase R^2 - but not useful -> needs parameter penalty
+* does not validate model (no generalization)
+
+regression paradox:
+* fit y=a*x; x,y standardized -> no intercept
+-> a is correlation; symmetric
+-> y=r*x, x=r*y!
+-> is also regression towards mean
+
+Normal distr:
+* conditionals E(y|x) linear in x
+
+Gauss Markov theorem:
+* y=X*b+eps
+* errors mean 0 and same errors sigma^2
+-> betahat=(X'X)^-1X' y (Best [] Linear [linear combination of y] Unbiased [on avg correct] Estimator - BLUE)
+-> for normal errors als MLE
+
+Hat matrix:
+H=X(X'X)^-1X'
+
+Logistic regression:
+* simple interpretation: if you increase variable x_j but one unit -> multiply odds by exp(b_j) [multiplicative], makes more sense
+
+Stein's paradox:
+* y_i ~ N(theta_i,1); completely different independent problems; k>=3
+* would estimate them independently; but another estimator does better in sum of squared error loss
+* thetahat_j = (1-(k-2)/sum(y_i^2))y_i
+* shrink them towards mean
+* combine even though independent problems!
+
+Fisher weighting:
+* to combine unbiased estimators
+* average with weighting 1/Var()
+
+Bias as criterion:
+* assume Poisson(lambda), estimate exp(-2*lambda)
+-> only unbiased estimator (-1)^X [but negative numbers paradoxical]
+* Basu's elephant:
+  * estimate total weight of 50 elephants
+  * take sample 1 and multiply by 50
+  -> unbiased if there is non-zero probability to weight other elephants (e.g. P=0.01); multiply by 100/99 if first elephant chosen
+  (Horvitz-Thompson estimator: estimate some total; probability for each possible sample)
+* if focus on bias, variance is ignored
+
+Trellis plots:
+* many small plots combined by same scale (rescale diff variables)
+
+Parallel set:
+* disjoined sets
+* connecting categories
+
+Parallel coordinates with 2 vars: bump charts / slope graphs
+
+Glyph: do data points with encoding like starmap
+Usually bar charts always better
+
+PCA:
+* normalize
+* find eigenvectors of covariance matrix S=X^TX/N
+* precision issues possible with this naive calc
+-> better SVD
+* X=UDV' -> X'X=VD^2V' -> V are eigenvectors
+* Screeplot: variance explained
+* not clear which kind of normalization (sphered data, 0..1 norm, whiten [rotation and scaling such that indentity covariance])
+* but can have negative numbers -> not physical; gard to interpret
+
+Pseudoinverse: X^+=VD^-1U'
+
+Eigenfaces: 50 for 90% variance
+
+Multidimensional scaling:
+* when matrix of distances known
+-> convert into matrix with coordinates of points
+* with linear methods
+* finally do PCA
+
+Nonlinear mapping to know:
+* IsoMap
+* Locally Linear Embeddings
+
+Discriminative: model P(y|x)
+Generative: model P(x,y)=P(x)P(y|x)=P(y)P(x|y)
+
+Bayesian:
+* everything is random variable
+* all parameters too
+* P(theta|y)
+* usually hopeless integrals: P(theta|y)=P(y|theta)P(theta) / sum(P(y|theta')P(theta'))
+* more and more papers (due to fast computation)
+* MCMC: simulate in computer instead of integrals
+* MLE would be problematic you if dont check posterior distribution
+* decide:
+* pure Bayesian: provide full posterior
+* or use posterior mode
+* non-informative priors (most uncertainty) -> there isnt really one
+* e.g. Jeffrey prior
+* standard book: Gelman: Bayesian Data Analysis
+* good: Probabilistic and Bayesian methods for Hackers
+* can account for sample size effects on extreme values
+
+Frequentist:
+* parameters unknown but fixed constant
+* P(y|theta) [known given unknown seems unnatural]
+* look at hypothetical alternative in data (y) that did not occur
+* need to be able to repeat experiments
+* theorem: every frequentist approach (that isn't strictly dominated by some other approach) is equivalent to some Bayesian formulation
+* MLE is not most likely value
+* cannot say what distribution on parameters is
+* results have no Bayesian statement (e.g. probabilities for a range of variables) -> frequentist probability mean "under hypothetical repetition)
+
+posterior = likelihood * prior
+
+Conjugate prior:
+* like mimick likelihood function
+For normal:
+* if sigma^2 known
+* prior N(mu0, tau^2)
+* -> N((1-B)*mu+B*mu0, (1-B)*sigma^2); B=sigma^2/(sigma^2+tau^2) shrinkage factor -> like regression towards mean
+For Poisson:
+* Gamma(alpha, lambda)
+* posterior mean: weighted average of means
+
+MCMC:
+* made sophisticated Bayesian analysis possible without conjugate priors (e.g. where unknown)
+* jumping from state to state (memory-less)
+* you design your own markov chain such that it will converge to desired distribution (stationary distribution)
+* Markov chains converge (but hard to know how long)
+* usually hard to divide by combination of all combinations
+-> randomly explore space of all combinations
+* HMM: underlying hidden states are markov chain
+* find P(x) of observed sequence -> forward/backward algorithm (dynamics programming, recursive)
+* find most likely hidden states given observed states  -> Viterbi algorithm
+* estimate parameters of model (transitions, emissions) -> Baum-Welch algorithm (form of EM [Dempster-Laird-Rubin])
+* run multiple chains
+
+Exponential random graphs:
+* p(G) \propto exp(\vec{param}*\vec{features})
+* simulate network space: transition to new with probability p(G_new)/p(G_old)
+
+Gibbs Sampler:
+* explore space by updating one coordinate at a time
+* draw x_i from P(x_i|x_{j\neq i})
+* depends on whether conditional distributions are tractable
+* natural for hierarchal regression models
+
+Metropolis-Hastings:
+* more general than Gibbs
+* generate new proposal state
+* use special acception probabilities a_ij = min(s_j*p_ji/(s_i*p_ij),1)
+-> construct stationary distribution that you want
+* need to balance between too small steps or too small acceptance probability
+* sometimes good rules of thumb for best acceptance probabilities
+
+Birds on island:
+* with entries 0/1
+-> fix marginals
+* swap 01/10 2x2 subpattern; can reach any state
+* stationary distribution will be uniform over all space
+
+Practical ML:
+* one-vs-one: faster but more
+
+MapReduce:
+* Partitioner: decides where keys go (by default hash value of key) -> needed for balancing
+
+Visualization:
+Rectangles; slanted (order to avoid overlap)
+
+Relational DB:
+* dont store graph pointers; separate logical links from physical (DB has to connect keys)
+* complicating for simple tasks -> rebirth of key-value stores
+* with internet new data sources: performance critical; simple data, simple schema
+
+NoSQL:
+* should scale well
+BASE instead of ACID:
+* Basic Availability: use replication and sharding to reduce unavailability; failures partial
+* Soft state: inconsistency allowed; application developers need to take care
+* Eventually consistent: at some point it will be consistent
+NoSQL good for:
+* high transaction volumnes
+* critical need for low latency
+* 100% availability
+* scale on many cheap machines (blades)
+Technology:
+* a lot of machines
+* distributed hash tables (DHT) used
+* key space partitioning
+* replication in storage layer
+* key-value store underneath (any DB)
+Design space:
+* distribution of keys known?
+* consistency model: eventual / no / transactional
+Distribution:
+* how many copies? (odd number [for ties])
+* single master: MongoDB
+* multi master: Piak, CouchDB, CouchBase
+Data model (biggest factor):
+* often denormalized (duplicated data)
+* often no joins
+* key/value pairs:
+  * usually no range notion
+  * usually no key order
+  * examples: DynamoDB, Riak
+  * extensions: major/minor key (look by part of key), batching, atomic batches
+* column families:
+  * columns grouped in families; stored together
+  * each row can have different columns (diff. representations; some can be missing)
+  * like very relaxed schema (columns missing etc)
+* document model:
+  * key/value stored where document with structure stored; can index into it
+Other:
+* log structured merge tree: write performance really good
+* Use cases:
+  * Netflix: switch to Cassandra; wanted to change schemas, scalability
+* Beyond NoSQL: Google Spanner
+  * globally distributed SQL
+  * atomic transactions
+  * synchronous replication
+  * consistency
+  * ACID transactions
+  * Paxos state machine algorithm
+  * TrueTime technology (theoretically you cannot have globally consistent clock; but with atomic clocks is possible approximately)
+
+CAP can't have all three:
+* Consistency: all nodes see same data at the same time
+* Availability: every request receives success/fail response
+* Partition tolerance: when cluster failure
+* RDB: C+A
+* NoSQL:
+  * A+P (Cassandra, CouchDB, Riak, Dynamo,...)
+  * C+P (BigTable, HBase, MongoDB, Redis, MemcacheDB, ...)
+* A + P + eventual consistency possible
+* Riak, Cassandra can set consistency level (how many read/write)
+* Snapshot consistency: is some state in time but not up-to-date
+
+Erdos-Renyi Random Graph Model:
+* each potential link (of n(n-1)/2) with probability p
+* average degree c=(n-1)*p:
+  * c<1 largest component log(n)
+  * c>1 emergence of giant component (order of n)
+  * c=1 largest component n^(2/3)
+* this model usually too simple
+
+Networks:
+* degree sequences: list of all node degrees
+
+Scale-free networks:
+* subnets (pick nodes randomly and keep their edges) are not scale-free
+
+p1 network (Holland-Leinhardt 1981):
+* parameters:
+  * theta: base rate for edge propagation
+  * alpha_i, beta_i: tendency for incoming/outgoing edges
+  * rho_ij: reciprocated edges
+  
+Latent space models:
+* Hoff 2002
+* lecturer likes this more than ERGM
+* everything has some latent position
+* but dimension and metric hard to chose
+  
+Exponential Random Graph Model:
+* most widely used
+* one particular: P_beta(G)=exp(-\sum beta_i*t_i)/Z
+* t_i could be degree of i
+* often problem that only trivial solutions (complete or empty graph)
+
+Quora A/B Testing in practice:
+* use of experiments to make choices between alternatives
+* t-test -> normality -> problem if power-law (linear in log-log), heavy-tail -> underestimate variance, too many false positives, in realtiy confidence if lower than thought
+-> use non-parametric test: bootstrap; bur slow
+* scale number of questions by time online (since some outliers ask too much)
+* check calibration of confidence intervals (run A-A test)
+* hypothesis testing tricky with ratios (esp. when denominator close to 0)
+-> Fieller method
+* remember weeks patterns of users

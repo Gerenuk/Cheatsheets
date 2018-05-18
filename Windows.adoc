@@ -1,0 +1,15 @@
+use command line:
+"wmic csproduct get vendor,name,identifyingnumber"
+to get computer’s vendor, model and serial numbers
+(see also http://www.computerhope.com/wmic.htm)
+
+Irfanview needs Ghostscript 32bit
+
+In MS Word:
+Wenn (Überschriften) Formatierung nicht weg geht, sollte man Ctrl+Space drücken
+To search/replace paragraph new lines use "^p" (see drop down in dialog for more)
+
+Press F8 at boot to chose from options
+
+To delete file or folder with trailing dot use
+rd /s "\\?\D:\<folder>"

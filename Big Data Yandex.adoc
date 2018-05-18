@@ -1,0 +1,160 @@
+= HDFS
+
+hdfs dfs -cat ... | head  | head
+hdfs dfs -tail ...        | last 1kb
+hdfs dfs -find ...
+..-rm ... -skiptrash
+
+http://<namenode>:50070/dfshealth.html   | WebUI
+read/write with WebHDFS through HTTP (e.g. curl)
+
+128MB -> <1% seek time on drive
+
+Secondary namenode: "Checkpoint namenode" better name (!= "Backup")
+
+= Distributed Filestorage
+
+== Avro
+* schema stored
+* header followed by blocks
+* can generate deserialization code from schema
+* sync marker marks blocks
+
+== Parquet
+* complex
+
+== Compression
+* compression/decomp/ratio in MiB/s:
+  * gzip: 16-90 / 250-320 / 3
+  * bzip2: 13 / 40 / 4.5
+  * LZO: 120 / 300 / 2.4
+  * Snappy: 200 / 475 / 2
+
+= Spark
+
+== Spark execution model
+* narrow dependence: independent of data (e.g. coalese), can pipe
+** map..., filter...
+* wide dependencies: need shuffle
+* join narrow if partitions co-partitioned
+* partitioner:
+** numPartitions (max index)
+** getPartition (key to index)
+* .partitionBy(..)
+** assigns partitioner
+** can reduce shuffle if co-partitions (same partitioner)
+** preservesPartitioning=True: if sure keys do not modify
+* Kryo: not useful for Python
+* Spark tries to pipeline inside Python process
+* mapPartitions: for faster map
+* check rdd.partitioner to see setting
+* use `preservePartitioning=True` for co-partitioner
+* use numPartitions=old.getNumPartitions() in new (shuffled?) data
+* mapValues: preserved partition
+* -> much less tasks
+
+= Spark SQL
+* .explain(True) to see plans
+* can push filters even to Parquet
+* pushdown: is option that needs to be enabled
+
+== Joins
+
+* hashjoin: supports only equality join; creates hash map
+* sort-merge join: no extra data structure, for huge tables; need sortable keys; can do more than equality
+* 4 types of join
+** spark.sql.join.preferSortMergeJoin=True; default
+** shuffle hash join: key not sortable; one side smaller; can use spark.sql.autoBroadcastJoinThreshold=10MB to tricks Spark; also can use spark.sql.shuffle.partitions to influence (since decision depends on these values); size < autobroad*numshufflepart, sizeA * 3 <= sizeB
+** broadcast join: autoBroadcastJoinThreshold again; could also manually sc.broadcast(dfB)
+* faster than Python UDFs: use Hive UDFs or Scala
+
+== Optimizations
+* persistence: MEMORY_ONLY_2: stores 2 replicas
+* checkpoint(): reliable write to HDFS and cut lineage
+** sc.setCheckpointDir(..)
+** cannot checkpoint Dataframe; need to checkpoint RDD
+** checkpoint in noisy cluster
+* spark.memory.storageFraction: guaranteed for cache
+
+== Resources
+* Executors can manage multiple tasks
+* leave at least 1 core and 1GB on each node
+* also leave 1 container to application master
+* use 5 cores per executor (due to HDFS reading)
+* use 90% of memory since off-heap
+
+== Dynamic allocation
+* since Spark usually uses long running containers
+* spark.dynamicAllocation.enabled=true
+* spark.dynamicAllocation.executorIdleTimeout=60s
+* spark.dynamicAllocation.cachedExecutorIdleTimeout=infinity -> need to lower this! otherwise cached data executors always stay
+* min/maxExecutors
+* shuffles will be lost with executors -> o YARN: spark.shuffle.service.enabled=ture, yarn.nodemanager.aux-service
+
+= Other
+* register udf for  SQL: spark.udf.register
+* F.unix_timestamp(.., <format>)
+* .astype("timestamp")
+
+= Hive
+* at Facebook on HDFS
+* now also S3, HBase
+* execution with Spark, Tez
+* metadata: not in HDFS, since random access
+* "default" database if not given
+* create table ... location ...; from existing file
+* Hive uses ^A for separator by default
+* table "managed" (hive may delete) or "external" (hive would only remove metadata)
+* "temporary" table removed after session closed
+* -> use "create external table ..." for existing file
+* field delim ^A, collection items ^B, map keys ^C, line termination \n
+* can have complex types: containers, maps, arbitrary nesting, ... (uses ^B, ^C delim)
+* array: val1 ^B val2 ^B ...
+* map: key1 ^C val1 ^B key2 ^C val2 ^B ...
+* "stored as ..." better format than text file
+* = Hive DDL
+* Hive only schema on *read* (no validation on write)
+* "load data local ..." -> added to existing file or files overwritten (use "overwrite" to clear existing files)
+* "sort by": only within files (one worker), "order by": total ordering
+* regex through "serde"
+* "view": only metainfo; datatypes automatically detected; read-only
+* CAST: Create As Select from Table
+* "show functions;" ~200 fcts; "describe function ..."
+* UDF, UDAF aggregate
+* UDTF table generating (e.g. explode into rows; explode, json_tuple, parse_url_tuple, posexplode, stack)
+* PTF (many to many)
+* can write own in Java
+* Hive streaming: re-use Hadoop streaming scripts; use in Hive
+* Hive PTF Window functions: Partitioned Table Functions
+** many-to-many, rolling window
+** basically Window functions
+
+== Hive optimizations
+
+=== Partitioning in HDFS
+** `PARTIIONED BY`
+** less reading
+** can have nested folder structure
+** dynamic partition possible (last of all selected cols)
+** can overwrite some partition only (partitioned columns need to be at end of select, and need to be correct order)
+** param hive.exec.max.dynamic.partition, ~.pernode, hive.exec.max.created.files
+** hive.error.on.empty.partition=true
+** `CLUSTERTED BY ... INTO .. BUCKETS`, SORTED BY
+* can `TABLESAMPLE` to sample
+* schema on read
+* hive.enforce.bucketing=true
+
+=== Map-side joins
+* if small table
+* ...
+
+=== Data skew
+* `SKEWED BY`
+* see video
+
+== Row-column oriented files
+* RCFile
+* some rows together stored column wise -> compression
+* -> ORC better
+
+

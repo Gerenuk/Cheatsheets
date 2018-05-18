@@ -1,0 +1,48 @@
+= Toodledo Email
+!!! Top Prio
+#today  Due
+#1/4/14
+:10  Minutes Erinnerung
+
+= Windows
+
+Win+D: Desktop
+Win+Num: Start pinned taskbar program
+Ctrl+Win+Num: Switch to last active window of program
+Ctrl+Win+Tab: 3D Selection
+Ctrl+Win+B: Switch to program that displayed message in taskbar
+Win+P: Presentation display (Monitors)
+Ctrl+Shift+Esc: Taskmanager
+
+Win+Pause: Systeminfo und Erweiterte Einstellungen
+
+Alt+Esc: Cycle items in opening order
+
+Explorer:
+Numlock *: Display all subfolders
+Numlocl -: Collapse folder
+Backspace: Prev Folder
+Ctrl+Shift+N: new folder
+
+Win+"+": Zoom
+
+= Excel
+
+Macro Editor: Alt-F11, create module
+Reevaluate all equations: Ctrl-Alt-F9
+(e.g. when content depends on formatting due to macro)
+Manual unpivot: Alt-N-P (eng. Alt-D-P), Multiple consolidate, Custom, Select Range, Doubleclick on bottom-right cell in Pivot
+
+Paste Values: Alt+E S V
+Paste Format: Alt+E S T
+Paste input validatoin (select list): Alt+E S F
+Paste column width: Alt+E S W
+
+Sum/subtract/multiply/divide rows while paste: Alt+E S D/S/M/I
+Paste as reference: Alt+E S L
+"Use text import wizard" after Paste to split words to cells etc.
+Excel web queries: to paste live data from web
+
+Spalte nach Trennzeichen trennen: Daten/Text in Spalten
+
+Double Click: "Format übertragen" -> mehrfach anwenden

@@ -1,0 +1,57 @@
+== Dynamic routing between capsules
+https://arxiv.org/abs/1710.09829v2
+* capsule is group of neurons with activity vector
+* vector length is probability
+* vector direction is parameters
+* one level capsules make prediction my transformation matrics of instantiation parameters of high-level capsules
+* when predictions agrees, high level capsule becomes active
+* good on MNIST and better for overlapping digits
+* learning: lower level capsules prefers to send output to similar higher level activity vector
+* assume visual system create parse tree-like structure from each eye fixation
+
+=== Routing
+* initially output send to all parents, but with coupling coef which sum to 1
+* capsules computes prediction vecotr by multiplying own output by weight matrix
+* if similar to parent -> coupling increased
+* better than max-pooling, where parents ignore all but one max neuron
+* this mechanism can "explain away"
+
+=== Layers
+* all but last layer convolutional
+* in higher level, position if coded in vectors instead of position
+
+=== Vectors
+* non-linear squashing (short vectors become almost zero)
+* Out_j = nonlin(In_j) * In_j
+* In_j = Sum c_ij W_ij Out_i
+* W_ij Out_i: prediction
+* c_ij: coupling coef
+* coupling refined by measurement similarity of Out_j and (W_ij Out_i)
+
+=== MNIST test
+* training on 28x28 MNIST, +2 pixel augmentation
+* better than baseline CNN (which has comparable number of parameters)
+* notable better than (comparable) CNN on test with affine deformations
+
+=== Interpretation
+* it seems to learn parameters like scale, thickness, skew, ...
+* more robust to affine transformation
+
+=== Multi-MNIST test
+* test where different digits on top of each other
+
+=== CIFAR 10
+* 10.6% error with ensemble of 7 models; 3 routing iterations
+* need "some else" category, to compensate for complex backgrounds
+* also test on small NORB data
+
+=== Discussion
+* capsules assume that only one of "the" object in their field
+
+=== Blog discussion
+https://medium.com/mlreview/deep-neural-network-capsules-137be2877d44
+* coincidences in high dimensions rare and meaningful
+* selected connections important
+* Hebbian learning important (fire together -> wire together)
+* scalar output => vector output
+* max pooling => routing-by-agreement

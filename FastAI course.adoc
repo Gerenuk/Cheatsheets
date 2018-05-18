@@ -1,0 +1,21 @@
+= Easy infrastructure
+* Crestle.com: Instant Jupyter notebook, but more expensive
+* Paperspace: good
+** turn off auto snapshot, enable public IP
+** pasting clipboard: Ctrl-Shift-V (e.g. Password)
+
+= Get started
+* 250GB
+* curl http://files.fast.ai/setup/paperspace | bash (~1h setup: cuda, anaconda, libraries)
+* reboot
+* git pull (fastai)
+* conda env update (sometimes)
+* jupyter -> use IP instead of "localhost"
+
+= Other
+* fast.ai on PyTorch
+* includes many best practices from DL
+* .lr_find(): from "Cyclical leanring rates for training n.n."
+** try (exp) l.r. and see where you had most improvement
+** plot and pick largest rate where still clearly improving
+* epochs until test gets worsell

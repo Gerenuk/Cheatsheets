@@ -1,0 +1,27 @@
+typen:
+varchar(n): max n zeichen
+decimal(p,q): min q Stellen vor Komma
+
+create table NAME(VAR1 TYPE1, VAR2 TYPE2, ..., primary key(VAR1, VAR2,...), foreign key(VAR1) references TABLE2(VART2));
+insert into NAME values(VAL1, VAL2, ...);
+insert into NAME(VAR1, VAR2) values(VAL1, VAL2);
+
+select ... from ... order by VAR1 <desc>, VAR2 <desc>, ...;
+select min(..), max(..), count(<distinct> ..), avg(..) from ... group by ...;
+
+update TABLE set VAR=VAL where ...;
+
+delete from TABLE where VAR=VAL;
+
+alter table TABLE add column VAR TYPE;
+alter table TABLE alter column VAR ...;   ...=drop default; set default VAL
+alter table TABLE drop column VAR;
+
+drop table TABLE;
+
+TYPEX: TYPE not null
+TYPEX: TYPE default VALUE
+operatoren: BETWEEN ... AND ...
+IN (..., ...)
+LIKE '%TEXT__' : %=(.*)   _=(.)
+

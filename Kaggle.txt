@@ -1,0 +1,254 @@
+Facebook V - 1st place
+======================
+http://blog.kaggle.com/2016/08/16/facebook-v-predicting-check-ins-winners-interview-1st-place-tom-van-de-wiele/
+
+* methods: kNN, XGBoost
+* separate classifiers for x-y rectangular grids
+* >100K classes! -> only model probability for 20 chosen candidates
+* features:
+  * nearest neighbor calc for chunks
+  * place accuracy summary features
+  * spatial summary features
+  * weekly summary features
+* many batches on 48GB workstation
+* average 15 XGBoost models to select 20 place candidates from features
+* accuracy (variation) showed pattern
+* yearly patterns
+* kNN features performed really well
+
+Facebook V - 2nd place
+======================
+http://blog.kaggle.com/2016/08/02/facebook-v-predicting-check-ins-winners-interview-2nd-place-markus-kliegl/
+
+* GNU parallel to automate parallel runs
+
+Avito duplicate Ads - 3rd place
+===============================
+http://blog.kaggle.com/2016/07/27/avito-duplicate-ads-detection-winners-interview-3rd-place-mario-gerard-kele-praveen-gilberto/
+
+* methods: XGBoost, RF, LogReg, MinHash, TFIDF + SVD, Follow-the-Leader-Regularized-Learning (FTRL)
+
+Home depot product search - 1st place
+=====================================
+http://blog.kaggle.com/2016/05/18/home-depot-product-search-relevance-winners-interview-1st-place-alex-andreas-nurlan/
+
+* methods: word2vec, Glove, many models, LSA, NMF, Gaussian projections, Random Tree Embedding, Bayesian Ridge, Lasso, XGBoost
+* ensemble multiple sampling schemes, since many terms only in test set (average of disjoint terms/disjoint IDs)
+* sklearn, keras, hyperopt
+
+BNP Paribas cardif claims management - 1st place
+================================================
+http://blog.kaggle.com/2016/05/13/bnp-paribas-cardif-claims-management-winners-interview-1st-place-team-dexters-lab-darius-davut-song/
+
+* many XGBoost, RF, ElNet, ANN, SVM, LogReg, ...
+
+Home depot product search - 3rd place
+=====================================
+http://blog.kaggle.com/2016/06/01/home-depot-product-search-relevance-winners-interview-3rd-place-team-turing-test-igor-kostia-chenglong/
+https://github.com/ChenglongChen/Kaggle_HomeDepot
+
+* 2-level stacking
+* XGBoost, GBT, ExtraTrees, RF, Ridge, KerasDNN, RGF
+* doc2vec, word2vec, wordnet sim, ...
+* SVD dim red
+* XGBoost, TSNE, Keras, Hyperopt, Gensim, ...
+* splitting for CV important, so that terms appear in train/test
+
+Home depot product search - 2nd place
+=====================================
+http://blog.kaggle.com/2016/06/15/home-depot-product-search-relevance-winners-interview-2nd-place-thomas-sean-qingchen-nima/
+
+* xgboost + ridge
+* put words into category and count
+* counting features
+* co-occurence, e.g. LSA
+* semantic similarity
+
+Yelp photo classification - 2nd place
+=====================================
+http://blog.kaggle.com/2016/05/04/yelp-restaurant-photo-classification-winners-interview-2rd-place-thuyen-ngo/
+
+* pre-trained convnet (first inception-v3, later resnet-152)
+* multi-layer perceptron for multi-label and multi instance; network learns how to combine multiple instances; attention units
+* tensorflow, torch, lasagne
+
+March machine learning mania 2016 - 1st place
+=============================================
+http://blog.kaggle.com/2016/05/10/march-machine-learning-mania-2016-winners-interview-1st-place-miguel-alomar/
+
+* logaritmic regression, RF
+
+Homesite quote conversion - 2nd place
+=====================================
+http://blog.kaggle.com/2016/05/02/homesite-quote-conversion-winners-interview-2nd-place-team-frenchies-nicolas-florian-pierre/
+
+* features: counts, PCA top, tSNE, IDs from k-means, golden features
+* LR+Reg Greedy Forest+NN+ET+XGB -> LogReg + XGBoost + ANN -> avg
+* bag NN
+
+Homesite quote conversion - 1st place
+=====================================
+http://blog.kaggle.com/2016/04/08/homesite-quote-conversion-winners-write-up-1st-place-kazanova-faron-clobber/
+
+* XGB, Keras, Lasagne, NoLearn, LibFM, ...
+* Categories: IDs, value count, out-of-fold likelihood, one-hot
+* Numerical: as is, percentile
+* differences of highly-correlation features
+* interaction candidates from XGB or LogReg
+* feature select: forward, backward, AUC
+* added noise to features
+* sub-models trained on partitions by categories
+* neural networks best stackers; XBG and LR good, but sensitive to feature selection; best to train on subsets of features
+* XGB from RF
+* XGB num_parallel_tree>1
+* XGB interaction embeddings as inputs to NN
+* different seeded folds
+* tips:
+  * use stratified k-fold
+  * usually should have only one peak in hyperparameters
+  
+Yelp photo classification - 1st place
+=====================================
+http://blog.kaggle.com/2016/04/28/yelp-restaurant-photo-classification-winners-interview-1st-place-dmitrii-tsybulevskii/
+
+* features from Inception-V3, Inception-BN (best), ResNet; use second to last layer (last layer too overfit to ImageNet -> but need Truncated SVD for dimred)
+* feature pooling (mean, median), Fisher vectors, VLAD descriptor
+* XGB, LR
+* multi-label: binary relevance (BR), ensemble of classifier chians (ECC)
+* tools: mxnet, torch, vlfeat, xgb, caffe
+
+Diagnosing heart diseases - 2nd place
+=====================================
+http://blog.kaggle.com/2016/04/13/diagnosing-heart-diseases-with-deep-neural-networks-2nd-place-ira-korshunova/
+https://github.com/317070/kaggle-heart
+
+* complicating image processing
+
+Allen AI science challenge - 3rd place
+======================================
+http://blog.kaggle.com/2016/04/09/the-allen-ai-science-challenge-winners-interview-3rd-place-alejandro-mosquera/
+
+* LR 3-class (yes/no/other to account for low confidence predictions)
+* gensim word2vec
+* expand word2vec with fuzzy string matching
+* treat as pair ranking problem
+
+Telstra network disruption - 1st place
+======================================
+http://blog.kaggle.com/2016/03/23/telstra-network-disruption-winners-interview-1st-place-mario-filho/
+
+* XGB, Keras
+
+Airbnb new user bookings - 2nd place
+====================================
+http://blog.kaggle.com/2016/03/17/airbnb-new-user-bookings-winners-interview-2nd-place-keiichi-kuroyanagi-keiku/
+
+* XGB, glmnet, R DescTools
+
+Prudential life insurance assessment - 2nd place
+================================================
+http://blog.kaggle.com/2016/03/14/prudential-life-insurance-assessment-winners-interview-2nd-place-bogdan-zhurakovskyi/
+
+* linear models enough (no worse than XGB)
+
+Airbnb new user bookings - 3rd place
+====================================
+http://blog.kaggle.com/2016/03/07/airbnb-new-user-bookings-winners-interview-3rd-place-sandro-vega-pons/
+https://www.kaggle.com/svpons/airbnb-recruiting-new-user-bookings/three-level-classification-architecture
+
+* XGB, Keras
+* own blending (better than LR and XGB if many classes)
+* XGB + Keras usually good
+
+Homesite quote conversion winners - 3rd place
+=============================================
+http://blog.kaggle.com/2016/02/29/homesite-quote-conversion-winners-interview-3rd-place-team-new-model-army-cad-quy/
+
+* categorical features: response-rate encoding
+* differences of high correlated features
+* XGB, h2o RF, Keras
+* no feature selection since all variables relevant
+
+Genentech cervical cancer screening - 1st place
+===============================================
+http://blog.kaggle.com/2016/02/26/genentech-cervical-cancer-screening-winners-interview-1st-place-michael-giulio/
+
+* autoencoder
+* SQL feature engineering
+* XGB + NN
+
+NOAA right whale recognition - 2nd place
+========================================
+http://blog.kaggle.com/2016/02/04/noaa-right-whale-recognition-winners-interview-2nd-place-felix-lau/
+http://felixlaumon.github.io/2015/01/08/kaggle-right-whale.html
+
+* predict parts of whale and crop image to let NN refocus
+* VGG-net, ResNet
+* Theano, Lasagne, Nolearn
+
+Winton stock market challenge - 3rd place
+=========================================
+http://blog.kaggle.com/2016/02/12/winton-stock-market-challenge-winners-interview-3rd-place-mendrika-ramarlina/
+
+* nu-SVMs, Ridge LR
+* peak-to-valley distance
+
+Rossmann store sales - 2nd place
+================================
+http://blog.kaggle.com/2016/02/03/rossmann-store-sales-winners-interview-2nd-place-nima-shahbazi/
+
+NOAA right whale recognition - 1st place
+========================================
+http://blog.kaggle.com/2016/01/29/noaa-right-whale-recognition-winners-interview-1st-place-deepsense-io/
+http://deepsense.io/deep-learning-right-whale-recognition-kaggle/
+
+* train NN to find whale head, align on head and crop
+* spatial transform networ, triplet training
+
+Santa's stolen sleigh - 2nd place
+=================================
+http://blog.kaggle.com/2016/01/28/santas-stolen-sleigh-winners-interview-2nd-place-woshialex-weezy/
+https://github.com/woshialex/SantaStolenSleigh
+
+* optimization, simulated annealing
+
+Rossmann store sales - 3rd place
+================================
+http://blog.kaggle.com/2016/01/22/rossmann-store-sales-winners-interview-3rd-place-cheng-gui/
+https://www.kaggle.com/c/rossmann-store-sales/forums/t/17974/code-sharing-3rd-place-category-embedding-with-deep-neural-network
+
+* "entity embedding" for categorical features (similar to semantic embedding)
+* Keras
+
+Avito duplicate ads - 2nd place
+===============================
+http://blog.kaggle.com/2016/08/31/avito-duplicate-ads-detection-winners-interview-2nd-place-team-the-quants-mikel-peter-marios-sonny/
+
+* made script to monitor whether XGBoost overfits on features (histograms, split purity) -> remove those features (which are too specific to training set)
+* many feature descriptions
+* cluster rows -> add their size as feature
+* non-overlapping items validation
+* XGB: max depth 20, min child 10, eta 0.1 (high)
+* RF and XGB combination of all models
+
+Avito duplicate ads - 1st place
+===============================
+http://blog.kaggle.com/2016/08/24/avito-duplicate-ads-detection-winners-interview-1st-place-team-devil-team-stanislav-dmitrii/
+
+* only XGB (top 3 with single; averaged with diff seeds for 1st place)
+* NCD distance (normalized compression distance)
+* text: stemming, lemmatization, transliteration
+* LSI of ads union/XOR
+* ratios of lengths
+* image: BRIEF, HOG, MXNet, AKAZE local visual features
+* tools: XGB, VLFeat, OpenCV, MXNet
+
+Prediction check ins - 3rd place
+================================
+http://blog.kaggle.com/2016/08/18/facebook-v-predicting-check-ins-winners-interview-3rd-place-ryuji-sakata/
+
+* Naive Bayes
+
+Dato - 1st place
+================
+http://blog.kaggle.com/2015/12/03/dato-winners-interview-1st-place-mad-professors/

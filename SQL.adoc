@@ -1,0 +1,77 @@
+= SQL Quickref
+
+:toc:
+
+== Commands
+
+[cols="m,d"]
+|===
+| *show tables from* db                     |
+| *alter table* tbl *add index* name (col1, ...)    |
+| *alter table* tbl *add primary key* (col1, ...)   |
+| *alter table* tbl *modify* col type       |
+| *create table* tbl (colname coldef, ...)  | http://dev.mysql.com/doc/refman/5.7/en/create-table.html
+| *create [temporary] table [if not exists]* ...    |
+| *create table* tbl *like* tbl2            |
+| *drop table [if exists]* tbl1, tbl2, ...  |
+| *delete from* tbl *where* ...             | http://dev.mysql.com/doc/refman/5.7/en/delete.html
+| *delete from* tbl *where* ... *order by* ... *limit* ...  |
+| *insert into* tbl *values* (...,...)      | http://dev.mysql.com/doc/refman/5.7/en/insert.html
+| *insert into* tbl *select* ...            |
+| *insert into* tbl ... *on duplicate key update* col=...,...   |
+| *load data infile* 'filename' *into table* tbl    | http://dev.mysql.com/doc/refman/5.7/en/load-data.html
+| *load data infile* ... *fields terminated by* '\t' *enclosed by* '' *ignore* 1 *lines* |
+| *select* ... *into outfile* 'filename'    | http://dev.mysql.com/doc/refman/5.7/en/select-into.html
+| *truncate* tbl                            |
+| *select* ... *from* ...                   | http://dev.mysql.com/doc/refman/5.7/en/select.html
+| *select* ... *from* ... *where* ... *group by* .... |
+| *select* ... *having* ...                 | *Applied last; Can refer to aggregations (e.g. max(a)), but not to WHERE clause
+| *(*select* ...) *union* (*select* ...)    |
+| *update* tbl *set* col1=val *where* ...   | http://dev.mysql.com/doc/refman/5.7/en/update.html
+| *update* ... *order by* ... *limit* ...   |
+| *load data infile* ... (@va, ...) *set* a=nullif(@va,"")  | to get NULL in column; will be '' otherwise
+| *pragma table_info*(tbl)                  | SQLite
+|===
+
+* Column definition: data_type *[not null|null] [auto_increment] [primary key]*
+* Column data types: *INT, FLOAT, DATETIME, VARCHAR*(len)
+* Provide index hinting for querying: http://dev.mysql.com/doc/refman/5.7/en/index-hints.html
+* In text comparison with "=" trailing spaces are not significant for CHAR/VARCHAR
+* String comparisons are also not case-sensitive (unless use BINARY)
+* Use VARCHAR COLLATE utf8_bin (but will mess up order by unless use COLLATE utf8_general_ci there)
+* to get NULL from CSV use "\N" (or sometimes "NULL")
+
+== Expressions
+
+[cols="m,d"]
+|===
+| *case val {when compval then ...} else ... end |
+| *if(cond, yesval, noval)                  |
+| *val REGEXP regex                         | Alternative RLIKE
+| *val LIKE pattern                         | '%' is '.*'; '_' is '.'; trailing space significant
+| *expr [not] between min and max           | min<=val<=max
+| *ifnull(expr, valifnull)                  | Return expr or valifnull if expr is null
+|===
+
+== Index
+
+* sometimes slower with index, when using index first and then needing to fetch single rows; full table scan can be more efficient
+* oracle can use optimization hints (in comments)
+* optimizer estimates number of rows
+* mysql: no virtual columns or function-based indexing
+* MySQL case-insensitive but controlled on column level
+* function based index if exact same function expression
+* only deterministic functions for index (not date, ...); postgres: declare IMMUTABLE
+* binding parameters can save time (no re-eval of plan); but can cost time since no histograms can be used for row estimates
+* leaf node traversal bad for index (when multiple leaf nodes with same values)
+* usually: index for equality first; then for ranges
+* LIKE can use index for left-most constant part of string
+* MySQL: MATCH AGAINST keywords for full-text search
+* bitmap index: individual indices can be combined easily; but very bad INSERT performance
+* partial indices: when often WHERE queries with constants
+* oracle treats empty string as NULL and sometimes NULL as empty string; oracle stores NULL instead of "" in VARCHAR2
+* oracle: indexing problem if all columns null
+* oracle: has only one DATE type with time
+* careful with numeric strings and indexing; use num_str=TP_CHAR(123)
+
+SELECT * can be slower since wouldn't use an index

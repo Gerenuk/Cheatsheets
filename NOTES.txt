@@ -1,0 +1,46 @@
+optimize:
+start: class_weight, criterion, max_depth=(20,40)
+opt: max_features, one of min_samples_leaf/min_samples_split/min_weight_fraction
+extra: min_samples_leaf=1, min_samples_split=5, n_estimators more steps
+no other cross-optimize
+
+add data size and imbalance
+add run ID (for extra optimize)
+
+optimize all of min_samples etc. variables?
+skopt options?
+thesis RF?
+
+prior on max_features?
+
+----
+Out of 14 datasets with default ROC 0.6-0.9
+
+class_weight=None, idx8: 0.996 (relative to best)
+Also: 9,10,6
+maybe other class_weight if poslabel <10% -> balanced or balanced_subsample both candidates
+
+criterion=entropy; always winner apart from 2 (0.998); try gini if imbalanced
+
+-> restrict entropy/classweightNone -> worst 0.994
+
+optimize:
+min_samples_leaf -> worst 0.9895
+min_samples_split -> worst 0.9873
+min_weight_fraction_leaf -> worst 0.996 <= best
+
+
+most common min_sample_leaf: 1,2,3
+a few higher; some have lower score (noisy?)
+
+min_sample_leaf=3 fixed -> rel to best 0.997
+-> no very clear pattern for duration difference to min_weight_fraction_leaf opti
+
+max_depth=20 -> at most 0.3% loss (often even win!)
+-> but no saving in time!!
+
+max_features=sqrt -> often no diff, but can be 2%-18%
+-> optimize
+
+optimizing max_depth brings no gain (score, duration)
+log-uniform distr for min_samples_leaf no gain (score, duration)

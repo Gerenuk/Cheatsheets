@@ -1,0 +1,28 @@
+= Header
+== Section
+_italic_
+*bold*
+`monospace`
+
+[cols="m,d"]
+.Tabletitle
+|===
+| tablecell
+|===
+
+line +
+break
+
+// comment
+
+////
+multi-line comment
+////
+
+TIP: special paragraph
+
+== Cheatsheet specific
+
+* replace: `\.([a-z_]+)\( -> .*\1*(`
+* replace: `([A-Za-z_]+)\(`
+* replace: `^(\| [^|]+)$ -> \1 |`

@@ -1,0 +1,38 @@
+for c in train.columns[train.dtypes=="object"]
+np.diff
+plt.plot(x,".")  # plot index vs x
+which number (almost) always smaller than other
+look at xa/xb plots; pd.scatter_matrix
+kmeans on correlation matrix -> find feature groups
+plot at feat means; maybe groups
+df.nunique(axis=1)==1     # dropna=False
+df.T.drop_duplicates()  # dupli cols
+.. or do .factorize() before in case there is just a mapping
+duplicated rows?
+plot means vs rows index; does mean shift?
+or RF predict row index; feat imp
+df.isnull().sum(axis=1)
+or axis=0 for cols
+some value always maps to particular other value?
+.index.tolist()
+large integers could ne nanoseconds
+feat: how many cols are exactly equal in this row
+how many rows in colA are greater than colB; also for dates
+spikes in histogram? where are? regular?
+maybe divmod features useful?
+pickle.dump(.., protocol=pickle.HIGHEST_PROTOCOL)
+sns.set(palette=)
+sns.set(font_scale=2)
+ShuffleSplit (if enough data), Kfold (if inhomo), LeaveOneOut
+Stratification: for small, unbalanced, many multi-class
+!need same validation as test split; i.e. exactly random OR timesplit
+feature husbad/wife which are separate in train/test
+id-based split: diff objects in train/test
+keep specific ratio of news id objects in validation
+diff optimal param on validation folds?
+too little data; too diverse data; similar samples with diff targets? (inconsistent)
+-> diff seeds and average scores?
+leaderboard diff distr: what is optimal constant submission -> adjust prediction
+weights of categories might change -> mimic in validation set
+train: only recommended songs; test: all songs
+np.column_stack

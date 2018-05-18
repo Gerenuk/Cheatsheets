@@ -1,0 +1,97 @@
+creating virtual environments: http://www.python.org/dev/peps/pep-0405/
+raise Newexception() from ... # suppres previous context
+tempdir context
+pydoc webserver
+sysconfig: info about installation (Python vers. etc)
+ast.literal_eval(): safe alternative to eval()
+recursive_repr(): to avoid recursive calls
+math.isfinite(): determine of special (nan, inf)
+faulthandler: traceback nach timeout
+collections.ChainMap: treat many mappings as one; write to first dict only
+round(x, -2): 1234->1200
+
+= GUI compare
+++ Python GUI compare
+
+Test Python GUI:
+wx:
+* no GUI designer? (Boa stuck)
+* worse than Qt by code clarity or stupid bugs
+* slow on OSX?
+* not quite ready for Python 3?
+* wiki: http://wiki.wxpython.org/FrontPage
+* long development
+* Dabo simplifies syntax
+* wxPython lags wxWidgets a bit
+
+Qt:
+* no so pythonic API
+* might need commercial license
+* winner?
+* PyQt more mature but only free if application open source; also not careful with memory (segfault?)
+* PySide more permissive with LGPL
+* large footprint
+* allows themes
+* additional package pyqwt recommended
+* pyqtgraph for updating plots
+
+Kivy:
+* multitouch
+* suitable for gamedev
+* onyl choice for tablets?
+
+PyGUI:
+* simpler
+
+libavg:
+* OpenGL
+* for many objects; artistic effects; video
+* for media-rich GUIs
+
+Web service:
+* HTML+JS
+* harder for desktop integration (open files) or window management
+* CEF Python: make window for your app?
+
+PyJamas:
+* to JS converter
+* outdated
+
+Comments:
+http://www.reddit.com/r/Python/comments/2czwff/what_gui_do_you_guys_use/
+
+isinstance(.., collections.Sequence)
+isinstance delegates to a dunder
+
+@singledispatch: call diff methods for diff types; e.g. for vistor pattern
+
+virtual subclass:
+Parent.register(Child)   # only this way parent knows about it
+
+ABC: can register other classes
+e.g. Sequence.register(tuple)
+-> subclass will yield true
+
+MyABC(metaclass=ABCMeta)
+MyABC.register(tuple)
+
+simple counting:
+* Counter 1.6s
+* naive Python 800ms (2-5x slower than Java)
+* toolz.frequencies 520ms
+* pandas.Series 280ms
+* cytoolz 210ms
+
+Sizes:
+integer: 24
+empty list: 64
+numpy integer: 4
+
+1e11*1e-11!=1 (11 is smallest)
+0.07*100!=7 (next 14, 28, 29, 56, ..)
+0.01*7*100!=1, but 0.01*700=7
+0.1*3!=0.3, 0.2*3!=0.6
+0.14*10!=1.4
+only a=0.5, 0.25, 0.5, 0.75, .. or b=1,2,4,8,... not prone to 0.a*b is long
+
+note that number displays rounded to 8 digits

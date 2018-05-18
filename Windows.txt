@@ -1,0 +1,21 @@
+To show DOS shortened names:
+for %I in (.) do echo %~sI
+
+Search:
+System.FileName:~<"start"  | starts with
+System.FileName:="exact"   | exact match
+System.FileName:~="part"   | substring
+System.Kind:<>picture
+System.DateModified:01/01/2010
+System.Size:<1mb
+System.Keywords:"keyword"  | tagged files
+can use AND, * for wildcard
+
+"winword.exe" "C:\My Files\doc1.doc" /mFilePrintDefault
+
+Open with dialog: rundll32.exe shell32.dll,OpenAs_RunDLL {drive:\path\filename} 
+
+Windows Environment variables:
+rundll32 sysdm.cpl,~EditEnvironmentVariables
+
+Proxy from netstat -an

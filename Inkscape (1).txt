@@ -1,0 +1,11 @@
+Transform handwriting to path and color:
+* scan image
+* transform to path (will create "one" huge path)
+* to color parts:
+** break apart path (empty letters like "o" will be filled)
+** combine element and color
+** combine rest (to fill letter)
+** to easier select everything but the colored object
+*** hide (obj.props, but object disappears)
+*** lock (obj.probs, but not selectable)
+*** obj to new layer

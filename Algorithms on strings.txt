@@ -1,0 +1,53 @@
+Substring search
+================
+* substring search easy; but with multiple patterns?
+-> could construct trie which contains all patterns
+* but trie could be huge in memory
+-> suffix trie of whole text! trie with all "suffixes"; add $ as final letter
+* but also need to include information about position
+-> add starting position to bottom leaf
+* but need Text^2/2 size
+-> can compress into suffix Tree: edges save partial strings
+* store position+length in suffixtree only
+* there is linear Weiner algorithm to construct suffix tree
+* but 20*|Text| memory footprint
+* also approximate matching not clear
+
+Burrows-Wheeler transform
+=========================
+* transform substring repeats into runs
+-> frequent words generate runs: e.g. from many "and" you get sorted "nd" with "a" as final letter
+* faster inversion: 1st, 2nd, ... "a" in first/last column correspond to same words
+-> need only first and last column and back and forth jumping
+
+BWT for pattern matching
+========================
+* can use first-last property (first/last column) to search for pattern
+* previous letter of first column always in last column
+* but slow since checking all letters -> introduce counts for runs
+* but where are the matches?
+* basically BWT allows for doing step by step (reverse) letters
+
+Suffix arrays
+=============
+* only store starting position of BW suffixes
+* is also depth-first traversal of suffix tree
+* Manber-Myers algo
+* could store only some values and recalc intermediate positions
+* can build in N*logN
+* like suffixes sorted (from left side)
+* last artifical character $ which is smaller than all
+* tag of suffix is their starting position -> order by suffix -> single list of numbers
+* BWT (starts) is same as suffix array
+* can build suffix tree from this in linear time
+
+Approximate pattern matching
+============================
+* esp. for many test patterns
+* BWT again
+* can search with number of mismatches
+
+Knuth-Morris-Pratt
+==================
+* Running time |Text|+|Pattern|
+* match prefixes; if (partial) match, skip as sensible

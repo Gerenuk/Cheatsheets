@@ -1,0 +1,325 @@
+= ML models
+* linear good for sparse linear models
+* vowpal for really large data
+
+
+= Feature encoding
+
+== Numerical feature
+* linear models sensitive to outliers
+* help non-tree-based models (linear, ANN):
+** e.g. clip values windsor -> np.percentile, np.clip
+** np.rank, scipy.stats.rankdata
+** np.log(x+1)
+** np.sqrt(x+2/3)
+** -> closer the average
+* sometimes merge data with diff preprocessing
+* sometimes mix models on diff preproc data
+* GBT not good at multiplication/division
+
+== Categoricals
+* LabelEncoder, pd.factorize
+* frequency encoding
+* for linear models: OneHotEncoder, pd.get_dummies
+* better for non-tree models -> tree method more trouble if many cols
+* categorical feature interaction to help non-tree models
+* !make count of cat vals over train+test, so that no surprise category
+
+== Date and coordinate
+* period times
+* time since particular event
+* distance to special objects (e.g. to centers of cluster, to most expensive house in square, to special)
+* area statistics
+* add rotated coordinates for non-tree models
+
+== Missing values
+* fill (extreme, mean, ...)
+* add indicator col
+* reconstruct by model
+* XGB handles NaN
+* do not replace missing value before featgen
+
+== Text features
+* bag of words (sklearn.feature_extraction.text.CountVectorizer)
+* embedding (e.g. bad of words)
+* TFIDF: x / x.sum(axis=1)[:,None] * np.log(x.shape[0]/(x>0).sum(0))
+* or sklearn.feature_extraction.TfidfVectorizer
+* n-grams (CounterVectorizer)
+* sometimes char-n-gram cheaper than word-grams
+* preprocess:
+** lowercase
+** stemming (chop off ending); "saw" -> "s"
+** lemmatization (more carefully word substitution); "saw" -> "see" or "saw" depending on meaning
+** stopwords (no important information); e.g. from nltk
+* embedding (unsupervised):
+** word2vec, glove, fasttext
+** sentences: doc2vec
+** not interpretable
+
+== Image features
+* CNN layers (later layers more task dependent)
+* "finetuning" for specific task later (from pretrained)
+* e.g. VGG 16, put in new last layer, finetune with slow 1/1000 of initial learning rate
+* image augmentation (e.g. rotations)
+
+= Data Leaks
+* meta info of images
+* X values of test set
+* ID order
+* row order
+* rows next to each other same label
+
+== Leaderboard probing
+* private testset somehow exploitable
+* probe distribution of test set
+* reverse engineer coordinates from distances
+* see download videos for complex examples
+
+= Metrics
+
+== Regression
+* MSE and RMSE same optimum, but different gradient during learning
+* R^2=0 if constant model
+* optimize R^2 same as MSE
+* MAE: Mean absolute error
+* MAE gradient constant
+* MSPE, MAPE; percentage error
+* MSPE: best constant = weighted mean
+* MAPE: best constant = weighted median
+* MSLE: Square logarithmic error sum(log(y)-log(yhat))^2; asymmetric
+* MSLE better than MAPE since relative, but less bias to small
+
+== Classification
+* logloss: works with soft predictions; easier to optimize
+** sum_n sum_class y_nc*log(yhat_nc); where sum_cl yhat_nc=1
+** penalizes completely wrong answer; rather a lot of small mistakes
+** best constant to set frequencies of classes as scores/probs
+* AUC = fraction of correctly ordered pairs (of both classes)
+* Cohens Kappa: like accuracy, but zero to base line accuracy
+** 1-(1-acc)/(1-rand)=kappa=1-err/baseerr; rand is acc. of random permutations
+* weighted error, weighted kappa; 1-weightederr/baseweightederr
+* quadratic weighted kappa: interrater agreement; used often
+
+== Optimization
+* metric: what we want
+* loss: what we actually optimize
+* early stopping: stop when wanted metric best
+* support:
+** MSE: most
+** MAE: LightGBM, Vowpal (quantile loss), RF (slow), Huber loss in Sklearn similar; other Sklearn NOT
+** Huber: MSE, MAE when large
+** LogCosh
+** ??PE: use sample_weights
+** LogLoss: many, NOT RF; calibrate if needed
+** Acc: hard to optimize; zero gradient; maybe try hinge loss, log-loss
+* calibrating:
+** Platt
+** Isotonic
+** Stacking (fit any classifier on top)
+* Optimize AUC:
+** pair-wise loss to optimize l(a,b,ahat,bhat)
+** exists in XBG, LGBM, not Sklearn
+** but maybe similar to normal log-loss
+* Quadratic weighted kappa
+** optimize MSE (regression) and adjust threshold
+** more complex: possible
+
+= Feature encoding
+
+== Mean encoding
+* use mean of target for category
+* problem: when some categories very rare; becomes "perfect" training feature -> regularization:
+** CV loop: make 5 fold; use means only on out-of-fold subsets; still leakage possible (e.g. LOO)
+** Smoothing: (mean(target)*n+globalmean*alpha)/(n+alpha); punish rare categories; combine with CV loop
+** Add noise: to degrade encoding on train; very hard to know amount of noise; usually with LOO
+** !Expanding mean: make some ordering; cumsum/cumcount; only feature quality not uniform; part of CatBoost
+** recommended: Expanding mean or CV loop
+* regression: can also use quantiles etc
+* for multiclass: this way introduce more class relation info, even when one-vs-all used in the end
+* for sets: explode and mean encode tuples; need to combine vector to numbers (max, mean, ..)
+* numeric features
+** could bin and treat as categorical
+** from raw numeric features, find most important ones and use split points from tree
+** !extract interactions from tree; if neighbouring nodes -> mean encode concatenate interaction
+* CatBoost automatically?
+* always try interactions for categories
+* try lagged features
+
+= Hyperparameter tuning
+* tuning manually easiest
+* libs: hyperopt, spearmint, GPyOpt, RoBO, SMAC3, scikit-optimize
+
+== Gradient Boosting
+* XGB, LightGBM, CatBoost, baidu/fast_rgf (interesting, but slow)
+* XGB/LightGBM [(+) means it relaxes model, (-) constraints]:
+** max_depth / max_depth,num_leaves (+); start with 7, if very large, maybe create new features
+** subsample / bagging_fraction (+)
+* colsample_bytree,colsample_bylevel / feature_fraction (+)
+* min_child_weight,lambda,alpha / min_data_in_leaf,lambda_l1,lambda_l2 (-); min_child most important (0,5,100,... large range)
+* eta,num_round / learning_rate,num_iterations (+); first make it small enough, then increase to make it converge; e.g. 0.1/0.01 see when it does overfit -> then scale num steps and rate inversely
+* maybe fix all seeds (*_seed in LightGBM)
+
+== Random Forest
+* n_estimators: start from 10 and see how many you need for performance
+* max_depth (+); start with 7 and more
+* max_features (+)
+* min_samples_leaf (-)
+* criterion: try both
+
+== Neural Networks
+* Neurons per layer (+); start 64
+* Number of layers (+); start 1,2
+* try to find config that can overfit data
+* SGD+momentum
+* Adam/Adadelta/Adagrad/...: adaptive, but overfit easier
+* Batchsize (+): overfitting if large
+* Learning rate: start 0.1; lower until converge
+* could scale batch and rate by same factor
+* Regularization: L1, L2, Dropout (usually closer to end, otherwise info lost too early), Static dropconnect!
+
+== Linear models
+* SVM: compile yourself for multicore (in latest version)
+* Vowpal: FTRL
+* SVM: start small 1e-5 increase x10
+* do not tune too long at beginning
+* average models (e.g. by seed, param-1/param/param+1,...)
+
+== Advanced feature engineering
+* inter-row based relations (e.g. min, max, sum at same cat value)
+* or also find nearest neighbours to aggregate
+* mean encode all variables
+* find 2000 nearest neighbour with Bray-Curtis metric sum|u_i-v_i|/sum|u_i+v_i| -> calc features
+* mean distances to closest neighbours, closes neighbours with label 1,...
+
+== Matrix factorization
+* e.g. for dim reduction of large feature space (e.g. BOW)
+* number of factor to tune; e.g 5-100
+* SVD, PCA, TruncatedSVD (for sparse data, e.g. BOW), NMF
+* !NMF good for  decision trees
+* !NMF(log(X+1)) can be useful (NMF og trans data)
+* transform all of X data at once (incl. test set(?))
+
+== Feature interactions
+* make Onthot of combinations of categorical
+* can also mul, div, sub,...
+* !-> maybe feature selection of cross-product features (e.g. by RF)
+* or dim reduction
+* each tree leaf a onehot feature (sklearn tree_model.apply(), xgboost booster.predict(pred_leaf=True))
+
+== t-SNE
+* hyperparam important (perplexity 5-100); try and see several
+* project train and test together, since stochastic
+* may need to reduce dimension before (100?)- otherwise too slow
+* t-SNE standalone faster than sklearn t-SNE
+* https://distill.pub/2016/misread-tsne/
+* http://scikit-learn.org/stable/auto_examples/manifold/plot_t_sne_perplexity.html
+
+== Bagging
+* average similar models, prevents too high variance (overfitting)
+* change seed if exists
+* row subsampling; or bootstrapping
+* column sample
+* shuffling (if algo sensitive on irder)
+* model specific param (e.g. slightly diff regularization param)
+* more bags better (e.g  10)
+* use parallelism
+* in sklearn BaggingClassifier, BaggingRegressor
+
+== Boosting ensembling
+* Weight boosting
+** calc prediction error (_absolute_ deviation per instance) and generate weight from this
+** repeat process (max where previous models wrong)
+** tune learning rate (or shrinkage or eta) and number of estimators
+** works with anything that accepts instance weights
+** types: AdaBoost (Sklearn), LogitBoost (Weka; usually only good for LogReg)
+* Residual boosting
+** more successul
+** calc error and make new y variable
+** learning rate, number of estimators
+** row/col subsampling
+** best with trees
+** types: gradient based (move towards residual); Dart (esp for classif.; drop out to control tree contribution, take only some prev estimators)
+* XGBoost, LightGBM, H20 GBM (cat var)
+* !CatBoost (strong initial param)
+
+== Stacking
+* make train/validation sets (50/50)
+* make validation predictions; stack model on it
+* make test pred and use learned stacking model from before
+* respect time for timeseries!
+* model diversity important (e.g. diff algo, diff feature transf)
+* plateau after some models
+* stacking model can be simple
+
+== StackNet
+* multiple stacking models -> stack again
+* on Kaggle 3 layers of stacking
+* like neural network (?)
+* always need fresh data
+* -> use k-fold (e.g. 5)
+** train 1-4, predict 5 -> rotate to get pred 1,2,3,4
+** use all instances again for stacking model
+** good with tree methods
+* alternative: predict for all instances and just average; better with ANN
+
+== Ensemble tricks
+* 2-3 GBTs (e.g. diff depth, tune for similar performance)
+* 2-3 ANNs (e.g. diff layer num)
+* 1-2 ExtraTrees, RF
+* 1-2 linear
+* 1-2 kNN
+* 1 Factorization Machine (libFm)
+* 1 SVM with Kernel
+* diff encoding for Cat feats
+* numerical: binning, outliers, derivates, percentiles
+* interactions, groupby, ...
+* unsupervised on numerical
+* in each new layer simpler algorithms (depth 2-3, max 1 ANN layer, linear with high reg., kNN with BrayCurtis distance)
+** maybe brute force best linear weights
+** add diff between model predictions
+** row-wise statistics like averages
+** feat selection
+* for every 7.5 model add 1 meta layer
+* still target leakage possible (select right k in k-fold stacking -> reduce k if overfitting)
+* software
+** https://github.com/kaz-Anova/StackNet
+** http://docs.h2o.ai/h2o/latest-stable/h2o-docs/data-science/stacked-ensembles.html
+** https://github.com/reiinakano/xcessiv
+* can interchange classif/regr
+
+== Competitions
+
+I saved their videos
+
+=== Crowdflower competition
+* quadratic weighted kappa
+* weight 1/(1+var)
+* char n-grams (1-5 letter; across spaces as well)
+* num match word
+* cosine distance between tfidf
+* distance of word2vec
+* levenshtein
+* binary features for diff cutoffs on sorted targets
+* 2nd stage RF; finally mixed linearly
+
+=== Springleaf competition
+* linear model at end stacking does not overfit
+* ranks, power transf (due to outliers)
+
+=== Microsoft Malware competition
+* byte counts, section length counts
+* 10-grams + feature selection
+* feature selection:
+** NMF better for trees (e.g. RF) since axis parallel; since working with counts
+** NMF on log(X+1)
+** Linear SVM + L1
+** RF feat imp
+** omit rare
+** fit on error-prone object to make sure features are most useful
+** !new binary problem with 1 on largest error out-of-fold samples
+* testing data added for training -> pseudo-label added, e.g. add labels from other model predictions on test set
+
+=== Walmart
+* linear worse than worse interactions
+* apparently ordered by date -> calc feature per day
+

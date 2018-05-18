@@ -1,0 +1,15 @@
+Text mining
+===========
+* need to find special sub-categories of data, before looking at top words (e.g. periodic, high/low, special attributes)
+* -> do an (0,1,0,..) feature and count top words for each of the bins
+* combine word into min(rank) list
+* also show cumulative tail percent (to understand when to stop looking)
+* show top secondary words for each primary word (don't show/count words which are already high primary words)
+* this could be done with fully Spark in two groupbys?
+* How many other words (Quartile of number)? How often alone?
+
+Feature aggregation
+===================
+* multiply by map (e.g. linear or hat function) and aggregate (e.g. sum/min/max) -> like convolution
+* this way many features are done
+* map may need to shift with time

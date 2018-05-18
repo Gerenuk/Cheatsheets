@@ -1,0 +1,15 @@
+CS231n
+https://www.youtube.com/watch?v=vT1JzLTH4G4
+
+= Introduction and History
+* Images and Video like "dark matter" of internet; a lot, but hard to process
+* SIFT features match parts of diff images with same object
+* 2012 big ImageNet improvement with CNN
+* "object detection": bounding boxes
+* 2015 ResNets: >200 layers
+
+= Image classification pipeline
+* L1 decision boundaries parallel to coor axes
+* http://vision.stanford.edu/teaching/cs231n-demos/knn/
+* seems: L1 has bad far extrapolation, doesnt change much with more and more nieghbors
+* 

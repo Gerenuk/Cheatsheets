@@ -1,0 +1,91 @@
+frequentist:
+* more variance, larger confidence intervals
+
+probabilities:
+* believes only
+
+variables:
+* .children, .parents
+* .value: current value
+* stochastic: always uncertain
+* determinisitic: determined if parents known
+* size= : for vector of these indep value
+* .random(): create a new random value for this variable
+* only use A.value= ; never anything else (e.g. += ) 
+as it will confuse caching
+* inside @pm.deterministic: use stochastic variable as scalar, not as .value
+* observed= : to fix current .value; tell value= (numpy array for speed) -> including data with this
+
+pm.Lambda: help creating deterministic variable of slicing and indexing
+
+pm.Bernoulli doesn't like exactly 0 or 1 -> need to set initialization values (value=) so that this doesnt happen
+
+map_=pm.MAP(model)
+map_.fit()
+mcmc=pm.MCMC(model)
+mcmc.sample(...)
+
+scipy.stats.mstats.mquantiles
+
+Simulated should be similar to observed
+Sampled from data distribution but without the value= option
+Do "separation" plots
+
+Look at 1 events, but sorted by posterior probability
+
+here only MCMC.
+But besides that also possible:
+
+* Laplace approx (approx posterior using simple functions)
+* Variational Bayes (advanced)
+
+pm.Categorical("assignment", [p, 1-p], size=..)
+
+discard burn-in period from trace
+
+better not have too much correlation in trace -> otherwise not exploring enough
+
+mcmc.trace("var", chain=<past_call_number>)
+
+All posterior values related (e.g. one small stddev often means other must be large)
+
+To start MCMC right at the maximum (and avoid burn-in), you can use pm.MAP(model).fit()
+-> can even be used as most likely value (but contains no uncertainty)
+
+autocorrelation probably means convergence, but not necessary
+
+pymc.Matplot.plot for plotting
+
+to help convergence:
+
+* provide good starting values with value=
+
+
+scipy.optimize.fmin to minimize loss
+
+Empirical Bayes: use frequentist to chose hyperparameter of prior
+
+Priors:
+Gamma(alpha,beta): positive real number; generalization of exponential
+Wishart: over positive semi-definite matrices; hence can be inverse covariance matrix (-> invert and normalize to get correlations)
+Beta(alpha,beta): [0,1]; alpha=1/beta=1 would be uniform; Beta+Binomial=Beta(alpha+X,beta+N-X)
+
+Problem: Estimating whole matrix requires a lot of parameters
+Tips:
+* use conjugancy if it applies
+* use good starting values
+* provide domain knowledge if possible
+* use empirical Bayes for parameters
+* maybe don't need all correlations
+
+Conjugate prior:
+
+* to avoid full MCMC, since prior and posterior have special form
+* but for multi-dim problem often no prior exists
+
+Jeffreys priors:
+
+* don't become accidently informative when variable transformed
+
+p(theta) ~ sqrt(-E(d^2log p(X|theta)/dtheta^2)
+

@@ -1,0 +1,380 @@
+\documentclass{article}
+\usepackage[a4paper,margin=1cm,landscape]{geometry}
+\usepackage{multicol}
+\usepackage{enumitem}
+\setlist{nolistsep,leftmargin=*}
+
+\usepackage[compact]{titlesec}
+%\titlespacing*{\section}{0pt}{1.1\baselineskip}{\baselineskip}
+
+\begin{document}
+\begin{multicols}{3}
+\section{Blogs}
+\begin{itemize}
+\item FastML
+\item PyData Videos
+\item ShapeOfData
+\item DataElixir NL
+\item DataScienceWeekly NL
+\item Reddit/ML
+\item DataTau
+\end{itemize}
+
+\section{Technology}
+\subsection{Database normalization}
+\begin{itemize}
+\item divide tables with relations to minimize redundancy
+\item no insert/update/deletion anomalies; update only one place
+\item denormalization only for performance
+\end{itemize}
+
+\subsection{Hadoop (2005)}
+\begin{itemize}
+\item distributed FS (HDFS) + processing (MapReduce)
+\item fail-tolerant resource management; replication
+\item scale-free; doesn't know about size of hardware
+\item one master (for small networks)
+\item Java (or other)
+\item ML: Mahout
+\item Pig, Hive,  Spark (2009; keep in-memory; MLlib)
+\end{itemize}
+
+
+\section{ML methods}
+\subsection{Supervised}
+\begin{itemize}
+\item \underline{Regression}: \textbf{OLS}, \textbf{LinReg}, \textbf{LOESS} (Locally Estimated Scatterplot Smoothing), \textbf{MARS} (Multivariate adaptive regression splines)
+\item \underline{Regularization}: \textbf{Ridge}, \textbf{Lasso} (least absolute shrinkage and selection operator) , \textbf{ElasticNet}
+\item \underline{Classification}: \textbf{DT} (CART, C4.5, GBM), \textbf{LogReg}, \textbf{NaiveBayes}, \textbf{SVM}, \textbf{LDA}, \textbf{RF}
+\item \underline{ANN}: \textbf{Perceptron}, \textbf{ConvNet}
+\item \underline{Timeseries}: \textbf{ANN}, \textbf{ARIMA}
+\item \underline{Recommendatio}n: \textbf{Collaborative filtering}
+\item \underline{ML}: \textbf{EM}, \textbf{PAC}, \textbf{VC}, \textbf{Boosting}
+\end{itemize}
+
+\subsection{Unsupervised}
+\begin{itemize}
+\item \underline{Clustering}: \textbf{kNN}, \textbf{DBS, \textbf{RBM} (learn prob.distr.; bipartite; hidden/visible units; stack -> deep believe)CAN}, \textbf{OPTICS} (adjust for local density)
+\item \underline{Dim Red}: \textbf{PCA}, \textbf{SOM}, \textbf{Manifold mappings}, \textbf{t-SNE} (t-distr. stochastic neighbor embedding), \textbf{Autoencoders} (learn coding)
+\item \underline{Association}: \textbf{Apriori}
+\item \textbf{ICA} (min. mutual info; split into additive; into non-gaussian)
+\end{itemize}
+
+\subsection{Other}
+\begin{itemize}
+\item \textbf{Online learning} (SGD)
+\item \textbf{Reinforcement learning} (Q-learning)
+\item \textbf{Active learning} (ask)
+\item Ensemble: \textbf{Boosting} (adding weighted weak learners; data reweighted; e.g. AdaBoost; but easily overfits if noise (unless branching program based booster))
+\end{itemize}
+
+\section{PCA}
+\begin{itemize}
+\item first component explains most variance; others orthogonal and also explain most of remaining variance
+\item alternatively minimize variance from line (line through multidimensional mean); others minizmize variance after correlation with previous subtracted
+\item sensitive to variable scaling
+\item need mean centering first (for above interpretations of max. variance); otherwise first EV will look like mean
+\item eigenvalues and -vectors of XT*X
+\end{itemize}
+
+\section{MARS}
+\begin{itemize}
+\item Multivariate adaptive regression splines
+\item Opensource "Earth"
+\item $c_0+\sum c_i*B(x)$
+\item B=max(0,x-const) or B=max(0,const-x)
+\item B=product of hinges
+\item can be combined with link function for GLM
+\end{itemize}
+
+\section{LDA}
+\begin{itemize}
+\item GDA = LDA + QDA(unequal cov.)
+\item find linear combination of features which characterize or separate classes; assumes normal distribution
+\item related to ANOVA (ANOVA: cat. indep + cont dep.; DA: cont. indep. + cat. dep.); LR and Probit Regr. more similar to DA (use these if no Gaussian)
+\item vs PCA: PCA does not model differences
+\item vs Factor analysis: factor analysis treats indep./dep. equal
+\item for cat. indep. -> Discriminant Correspondence Analysis
+\end{itemize}
+
+\section{Factor analysis}
+\begin{itemize}
+\item explain variables by fewer underlying unobserved factors
+\item variables are linear combination of factors plus error term (equiv. to low-rank approximation)
+\item related to PCA but not equal
+\end{itemize}
+
+\section{Compressed sensing}
+\begin{itemize}
+\item for reconstructing a signal
+\item theorem 2004 and fewer samples than sampling theorem needed
+\item solve underdetermined linear system
+\item optimization; constraint: sparsity/incoherence
+\item use L1 or L0 norm for sparsity
+\item for many problem L1 equiv to L0 (Candes)
+\item L1 linear program; but with noise basis pursuit denoising preferred since preserves sparsity despite noise
+\item multiply both sides by wide matrix Q; know alpha from (QD)a=(Qx); knowing QD and Qx only
+\end{itemize}
+
+\section{HMM}
+\begin{itemize}
+\item Markov process with unobserved hidden states
+\item transition probabilities in hidden states; output/emission probabilities from hidden states
+\item "simplest dynamic Bayesian network"
+\item for temporal pattern recognition, speech, handwriting, ...
+\item generalization to pair/triple models for more complex data structures and nonstationary data
+\item forward algorithm; forward-backward algorithm; Viterbi algorithm
+\end{itemize}
+
+\section{BIC}
+\begin{itemize}
+\item $BIC=-2 ln(likelihood)+ freeparam\cdot ln(datapoints)$
+\item asymptotic result if data distr is from exponential family
+\end{itemize}
+
+\section{word2vec (2013)}
+\begin{itemize}
+\item words to high dim space
+\item similar words near
+\item similar relations are parallel lines
+\item meaning from words around them
+\item shallow ANN
+\item multiple algorithms (CBOW, Skip-gram, ..)
+\item scales well
+\end{itemize}
+
+\section{Sparse modeling}
+\begin{itemize}
+\item L0 norm on alpha NP-hard:
+\item L1 norm as relaxation -> basis pursuit
+\item greedy methods -> matching pursuit, orthogonal MP
+\end{itemize}
+
+\section{Classification}
+\begin{itemize}
+\item precision: TP/(TP+FP)
+\item recall/sensitivity: TP/(TP+FN)
+\item accuracy: (TP+TN)/(TP+FP+TN+FN)
+\item ROC curve: TPR [TP/(TP+FN)] - FPR [FP/(TN+FP)]
+\item multiclass from binary: error correcting codes, one-vs-all
+\item rare class -> cost sensitive learning
+\end{itemize}
+
+\section{Generalized linear model}
+\begin{itemize}
+\item generalization of linear regression
+\item link function -> response variable other than normal distribution (e.g. only positive, or bounded [0;1] )
+\item E(Y)=g\^-1(theta*X)  [from exponential family or even overdispersed exp. family]
+\end{itemize}
+
+\section{SVM}
+\begin{itemize}
+\item good:
+\begin{itemize}
+  \item good generalization, bounds on generalization error from theory (doesn't depend on dimension of space)
+\end{itemize}
+\item bad:
+\begin{itemize}
+  \item unscaled features
+  \item imbalanced classes (rather DT)
+  \item multiple classes
+  \item huge feature number
+  \item batch learning
+  \item parallel training needed
+  \item parameters difficult to interpret
+  \item not for many classes or regression (even though possible; for regression at least Platt scaling)
+  \item memory intensive
+\end{itemize}
+\item quadratic soft margin -> like linear with shifted kernel K <- K+lambda (?)
+\item kernel obeys Mercers theorem
+\item usually 25\% support vector
+\item in practice always some kernel with SVM possible
+\item AvA best for multiclass?
+\end{itemize}
+
+\section{Association analysis}
+\begin{itemize}
+\item support o(X+Y)/N
+\item confidence O(X+Y)/o(X)
+\end{itemize}
+
+\section{Cluster analysis}
+\begin{itemize}
+\item hierarchal (nested) / partitional (unnested)
+\item exclusive/overlapping/fuzzy
+\item complete/partial
+\item well-separated (objects closer to cluster than others)
+\item prototype-based
+\item density-based
+\item graph-based
+\item K-Means (cant do non-spherical or widely diff densities, outliers diff, need centroid calc), agglomerative (merging, dendrogram; no global function, time expensive), DBSCAN
+\end{itemize}
+
+\section{AdaBoost}
+\begin{itemize}
+\item type of boosting
+\item adaptively change training set
+\item adaptive boosting
+\item combined with other methods (can be weak)
+\item sensitive to noise data and outliers
+\end{itemize}
+
+\section{kNN}
+\begin{itemize}
+\item bad: sensitive to noise
+\item non-parametric classification
+\item can be used for regression too (average)
+\item number of neighbors and distance metric needed
+\item care of majority voting when classes skewed
+\item dimension reduction to avoid curse of dimensionality
+\item effective parameters: n/k
+\item improve: kernel, emphasize some vars, local regression, ...
+\end{itemize}
+
+\section{Naive Bayes}
+\begin{itemize}
+\item good:
+\begin{itemize}
+  \item good if independence holds
+  \item very simple (just counts)
+  \item high bias -> good for small training set
+\end{itemize}
+\item P(X|Y=y)=prod P(Xi|Y=y)
+\item for continuous variable discretize
+\end{itemize}
+
+\section{Matrix decomposition}
+\begin{itemize}
+\item eigendecomposition: $A=ULU^{-1}$ (U is matrix of EV; A nondegenerate eigenvalues and lin.indep. eigenvectors; always possible if A and U square)
+\item SVD: $A=UDV^H$ (A is any matrix; $UU^H=VV^H=1$ [unitary])
+\end{itemize}
+
+\section{Linear regression}
+\begin{itemize}
+\item $\hat{y}=X(X^T*X)^{-1}*X^T*y$ (hat matrix times y)
+\item shrinkage method:
+\begin{itemize}
+  \item ridge regression: L2, still closed form solution
+  \item lasso (basis pursuit): L1, quadratic programming, some coefficients exactly zero
+\end{itemize}
+\end{itemize}
+
+\section{Logistic regression}
+\begin{itemize}
+\item only Normal solvable in closed form; Newtons method otherwise
+\item no convergence for multicollinearity, sparseness, complete separation
+\item need about 10 events (hits) per feature
+\item to test: Deviance (compare likelihood to saturated model [too many parameters]), and more...
+\item low bias (may overfit -> sometime rather Naive Bayes)
+\item many ways to regularize
+\item online gradient descent possible (update; unlinke DT or SVM)
+\item multinomial logistic regression (for multiple classes)
+\end{itemize}
+
+\section{Apriori algorithm}
+\begin{itemize}
+\item frequent item set mining (find sets which appear sufficiently often)
+\item sets successively built up
+\end{itemize}
+
+\section{Decision tree}
+\begin{itemize}
+\item good:
+\begin{itemize}
+  \item simple+white box (explanable)
+  \item no preparation
+  \item numerical/categorial
+  \item robust
+  \item large data
+  \item mixed data
+  \item missing values
+  \item robust to outliers
+  \item insensitive to monotone transform
+  \item computation scalable
+  \item deal with irrelevant inputs
+\end{itemize}
+\item bad:
+\begin{itemize}
+  \item NP-complete
+  \item overcomplex trees (overfitting)
+  \item XOR/parity/multiplexer hard to learn
+  \item weaker predictive power than SVM
+  \item sometime hard to interpret
+  \item can overfit  
+\end{itemize}
+\item aka classification trees, regression trees
+\item rectangular decision regions
+\item leaves are class labels, branches are deciding feature
+\item top down or bottom up; usually greedy
+\item ensemble methods: random forest, boosted tree, bagging
+\item algorithms: CART, C4.5, MARS
+\item impurity difference between parent and weighted mean of children
+\item impurity measure Gini: $1-\sum p_i^2$
+\item at the end tree pruning
+\item non-parametric
+\item algorithm ID3 (entropy based) -adv-> C4.5
+\end{itemize}
+
+\section{Curse of dimensionality}
+\begin{itemize}
+\item hypercube: in 10D to catch 1% or samples one needs 63% of feature range
+\item all samples are close to an edge
+\item samples sparse in space
+\end{itemize}
+
+\section{EM algorithm}
+\begin{itemize}
+\item for maximum likelihood problems
+\item  iterative method for finding maximum likelihood or maximum a posteriori (MAP) estimates of parameters in statistical models, where the model depends on unobserved latent variables
+\end{itemize}
+
+\section{Mistakes to avoid}
+\begin{itemize}
+\item lack of data (need about 5 data points per feature)
+\item only one technique
+\item ask wrong question
+\item leaks from future
+\item extrapolate
+\item answer every question
+\item believe in best model
+\end{itemize}
+
+\section{Fraud detection}
+\begin{itemize}
+\item anomaly detection
+\item interesting pattern mining
+\item clustering
+\item expert system encode fraud and search
+\item supervised neural networks, bayesian learning neural network
+\item change of behaviour
+\item create new features from frauds
+\end{itemize}
+
+\section{Regression}
+\begin{itemize}
+\item ANN
+\item CART (DT)
+\item MARS (Multivariate adaptive regression splines)
+\item kNN
+\end{itemize}
+
+\section{Multiple classes}
+\begin{itemize}
+\item One-vs-All
+\item All-vs-All (for all pairs)
+\item Max-Class
+\end{itemize}
+
+\section{Covariance matrix}
+\begin{itemize}
+\item $\Sigma_ij=E((X_i-\mu_i)(X_j\-mu_j))=E(X*X^T)-\mu*\mu^T$
+\end{itemize}
+
+\section{Dimensionality reduction}
+\begin{itemize}
+\item PCA (+ kernel trick)
+\item self-organizing maps
+\end{itemize}
+
+\end{multicols}
+\end{document}

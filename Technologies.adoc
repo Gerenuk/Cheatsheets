@@ -1,0 +1,128 @@
+= Javascript transpilers
+TypeScript won
+Coffescript lose interest
+Dart not real JavaScript
+Elm good but not enough traction
+Babel worse?
+
+= Misc Deep Learning
+* High volume: Caffe2, CNTK
+
+= Tensorflow
+* Tensorflow has optimisations for Intel Xeon
+* Static
+* Hard to implement something new if not existing (attention)
+
+= Pytorch
+* Dynamic
+* Use python functions
+* New fast.ai lib soon (switching from TF)
+
+= Web
+* jQuery obsolete
+
+= XGBoost
+* Throwing more cores is not the ideal for fast histogram xgboost, while exact xgboost likes getting more cores
+* XGBoost is a really good stacker model (see Wolpert's stacked generalization, see Lecun's sequential modeling
+
+= Arrow
+* data format for (nested) tables
+* common serialization format between technologies
+* optimized for modern CPU usage (SIMD, cache local)
+* mainly in-memory (disk would pay more attention to compression)
+
+The trade-offs being for columnar data are different for in-memory. For data on disk, usually IO dominates latency, which can be addressed with aggressive compression, at the cost of CPU. In memory, access is much faster and we want to optimize for CPU throughput by paying attention to cache locality, pipelining, and SIMD instructions.
+
+Interoperability between Parquet and Arrow has been a goal since day 1
+
+= Apache Ignite
+* memory centric data processing
+* distributed execution and data
+* hot data in memory or flash, cold data on disk
+* SQL99 support, key-value, ACID, streaming, alpha ML, IgniteRDD for Spark integration
+* Java, NET, C++ API
+* Spark can use IgniteRDD
+* Ignite vs Spark:
+** data source agnostic, use many data
+** full ACID
+** ?
+
+= Graph databases
+* Neo4J, OrientDB, TitanDB:
+** similar speed
+** OrientDB needs much more memory
+
+== Neo4J
+* Cypher language
+* for OLTP
+
+== OrientDB
+* Extended SQL language
+
+== TitanDB
+* Gremlin language (nice)
+* for querying
+
+= Accumulo
+* on Hadoop; developed by NSA
+* cell-level security
+
+= Redis
+* remote dictionary server
+* key-value; types
+* everything a string
+* cluster
+* autodiscovery
+* no consistency guarantee
+* very fast
+
+= Cassandra
+* by Amazon
+* compression
+* no join
+* tunable consistency
+* BASE instead of ACID
+* not row-level consistent(?,!)
+* AP
+
+= HBase
+* sparse data
+* versioning, keep writing and clean old later
+* row-level consistency
+* Drill for SQL
+* fast reads, slow writes
+* CP
+* no transactions
+* for reporting
+
+= MongoDB
+* BSON
+* no join
+* complex where operations
+* profiling
+* only master is up-to-date
+* for speed and distribution
+
+= AWS DynamoDB
+* schema-less
+* row only 64kn
+* query max 1MB
+* limited checks on data
+* no join, no complex queries
+* priced on throughput
+* speed as a service
+
+= Teradata
+* Petabyte tables
+* SQL
+
+= MonetDB
+* free, for very large data
+* SQL
+* Python
+
+== Spline
+https://www.youtube.com/watch?v=T2vNPBCfA64
+* Spark data lineage graphs (not in Atlas)
+* reads Spark DAG and create info and visualization
+

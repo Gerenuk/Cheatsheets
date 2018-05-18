@@ -1,0 +1,71 @@
+# <comment>
+*<section>
+**<subsection>
+*Title: <title>
+*Author: <author>
+*TOC
+
+double\
+line
+
+*Image: <image.jpg>
+*Image-left: <image.jpg>
+*Image-center: <image.jpg>
+*Image-right: <image.jpg>
+
+\t <tabmode line>	# also 8 space possible
+\t 1)<enum entry>
+\t * <bullet entry>
+\t [<item>] <description>
+
+\t # <quoted text>
+\t <verbatim mode>	# default if no other matches
+\t\t <centred text>
+
+^<<
+<literal mode>
+^>>
+
+^L			# page break
+
+----			# separator line
+
+_bold_
+'italics'
+|teletype|
+# all these characters appear literally if only once in line or doubled
+
+=[<target>]=		# with text
+=[(<target>)]=		# just target
+
+[<target>]		# reference
+[text (<target>)]
+[text (:<url>)]
+
+[Note: <footnote> ]
+
+(<url>)			# sometimes even just <url> possible
+
+\[			# just a brace
+
+Deprecated:
+}+ <visible target> +{
+}- <invisible target> -{
+
+{+ <visible ref> +}
+{- <vis ref> @ <invis ref> -}
+
+use 'http://...' oder ':<filename<...' for links
+
+Tables:
+\t ! abc   !
+\t !-------!		# optional
+\t ! a ! b !
+
+#---SET-CONTROL tableparser=new
+# this will require line separators, but also multiline entries now possible
+
+#---PASS-HTML <rawhtml>
+#---SET <var>=<text>		# refered as %<var>%
+#---SET-HTML ...
+#---SET-LaTeX ...		# package dependent

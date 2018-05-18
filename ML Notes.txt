@@ -1,0 +1,36 @@
+Convolutional neural network:
+* https://www.youtube.com/watch?v=n6hpQwq7Inw
+* edges most valueable; normalize image (increase training speed); contrast normalization (like edge detector)
+* 32x32 image (need to rescale and shift)
+* convolution: expresses amount of overlap; use Gabor filters (detects orientation; vertical, horizontal, +45, -45)
+* 1. filters (not quite Gabor filters) which are effectively similar to edge detection
+* 2. use Tanh, Abs
+* 3. subsampling, Tanh layer
+* 4. convolution map
+* 5. linear classification
+
+Mahout:
+* Hadoop
+* starting to support Spark and H20 (http://gigaom.com/2014/03/27/apache-mahout-hadoops-original-machine-learning-project-is-moving-on-from-mapreduce/)
+
+Oryx:
+* ML with Hadoop by Cloudera
+
+MLlib:
+* Spark ML
+
+Apache Spark:
+* open-source data analytics cluster computing framework
+* on top of Hadoop but with in-memory loading
+* 100x faster than Hadoop
+
+Plot:
+Box-Plot (by Tukey): plot Median, Q25, Q75, Min, Max; but consider values  x < Q25-1.5*(Q75-Q25) and x>Q75+1.5*(Q75-Q25) outliers
+
+K-Means:
+Disadv
+* worst case is superpolynomial
+* results can be arbitrarity bad wrt objective function of optimal clustering
+* fro small data initial grouping can determine clusters
+* need to set K
+* don't know attribute weighting

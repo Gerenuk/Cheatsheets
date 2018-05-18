@@ -1,0 +1,48 @@
+nedit -server			# nc can be controller through server/client model
+
+nedit -import <part of configuration>
+nedit -read 'file'		# openmn readonly
+nedit -line n			# goto line#
+nedit -do <macro>		# execute macro or action
+
+Autosave: Every 8 Editing Ops and 80 Chars
+
+Up to Quadruple clicking selects more
+
+Ctrl+Drag: Rectangular
+
+Shift+Secondary: Overwrite
+Alt+Secondary: Exchange
+
+Ctrl+Right: Pan Scrolling
+
+Middle Drag: moves primary (in overwrite with Ctrl)
+
+Ctrl+Direction: extend scope (e.g. line->paragraph)
+Ctrl+U: Del to start of line
+Ctrl+Del: Del to end of line
+Ctrl+PageUp/Down: Scroll sideways
+
+Fillparagraph rearranges line lengths (see Doc)
+
+Shift+Ctrl+M: Select between brace match
+
+Calltips files (see Doc)
+
+Syntax Highlighting can be adjusted with regex (Default Settings,...)
+
+Shell Menu: Execute commands or use them as filters
+
+Macros: ~/.nedit/autoload.mm
+Own prog lang
+
+Ranges (defined by Macros only) can create readonly areas?
+
+Customize Menus (Default Settings,...)
+
+~/.Xdefaults
+*nedit.shell: /bin/bash
+*nedit.printCommand: kprinter --stdin
+*nedit.printQueueOption: 7d3_a4m
+*nedit*text.autoWrapPastedText: True
+*nedit*test*cursorVPadding: 2

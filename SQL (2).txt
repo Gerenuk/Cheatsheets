@@ -1,0 +1,50 @@
+SELECT [DISTINCT] <expr> [AS <alias>] FROM <table> [AS <alias>]
+[WHERE ...]
+[GROUP BY ...]
+[HAVING ...]
+
+[UNION [ALL]
+[SELECT ...]
+[ORDER BY [orderexpr] ASC | DESC]], [ORDER ...]]
+need same number of cols, don't need alias for second SELECT
+
+FROM <table>,<table>
+FROM <table> INNER JOIN <table> ON <col> <op> <col> AND ...
+use "<table> AS <alias>"
+LEFT, RIGHT, OUTER JOIN (OUTER=left and right) also take NULL values
+
+SELECT <aggr>(<expr>) AS <name> FROM ... [WHERE ...]
+<aggr>=COUNT MIN MAX SUM AVG
+COUNT(*) counts all of GROUP BY
+HAVING COUNT(*)>2
+
+SELECT <aggr>(<col>) AS <name>, <aggr>(<col>) AS <name>... FROM ... [WHERE ...] [GROUP BY <col> <col> ...] [HAVING ...]
+
+
+SELECT ...
+INTO <newtable>
+FROM <table>
+
+Use "[...]" if special char, space or minus
+'String'
+
+
+
+<expr>=column or equation
+WHERE:
+=                      NULL if any parameter NULL
+<>
+<
+>
+<=
+>=
+<var> IS NULL
+<var> IS NOT NULL
+<var> BETWEEN <num> AND <num>
+IN (..., ...)
+<var> Like <str>        text patterns; _ is . ; % is .* ; '[_]' to search for special char; [5-7]=5,6,7; [[]5]="[5]"
+Exists                  if subrequest yields at least one line
+
+NOT
+AND
+OR

@@ -1,0 +1,16 @@
+Reverse running total:
+* Running total
+* Running along Advanced
+* Sort by Myfield/Minimum
+
+Add vertical line:
+* click axis
+* Add reference line
+* Value: Constant
+
+If scrollbar missing in dashboard:
+* click black triangle in dashboard
+* Fit/Normal
+
+Overlapping bars in plot (too broad):
+* change variable from continous to discrete

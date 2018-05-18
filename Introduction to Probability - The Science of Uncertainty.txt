@@ -1,0 +1,394 @@
+Independence
+============
+* for all subsets of variables the AND probability is product of individual probability
+* -> any conditional prob when left/right diff indicies -> can remove conditional
+
+Uniform:
+sigma=(b-a)/sqrt(12)
+
+for exponential distr (time until something happens)
+P(x>=a)=exp(-lambda*a)
+E(X)=1/lambda
+Var(X)=1/lambda^2
+
+CDF can handle both continuous and discrete
+CDF=P(X<=x)
+
+Expo lifetime (memorylessness):
+P(T>x)=exp(-lambda*x)
+X=T-t (lifetime after already time t passed)
+-> P(X>x|T>t)=exp(-lambda*x) -> same as at time 0
+
+P(t<=T<=t+d|T>t)=lambda*d (for small d)
+
+f(x|y)=f(x,y)/f(y)
+P(X in A|y)=int_A f(x|y)dx
+
+Derived distributions
+=====================
+* use CDF for transformations
+* for continuous: Y=aX+b -> fY(y)=1/abs(a)*fX((y-b)/a)
+* a*N(mu,sig^2)+b ~ N(a*mu+b, a^2*sig^2); again normal distr!
+* general: fY(y)=(dFY/dy)(y); FY(y)=P(Y<=y) <- plugin Y=..
+* a/Uniform[b,c] ~ d/y^2
+* monotonic, differentiable:
+  * Y=g(X); X=h(Y)
+  * fY(y)=fX(h(y)) |(dh/dy)(y)|
+* non-monotonic:
+  * need difference of intervals of CDF
+* multiple variables:
+  * X~Unif[0,1]; Y~Unif[0,1] -> X/Y~ Unif in 0..1 and 1/(2*z^2) in 1..
+
+Sum of two indep random variables
+=================================
+
+Covariance
+==========
+* if indep: E[XY]=E[X]E[Y]
+* cov(X,Y)=E[(X-E[X])*(Y-E[Y])]; 0 is indep
+* cov(X,X)=Var[X]
+* cov[X,Y]=E[XY]-E[X]E[Y]
+* cov(aX+b,Y)=a*cov(X,Y)
+* cov(X,Y+Z)=cov(X,Y)+cov(Y,Z)
+* var[X+Y]=Var[X]+Var[Y]+2*Cov[X,Y]
+* Var[Sum_i Xi]=Sum_ij Cov[Xi,Xj]   # where Cov[Xi,Xi]=Var[Xi]
+* rho(X,Y)=Cov[X,Y]/(Sig[X]*Sig[Y])  ; -1<=rho<=1
+* |rho|=1 -> linearly related   X-E[X]=c*(Y-E[Y])
+* rho(aX+b,Y)=sign(a)*rho(X,Y)
+
+If Z,V,W indep., zero means and unit var.
+X=Z+V, Y=Z+W
+-> rho=0.5
+
+Conditional expectation as rand.varia.
+======================================
+E[X|Y=y]=g(y) -> g(Y)=E[X|Y] is rand.varia.
+* E[E[X|Y]]=E[X]   (law of iterated expectations)
+
+E[revised forecast with more info later]=E[forecast now]
+
+Conditional variance
+---------------------
+* Var_X[X|Y=y]
+* Var_X[X,Y] is rand.varia.
+
+Var[X]=E[Var[X|Y]]+Var[E[X|Y]]=(var.within sections)+(var.between sections)
+
+(calc E[Var[X|Y]] and Var[E[X|Y]] from definitions and add)
+
+Sum of random var. of indep var.
+--------------------------------
+* Y=X1+...+XN; iid, indep of N
+* E[Y]=E[N]E[X]
+* Var[Y]=E[N]*Var[X]+(E[X])^2*Var[N]
+
+Bayesian
+========
+* unknown is random variables; has distr. p(Theta)
+* observation process = p(x|Theta)
+* realization = x
+-> posterior calc -> P(Theta|x)
+
+point estimates:
+* MAP (max aposteriori prob)
+-> has smallest prob of error (Theta-hat != Theta)
+* least mean square
+
+Beta distr:
+x^(alpha-1)*(1-x)^(beta-1)
+mode: (a-1)/(a+b-2)
+
+MAP estimate: k/n
+LMS estimate: E(Theta|K=k)=(k+1)/(n+2)
+
+Linear models with normal noise
+-------------------------------
+* Xi = sum_j aij*Tj+Wi   ; W noise, T to be estimated; both indep and normal
+
+e.g. X=T+W; T~N(0,1), W~N(0,1) -> That=X/2
+
+e.g.
+X1=T+W1
+...
+Xn=T+Wn
+(like multiple measurements)
+T~N(x0,s0^2); W~N(0,si^2); all indep
+fT|X also normal -> max. is linear eq. (and mean=peak)
+-> T=sum xi/si^2 / sum 1/si^2   [but starts from i=0!; prior mean same as other observations]
+MSE = E[(That-T)^2|x] = ... = Var(T|x) = 1/(sum 1/si^2) [indep of x!; same given x but also overall]
+exp(-(ax^2+bx+c)) -> mu=-b/2a, var=1/2a
+
+Trajectory estimation
+---------------------
+* x(t) = T0+T1*t+T2*t^2  ; all indep. unknown T
+* some pairs (x,t) known
+* Xi=T0+T1*ti+T2*ti^2+Wi
+
+Linear normal models
+--------------------
+* Ti and Xi linear fct of indep normal random variables -> linear regression
+* T_hat = linear fct of Xi
+* MAP = Exp(T|X)
+* all marginal posteriors normal -> mean=peak
+-> joint max. and marginals (leaving only one var) give same estimates
+* Expect. of sq. deviation indep. of x
+
+Estimate by LMS
+---------------
+* LMS -> same as conditional expectation
+* If minimizing conditional squared deviation -> use conditional mean
+* for many parameters (x or theta)  sometimes issues with equation complexity or computation
+* cov(Error,Estimator)=0
+* Exp(Error)=0
+* var(Theta)=var(Estimator)+var(EstimationError)
+
+Linear least squares estimator
+------------------------------
+* always ThetaHat = E[Theta|X]
+* ThetaHat = a*X+b
+* (ThetaHat-E[Theta])/(X-E[X])=Cov(Theta,X)/Var(X)=rho*sigmaTheta/sigmaX
+* only need means and covariances to make linear model
+* ThetaL=E[Theta]+rho*sigma_Theta/sigma_X*(X-E[X])
+* E[(Theta_L-Theta)^2]=(1-rho^2)*Var(Theta) -> uncertainty gets reduced
+
+Coin with bias Theta
+--------------------
+* number of heads X
+* if uniform prior: ->Theta_LMS=(X+1)/(n+2); also linear, therefore also optimal linear estimator
+
+Multiple observations
+---------------------
+* assume linear estimator: ThetaHat = sum a_i*X_i+b; minimize MSS
+* E[Theta|X] linear in X then ThetaHat_MLS=ThetaHat_LLMS
+
+LMS:
+* use X or X^3?
+* LMS: E[Theta|X] same as E[Theta|X^3]
+* LLMS: different
+
+LMS -> ThetaHat = E[Theta|observations]
+
+Weak law of large numbers
+-------------------------
+sum(X_i)/n -> E[X]
+Prob. for deviation of sample mean from pop. mean diminishes to zero
+
+Markov: X>=0, a>0
+P(X>=a)<=E[X]/a
+
+Chebyshev:
+P(|X-mu|>=c)<=sigma^2/c^2
+
+
+poll accuracy 1% with 5% error prob -> n=50000 by Chebyshev
+
+Convergence in probability
+--------------------------
+forall eps>0: lim_n->inf P(|X-a|>=eps)=0
+
+Xn->a, Yn->b => 
+g continuous -> g(Xn)=g(a)
+Xn+Yn -> a+b
+E[Xn] does not need to converge to a! (e.g. if P=1/n for n^2)
+-> Exp. care about all values; convergence only about tail
+
+Chernoff bound: P(|Mn-mu|>=a)<=exp(-n*h(a))
+
+Convergence with prob 1: stronger
+
+Convergence to limiting CDF
+
+Central limit theorem
+---------------------
+* Xi i.i.d.
+* sum(Xi)/sqrt(n) so that variance stays constant
+* Zn=(Sn-n*mu)/sqrt(n)/sigma
+* lim_n->inf P(Z<=z)=P(Z<=z) where Z~N(0,1)
+* -> convergence of CDF! (not necessarily PDF; need more assumptions here)
+* versions without i.i.d possible (e.g. only nearby X dependent; not identical, but conditions on mu and sigma)
+* proof: E[exp(s*Z_n)]->E[exp(s*Z)]; needs hard maths
+* Sn ~ N(n*mu, n*sigma^2)
+
+Classical (non-Bayesian) statistics
+===================================
+* Theta unknown constant (like physical constant)
+* Theta -> p_X(x;theta) -> X -> Estimator -> ThetaHat(X)
+* theta not random variable -> not in subscript; multiple candidate models
+* design estimator to make ThetaHat-theta small; no single best rule
+
+Estimating mean
+---------------
+* let's use ThetaHat = sample mean
+* E[ThetaHat]=theta (unbiased)
+* ThetaHat_n -> theta (consistency)
+* MSE: E[(ThetaHat-theta)^2]=sigma^2/n; here indep of theta
+* E[(Thetatat-theta)^2]=var(ThetaHat-theta)+(E[ThetaHta-theta])^2=var(ThetaHat)+bias^2
+
+Confidence interval
+-------------------
+* P(ThetaHat- <= theta <= ThetaHat+)>=1-alpha forall theta; random variables outside!
+* sum X_i/n where Xi iid with theta, sigma: P(ThetaHat_n -1.96*sigma/sqrt(n)<=theta<=ThetaHat_n+1.96*sigma/sqrt(n)) approx 0.95
+* -> but need sigma here; options:
+  * can use upper bound
+  * estimate sigma sigmaHat=sqrt(ThetaHat(1-ThetaHat))
+* since also estimate sigma -> t-table correction for n<=30
+
+Maximum Likelihood
+------------------
+* if theta not an expectation of something
+* thetaHat_ML = argmax_theta p_X(x;theta)
+* same as flat prior
+* if n iid data ->
+  * MLE consistent
+  * asymptotically normalized is normal
+  -> confidence interval
+  * asymptotically efficient (smallest possible variance)
+
+sample from iid normal with unknown mean and variance
+* mu=sample mean
+* variance=sample variance (to mean)
+
+for convex g:
+g(E[X])<=E[g(X)]
+
+Chernoff bound, a>0:
+P(X1+..+Xn>=n*mu+na) falls expententially with n
+
+Bernoulli process
+=================
+* seq of indep Bernoulli trials; p for hit
+* stochastic process: seq of random variables
+
+Poisson process
+===============
+* continuous time version of Bernoulli; n->inf
+* P(k,tau)=Prob. of k arrivals in interval tau=(lambda*tau)^k*exp(-lambda*tau)/k!
+* for very small delta (hence not more than one arrival):
+  P(k,delta) approx 1-lambda+delta if k=0; lambda*delta=1; 0 if k>1
+  approx with O(delta^2) error
+* mean=var=lambda*tau
+* (since np(1-p) with p small)
+* CDF=1-P(T>t)=1-P(0,t) [zero arrivals]=1-exp(-lambda*t)
+* differentiate -> time until next arrival: lambda*exp(-lambda*t) [memoryless]
+* time of k-th arrival: by time y at least k arrivals -> sum
+* = P(k-1, y)*lambda (Erlang distr)
+
+Arrival rate: Poisson lambda/time; Bernoulli p/trial
+PML of number: Poisson Poisson; Bernoulli Binomial
+Interarrival time: Poisson Exponential; Bernoulli Geometric
+Time to k-th arrival: Poisson Erlang; Bernoulli Pascal
+
+Sum/Merge of Poisson: also Poisson (intuition or do convolution) with sum parameters
+
+(!)to get min[x,y,z] use CDF with
+P(min[x,y,z]>=t)=P(x>=t,y>=t,z>=t)=exp(-3*lambda*t); like merged Poisson process
+
+Expected time until k=3 happen:
+1/(3*lambda)+1/(2*lambda)+1/lambda
+(first event is racing with 3, second event racing with 2, last normal exponential)
+
+(!) Splitting poisson processes: independent (unlike Bernoulli process where discreteness means that a taken slots means opposite stream slot is not taken)
+
+Random incidence paradox
+------------------------
+* you arrive at random moment, but find out interarrival time (also looking at time of last arrival)
+* -> will be double the normal interarrival time
+
+Limits
+------
+* fix p, inf n: CLT
+* inf n, p to zero, np fixed!: Poisson
+* agree when p small, but np large
+* for Poisson: sum, but distributions depend on n!
+* Poisson for large parameter does become normal
+* Poisson approx if p small; also normal if n*p large
+
+Number of Poisson arrivals until time T~exp
+merged process; until merged is from terminator process
+-> geometric that shifted by one
+
+Y=X1+...+XN
+
+X Bernoulli q (outcomes 0,1), N Binomial p, trials m -> Y Binomial pq, m
+X Bernoulli q, N Poisson lambda -> Y Poisson lambda*q
+X geometric p, N geometric q -> Y geometric pq
+X exponential lambda, N geometric q -> Y exponential with lambda*q
+
+Markov chains
+=============
+conditional on current state, past and future are independent
+given current state, past doesn't matter
+
+would be difficult if linear state chain, with 2er jumps (interweaved)
+
+recurrent state: there is always a path back to starting point
+(otherwise transient -> visited only finite number of times)
+
+periodicity: if can be grouped, such that all transitions from one group lead to next group (forced grouped switching)
+-> fixed position and n*k number of steps
+
+with a self-transition never periodic
+
+if recurrent states in single and and not periodic -> converges and indep of start
+(since copies eventually meet)
+
+Birth-Death processes
+=====================
+0 to max M items; linear chain
+any time prob p_i for birth or q_i for death
+
+to solve:
+think of cut somewhere in the chain
+jumps up = jumps down
+
+pi_i*p_i=pi_(i+1)*q_(i+1)
+-> recurrence relation
+(!)multiply by *p_i/q_(i+1)
+
+if all p,q equal:
+rho=p/q
+pi_i=rho^i*(1-rho)/(1-rho^(M+1))
+
+for M->inf: E[X]=rho/(1-rho)
+
+Mixing time: exponential
+
+How many phone lines needed?
+============================
+calls start with Poisson lambda
+call duration exponential with parameter mu; but small durations actually not that likely
+-> satisfies Markov properties (only depends on recent past state)
+
+call creation: lambda*delta
+1 call ends while i busy: i*mu*delta
+
+like birth-death process, but call reduction depends on number of current calls
+
+lambda*pi_(i-1)=i*mu*pi_i
+pi_i=pi_0*lambda^i/mu^i/i!
+pi_0=1/sum lambda^i/mu^i/i!
+
+Short term behavior
+===================
+Absorption
+----------
+* short-time behavior; p_ii=1 (stay in state)
+* you can write equations for probabilities for ending up in one sink or the other
+
+Mean time to absorption
+-----------------------
+* easy recurrence relation
+
+Mean first passage
+------------------
+* from i to s; expected number of steps
+* like absorption
+
+Gambler's ruin
+==============
+* start with i euros, play until n euros or ruin in a fair game
+* winning probability = i/n
+* expected wealth = i
+* time in game = i*(n-i)
+* if not fair with prob p: r=(1-p)/p
+  * wealth=(1-r^i)/(1-r^n)

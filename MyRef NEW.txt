@@ -1,0 +1,173 @@
+== DuckDuckGo
+
+|===
+| compute integral of ...                   | https://duck.co/ia/view/symbolab[Ref]
+| aur ...                                   | Search AUR
+| calendar january                          | Show calendar (only months or dates)
+| 1 + 2                                     | Calculator
+| color picker                              |
+| duckduckgo syntax cheatsheet              | Syntax
+| ... map                                   | Show map
+| \...                                      | I'm feeling ducky
+| ... inbody:...                            |
+| ... intitle:...                           |
+| ... OR ...                                | OR; only one adjacent words
+| mysql cheatsheet                          |
+| numpy ...                                 |
+| python <pypi_pkg>                         |
+| python datetime cheatsheet                |
+| regex cheatsheet                          |
+| .. =~ / ... /                             | Show regex match groups
+|===
+
+== Confluence
+* links: file:///W:/...
+
+== Windows
+* `rundll32 sysdm.cpl,EditEnvironmentVariables`
+
+== Excel
+Remove table: Entwurf/Tools/In Bereich konvertieren
+Zellen in gefilterte Tabelle einfügen:
+* Kopieren, Zielbereich markieren, Formel =A2 eingeben; Ctrl-Enter (überall einfügen); evtl als Werte erneut einfügen
+Nur sichtbare Zellen kopieren:
+* Vorsicht: Nur in sichtbare einfügen geht nicht
+* F5, Inhalte, Sichtbare Zellen
+
+ranks = numpy.empty(len(array), int)
+ranks[data.argsort()] = numpy.arange(len(array))
+
+slow but works:
+array.argsort().argsort()
+
+scipy.stats.rankdata(data)  # returns floats of ranks
+
+or http://pythonhosted.org/ranking/
+
+sql: limit is only results; need subquery if want to limit number of input rows
+
+sqlite: need "create index" for index creation (no alter table)
+
+DictWriter(csvfile, fieldnames, restval='', extrasaction='raise'); restval="ignore" (extra ignored)
+
+scipy.stats.pearsonr(x,y) -> (pearson, 2-tailed-p-value)
+
+mousewheel.default.delta_multiplier_y 
+
+== Irfanview
+View background color: Options/Properties/Viewing/Main window color
+
+== Notepad+
+Side by side: right click tab, move to other
+Sort lines: Edit, line operations, ...
+
+df.to_pickle("..")
+df=pd.load("..")
+
+== DBeaver
+http://dbeaver.jkiss.org/files/
+Extract /drivers to DBeaver directory
+
+Tab separated:
+Edit .dbeaver/General/.dbeaver-data-sources.xml and set &#09;
+
+DBeaver drivers: http://dbeaver.jkiss.org/files/
+
+== SQLite
+import sqlite3
+connection = sqlite3.connect('~/foo.sqlite')
+connection.row_factory = sqlite3.Row
+cursor = connection.execute('select * from bar')
+# instead of cursor.description:
+row = cursor.fetchone()
+names = row.keys()
+
+sqlite: fetchmany -> empty list if no more rows
+
+s.ix[func(s).order().index]
+
+sklearn.externals.joblib
+joblib.dump(clf, "file.pkl")
+
+select avg(x) from (select x from data limit 10)
+
+REINDEX # recreate indices, e.g. when collation changed
+VACUUM # rebuild database; clean up empty space when large data deleted, reduce fragmentation
+
+Toolz:
+get_in([..]) : nested access
+
+
+== SQLite
+
+* no right/outer join
+* for alter table only rename table and add column
+* no ""for each statement" trigger
+* views read-only
+* no access rights
+
+Potential SQLite speedup:
+http://www.sqlite.org/pragma.html#pragma_cache_size
+http://www.sqlite.org/pragma.html#pragma_page_size
+http://www.sqlite.org/pragma.html#pragma_synchronous
+sometimes faster to load table without indices and re-create indices
+
+maybe: PRAGMA journal_mode = OFF; PRAGMA synchronous=OFF;
+
+numpy: norm: np.linalg.norm
+
+df.convert_objects(convert_numeric=True)   # to convert to numeric (and NaN if not convertable)
+
+install line_profiler
+%lprun -f func func(val)
+
+Doc: https://docs.python.org/3.5/library/datetime.html#strftime-strptime-behavior
+
+http://berkeleyanalytics.com/bottleneck/reference.html#bottleneck.partsort # smallest N appear first
+heapq.nlargest
+
+ax.xaxis.set_major_formatter(FormatStrFormatter('%.03f'))
+ax.tick_params(axis='x',which='minor',bottom='off')
+
+plt.setp(ax.get_xticklabels(), visible=False) # make labels invisible on one axis
+or for label in ax.get_xticklabels():
+    label.set_visible(False)
+    
+pd.to_datetime(fulldata_test.timestamp, unit="s")
+
+sys.last_value # last exception
+
+
+NCCT-Ländern laut Finanical Action Task Force (non-cooperative countries and territories): nicht genug gegen Geldwäsche
+Offshore Länder: günstige Steuersätze (Bahamas, British Virgin Islands, Cayman Islands, Panama, ..)
+Ultra High Risk laut ING: Kuba, myanmar, Nordkorea, Sudan, Süd-Sudna, Syrien, Iran
+
+explorer .  # open current folder in explorer
+
+Run "."   # user directory
+".."   # users directory
+explorer /  # my docs
+
+df.query("@var") # refer to environment
+
+statsmodels.stats.proportion.proportion_confint() # for binomial confidence intervals
+
+dateutil.parser.parse(any_text_date_format)
+
+cp -r dir destdir   # copy all recursively (also hidden)
+uname -a
+
+
+Apache Singa: Deep learning on cluster (CNN, RBM, RNN, ...)
+ML: Microsoft DistrMLToolkit, 
+Amazon ML: to Amazon S3/Redshift/...; Supervised ML; Amazon centric: Models cannot be imported/exported; <100GB
+MS Azure ML Studio: Pay-as-you-go; Create/Train models, API; <10GB or connect to Azure storage
+Google Tensorflow: distributed; data flow
+MS Computational Network Toolkit: similar to Tensorflow; create ANN by directed graph; CPU+GPU
+Samsung Veles: distributed deep-learning; C++; Python for automation; REST API for models
+(Lugano Switzerland) Brainstorm: LSTM; ANN; CPU, GPU; Python scripting
+mlpack: ?
+(Princeton Vision Group) Marvin: ANN; born to be hacked; some C++ and CUDA; minimal
+Neon: company; deep learning; mostly Python C++; 
+
+tqdm(.., total=.., leave=True)

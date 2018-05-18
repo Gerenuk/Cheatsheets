@@ -1,0 +1,53 @@
+* Julian de Wit, Kaggle Grandmaster
+* structures
+* Image: DL feature generator; XGB on top
+* DL: can do multitask learning
+  * e.g. translator between all languages
+  * Merck molecule challenge: one model which predicts all 15 targets
+* DL can learn entity embeddings
+  * for high cardinality data (which are hard in tree-based)
+  * e.g 3rd place Rossmann Store Sales (city embeddings)
+! learn embeddeing from Onehot to learn representation to use in XGB
+* Instacart basket analysis:
+  * 3rd place NN
+  * no feature engineering
+  * various embeddings, NN+Boost
+* Sometimes special architectures with NN:
+  * Taxi trajectory Kaggle; Predict destination of taxi rides
+    * Embeddings, Attention-like
+    * Win by large margin
+  * How much did it rain
+    * Won by Recurr NN by big margin
+    * Time series + agg by hour
+    * Estimate how much rain has fallen given radar samples
+  * In research: Relational reasoning nets
+    * Big sudden improvement
+* Pretrained networks have trouble with black and white rip-cage medical images
+* Maybe first detect place; Then do final classification
+* Segmentation-Net:
+  * Image to Image (any overlay)
+  ! U-net most popular (also now on Kaggle)
+  * for segmentation, localization, counting
+  * more flexible than RCNN
+  * e.g. Data science Bowl 2016, 3rd place (U-Net)
+    * overlay per scan slice -> add up to get heart volume
+* DL Unicorn in Kaggle (DL in tops with little feature engineering)
+* Tree-based models like normal target better (maybe transform)
+* Two targets: Instance deviation minimized and also Total deviation minimized (otherwise total might be bad); balancing often not so sensitive
+* invoice info extraction: OCR + "slot filling"
+* breakthroughs only pattern matching; only perceptual data; only narrow domains; no common sense
+* Number of neuron needs to work somehow; but not much improvement from tuning
+* ReLU always works somehow
+* Quora duplicate question detection DL unicorn; a lot engineered features; ugly network
+* SOTA 2017:
+  * Images: ResNet
+  * Segmentation: U-Net
+  * NLP translation: ? changes a lot (used RecNet+ Attention; CNN + Attention; only Attention; DeepL CNN; ...)
+  ! NLP classif big text: SVM ?
+  * NLP classif short sentences: Attention, Recurrence, ...
+* large num CV folds to see distribution
+  
+
+Leave-out encoding: Exclude current?
+Secret XGBoost params?
+Video links Instacart, 

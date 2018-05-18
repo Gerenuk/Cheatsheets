@@ -1,0 +1,77 @@
+= Memory alphabet
+(Mnemonic Peg System)
+
+A Affe
+B Bär
+C Chamäleon
+D Delfin
+E Elephant
+F Flamingo
+G Giraffe
+H Hase
+I Igel
+J Jaguar
+K Känguru
+L Löwe
+M Maus
+N Nashorn
+O Octopus
+P Pinguin
+Q Qualle
+R Robbe
+S Schlange
+T Tiger
+U Uhu
+V Vogelspinne?
+W Wal
+X Axolotl
+Y Yak
+Z Zebra
+
+(see http://en.wikipedia.org/wiki/List_of_animal_names)
+http://www.kinder-tierlexikon.de/suchliste.htm
+
+= Stromkosten
+
+100W etwa 3cent pro Stunde
+
+= Messer Pflege
+* nicht nass stehen lassen
+* kein Puder Waschmittel
+* keine aggressiven Zitronenwaschmittel
+
+= Lebensmittelkosten
+Mittel: Joghurt=Fertigessen=Gemüse
+Viel: Obst=Fertigsalat
+
+= World eats
+http://www.nationalgeographic.com/what-the-world-eats/
+Above avg:
+* Produce: China, Cuba, North/South Korea
+* Dairy: US, Argentina, Germany, Australia, UK
+* Meat: Hong Kong, (US), (North/South Korea), Vietnam, (Australia)
+* Sugar&Fat: Mexiko, (Saudi Arabia)
+* Grain: India, Saudi Arabia, Vietnam
+
+Below avg:
+* Dairy: North/South Korea, Vietnam
+* Meat: India
+* Sugar&Fat: China
+* Grain: US, Germany, Australia
+
+= Generation Naming
+
+Gen X: 1960-1980
+Gen Y (Millenials): 1980-2000
+Gen Z: ~2000
+
+= Funny unicode
+
+Coffee cup 2615
+Skull/Crossbones 2620
+Smiley 263A
+Smiley black 263B
+Frowny 2639
+Snowman 2603
+Squiggly face 2368
+Star 2605

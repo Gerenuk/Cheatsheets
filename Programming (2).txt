@@ -1,0 +1,3 @@
+Variable naming:
+* functions: verb is change state, noun if return value (what does 'create_database' mean)
+* "Clean Code", "The Art of readable code"

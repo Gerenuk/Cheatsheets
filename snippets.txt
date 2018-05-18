@@ -1,0 +1,18 @@
+len(list(re.finditer()))
+
+os.walk
+
+json.loads()
+
+textwrap.wraptext()
+
+python -m 2to3 -w <dir>
+(add Python/Tools/Scripts to PYTHONPATH; add Python to PATH)
+
+
+Numpy: select rows with NaNs:
+a[np.isnan(a).any(axis=1)]
+
+delete rows:
+http://docs.scipy.org/doc/numpy/reference/generated/numpy.delete.html
+np.delete(arr, [col1, col2, ...], axis=1)

@@ -1,0 +1,18 @@
+* paths not correlated but co-integrated: when any linear combination stationary (common stochastic drift -> Granger test)
+
+X(t+dt)=Hx*X+Hy*Y+Rxy
+compare error functionals
+Ex=int dt [Rx,Ry]
+Exy=int dt [Rxy, Rxy]
+-> co-integrated uf Exy much smaller than Ex
+"future of X can be better predicted with known X and Y than just Y alone"
+
+-> form u(t)=X-beta*Y; apply Augmented Dickey Fuller test of residuals to see if stationary (test if rho<<1 in u(t+1)=rho*u(t)+eps -> then residuals not stationary and hence co-integrated)
+
+P(X,Z|Y)=P(Z|Y)P(X|Y) (but conditional indep. neither necessary nor sufficient for normal independence)
+
+P(X1..Xn)=prod P(Xi|par(Xi))
+
+Propensity modelling:
+1. predict probability that someone will be in group A (e.g. starting using something)
+2. compare people within same propensity score for causal questions

@@ -1,0 +1,121 @@
+Y-fast trie: store integer from bounded domain, supports exact and predecessor or successor queries in time O(log log M), using O(n) space [less than X-trie], where n is the number of stored values and M is the maximum value in the domain
+
+X-tree is an index tree structure based on the R-tree used for storing data in many dimensions. It differs from R-trees, R+-trees and R*-trees because it emphasizes prevention of overlap in the bounding boxes, which increasingly becomes a problem in high dimensions. In cases where nodes cannot be split without preventing overlap, the node split will be deferred, resulting in super-nodes. In extreme cases, the tree will linearize, which defends against worst-case behaviors observed in some other data structures.
+
+In computer science, an x-fast trie is a data structure for storing integers from a bounded domain. It supports exact and predecessor or successor queries in time O(log log M), using O(n log M) space, where n is the number of stored values and M is the maximum value in the domain. The structure was proposed by Dan Willard in 1982,[1] along with the more complicated y-fast trie, as a way to improve the space usage of van Emde Boas trees, while retaining the O(log log M) query time.
+
+Heap sort: unstable; less space then merge sort; often faster;
+Quicksort: good average, but n^2 worst case; unstable in most efficient versions; faster than merge sort if fast memory access
+Merge sort: worst case still 40% less comparisions than Quicksort; in-place possible but complicating; when memory access slow; good for linked list (no random access)
+
+Too many comments bad:
+need time to write and maintain; might be outdated; not tested by compiler;
+
+Each function should do only one thing; should be visible on the screen
+
+IPC:
+- sockets good
+- named pipes slightly faster but unidirectional
+- shared memory fastest
+
+Statically typed with type inference:
+- Haskell, F#, OCaml
+
+Mixed:
+- Scala, Boo?
+
+
+Encoding:
+BOM:
+* only for unicode
+* FFFE or FEFF : UTF-16 LE or BE
+* or EFBBBF : utf8; special bytes that hopefully are not meaningful in other encodings
+* UCS-2=UTF-16 (except TFF16 some more codepoints)
+* UTF8 bytes: 0.. (<0x80); 110.. 10..; 1110.. 10.. 10..; 11110.. 10.. 10.. 10..
+
+Use utf-8-sig, if there is a BOM byte
+utf16 automatically does BOM (don't use utf-16LE unless BOM is missing)
+
+Chardetect:
+file -i <file>
+iconv  # to convert
+uchardet
+chardet # (python)
+
+Don't Repeat Yourself (DRY) or Duplication is Evil (DIE)
+Every piece of knowledge must have a single, unambiguous, authoritative representation within a system.
+a modification of any single element of a system does not change other logically-unrelated elements
+It states that you are allowed to copy and paste the code once, but that when the same code is replicated three times, it should be extracted into a new procedure.
+
+Potato programming: tear down vectors into loops (inefficient)
+
+SQL:
+show full processlist;
+explain ...command...;
+
+Don't Repeat Yourself (DRY) or Duplication is Evil (DIE)
+Every piece of knowledge must have a single, unambiguous, authoritative representation within a system.
+a modification of any single element of a system does not change other logically-unrelated elements
+It states that you are allowed to copy and paste the code once, but that when the same code is replicated three times, it should be extracted into a new procedure.
+
+Skiplists (W. Pugh):
+* number of moves if O(log N) with high probability (any probability possible given a changing constant)
+* cost of search log N on average and in most cases
+* binary trees good for insertion, but need balanced if degenerate (e.g. sorted elements inserted)
+* skiplists theoretically have bad worst-case, but unlikely (for 250 elements, time 3x the average is 1:1,000,000)
+* space efficient (1.3 pointers per element)
+* node with k-forward: "level k node"
+* i-th forward pointer should point to next node level i or higher
+* insertion and deletion requires only local modification
+* level of node (chosen randomly at insertion; independent of elements in the list) never changes
+* level i node has i forward pointers (capped at max level); other levels are None
+* None greatest key; All levels terminated with None
+* Search: try highest levels first
+* start search at level log_(1/p)(n) would be best[p is prob that net level opened; n is number of elements]
+  * could start at max level, which only adds a constant to runtime
+  * best would be to use (last max level)+1 without overshooting!
+  * hard limit on levels is log_(1/p)(N) [N upper bound on total elements]
+* p=2^k good of probabilities from random bit stream
+* best use p=0.25 unless variability of running times of concern
+* low constant factor overhead
+* requires slightly more comparisons than other methds (for real value keys slightly slower than non-recursive AVL; search slightly slower than 2-3 tree)
+-> may need to optimize such than search key only once against each node (expected number of comparisons will be 7/2+3/2*log2(n))
+* bounds:
+  * balanced tree: worst-case bounds
+  * self-adjusting trees: amortized time bounds (operation can be O(n) instead of O(log n)); faster than skiplists only for highly skewed distributions [maybe add cache to skiplist as help]
+  * skip list: probabilistic bound
+  * skiplists can work on multiple processors
+
+Algorithms:
+* multiple string search; fuzzy with edit distance:
+  * Levenshtein automata (automata to find a match)
+  * BK Trees: for any metric space (triangle ineq): create tree and exploit triangle ineq. conditions for logic
+* find/index area by quadtree and optimize for consecutive regions: use Hilbert curves
+
+all errors should have detailed info on variables
+logging: normal (with debug level), user/runtime display, extensive data dump (for debugging; filters stop unless opened); critical -> no result, error -> wrong result, warning -> probably correct result, debug -> some internal info you usually don?t need
+
+Stop process:
+* only by "SHOW PROCESSLIST" and "KILL <id>"
+
+
+Sqlite performance
+==================
+http://stackoverflow.com/questions/1711631/how-do-i-improve-insert-per-second-performance-of-sqlite?lq=1
+With transactions: INSERT speed 53
+synchronous=OFF: INSERT 70 (but may corrupt if computer crash)
+journal_mode=MEMORY: INSERT 64
+sync=OFF and jour=MEMORY: INSERT 72
+inmemory: INSERT 79
+
+CREATE INDEX + INSERT: 48
+INSERT + CREATE INDEX: 63
+
+Sqlite
+======
+LIKE: use % and _
+to escape use LIKE "%utm\_%" escape "\"
+
+Get substring until some substring: substr(url,1,instr(url, "utm_")-1)
+
+update or ignore moz_places set url=substr(url,1,instr(url, "utm_")-2) where url like "%utm\_%" escape "\"
