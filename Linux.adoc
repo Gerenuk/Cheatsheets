@@ -254,3 +254,125 @@ https://superuser.com/questions/165116/mount-dev-proc-sys-in-a-chroot-environmen
 * Process control::              kill
 * Delaying::                     sleep
 * Numeric operations::           factor numfmt seq
+
+
+Cinnamon:
+* from GNOME2
+* from Linuxmint
+* edge tiling and snapping
+* lightweight
+
+Unity:
+* for GNOME optimize screen space for touchscreens
+* Dash search scope with Lenses
+
+Pantheon:
+* elementaryOS
+* no fork; GTK3
+* clean, modern
+* grid window tiling
+* light
+
+Other:
+* LXDE: super light-weight
+* XFCE: light, GTK2+, simple
+* Trinity: KDE3
+* MATE: GNOME2, light
+
+Tiling:
+http://www.slant.co/topics/390/~what-are-the-best-window-managers-for-linux
+
+i3:
+* poor floating, manual tiling, no window gap
+
+awesome:
+* http://www.slant.co/topics/390/viewpoints/2/~what-are-the-best-window-managers-for-linux~awesome
+
+dwm: too light
+xmonad:
+* needs Haskell knowledge
+
+git push origin master
+
+htop:
+"task"="process"
+Memory: Green used, Blue buffers, Orange cache
+VIRT: requested memory incl memory mapped files (not useful?)
+RES: currently in memory (hence without swapped; incl shared memory with others)
+SHR: potentially shared memory
+
+Uninterruptable processes are USUALLY waiting for I/O following a page fault. The process/task cannot be interrupted in this state, because it can't handle any signals; if it did, another page fault would happen and it would be back where it was.
+
+A niceness level increase by 1 should yield a 10% more CPU time to the process
+
+
+Execution:
+
+Interactive + Login:
+1. /etc/profile
+2. .bash_profile OR .bash_login OR .profile
+3. on exit: .bash_logout
+
+Interactive w/o Login:
+1. .bashrc
+
+Non-interactive
+1. $ENV
+
+while read $var; do echo "$var"; done
+gawk '{print $3}'
+
+
+Git:
+List file conflicts
+
+git diff --name-only --diff-filter=U
+git ls-files -u
+
+Merge:
+git mergetool
+git checkout --ours <file>
+git checkout --theirs <file>
+git add <file>
+git commit ...
+git pull
+
+
+
+
+for i in */; do zip -9 -r "${i%/}.zip" "$i"; done   # compress all dirs into separate file
+
+ssh-keygen -t ed25519 -a 100  # secure ssh https://security.stackexchange.com/questions/143442/what-are-ssh-keygen-best-practices
+
+run with Bumblebee/GPU: primusrun <cmd>
+install cuda
+
+
+Show largest pacman packages:
+pacman -Qi|gawk '/^Installationsgröße/{print $3$4, name} /^Name/{name=$3}'|sort -hr|less
+
+pacman -Qe: explictely installed
+pacman -Qt: not a dependency
+
+/sys/devices/system/cpu/vulnerabilities/ : check vulnerabilities and files content for mitigations
+
+Bash:
+${filename%.txt}_extra.txt    | Remove extension and add new
+
+https://wiki.archlinux.org/index.php/Wireless_network_configuration#Wireless_management
+Scan Wifi: iw dev wlp3s0 scan
+
+
+watch: run command periodically
+
+for i in *; do [ -f "$i" ] && echo "$i"; done   # glob files only (otherwise also dir)
+
+Special characters, e.g. for Prompt
+echo -e '\uE0B2 \uE0B0'  ->   
+(powerline provides even more characters)
+
+
+
+grubx64 vs shimx64:
+* shimx64 for secure boot -> launch grubx64 in same dir
+* for other that grub, still call the file grubx64.efi

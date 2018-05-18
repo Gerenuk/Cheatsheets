@@ -1,3 +1,0 @@
-grubx64 vs shimx64:
-* shimx64 for secure boot -> launch grubx64 in same dir
-* for other that grub, still call the file grubx64.efi

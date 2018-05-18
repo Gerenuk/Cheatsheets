@@ -48,3 +48,11 @@ Average and Worst case:
 * use variable width encryption since 1-1-mapping (e.g. Hasty Pudding, Feistel (at least 4 rounds))
 * use Permutation polynomials of finite fields
 * use A*k mod N (where N and A relatively prime; i.e. ggT=1)
+
+
+++++++++++
+* lowest common ancestor: find ancestor in tree
+* multi-string search: Aho–Corasick algorithm
+* maximum subarray problem: find the contiguous subarray within a one-dimensional array of numbers which has the largest sum (can contain negative numbers!)
+
+scipy.optimize.fmin: simplex downhill optimization

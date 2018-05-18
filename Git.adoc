@@ -10,3 +10,10 @@ dir/              # does not look into dir
 
 dir/*
 !dir/file.txt     # works; this file will be included
+
+= Commands
+
+|===
+| git help      		| Help
+| git help -g   		| Tutorials
+|===

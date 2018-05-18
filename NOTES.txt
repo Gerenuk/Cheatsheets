@@ -1,46 +1,52 @@
-optimize:
-start: class_weight, criterion, max_depth=(20,40)
-opt: max_features, one of min_samples_leaf/min_samples_split/min_weight_fraction
-extra: min_samples_leaf=1, min_samples_split=5, n_estimators more steps
-no other cross-optimize
+﻿== YARN
 
-add data size and imbalance
-add run ID (for extra optimize)
+* split resource mgmt (ResourceManager) from job scheduling/monitoring (ApplicationMaster)
+* computation: ResourceManager, NodeManager
+* memory, CPU, disk
+* YARN_NODEMANAGER_OPTS env var
+* to see resources from nodes go to RM UI //...:8088/cluster/nodes
+* memory/CPU: min-alloc=increments; max-alloc=max
+* container killed if vmem-pmem-ratio factor on map or reduce exceeded
+* Mapper/Reduce ask for memory/CPU/disk; AM only ask for memory/CPU
+* each container is JVM process
+* usually java.opts=0.8 container memory
 
-optimize all of min_samples etc. variables?
-skopt options?
-thesis RF?
+== Hadoop
 
-prior on max_features?
+* Cloudera sometimes use Kudu (distributed columnar store) instade of HDFS; rely on Spark instead of MapReduce
+* Hortonworks: also Spark
+* Databricks: Spark-people; prefer Mesos over YARN
+* Hive useful for file-to-table mgmt
+* Impala for massively parallel processing
+* Tableau want to support Spark directly sometime
+* Spark streaming a bit weak?
+* Kerberos only full implemented auth for Hadoop (even though bad); use Ranger or Sentry to reduce pain (need, otherwise each part does own auth)
+* Ranger (Hortonsworks) slightly ahead of Sentry (Cloudera)
+* HBase good; with Phoenix you can query by SQL tool; Ambari integrated
+* Impala: massively parallel on HDFS; much faster than Hive; can replace Teradata and Netezza; supported by Cloudera (Hortonswork Phoenix instead)
+* Kafka: distributed messaging; a bit basic though
+* Storm/Apex: better than Spark at streaming; but mgmt and API not so good
+* Ambari/Cloudera Mgr: Best to monitor cluster
+* Pig: won't be there for long; Spark better; other alternatives are Apache Nifi or Kettle
+* Nifi/Kettle: Kettle more mature; improvement over Oozie?
+* Knox: Edge protection; reverse proxy written in Java with auth; not well written; obscure errors
+* Kylin: precalc into cubes(?)
+* Atlas/Navigator: Hortonworks new data governance tool; no fully baked; may surpass Cloudera's Navigator
 
-----
-Out of 14 datasets with default ROC 0.6-0.9
-
-class_weight=None, idx8: 0.996 (relative to best)
-Also: 9,10,6
-maybe other class_weight if poslabel <10% -> balanced or balanced_subsample both candidates
-
-criterion=entropy; always winner apart from 2 (0.998); try gini if imbalanced
-
--> restrict entropy/classweightNone -> worst 0.994
-
-optimize:
-min_samples_leaf -> worst 0.9895
-min_samples_split -> worst 0.9873
-min_weight_fraction_leaf -> worst 0.996 <= best
+obsolete(?)
+* Oozie: error-hiding; diff from docs; broken validator; written poorly
+* MapReduce
+* Tez
 
 
-most common min_sample_leaf: 1,2,3
-a few higher; some have lower score (noisy?)
+== Text file encoding BOM Bytes
 
-min_sample_leaf=3 fixed -> rel to best 0.997
--> no very clear pattern for duration difference to min_weight_fraction_leaf opti
+* only for unicode
+* FFFE or FEFF : UTF-16 LE or BE
+* or EFBBBF : utf8; special bytes that hopefully are not meaningful in other encodings
+* UCS-2=UTF-16 (except TFF16 some more codepoints)
+* UTF8 bytes: 0.. (<0x80); 110.. 10..; 1110.. 10.. 10..; 11110.. 10.. 10.. 10..
 
-max_depth=20 -> at most 0.3% loss (often even win!)
--> but no saving in time!!
+Use utf-8-sig, if there is a BOM byte
+utf16 automatically does BOM (don't use utf-16LE unless BOM is missing)
 
-max_features=sqrt -> often no diff, but can be 2%-18%
--> optimize
-
-optimizing max_depth brings no gain (score, duration)
-log-uniform distr for min_samples_leaf no gain (score, duration)

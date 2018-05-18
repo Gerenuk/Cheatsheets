@@ -1,3 +1,0 @@
-git help      | Help
-git help -g   | Tutorials
-

@@ -1,0 +1,138 @@
+* normal programs
+* probabilistic variables, inference
+* can run forward (consequences) and backward (constraints)
+* paradigms:
+    * imperative: Infer.NET, pWhile
+    * functional: BUGS, IBAL, STAN, Church
+    * logic: BLOG, Alchemy, Tuffy
+    * tabular (program as relational database to avoid impedance mismatch between input/output types): Tabular
+* inference methods:
+    * static: convert to Bayesian network and do belief propagation etc. (e.g. Infer.NET); data flow analysis
+    * dynamic: run several times and create sample (Church, Stan); need to combat high sample rejection
+* can model Dirichlet processes, LDA, ...
+
+|===
+| Name           | State    | Expressivity                          | Scalability                              | Paradigm  
+| Venture        | mature   | full                                  | complex fast inference and expressive    | functional
+| Figaro         | mature   | full, but rather graphical models     | fast for graphical models                | OOP
+| BLOG           | mature   | only logic models                     | fast with strong inference
+| Church         |          | full                                  | slower inference since complex models    | functional
+| Haraku         |          |                                       |                                          | functional
+| Chimple        |          | full, but rather graphical models     | fast for graphical models
+| Dimple         |          | only graphical models                 | fast for graphical models
+| Stan           | mature   | limited?
+| Infer.NET      |          | limited?
+|===
+
+Expressivity:
+* language limits
+* language conciseness
+* but if very expressive: slower inference, easier to have slow models
+
+Venture/Church:
+* cleanest
+* unconstraint prob.prog.              
+* Church for very complex programs, slower sampling efficiency
+* dialects of Scheme
+
+Venture: 
+* academic
+* slice sampling
+* can program inference yourself
+* still very alpha and incomplete (03/2015)
+* Python integration (but not perfect)
+
+Church:
+* converted to Javascript (fast)              
+
+Newer languages often cleaner      
+
+Figaro:
+* commericial
+* Scala integration
+* can represent non-parametric                                    
+
+Chimple/Dimple:
+* with Matlab or Java
+
+Inference:
+* easier for Bayesian networks and hierarchical DPs
+
+Stan:
+* no discrete variables (usually better marginalize them out, see manual)
+* no variable-sized models
+
+Haraku:
+* Haskell
+
+Conclusion:
+* for traditional, non-parametrics -> STAN, BLOG
+* for graphical models -> Figaro and other specialized
+* for Bayesian non-parametric -> see what matures
+
+Some Bayesian modeling techniques in Stan
+=========================================
+Michael Betancourt
+https://www.youtube.com/watch?v=uSjsJg8fcwY
+
+* pi(q|D): data D, pi posterior density
+* components
+  * data
+  * parameters
+  * model; priors for parameters; y equation
+* pi(y,x|theta)=pi(y|x,theta)*pi(x|theta)
+  ^likelihood   ^interesting  ^careful(if indep)
+* assume covariates don't depend on parameters -> pi(x) -> drop to get pi(y,x|theta)
+* pi(y|x,theta)=pi(x|f(x,theta1),theta2) : functions of covariates
+                                 ^often noise
+=> noise term: sigma~Half-Cauchy(tau) (instead of Gaussian), heavier tailed, less constraining to be below tau
+* alpha, beta ~ normal
+
+General linear models:
+* map linear to some distribution g(X^T*beta+alpha)
+* g^-1: (a,b) -> (-inf,inf) [historical reason]
+* bernoulli(inv_logit(..)) [-> simplify to bernoulli_logit()]; no noise term
+* poisson(exp(..)) [-> simplify to poisson_log()]
+
+-> but assumes all data is the same (complete pooling)
+* how to deal with individuals which group
+-> hierarchical: phi -> theta_i -> y_i (every individual different -> less bias but more variance)
+
+between one parameter for all and one parameter each
+-> introduce distribution of population distribution
+
+exchangeability:
+* permutations dont make a difference
+* may be within subgroups
+-> definetti theorem: it must be a mixture:
+pi(theta)=int dphi prod_i pi(theta_i|phi)pi(phi)
+
+=> one hyper-parameter which determines _distribution_ of _individual_ parameters
+=> hyper-prior really important for fit!
+
+-> with data:
+pi(y,theta)=int dphi prod_i pi(y_i|theta_i)pi(theta_i|phi)pi(phi)
+
+care if visible subgroups
+
+uniform prior bad -> infinite weight about any value -> similar to completely individual parameters; no interaction
+
+multi-level model: alpha_i=sum alpha_i,j
+=> _sum_ over all possible subgroup possibilities (no cross-product)
+
+=> hard to fit; can be really biased
+e.g. Neal's funnel distribution
+exploration and different step-size difficult -> MCMC gets stuck
+
+=> better: calculate algebraically parameter from simpler distr
+have aux parameter
+theta_n=theta~ * exp(-phi/2) + 0 instead of N(0,exp(-phi/2))
+theta~ = N(0,1)  <- this is uncorrelated with phi
+-> "centered parametrization"
+(but doesnt work when too little data)
+-> non-centered works better with little data(?)
+(usually you don't have enough data and that's why you use hierarchical anyway)
+
+non-centered, can also use distr for sum mu_i
+
+read Stan manual

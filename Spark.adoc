@@ -639,3 +639,4 @@ df.sort(F.desc("col"))
 df.orderBy(F.desc("col"))
 
 * https://developer.ibm.com/hadoop/2016/08/03/is-cpu-scaling-impacting-your-hadoop-performance/[CPU scaling] may affect performance
+

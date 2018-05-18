@@ -1,3 +1,157 @@
+= Best programming practices
+
+Inheritance:
+* white-box reuse
+* + statically at compile-time
+* + can reimplement methods
+* - can't change implementation at runtime
+* - breaks encapsulation
+
+Composing:
+* black-box reuse
+* generally better
+* + at runtime
+* respect interface
+
+= Best practices
+
+Delegation:
+* instead of inheriting from class, keep reference and call that class
+* + can change behaviour at runtime
+* - harder to understand
+* best used in standard patterns
+* patterns: state, strategy, visitor
+
+Aggregation:
+* one object owns
+* identical lifetime
+* diamond arrow
+
+Acquaintance:
+* "using"
+* just knows about object
+
+Refactoring:
+* bad to do something on variable of other object -> polymorphism
+* long method and large distance between method name and method body -> extract method
+* temp assignment only once -> inline
+* long lines -> new explaining variable
+* method object of complicating structure needed
+* method references other obj often -> more methods
+* field used more often by other object -> more field
+* temp var assignment diff values -> split
+* func args assigned new values -> temp var
+* class has subclass with field that change together -> extract class
+* class not doing much -> inline
+* hide delegate: getDept getManager --> getManager -> Dept
+* reverse if too much simple delegation (if you want ot access many methods of delegate)
+* primitive value over-used -> real object
+* dont expose collection -> provide modification methods
+* numeric type code -> make class (for type checks) with parameters (subclass if varying behaviour)
+* null objects which have methods but don't react (missing)
+* introduce asserts of something assumes that otherwise is programming bug
+* separate queries and state modifier methods
+
+dont overuse exceptions (invisible exit point)
+"exception" not "ordinary"; not for things that always happen
+python+no-tests -> hard refactoring
+correctness -> haskell with type checking
+in that order: make it correct, make it clear, make it concise, make it fast
+
+improve: work with smarter people
+
+Make it
+1. correct
+2. clear
+3. concise
+4. fast
+
+= Floating point
+http://software.intel.com/en-us/articles/consistency-of-floating-point-results-using-the-intel-compiler
+Compiler options let you control the tradeoffs between accuracy, reproducibility and performance. Use
+
+    /fp:precise /fp:source (Windows) or
+    –fp-model precise –fp-model source (Linux or Mac OS X)
+
+to improve the consistency and reproducibility of floating-point results while limiting the impact on performance.
+If reproducibility between different processor types of the same architecture is important, use also
+
+    /Qimf-arch-consistency:true (Windows) or
+    -fimf-arch-consistency=true (Linux or Mac OS X)
+
+
+
+For the complete article, updated for Intel Composer XE 2013,  please open the attached PDF file.
+
+== Useful
+* error measured in ulp (units in the last place)
+* relative error bounded by machine epsilon (differs from ulp by a factor 1-2)
+* special values \pm\infty, \pm 0, NaN (stored by using extreme exponents)
+* NaN can store extra info since not all bits used (system dependent)
+* \pm 0=1/\pm\infty
+* NaN produced by: \infty+(-\infty), 0 x \infty, 0/0, \infty/\infty, \sqrt{x<0}
+* \infty produced on overflows in operation (possible to distinguish between overflow and division by zero from additional special flags)
+* -0=+0 (not -0<+0); signed zero to keep information for 1/(1/x), underflow, \log(x) and complex numbers
+* catches:
+  * x/(x^2+1)=0 if overflow whereas it should be 1/x
+  * x=y <=> 1/x=1/y not true for +0, -0
+* IEEE uses denormalized numbers at the boundary of exponents to gain some more bits (not 1.#### but 1###.### anymore)
+* possible exceptions: overflow, underflow, division by zero, invalid operation (result NaN or comparison with NaN), inexact; flag for each
+
+== Rearrangement to avoid catastrophic cancellation =
+* \frac{-b+\sqrt{b^2-4ac}}{2a}=\frac{2c}{-b-\sqrt{b^2-4ac}}
+* x^2-y^2=(x+y)(x-y)
+* \sqrt{s(s-a)(s-b)(s-c)}=\frac{1}{4}\sqrt{(a+(b+c))(c-(a-b))(c+(a-b))(a+(b-c))} when a>=b>=c
+* \ln(1+x)=\frac{x\ln(x)}{(1+x)-1} (relative error 5 epsilon if x<3/4, guard digit and ln within 1/2 ulp)
+* Smith's formula for complex number division
+
+== Informal
+* Numbers represented as 1.#### x 2^(####); first constant bit is omitted in representation; p is precision; exponent stored as positive integer with offset
+* Zero represented with special minimum base (lexicographic order with negative and normal numbers preserved)
+* when subtracting, some bits from the smaller numbers are lost due to shifting. But at least one guard digit important to ensure 2 epsilon total error; otherwise all digits could be wrong
+* when using round to even, then x-y+y-y+y... with be x_0 or x_1
+* if for integers \abs{m}<2^{p-1} and n=2^i+2^j, then m/n*n=m
+* standards: IEEE 754 (base 2, p=24 or 53) and IEEE 854 (base 2 or 10); they specify algorithms for arithmetics (and square root)
+* 9 digits enough to recover a 24bit (single precision) integer
+* no specification for transcendental functions (since different possible; rational approximation, CORDIC, tables,...)
+
+Someones idea:
+prevent over/underflow in log sum(exp(x)) subtract max -> m+log sum(x-m)
+
+= Font
+* http://hivelogic.com/articles/top-10-programming-fonts
+* Best first: Inconsolata, Consolas (commerc.), Deja vu sans mono, Proggy, Monaco
+* Programming new: Monoid
+* Printing: Charis SIL
+* (Hack 2.0)
+
+= Languages
+
+== Misc compare
+* Java easier than python to get to perform well
+* Clojure good but weird
+
+
+== Scala
+Scala issues:
+* Not nicely compatible with Java
+* too hard for programmers
+* If you trigger dynamic compilation, then it is slow
+
+== Performance
+* fastest: C/gcc
+* almost fastest: Rust, C++/g++
+* pretty fast: Fortran, Ada, Swift, Go, C#, Java
+* Lisp, OCaml
+* Haskell/GHC, F#
+* Node.js, Typescript, Dart, Racket
+* Slow: Python, Ruby, Lua
+
+== Length
+* Rust longer than C
+* 
+
++++++++++++
 Y-fast trie: store integer from bounded domain, supports exact and predecessor or successor queries in time O(log log M), using O(n) space [less than X-trie], where n is the number of stored values and M is the maximum value in the domain
 
 X-tree is an index tree structure based on the R-tree used for storing data in many dimensions. It differs from R-trees, R+-trees and R*-trees because it emphasizes prevention of overlap in the bounding boxes, which increasingly becomes a problem in high dimensions. In cases where nodes cannot be split without preventing overlap, the node split will be deferred, resulting in super-nodes. In extreme cases, the tree will linearize, which defends against worst-case behaviors observed in some other data structures.
@@ -119,3 +273,9 @@ to escape use LIKE "%utm\_%" escape "\"
 Get substring until some substring: substr(url,1,instr(url, "utm_")-1)
 
 update or ignore moz_places set url=substr(url,1,instr(url, "utm_")-2) where url like "%utm\_%" escape "\"
+
+++++++++++++
+Variable naming:
+* functions: verb is change state, noun if return value (what does 'create_database' mean)
+* "Clean Code", "The Art of readable code"
++++++++++++++++

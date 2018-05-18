@@ -669,3 +669,13 @@ send() function restarts generator and also returns new value like next()
 * to restore built-ins: `del myoverwritten` or `import builtins; real=builtins.real`
 
 == Unsorted
+class my_nt(NamedTyple)   # Python 3.6
+
+or dataclasses in Python 3.7
+
+JSON worse than YAML since tuple and list become same encoding
+
+Performance:
+* creating lists has small overhead compared to tuples, so creating small tuples faster than small lists; but apart from that tuples are not faster
+
+++++++++

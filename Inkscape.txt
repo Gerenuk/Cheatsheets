@@ -1,3 +1,27 @@
+Scroll:		middle mouse
+Zoom:		+ -
+Selector:	space or F1
+		Ctrl to restrict moving or rescaling
+Selector:	click again
+		rotate or skew (Ctrl for 15deg steps)
+Selector:	keys:
+		arrows (move), </> (scale)
+		[/] (rotate)
+		shift: increase steps
+		alt: step=one screen pixel
+Fill&Stroke:	F7=pick colour (shift click for stroke colour)
+Selection:	Tab selects by z-order (shift to select from top)
+		Alt-click to select hidden objects
+Paste style:	Fill, Stroke, Font
+Path:		see tutorial-advanced.html
+		Boolean operations for fills possible
+		Inset/Outset: displace point perp to path, linked offset possible
+		Simplification reduces number of points
+Text:		Alt+</> changes letter spacing
+		Ctrl+Alt+</> changes line spacing
+		Alt+arrow shifts one letter
+
+
 |===
 | Shift + Wheel | Scroll horizontally
 | Plus, Minus | Zoom
@@ -110,3 +134,15 @@ Offset:
 Calligraphy: Stroke tools
 Interpolation: Morph shapes to others
 Tracing: Bitmap to Path
+
+== Transform handwriting to path and color
+* scan image
+* transform to path (will create "one" huge path)
+* to color parts:
+** break apart path (empty letters like "o" will be filled)
+** combine element and color
+** combine rest (to fill letter)
+** to easier select everything but the colored object
+*** hide (obj.props, but object disappears)
+*** lock (obj.probs, but not selectable)
+*** obj to new layer

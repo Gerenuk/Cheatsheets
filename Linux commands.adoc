@@ -277,6 +277,13 @@
 | swapoff -a; swapon -a                     | check if free+buf+cache>swap; use to bring back pages to RAM after mem-hog app
 | find . -ctime -_n_                        | find files that are at most _n_ days old
 | convmv                                    | convert file encoding
+|===
+
+== CUDA
+
+[cols="m,d"]
+|===
+| nvidia-modprobe                           |
 |===
 
 == File system (show info; read only)
@@ -363,15 +370,27 @@
 | mail _TO@ADR_ -s "_SUBJECT_" -r "_FROM@ADRr_" | send email
 | lynx -dump                                | dump webpage in ASCII
 | watch -n _SECONDS_ lynx -dump             | watch in web page changes
-| ssh-keygen -t dsa                         | create DSA key
 | lftp -u _USER_,_PASSWD_ _HOST_ -e "cd _DIR_;get _FILE_;exit" | download with lftp
 | echo 1 > /proc/sys/net/ipv4/ip_forward    | Enable forwarding
 | wget -c _URL_                             | continue
 | wget -rkp -l _DEPTH_ -A _SUFFIX_ -R _SUFFIX_ -np | recursive, convert linKs,Page requisites, No Parent
 | write _USER_[@_HOST_] [tty1]              | write message
-| ssh -C _USER_@_HOST_                      | compress with gzip-like system
 | nohup _COMMAND_                           | command does not quit at hungup (e.g. logout)
 |===
+
+== SSH
+
+[cols="m,d"]
+|===
+| ssh-keygen -t ed25519 -a 100              | Suggested in https://security.stackexchange.com/questions/143442/what-are-ssh-keygen-best-practices/143579 and https://wiki.archlinux.org/index.php/SSH_keys#Choosing_the_authentication_key_type
+| ssh -C _USER_@_HOST_                      | compress with gzip-like system
+|===
+
+* DSA deprecated in OpenSSH 7.0
+* RSA compatible, but weaker and needs longer keys
+* ECDSA is suspicious (NIST-produced)
+* Ed25519 key size is always 256
+* -> Ed25519 is best
 
 
 == Network (show info or configure)
