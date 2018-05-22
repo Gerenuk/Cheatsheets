@@ -1,0 +1,6 @@
+
+	from lxml.html.soupparser import fromstring
+	dd=fromstring(open("...").read())
+	es=dd.xpath('.//a[contains(text(),"Rohrhalterungen")]')
+	e=es[0]
+	e.getroottree().getpath(e)   # -> xpath

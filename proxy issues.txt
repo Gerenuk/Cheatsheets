@@ -11,6 +11,7 @@
     npm.cmd config set http-proxy <host>:<port>
     npm.cmd config set strict-ssl false
 
+  Install packages from apm in console
 
 * Conda:
 

@@ -1,0 +1,398 @@
+== HTTP
+
+* communication between server/client with request/response as text messages
+* with methods, URLs, message body
+* methods should follow some contracts
+
+* stateless request/response protocol with plain text ASCII messages (separated by \r\n)
+* request:
+** request line "GET /../.."
+** header fields (https://en.wikipedia.org/wiki/List_of_HTTP_header_fields#Request_fields); "Host" is mandatory since HTTP/1.1
+** message body (preceded by empty line; may use \n only)
+* server provides resources
+* response: status information, may contain content
+* replies on transport protocol (e.g. TCP; but HTTPU for UDP exists)
+* resources identified by URLs, URIs
+* HTTP/1.1
+** can reuse a connection multiple times -> no TCP 3-Way-Handshake
+** multiple transfer optimizations (chunks, pipeline, byte selection serving)
+* HTTP/2 in 2015 (supersedes Google SPDY)
+* server sends back a status line with error code; and an additional message with content
+* multiple authentication possible
+* methods: GET, POST, HEAD, OPTIONS, PUT, DELETE, TRACE, CONNECT
+* unknown methods treated as unsafe and non-idempotent
+* RFC5789 defined PATCH, WebDAV has also 7 new methods
+* methods (only GET and HEAD compulsory):
+** GET: to get resource
+** HEAD: to get meta-information only (no content!)
+** POST: post data as subpart of resource
+** PUT: put given data in position of resource
+** DELETE: delete specified resource
+** TRACE [discouraged due to cross-site tracing]: echo resource so that client can see wat changes made by intermediate servers
+** OPTIONS: return HTTP method that server supports for URL
+** CONNECT: convert connection to transparent TCP tunnel
+** PATCH: apply partial modification to resource
+* safe methods (i.e. no modification [apart from logging]): GET, HEAD, OPTIONS, TRACE; also idempotent
+* also idempotent: PUT, DELETE [hence not POST, CONNECT, PATCH!]
+* cacheable: GET, HEAD, POST
+* request has body: POST, PUT, CONNECT, PATCH; optional: GET, OPTIONS
+* response has body: all but HEAD
+* status code:
+** first line of response
+** can be customized
+** first digit usually refers to class (1:Info, 2:Success, 3:Redirect, 4:Client error, 5:Server error)
+* state only with HTTP cookies or hidden variables in forms
+* "Connection: Keep-Alive" for longer running
+* "Transfer-Encoding: chunked"
+* Media Types which are known to the intermediary, may be transformed (compresses, inlined, ...)
+* "application/octet-stream" for binary (?)
+* common response codes:
+** 
+
+== RESTful API
+
+* URL + Internet Media Type + HTTP method
+
+https://www.quora.com/What-is-a-REST-API
+* URL is an object - not a function
+* representations can be defined/negotiated (in header) - not a parameter
+* requests are stateless and do not require knowledge of previous calls
+* reference given by full links - no need to build links from data parts
+
+* https://awesome-python.com/#restful-api
+* web service to access and manipulate web resource
+* "core principles derived from HTTP"
+* request in XML, HTML, JSON
+* Internet Media Type:
+** lists as "Accept:" properties in request
+* other web services: WSDL, SOAP [has official standard for Web API]
+* usually HTTP used with GET, POST, PUT, DELETE
+* layered system allows intermediaries (proxy, firewall, ...) without interface change; client cannot tell whether there are intermediaries
+* cacheability explicitely defined
+* server may send client-side code
+* requests:
+** resource identified by URI
+** with info that client gets, he can modify resource
+** representation tells all available next states
+** messages self-descriptive (e.g. parser Internet media type [formerly MIME])
+* on lists or items; combinations with:
+** GET [nullipotent, no side-effect]
+** PUT [replace existing, idempotent]
+** PATCH [update for items only]
+** POST [new item; for lists only]
+** DELETE [idempotent]
+* describing REST APIs:
+** generate code, documentation, test-cases with tools
+** OpenAPI (Swagger https://swagger.io/)
+** Open Data Protocol (OData); e.g. meta-doc available at "URL$metadata"
+** RSDL
+* define media type, drive application state, define extended relation
+
+== Internet Media Type
+
+https://en.wikipedia.org/wiki/Media_type
+* type + subtype (+ optional parameters)
+* e.g. "text/html; charset=UTF-8"
+* type: application, audio, example, font, image, message, model, multipart, text, video
+* subtype:
+** can have tree prefixes separated by "."; e.g."vnd.<vendor>.", "prs." for personal, "x." (discouraged?)
+** suffix ("+xml", "+json", "zip")
+* "/etc/mime.types" associates extensions with Internet Media Type ("text/html  htm  html")
+
+== Uniform Resource Locator URL
+
+* URL:
+** scheme:
+** [//[user[:password]@]host[:port]]
+** [/path]
+** [?query] usually using a delimiter
+** [#fragment]  secondary resource
+* special character encoding:
+** for domain name https://en.wikipedia.org/wiki/Punycode used (e.g. "Mnchen-3ya" for "München")
+** path name escaped by "%<hex>"
+
+== APIs
+
+* https://connexion.readthedocs.io/en/latest/ for spec in YAML which maps to Python functions
+* Paypal: https://developer.paypal.com/docs/api/overview/
+* http://blog.luisrei.com/articles/flaskrest.html
+* REST vs SOAP https://nordicapis.com/rest-better-than-soap-yes-use-cases/
+
+== Flask
+
+* build with scalability and simplicity in mind
+* does not make decisions for you
+* web micro framework build in Werkzeug, Jinja2
+* bigger competitor: Django, batteries included (ORM, serializer, user management, internationalization)
+* many extensions (http://flask.pocoo.org/extensions/ ; popular: flask-restplus)
+* extensive documentation
+* Marshmallow: convert complex data types (classes) into native Python data [to validate, (de)serialize]
+* Examples: https://auth0.com/blog/developing-restful-apis-with-python-and-flask/  Marshmallow, Docker, Auth0
+* Request object http://flask.pocoo.org/docs/0.12/api/#incoming-request-data:
+** request["files"]["file"] when file uploaded; like standard Python object, but can also save
+
+	from flask import Flask
+	app = Flask(__name__)
+
+	@app.route('/')
+	def hello_world():
+		return 'Hello, World!'
+		
+	export FLASK_APP=hello.py
+	flask run
+	
+* flask command since version 0.12
+* will be visible only locally; add parameters "--host=0.0.0.0" to make to reachable from other computers
+* debug mode with `export FLASK_DEBUG=1`; get interactive debugger in browser after exception; 
+* dynamic URLs:
+
+	@app.router("/<converter:name>")
+	def do(name):
+	
+* convert is optional (can be string, int, float, path, any, uuid)
+* `url_for("funcname", ..)` to generate URL strings (more maintainable)
+* by default only GET (and OPTIONS) method. "HEAD" automatically if "GET" is present. specify with
+
+	@app.route("/", methods=["GET", "POST"]):
+	def do():
+		if request.method=="POST":
+		
+* note that HTML4, XHTML1 forms only send GET or POST
+* create folder "/static" and it will be accessible by URL `url_for("static", filename="..")`
+* use Jinja templates ind folder "templates" and render with `render_template("file.html", var=val)`; variables automatically escapes HTML
+* inside templates you also have `request`, `session` objects and `get_flashed_messages()` function
+* templates very useful for inheritance (for keeping certain elements on each page)
+
+* request data in global `request` object (threadsafe due to context locals) ->need to take care during unit-testing, create request with `test_request_context()`
+** request.method : "GET", "POST", ...
+** request.args : dict (of URL "?key=value")
+** request.form: dict
+* file upload:
+** uploaded files: 'enctype="multipart/form-data"' in form (otherwise browser does not transmit)
+** request.files["the_file"]; like Python file, but also `.save()`
+** use `secure_filename()` if want to store with same filename on server
+* cookies
+** `request.cookies` : dict
+** `response.set_cookie("key", "val")` to set
+** for sessions use flask `Session` for extra security
+** see "Deferred Request Callbacks" for cookies where response object does not exist yet
+* `response = make_response(text)`
+* redirect with `flask.redirect(url)`
+* abort request with `flask.abort(errorcode)`
+* `@app.errorhandler(errorcode)` for custom error page
+* Flask generates API by writing Python code -> not as easy when you start with OpenAPI definition
+
+=== Response object
+
+* str return converted to body=str, "200 OK" code, "text/html" media type
+* tuple returned: (response, status, headers) or (response, headers)
+* if no response conversion works (and not Response object), then Flask assumes a valid WSGI application
+
+=== Session object
+
+* http://flask.pocoo.org/docs/0.12/quickstart/#sessions
+* store info about use from one request to next
+* implemented with cryptographic cookies
+* need to store `app.secret_key = "..."`
+* for server-side sessions use Flask extensions
+
+=== Message flashing
+
+* show message at end of request and access it in next request (only)
+* http://flask.pocoo.org/docs/0.12/quickstart/#message-flashing
+
+=== Logging
+
+* http://flask.pocoo.org/docs/0.12/quickstart/#logging
+
+=== Flask extensions
+
+* http://flask.pocoo.org/docs/0.12/extensions/#extensions
+
+=== Deployment
+
+* http://flask.pocoo.org/docs/0.12/deploying/#deployment
+
+== Eve
+
+* automatically creates API based on model definition
+* but exposes full database as is
+
+== Request
+
+* many variables (see http://docs.python-requests.org/en/master/api/ or `dir(request)` for many)
+* `vars(request)` only shows `request.environ` with a dict, `request.url` (and few other low-level)
+* attributes:
+** `method` : "GET", ...
+** `data` : binary data (make sure to use correct "Content-Type: ..." ("text/plain" or octet-stream); will be set even if json
+** `url` : full url
+** `params` : ?
+** `json` : filled if content type JSON (otherwise None)
+** `headers`: header (string)
+** `cookies` : dict
+** `files` : dict (immutable)
+** `auth` : not found; maybe `authorization` or need to enable
+** `timeout` : not found
+** `allow_redirects` :` not found
+** `proxies` : not found
+** `verify` : not found
+** `stream` : not found
+** `cert` : not found
+* request from flask, additional vars:
+** `values`: dict (combined multidict), query param + form data
+** `args` : url args, dict (immutable)
+** `base_url`
+** `charset` : e.g. "utf-8"
+** `content-type` : e.g. "text/plain"
+** `mimetype`: e.g. "text/plain"
+** `mimetype_params`: dict
+** `encoding_errors` : e.g. "replace"
+** `form` : dict (immutable)
+** `full_path` : part after host
+** `host` : e.g. "localhost:8080"
+** `host_url` : e.g. "http://localhost:8080"
+** `input_stream`: ?
+** `query_string`: raw bytes query string
+** `user_agent`
+* fragment "#.." not found
+* data may be empty if it is already parse by something like forms; but will be set if you "cache" it with request.get_data()
+
+== Response
+
+http://docs.python-requests.org/en/master/api/#requests.Response
+* resp.content
+* resp.text (if resp.encoding set)
+
+== Python Requests
+
+* data as dict will be passed a form data (type "application/x-www-form-urlencoded"); .data empty
+* for json use headers={"Content-Type":"application/json"} or json=...
+* `resp.content`
+* `resp.raw.read(<numbytes>)`
+* reading in streaming, so may run out
+
+== Flask Restplus
+
+	from flask import Flask, request, make_response
+	from flask_restplus import Resource, Api
+
+	app = Flask(__name__)
+	api = Api(app)
+
+	all_data = []
+
+	@api.route('/data')
+	class Test(Resource):
+		def get(self):
+			resp = make_response("".join(map("-> {}\n".format, all_data)))
+			resp.mimetype = "Content-Type: text/plain; charset=utf-8"    # otherwise JSON by default
+			return resp
+
+		def post(self):
+			data = request.data
+			data_str = str(data, encoding="latin1")
+			print("Adding", data, "->", data_str, flush=True)
+			all_data.append(data_str)
+			return ""
+
+http://michal.karzynski.pl/blog/2016/06/19/building-beautiful-restful-apis-using-flask-swagger-ui-flask-restplus/
+
+== Web server
+
+* Flask only one request at time
+* Nginx: Stable web server
+* uWSGI: Web Server Gateway tofork workers
+* https://hackernoon.com/a-guide-to-scaling-machine-learning-models-in-production-aa8831163846
+* Other than Flask:
+** Bottle https://www.toptal.com/bottle/building-a-rest-api-with-bottle-framework
+
+== CURL
+
+Also Python `requests` library possible for `put`, `get`, ...
+
+    curl -d "var1=val1&var2=val2" -X POST <url>
+	curl -d "asciitext" -H "Content-Type: text/plain" -X POST <url>
+	curl -d "{<json>}" ...
+	curl -d "@file.txt" ...
+
+    curl -v -H "Content-Type: text/plain" -X POST localhost:8080/ -d "data"
+	curl -v localhost:8080/
+	
+* on windows command line it will be "latin1" encoding
+* error "curl: (23) Failed writing body" may appear (due to pipe problems), but is not severe
+* `-d` implies `-X POST`
+* on PowerShell console you need to escape quotes with backslash
+
+== Flask RestPlus
+
+* similar to flask_restful, but with auto-docs
+* request parser deprecated (e.g. use marshmallow)
+* validates input
+* formats output (as JSON)
+* turns exceptions into HTTP with @api.errorhandler -> error handler functions for certain exceptions
+* generate interactive documentation (Swagger UI)
+* /api/swagger.json: Open API format (openapis.org, lots of tooling, Swagger UI just one tool, code generators for clients)
+* RequestParser: for query
+* api.model: for body; can inheritance and nesting; also for output formatting with @api.marshal_with
+* api.response: format responses
+
+* will make parameters in URL
+	data_parser = api.parser()
+	data_parser.add_argument("data")
+	
+	@api.expect(data_parser)
+    def post(self):
+
+
+== Cookbook
+
+from flask import Flask
+app = Flask(__name__)
+
+@app.route("/")
+def hello_world():
+  return "Hello, World!"
+
+  
+#!/bin/bash
+export FLASK_APP=./cashman/index.py
+source $(pipenv --venv)/bin/activate
+flask run -h 0.0.0.0
+
+
+# get incomes
+curl http://localhost:5000/incomes
+
+# add new income
+curl -X POST -H "Content-Type: application/json" -d '{
+  "description": "lottery",
+  "amount": 1000.0
+}' http://localhost:5000/incomes
+
+== HTTP 2
+
+-> mainly some performance improvements
+server can also return additional responses that client most likely will need
+
+* approved 2015
+* supported by most browsers
+* 25% of sites support it
+* negotiate protocol and version
+* compatibly to HTTP 1.1
+* faster due to:
+** server push (push more responses than requested)
+** data compression of headers
+** pipeline of requests
+** multiplex multiple requests over one TCP
+
+== Restful APIs
+
+https://av.tib.eu/media/21186
+* HTTP Request: Method, Path, Query (after "?"), Headers, Body
+* HTTP Response: Status code, Headers, Body
+* Collections (GET, POST), Items (GET, PUT, DELETE), Controller (POST; function name in URL)
+
+== GraphQL
+
+* declarative; specify what you need in graph-like fashion "with patterns with placeholders"
+* https://dev-blog.apollodata.com/graphql-vs-rest-5d425123e34b
