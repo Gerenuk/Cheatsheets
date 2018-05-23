@@ -1,0 +1,316 @@
+Cointegration
+-------------
+Two time series that have "dependence" as linear combination are. For tests see http://en.wikipedia.org/wiki/Cointegration (e.g. simple Engle-Granger test).
+
+Independence
+------------
+* Subindependence (weaker the independence) if characteristic function factorizes
+
+Central limit theorem
+---------------------
+* http://en.wikipedia.org/wiki/Berry%E2%80%93Esseen_theorem quantifies deviation from normal distribution
+
+Distributions
+-------------
+* sum of uniform distributions http://en.wikipedia.org/wiki/Irwin%E2%80%93Hall_distribution
+* mean of uniform distributions http://en.wikipedia.org/wiki/Bates_distribution (convergence $1/\sqrt{n}$ by Kolmogorov-Smirnov distance)
+
+Short mentions
+..............
+* Tracy-Widom:
+  * normalized largest eigenvalue of random Hermitian matrix
+  * application: multivariate statistics, inferring population structure, longest increasing subsequence, longest common subsequence, ...
+  * analytics form complicating
+* Shifted Gompertz:
+  * largest of two indep var (exponential[b] and Gumbel[eta,b])
+  * applications: modeling adoption/diffusion of innovation, growth of social networks (better than Bass or Weibull), ...
+  * CDF: (1-exp(-bx))exp(-eta*exp(-bx))
+* Rayleigh:
+  * usually when overall magnitude of vector related to directional component
+  * PDF: x*exp(-x^2)
+  * CDF: 1-exp(-x^2)
+  * generalizations: Rice, Weibull
+* Log-logistic:
+  * survival analysis where rate first increases and the decreases
+  * ln X ~ logistic
+  * heavier tails than log-normal
+  * non-monotonic hazard rate, unlike more commonly Weibull
+  * CDF closed form unlike log-normal
+  * application: stream flow rates, distribution of wealth
+  * PDF: x^b/(1+x^b)^2
+  * CDF: 1/(1+x^-b)
+* Levy:
+  * stable, analytically expressible (like normal and Cauchy)
+  * application: frequency of geomagnetic reversals, length of path of photon, time of hitting a single point in Brownian motion, ...
+  * PDF: exp(-c/(x-m))/(x-m)^(3/2)
+  * CDF: erfc(sqrt(c/(x-m)))
+* Half-normal:
+  * normal, but only positive values
+  * mean: sig*sqrt(2/pi)
+  * variance: sig^2*(1-2/pi)
+* Gompertz:
+  * distribution of adult life-spans; survival
+  * application: failure rates of computer nodes, customer life-time, ..
+  * PDF: exp(bx)*exp(-eta*exp(bx))
+  * CDF: 1-exp(-eta*(exp(bx)-1))
+  * Gamma is conjugate prior
+* Gamma/Gompertz:
+  * PDF: exp(bx)/(a+exp(bx))^s
+  * CDF: 1-a/(c+exp(bx))
+* Generalized Pareto:
+  * model tails of other distribution; parameters localtion, scale, shape
+  * PDF: (1+xi*z)^-(1/xi+1)
+  * CDF: 1-(1+xi*z)^(-1/xi)
+* F-distribution:
+  * analysis of variance null distribution
+  * PDF, CDF: need Beta and Incomplete Beta Function
+* Exponential: 
+  * time between events in poisson process (i.e. constant rate)
+  * memoryless: P same when time shifted
+  * PDF: exp(-ax)
+  * CDF: 1-exp(-ax)
+  * minimum of multiple expontial variables also exponential with a=sum a_i (but not for max!)
+  * estimation: a=1/<x> (MLE), (n-1)/n*1/<x> (unif.min.variance.unbias.est.)
+* Dagum:
+  * income estimation
+  * CDF: (1+(x/b)^-a)^-p
+* Birnbaum-Saunders:
+  * fatigue life distribution
+  * application: reliability, model failure times; failure due to cracks in repeated stress, ...
+  * transform Y=sqrt(X/b)-sqrt(b/X) to get normal
+* Kumaraswamy:
+  * like Beta but analytically simpler
+  * PDF: x^(a-1)*(1-x^a)^(b-1)
+  * CDF: 1-(1-x^a)^b
+* Irwin-Hall (uniform sum):
+  * sum of uniform variables
+  * (Bates: mean of uniform)
+  * PDF, CDF: sum similar to binomial expansion
+  * mean: n/2
+  * variance: n/12
+* Beta:
+  * variables in finite interval
+  * applications: order statistics (k-th smallest of uniform is Beta), Bayesian priors, project management where events constraint to interval, ..
+  * PDF, CDF: needs Beta function
+* Wishart:
+  * generalization of chi-square to multiple dimensions
+* Parabolic fractal:
+  * discrete
+  * can fit better than power law; model King effect
+  * PMF: n^-b*exp(-c*(log n)^2)
+* Borel:
+  * branching, queueing theory; number of off-spring Poisson -> will extinct -> number of descendants Borel
+  * application: distribution of typical busy period of queue, ...
+  * PMF: exp(-m*n)*(m*n)^(n-1)/n!
+  * generalization Borel-Tanner
+* chi:
+  * square root of sum of squares of normal
+  * PDF: x^(k-1)*exp(x^2/2)
+  * Mode: sqrt(k-1)
+  * variance: sig^2=k-m^2
+* chi-squared:
+  * sum of squares of normal
+  * PDF: x^(k/2-1)*exp(-x/2)
+  * mean: k
+  * mode: max(k-2,0)
+  * variance: 2k
+  * converges to normal (e.g. k>50); but slow
+  * sqrt(x), root[3](k) also normal (see transformations)
+* Exponential-logarithmis:
+  * lifetime with descreasing failure rate (work hardening or immunity)
+  * PDF, CDF: analytic but quite nested
+* Fréchet (inverse Weibull):
+  * special case of extreme value distr
+  * application: extrems events such as annually max one-day rainfalls
+  * CDF: exp(-z^(-a))
+* Gamma:
+  * applicatiions: inter-event intervals, amount aggregated insurance claims, ...
+  * PDF: x^(a-1)*exp(b*x)
+  * CDF: needs gamma func
+* Erlang:
+  * sum of exponential variables
+  * special case of Gamma
+  * applications: number of connections at the same time in queue; waiting times between k events of Poisson process
+  * PDF: x^(k-1)*exp(-l*x)
+  * CDF: needs incomplete gamma function or sum of exp
+* Log-Cauchy:
+  * applications: survival when some extreme outliers
+  * super-heavy log tail
+  * PDF: 1/x*sig/((ln(x)-m)^2+sig^2)
+  * CDF: 1/pi*arctan((ln(x)-m)/sig)+1/2
+  * only median exists: exp(m)
+* Lomax:
+  * Pareto that shifts to begin at zero
+  * PDF: (1+x/b)^-(a+1)
+  * CDF: 1-(1+x/b)^-a
+  * mean: b/(a-1)
+* Pareto:
+  * PDF: a*b^a/x^(a+1)
+  * CDF: 1-(b/x)^a
+  * mean: a*b/(a-1)
+* Weibull:
+  * applications: failure proportional to power of time; survival analysis, delivery times, failure analysis, size of insurance claims, partical size
+  * PDF: x^(k-1)*exp(-(x/b)^k)
+  * CDF: 1-exp(-(x/b)^k)
+  * -> plot {ln(-ln(1-F))} = k*{ln(x)} - k*ln(b) for linear
+  * see Wikipedia for how to deal with empirical data
+  * b*(-ln(U))^(1/k) is Weibull if U~uniform[0,1]
+* Generalized extreme-value distribution:
+  * Fisher-Tippett-Gnedenko theorem: for n iid vars; Mn=max(X1..Xn);i
+    * if lim(n->infty) (Mn-bn)/an exists, then it must be Gumbel, Frechet or Weibull
+  * CDF: exp(-t(x)); t(x)=(1-z*eta)^(-1/eta) [eta!=0]; t(x)=exp(-z) [eta=0]
+  * PDF: more nested
+  * location, scale, shape param; support half-infinite, direction depending on eta
+  * mean: m+sig*(Gamma(1-eta)-1)/eta
+* Generalized Pareto distribution:
+  * tails for extreme value distribution
+  * PDF: (1+eta*z)^-(1/eta+1)
+  * CDF: 1-(1+eta*z)^(-1/eta)
+ 
+Note: looked through all continuous [0,infty] for interesting distributions
+
+Pickands-Balkema-deHaan theorem:
+* 2nd theorem of extreme values, which gives asymptotic tails (above threshold)
+* -> usually generalized Pareto distribution:
+
+Tests
+-----
+* Rayleigh:
+  * test for periodicity of irregularly sampled data
+
+Dvoretzky–Kiefer–Wolfowitz inequality
+=====================================
+* Probability that empirical distribution will deviate by eps
+* P(diff eps in F)<=2*exp(-2*n*eps^2)
+
+Variance of sum of binomials
+============================
+* Var(Z)=n*p*(1-p)-n*s^2
+* p = avg p_i
+* s^2 = Var(p_i)
+* https://en.wikipedia.org/wiki/Binomial_sum_variance_inequality
+
+Sum of Bernoulli is approx Poisson
+==================================
+* La Cam's theorem
+* for multiple Bernoulli with prob p_i
+* sum(P(k)-Pois(k))<2*sum p_i^2
+
+Probability of overshooting of sum
+==================================
+* https://en.wikipedia.org/wiki/Lorden%27s_inequality
+
+Relation between moments of collection of indep variables
+=========================================================
+* https://en.wikipedia.org/wiki/Marcinkiewicz–Zygmund_inequality
+
+Mean delay in a queue
+=====================
+* https://en.wikipedia.org/wiki/Ross%27s_conjecture
+
+Probability of observing atypcial sequence of samples
+=====================================================
+* https://en.wikipedia.org/wiki/Sanov%27s_theorem
+
+Positive probability of being positive
+======================================
+* P(X>0)>=E(X)^2/E(X^2)
+
+Bound on deviation from mean on unimodal
+========================================
+* https://en.wikipedia.org/wiki/Vysochanskij–Petunin_inequality
+* P(|X-mu|>=lambda*o)<=4/(9*lambda^2)
+
+Bound that sum deviates from mean
+=================================
+* https://en.wikipedia.org/wiki/Hoeffding%27s_inequality
+* more general than Bernstein
+* special cases of https://en.wikipedia.org/wiki/Doob_martingale#McDiarmid.27s_inequality
+
+Upper bound for deviation of sum from expected
+==============================================
+* https://en.wikipedia.org/wiki/Bennett%27s_inequality
+* max(X)=a (almost surely)
+* P(S>t)<=exp(...)
+
+Bound of deviation of sum from mean
+===================================
+* https://en.wikipedia.org/wiki/Bernstein_inequalities_(probability_theory)
+
+Some strengthening of law of large numbers
+==========================================
+* https://en.wikipedia.org/wiki/Hsu–Robbins–Erdős_theorem
+
+Prob of random walk in center
+=============================
+* https://en.wikipedia.org/wiki/Rademacher_distribution#Van_Zuijlen.27s_bound
+* P(|sum X/sqrt(n)|<=1)>=0.5
+
+Convergence to mean quantified
+==============================
+* https://en.wikipedia.org/wiki/Berry–Esseen_theorem
+
+Exponential bound on tail distribution of sum
+=============================================
+* https://en.wikipedia.org/wiki/Chernoff_bound
+
+Probability that partial sum exceeds a bound
+============================================
+* https://en.wikipedia.org/wiki/Kolmogorov%27s_inequality
+
+Concentration inequalities for deviations
+=========================================
+* https://en.wikipedia.org/wiki/Concentration_inequality
+
+Bound on probability that partial sum exceeds a bound
+=====================================================
+* https://en.wikipedia.org/wiki/Etemadi%27s_inequality
+
+Correlation and independence
+============================
+* jointly normal and uncorrelated (cov=0) -> independent
+* only marginally normal and uncorrelated -> not necessarily indep (https://en.wikipedia.org/wiki/Normally_distributed_and_uncorrelated_does_not_imply_independent)
+
+Entropy power inequality
+========================
+* https://en.wikipedia.org/wiki/Entropy_power_inequality
+
+Circular mean by complex numbers
+================================
+* https://en.wikipedia.org/wiki/Mean_of_circular_quantities
+* max likehood
+* minimizes distances 1-cos(a,b) [half the squared Euclidean distance of points]
+
+
+== Poisson approximation
+
+=== Le Cam's theorem
+
+https://en.wikipedia.org/wiki/Le_Cam%27s_theorem
+
+* sum of independent Bernoulli variables (not identical)
+* asciimath:[lambda_n=p_1+...+p_n]
+
+asciimath:[sum_(k=0)^oo abs(sf"Pr"(S_n=k)-(lambda_n^k e^(-lambda_n))/(k!))<2 sum_(i=1)^n p_i^2]
+
+Maybe, improved version of Hollander with extra factor asciimath:[sf"min"(1,1/lambda_n)]?
+
+++++++++++++
+Durbin-Watson:
+
+* Auto-correlation of residuals; 0..4
+* d=2 none; d<1 considerable positive corr; 
+* d<2 successive terms much different (-> possibly underestimation of statistical significance)
+* complex derivations for thresholds (depending on significance and num. of samples)
+* affects ability for statistical test:
+  * positive corr -> F-stat may be inflated (since MSE underestimated); OLS std. errors of coef. underestimated -> incorrectly reject Null
+  * for corr. -> use Cochrane-Orcutt procedure
+  * D-W stat not applicable if lagged dependent variables -> rather use Durbin's h-test if large samples
+  * D-W stat biased for autoregressive moving avg. models -> for large samples use normally distrib. h-statistic (which derives from d and estimated variance)
+
+Jarque-Bera:
+
+* test is skewness and kurtosis belong to normal
+* JB=(n-k)/6(S^2+(K-3)^2/4)
+* chi^2 with df=2 (for n>2000)
+* tests S=0, K-3=0; for small n rejects Null too much

@@ -1,0 +1,769 @@
+////
+Checked until MPL 2.1
+TODO:
+* put most used command/parameters first
+* what is agg_filter?
+////
+
+= Matplotlib
+
+:toc:
+
+== Intro
+
+* Example can be found on https://matplotlib.org/devdocs/gallery/index.html[Matplotlib Gallery]
+* Most commands here refer to http://matplotlib.org/api/pyplot_api.html[matplotlib.pyplot].
+* A summary of the pyplot command is given by https://matplotlib.org/api/pyplot_summary.html[help(plt.plotting)]
+* Axis commands are on https://matplotlib.org/api/axes_api.html[Axes API]
+* Axis has most `pyplot` commands; For properties they are usually called `ax.set_*`, `ax.get_*`
+* https://matplotlib.org/devdocs/thirdpartypackages/index.html[3rd party packages]
+
+[cols="m,d"]
+|===
+| *get_plot_commands*()                     | Python list of plot commands http://matplotlib.org/api/pyplot_api.html#matplotlib.pyplot.get_plot_commands[Ref]
+| _ec_=                                     | edge color
+| _fc_=                                     | face color
+| _ls_=                                     | linestyle ("solid", "dashed", "dashdot", "dotted", (offset, on-off-dash-seq), "-", ...)
+| _lw_=                                     | linewidth
+| _data_=                                   | Most plots take `data` and use column names for `xysc`, `color`, `edgecolors`, `facecolors`, `linewidths`
+| _zorder_=                                 | z-order
+| _marker_="go"                             | https://matplotlib.org/devdocs/api/markers_api.html[Markers API], https://matplotlib.org/gallery/lines_bars_and_markers/marker_reference.html#sphx-glr-gallery-lines-bars-and-markers-marker-reference-py[Gallery Ref]
+|===
+
+* Plotting functions support categorical values (e.g. list of strings)
+
+== Figure/Axes and Layout
+
+[cols="m,d"]
+|===
+| *figure*(_figsize_=..)                    | Add new figure. Can reference previous figures by ID. http://matplotlib.org/api/pyplot_api.html#matplotlib.pyplot.figure[Ref]
+| *figure*(_num_=1, _clear_=True)           | New window only if no same `num` exists
+| fig.*set_size_inches*(8, 11)              |
+| *show*(..)                                | Display a figure http://matplotlib.org/api/pyplot_api.html#matplotlib.pyplot.show[Ref]
+| *sca*(ax)                                 | Set current axes. Current figure updated to parent of ax http://matplotlib.org/api/pyplot_api.html#matplotlib.pyplot.sca[Ref]
+| *draw*()                                  | Redraw current figure http://matplotlib.org/api/pyplot_api.html#matplotlib.pyplot.draw[Ref]
+| *tight_layout*(..)                        | Adjust subplot parameters to give specified padding if clipped labels http://matplotlib.org/api/pyplot_api.html#matplotlib.pyplot.tight_layout[Ref]
+| _pad_=1.08                                | 
+|===
+
+=== Multi-layout
+
+[cols="m,d"]
+|===
+| fig, axs = *subplots*()                   | Create figure with axes and size, ax is one or multiple http://matplotlib.org/api/pyplot_api.html#matplotlib.pyplot.subplots[Ref]
+| _nrows_=1 +
+  _ncols_=1                                 |
+| _sharex_=False +
+  _sharey_=False                            | "none", "all", "row", "col"
+| _figsize_=(10,10)                         |
+| _squeeze_=True                            | Squeeze extra (1) dim in returned axis
+| **kwargs                                  | Same as http://matplotlib.org/api/pyplot_api.html#matplotlib.pyplot.figure[figure()]
+| *subplot2grid*(..)                        | Create a subplot in a grid http://matplotlib.org/api/pyplot_api.html#matplotlib.pyplot.subplot2grid[Ref]
+| *subplot_tool*(_targetfig_=None)          | Launch subplot tool for a figure http://matplotlib.org/api/pyplot_api.html#matplotlib.pyplot.subplot_tool[Ref]
+| *subplots_adjust*(..)                     | Tune the subplot layout http://matplotlib.org/api/pyplot_api.html#matplotlib.pyplot.subplots_adjust[Ref]
+| fig.*subplots_adjust*(_left_=0.15, _right_=.9, _bottom_=0.1, _top_=0.9) | Adjustment when saving clips labels
+| *subplot*(rows,cols,num) +
+   plot(...) +
+  *subplot*(rows,cols,num) +
+   plot(...)                                | or 3-digit single argument http://matplotlib.org/api/pyplot_api.html#matplotlib.pyplot.subplot[Ref]; use `add_subplot`() to not overwrite
+|===
+
+* http://matplotlib.org/users/gridspec.html[gridspec] more powerful than `subplots`
+
+=== Clearing, deleting, closing
+
+[cols="m,d"]
+|===
+| *cla*()                                   | Clear current axis
+| *clf*()                                   | Clear current figure
+| *close*()                                 | Close figure http://matplotlib.org/api/pyplot_api.html#matplotlib.pyplot.close[Ref]
+| *delaxes*()                               | Remove axes from current figure http://matplotlib.org/api/pyplot_api.html#matplotlib.pyplot.delaxes[Ref]
+|===
+
+=== Getting figure information
+
+[cols="m,d"]
+|===
+| *gcf*()                                   | Get reference to current figure
+| *get_current_fig_manager*()               | http://matplotlib.org/api/pyplot_api.html#matplotlib.pyplot.get_current_fig_manager[Ref]
+| *get_figlabels*()                         | Get list of existing figure labels http://matplotlib.org/api/pyplot_api.html#matplotlib.pyplot.get_figlabels[Ref]
+| *get_fignums*()                           | Get list of existing figure numbers http://matplotlib.org/api/pyplot_api.html#matplotlib.pyplot.get_fignums[Ref]
+| *fignum_exists*(num)                      |
+|===
+
+* Remember to `close()` figure to free memory
+
+== Plots
+
+=== Plot and variants (same size, shape)
+
+[cols="m,d"]
+|===
+| *plot*(..)                                | Plot points of same size and color http://matplotlib.org/api/pyplot_api.html#matplotlib.pyplot.plot[Ref]
+| _marker_="go"                             | Marker https://matplotlib.org/api/_as_gen/matplotlib.pyplot.plot.html?highlight=plot#matplotlib.pyplot.plot[Ref]
+| **kwargs                                  | https://matplotlib.org/api/_as_gen/matplotlib.lines.Line2D.html#matplotlib.lines.Line2D[Line2D]
+| [line1, ..] = plot(..)                    |
+| *plot*(x, y, "go")                        | Green Circles
+| *plot*(y, "go")                           | Green Circles
+| *plot*(x1, y1, x2, y2, ...)               |
+| *plot*(x1, y1, "f1", x2, y2, "f2", ...)   |
+| *plot*("X", "Y", data={"X":..,..})        |
+| *errorbar*(x, y, _yerr_, _xerr_)          | Error optional http://matplotlib.org/api/pyplot_api.html#matplotlib.pyplot.errorbar[Ref]
+| plotline, caplines, barlinecols = errorbar(..)    |
+| *step*(x, y)                              | Plot step plot (parameters like `plot`) http://matplotlib.org/api/pyplot_api.html#matplotlib.pyplot.step[Ref]
+| _where_="mid"                             | `"pre", "post", "mid"`
+|===
+
+* See section Scaling for log-scaling
+* https://matplotlib.org/devdocs/api/projections_api.html[Projections API]
+
+=== Other Marker plots
+
+[cols="m,d"]
+|===
+| *bar*(left, height, _width_=0.8, _bottom_=None)   | (left,left+width,bottom,bottom+height) http://matplotlib.org/api/pyplot_api.html#matplotlib.pyplot.bar[Ref]
+| _align_="center"                          | `"edge"`, `"center"`
+| _color_=[..]                              |
+| _edgecolor_=[..]                          |
+| _error_kw_=[..]                           | Error data (ecolor and capsize here possible)
+| _fill_=False                              |
+| _hatch_="/"                               |
+| _log_=True                                |
+| _orientation_="horizontal"                |
+| _tick_label_=[..]                         | String or array
+| _yerr_=[..]                               | (Color with `ecolor=`, Error bar length `capsize=`)
+| bars = bar(..)                            | https://matplotlib.org/api/container_api.html#matplotlib.container.BarContainer[BarContainer]
+| *barh*(bottom, width)                     | Horizontal bar chart http://matplotlib.org/api/pyplot_api.html#matplotlib.pyplot.barh[Ref]
+| rec = barh(..)                            | https://matplotlib.org/api/_as_gen/matplotlib.patches.Rectangle.html#matplotlib.patches.Rectangle[Rectangle]
+| *broken_barh*(..)                         | Bar charts which dont start at zero http://matplotlib.org/api/pyplot_api.html#matplotlib.pyplot.broken_barh[Ref]
+| **kwargs                                  | https://matplotlib.org/api/collections_api.html#matplotlib.collections.BrokenBarHCollection[BrokenBarHCollection]
+| *hist*(x, _bins_="auto")                  | `bins+1` edges like `np.*histogram*()`; returns (n, bins, patches) http://matplotlib.org/api/pyplot_api.html#matplotlib.pyplot.hist[Ref]
+| n, bins, patches = hist(..)               | Value of histogram bins, Edges of bins (length nbins+1), patches
+| _bottom_=..                               | Bottom baseline
+| _color_=[..]                              |
+| _cumulative_=True                         | Last bin has total; Reverse if negative
+| _density_=True                            | Normalized to 1 (divide by bin width); `hist(.., normed=..)` deprecated due to confusion
+| _histtype_="step"                         | `bar`, `barstacked`, `step`, `stepfilled`
+| _log_=True                                |
+| _normed_=True                             | Integral sum to 1
+| _orientation_="horizontal"                |
+| _range_=(..,..)                           | Default `x.min()`, `x.max()`
+| _rwidth_=..                               | Relative width of bars
+| _stacked_=True                            |
+| _weights_=[..]                            | Weights for bin counts
+| **kwargs                                  | Patch properties https://matplotlib.org/api/_as_gen/matplotlib.patches.Patch.html#matplotlib.patches.Patch[Ref]
+| plt.hist(mat, histtype="step", lw=1)      | Multiple histograms
+| *scatter*(x, y)                           | http://matplotlib.org/api/pyplot_api.html#matplotlib.pyplot.scatter[Ref]
+| _s_=[..]                                  | Size in points^2
+| _c_=[..]                                  | Color; Single, List of colors, List for values to map
+| _cmap_=[..]                               | Colormap
+| _c_=[..], _norm_=mpl.colors.LogNorm()     | Normalize color
+| _vmin_=.. +
+  _vmax_=..                                 | Min/max values for color valuess
+| _edgecolors_="none"                       | http://matplotlib.org/api/collections_api.html#matplotlib.collections.Collection[Ref]
+| **kwargs                                  | https://matplotlib.org/api/collections_api.html#matplotlib.collections.Collection[Collection]
+| pathcoll = scatter(..)                    | Returns https://matplotlib.org/api/collections_api.html#matplotlib.collections.PathCollection[PathCollection]
+| *eventplot*(x)                            | Short, parallel lines at given positions http://matplotlib.org/api/pyplot_api.html#matplotlib.pyplot.eventplot[Ref]
+| **kwargs                                  | https://matplotlib.org/api/collections_api.html#matplotlib.collections.LineCollection[LineCollection]
+| list_of_eventcoll = eventplot(..)         | https://matplotlib.org/api/collections_api.html#matplotlib.collections.EventCollection[EventCollection]
+| *eventplot*(X)                            | Multiple rows
+| *pie*(x)                                  | http://matplotlib.org/api/pyplot_api.html#matplotlib.pyplot.pie[Ref]
+| _explode_=                                | Fraction of radius to draw piece out
+| pie_artists, texts = pie(...)             | https://matplotlib.org/api/_as_gen/matplotlib.patches.Wedge.html#matplotlib.patches.Wedge[Wedge], https://matplotlib.org/api/text_api.html#matplotlib.text.Text[Text]
+| *stem*(x, y)                              | Stem plot (vertical lines) http://matplotlib.org/api/pyplot_api.html#matplotlib.pyplot.stem[Ref]
+| *stem*(y)                                 | x=[0..len-1]
+| markerline, stemlines, baseline = stem(..)| https://matplotlib.org/api/container_api.html#matplotlib.container.StemContainer[StemContainer]
+| *polar*(..)                               | Polar plot http://matplotlib.org/api/pyplot_api.html#matplotlib.pyplot.polar[Ref]
+|===
+
+* All commands have quite some more optional kwargs.
+* `plot` line styles by `rcParams["axes.prop_cycle"]`
+* for `scatter` all of `x`, `y`, `s` and `c` may be masked array; Only completely unmasked point will be plotted
+* `xysc` for `scatter` may be 2D and will be flattened (but `c` only flattened if same size as  `xy`)
+* `plot` faster if same size and color
+* most params which access an array (e.g. `color`) also accept a single scalar
+* a lot of customization for https://matplotlib.org/api/projections_api.html#matplotlib.projections.polar.PolarAxes[PolarAxes]
+
+=== Filled plots
+
+[cols="m,d"]
+|===
+| *fill*(..)                                | Plot filled polygons http://matplotlib.org/api/pyplot_api.html#matplotlib.pyplot.fill[Ref]
+| patches = fill(..)                        | https://matplotlib.org/api/_as_gen/matplotlib.patches.Patch.html#matplotlib.patches.Patch
+| *fill_between*(x, y1, y2=0)               | Plot filled polygons between curves http://matplotlib.org/api/pyplot_api.html#matplotlib.pyplot.fill_between[Ref]
+| _interpolate_=                            |
+| **kwargs                                  | https://matplotlib.org/api/_as_gen/matplotlib.patches.Polygon.html#matplotlib.patches.Polygon[Polygon]
+| *fill_betweenx*(y, x1, x2=0)              | Plot filled polygons between _horizontal_ curves http://matplotlib.org/api/pyplot_api.html#matplotlib.pyplot.fill_betweenx[Ref]
+| *stackplot*(x, y1, y2, ..)                | Stacked area plot http://matplotlib.org/api/pyplot_api.html#matplotlib.pyplot.stackplot[Ref]
+| list_of_polycoll = stackplot(..)          | https://matplotlib.org/api/collections_api.html#matplotlib.collections.PolyCollection[PolyCollection]
+| *stackplot*(x, Y)                         | Y is matrix
+| _baseline_='wiggle'                       | 'sym', 'wiggle' (minimize slopess), 'weighted_wiggle'
+| _labels_=[..]                             | List of labels
+| _colors_=[..]                             |  
+| r = stackplot(..)                         | Returns `PolyCollection` https://matplotlib.org/api/collections_api.html#matplotlib.collections.PolyCollection[Ref]
+| san = mpl.sankey.*Sankey*(...) +
+  san.add() +
+  san.finish()                              | https://matplotlib.org/devdocs/api/sankey_api.html#module-matplotlib.sankey[Ref]
+|===
+
+
+=== Statistical plots
+
+[cols="m,d"]
+|===
+| *boxplot*(x)                              | Marker Median, Quartiles and outliers (Q3+1.5*(Q3-Q1)) http://matplotlib.org/api/pyplot_api.html#matplotlib.pyplot.boxplot[Ref]
+| _bootstrap_=1000                          | Bootstrap median for notched boxplots (otherwise Gaussian approx)
+| _conf_intervals_=[..]                     | Override notch locations
+| _notch_=True                              | narrower at median
+| _positions_=[..]                          | Default `range(1,N+1)`
+| _showmeans_=True                          |
+| _sym_=                                    | Symbol for flier points
+| _usermedians_=[..]                        | Override medians by user definition
+| _vert_=False                              | Horizontal
+| _whis_=1.5                                | Reach of whiskers
+| *violinplot*(data)                        | http://matplotlib.org/api/pyplot_api.html#matplotlib.pyplot.violinplot[Ref]
+|===
+
+=== Heatmap/Binned plots
+
+[cols="m,d"]
+|===
+| *hexbin*(x, y, _gridsize_=100)            | Histogram of (x,y) values http://matplotlib.org/api/pyplot_api.html#matplotlib.pyplot.hexbin[Ref]
+| _C_=arr, _reduce_C_function_=np.mean      | Array (or masked) of "weights" of (x,y) point to aggregate with a function
+| _bins_="log"                              | (log(i+1) for color)
+| _bins=<int>                               | Counts binned into <int> bins
+| _bins_=<seq>                              | Lower bounds for bins
+| _extent_=..                               | Limits of bins (?)s
+| _marginals_=True                          | Color rectangle
+| _xscale_="log"                            | log10
+| _mincnt_=1                                | Only display cells with min counts
+| _norm_=mpl.colors.*LogNorm*()             | For log scaling of color http://matplotlib.org/api/colors_api.html#matplotlib.colors.Normalize[Ref]
+| _vmin_=.. +
+  _vmax_=..                                 | Min/max of color-value map
+| **kwargs                                  | http://matplotlib.org/api/collections_api.html#matplotlib.collections.Collection[Collection]
+| polycoll = hexbin(..)                     | http://matplotlib.org/api/collections_api.html#matplotlib.collections.PolyCollection[PolyCollection]
+| polycoll.get_array()                      | Get counts
+| *hist2d*(x, y, bins=10)                   | http://matplotlib.org/api/pyplot_api.html#matplotlib.pyplot.hist2d[Ref]
+| _bins_=(int, int)                         | For each dimension
+| _bins_=arrx,arry                          | Bin edges
+| _bins_=arr                                | (both) Bin edges
+| counts, xedges, yedges, image = hist2d(..)| 
+| figimage(X)                               |
+| _resize_=True                             |
+|===
+
+=== Array plots
+
+[cols="m,d"]
+|===
+| *pcolormesh*(..)                          | Faster than `pcolor` http://matplotlib.org/api/pyplot_api.html#matplotlib.pyplot.pcolormesh[Ref]
+| quadmesh = pcolormesh(..)                 | http://matplotlib.org/api/collections_api.html#matplotlib.collections.QuadMesh[QuadMesh]
+| **kwargs                                  | http://matplotlib.org/api/collections_api.html#matplotlib.collections.QuadMesh[QuadMesh]
+| *pcolor*(..)                              | Create pseudocolor plot of a 2D array, slower than `pcolormesh` http://matplotlib.org/api/pyplot_api.html#matplotlib.pyplot.pcolor[Ref]
+| **kwargs                                  | http://matplotlib.org/api/collections_api.html#matplotlib.collections.PolyCollection[PolyCollection]
+| polycoll = pcolor(..)                     | http://matplotlib.org/api/collections_api.html#matplotlib.collections.PolyCollection[PolyCollection]
+| *imshow*(M,..)                            | Display an image http://matplotlib.org/api/pyplot_api.html#matplotlib.pyplot.imshow[Ref]
+| _interpolation_=...                       |
+| **kwargs                                  | http://matplotlib.org/api/artist_api.html#matplotlib.artist.Artist[Artist] 
+| image = imshow(..)                        | http://matplotlib.org/api/image_api.html#matplotlib.image.AxesImage[AxesImage]
+| *matshow*(A)                              | http://matplotlib.org/api/pyplot_api.html#matplotlib.pyplot.matshow[Ref]
+| *spy*(Z, _precision_=..)                  | plot sparsity pattern of array (whether cell close to zero) http://matplotlib.org/api/pyplot_api.html#matplotlib.pyplot.spy[Ref]
+|===
+
+=== Triangulation plots
+
+[cols="m,d"]
+|===
+| *triplot*(..)                             | Draw triangulation as lines and markers http://matplotlib.org/api/pyplot_api.html#matplotlib.pyplot.triplot[Ref]
+| *tripcolor*(..)                           | Draw pseudocolor plot of an unstructured triangular grid http://matplotlib.org/api/pyplot_api.html#matplotlib.pyplot.tripcolor[Ref]
+| *tricontour*(..)                          | Draw triangulation contours http://matplotlib.org/api/pyplot_api.html#matplotlib.pyplot.tricontour[Ref]
+| *tricontourf*(..)                         | Draw filled triangulation contours http://matplotlib.org/api/pyplot_api.html#matplotlib.pyplot.tricontourf[Ref]
+|===
+
+=== Contour plots
+
+[cols="m,d"]
+|===
+| *contour*(..)                             | http://matplotlib.org/api/pyplot_api.html#matplotlib.pyplot.contour[Ref]
+| quadcont = contour(..)                    | http://matplotlib.org/api/contour_api.html#matplotlib.contour.QuadContourSet[QuadContourSet]
+| *contourf*(..)                            | _Filled_ contour plot http://matplotlib.org/api/pyplot_api.html#matplotlib.pyplot.contourf[Ref]
+| *clabel*(c)                               | Label contour plot http://matplotlib.org/api/pyplot_api.html#matplotlib.pyplot.clabel[Ref]
+|===
+
+=== Vert/Horiz Line/Span plots
+
+[cols="m,d"]
+|===
+| *hlines*(y, xmin, xmax)                   | Plot horizontal at each y from xmin to xmax (similar to a histogram) http://matplotlib.org/api/pyplot_api.html#matplotlib.pyplot.hlines[Ref]
+| **kwargs                                  | https://matplotlib.org/api/collections_api.html#matplotlib.collections.LineCollection[LineCollection]
+| lines = hlines(..)                        | https://matplotlib.org/api/collections_api.html#matplotlib.collections.LineCollection[LineCollection]
+| *vlines*(x, ymin, ymax)                   | Plot vertical lines at each x from ymin to ymax http://matplotlib.org/api/pyplot_api.html#matplotlib.pyplot.vlines[Ref]
+| ax.axhline(y=0, xmin=0, xmax=1)           | https://matplotlib.org/api/_as_gen/matplotlib.axes.Axes.axhline.html#matplotlib.axes.Axes.axhline[Ref]
+| **kwargs                                  | https://matplotlib.org/api/_as_gen/matplotlib.lines.Line2D.html#matplotlib.lines.Line2D[Line2D]
+| line = ax.axhline(..)                     | https://matplotlib.org/api/_as_gen/matplotlib.lines.Line2D.html#matplotlib.lines.Line2D[Line2D]
+| *axhline*(y)                              | Horizontal line http://matplotlib.org/api/pyplot_api.html#matplotlib.pyplot.axhline[Ref]
+| *axhspan*(ymin, ymax)                     | Horizontal rectangle http://matplotlib.org/api/pyplot_api.html#matplotlib.pyplot.axhspan[Ref]
+| *axvline*(x)                              | http://matplotlib.org/api/pyplot_api.html#matplotlib.pyplot.axvline[Ref]
+| *axvspan*(xmin, xmax)                     | http://matplotlib.org/api/pyplot_api.html#matplotlib.pyplot.axvspan[Ref]
+|===
+
+=== Spectral plots
+
+[cols="m,d"]
+|===
+| *acorr*(x)                                | Autocorrelation http://matplotlib.org/api/pyplot_api.html#matplotlib.pyplot.acorr[Ref]
+| *angle_spectrum*(x)                       | Angle spectrum http://matplotlib.org/api/pyplot_api.html#matplotlib.pyplot.angle_spectrum[Ref]
+| *cohere*(x,y)                             | Plot coherence http://matplotlib.org/api/pyplot_api.html#matplotlib.pyplot.cohere[Ref]
+| *csd*(x, y)                               | Cross-spectral density http://matplotlib.org/api/pyplot_api.html#matplotlib.pyplot.csd[Ref]
+| *csv*(x, y)                               | Cross-spectral density http://matplotlib.org/api/pyplot_api.html#matplotlib.pyplot.csd[Ref]
+| *magnitude_spectrum*(x)                   | Plot magnitude spectrum http://matplotlib.org/api/pyplot_api.html#matplotlib.pyplot.magnitude_spectrum[Ref]
+| *phase_spectrum*(x)                       | Plot phase spectrum http://matplotlib.org/api/pyplot_api.html#matplotlib.pyplot.phase_spectrum[Ref]
+| *psd*(x)                                  | Power spectral density http://matplotlib.org/api/pyplot_api.html#matplotlib.pyplot.psd[Ref]
+| *specgram*(x)                             | Plot spectrogram http://matplotlib.org/api/pyplot_api.html#matplotlib.pyplot.specgram[Ref]
+| *xcorr*(x,y)                              | Plot cross-correlation http://matplotlib.org/api/pyplot_api.html#matplotlib.pyplot.xcorr[Ref]
+|===
+
+
+=== 3D Plots
+
+[cols="m,d"]
+|===
+| mpl_toolkits.mplot3d.axes3d.*Axes3D*      | https://matplotlib.org/api/_as_gen/mpl_toolkits.mplot3d.axes3d.Axes3D.html#mpl_toolkits.mplot3d.axes3d.Axes3D[Ref]
+| mpl_toolkits.mplot3d.axes3d.Axes3D.*voxels*   | Binary 3D data voxels https://matplotlib.org/api/_as_gen/mpl_toolkits.mplot3d.axes3d.Axes3D.html#mpl_toolkits.mplot3d.axes3d.Axes3D.voxels[Ref]
+| fig.*add_subplot*(, _projection_='3d') +
+  ax.*plot_surface*(x,y,m) +
+  ax.*view_init*(_azim_=)                   |
+| *plot_wireframe*(..)                      |
+|===
+
+* https://matplotlib.org/devdocs/api/toolkits/mplot3d.html[mplot3d]
+* https://matplotlib.org/devdocs/gallery/index.html#mplot3d-toolkit[mplot3d gallery]
+
+=== Field plots
+
+[cols="m,d"]
+|===
+| *barbs*(..)                               | For vector fields 2D barbs http://matplotlib.org/api/pyplot_api.html#matplotlib.pyplot.barbs[Ref]
+| *quiver*(..)                              | Plot 2D field of arrows http://matplotlib.org/api/pyplot_api.html#matplotlib.pyplot.quiver[Ref]
+| *quiverkey*(..)                           | Add key to quiver plot http://matplotlib.org/api/pyplot_api.html#matplotlib.pyplot.quiverkey[Ref]
+| *streamplot*(x,y,u,v)                     | Plot streamlines of vector flow http://matplotlib.org/api/pyplot_api.html#matplotlib.pyplot.streamplot[Ref]
+|===
+
+== Axis
+
+* Axes commands are found on http://matplotlib.org/api/axes_api.html[Axes API]
+* Turning axis/frame/grid on/off and axis color are handled by | https://matplotlib.org/api/axes_api.html#appearance[Axes Appearance]
+
+=== General
+
+[cols="m,d"]
+|===
+| ax = *gca*()                              | Way to get current x and y axis; Get current axis of current figure (matching given information or create new one) http://matplotlib.org/api/pyplot_api.html#matplotlib.pyplot.gca[Ref]
+| axis = ax.*xaxis*                         | Get x axis only
+| *axes*()                                  | Create new axis (like *subplot*(111)) http://matplotlib.org/api/pyplot_api.html#matplotlib.pyplot.axes[Ref]
+| *axis*()                                  | return axis http://matplotlib.org/api/pyplot_api.html#matplotlib.pyplot.axis[Ref]
+| ax.get_xaxis()                            |  Return this axis instance
+| ax.spines['left'].*set_color*('none')     |
+| ax.spines['left'].*set_linewidth*(2)      |
+| ax.spines['left'].*set_position*(("data", 0)  |
+| axes.*ravel*()                            |
+| ax2 = *twinx*(_ax_=None)                  | Twin axis on the right (Caused problems with date plotting)
+| ax2 = *twiny*(_ax_=None)                  | Twin axis on the top
+| *box*(False)                              | Turn off axes box
+|===
+
+=== Ticks
+
+[cols="m,d"]
+|===
+| ax.xaxis.*set_major_locator*(mpl.ticker.*MultipleLocator*(1))     | Locator of ticks (http://matplotlib.org/api/ticker_api.html#tick-locating)[Ref]
+| ax.xaxis.*set_major_formatter*(formatter) | Tick formatting (http://matplotlib.org/api/ticker_api.html#tick-formatting)[Ref]
+| labels = [label.*get_text*() for label in ax.*get_xticklabels*()] +
+  ax.*set_xticklabels*(labels)              | Change label text
+| ax.*set_xticklabels*([d.*strftime*("%y %b") for d in df.index.to_pydatetime()])  | After df.plot()
+| ax.xaxis.labelpad = 5                     |
+| rcParams['xtick.major.pad'] = 3           |
+| *tick_params*(_labelsize_=20)             | Change ticks and labels http://matplotlib.org/api/pyplot_api.html#matplotlib.pyplot.tick_params[Ref]
+| ax.xaxis.*set_tick_params*(which='both', _rotation_=90) | https://matplotlib.org/api/_as_gen/matplotlib.axis.Axis.set_tick_params.html#matplotlib.axis.Axis.set_tick_params[Ref]
+| *locator_params*()                        | Control behavior of tick locators http://matplotlib.org/api/pyplot_api.html#matplotlib.pyplot.locator_params[Ref]
+| *minorticks_off*()                        | http://matplotlib.org/api/pyplot_api.html#matplotlib.pyplot.minorticks_off[Ref]
+| *ticklabel_format*(..)                    | Change label ScalarFormatter http://matplotlib.org/api/pyplot_api.html#matplotlib.pyplot.ticklabel_format[Ref]
+| *xticks*(positions, labels)               | Sets ticks http://matplotlib.org/api/pyplot_api.html#matplotlib.pyplot.xticks[Ref]
+| *xticks*(positions)                       |
+| loc, labels = xticks()                    | Get ticks
+| _rotation_=90                             |
+| *xticks*(_rotation_=45, _rotation_mode_="anchor", _ha_="right")   | Rotate ticks
+| ax.*set_xticks*(positions)                |
+| mpl.ticker.*PercentFormatter*             | https://matplotlib.org/api/ticker_api.html#matplotlib.ticker.PercentFormatter[Ref]
+| mpl.ticker.*EngFormatter*(unit='', places=None, sep=' ')  | https://matplotlib.org/api/ticker_api.html#matplotlib.ticker.EngFormatter[Ref]
+| mpl.ticker.*FuncFormatter*(func)          | https://matplotlib.org/devdocs/api/ticker_api.html#matplotlib.ticker.FuncFormatter[Ref]
+| ax.*convert_xunits*(x)                    | For axis with unit support shttps://matplotlib.org/api/_as_gen/matplotlib.axes.Axes.convert_xunits.html#matplotlib.axes.Axes.convert_xunits[Ref]
+| plt.xticks(rotation=50, fontsize=10, ha="right")  |
+|===
+
+* https://matplotlib.org/api/axes_api.html#ticks-and-tick-labels[Ticks and Labels]
+* https://matplotlib.org/devdocs/api/ticker_api.html[Ticker API]
+* https://matplotlib.org/api/axes_api.html#twinning[Twinning]
+* https://matplotlib.org/api/axes_api.html#units[Unit support]
+
+=== Grid
+
+[cols="m,d"]
+|===
+| *rgrids*(..)                              | Get or set radial grid lines http://matplotlib.org/api/pyplot_api.html#matplotlib.pyplot.rgrids[Ref]
+| *thetagrids*(..)                          | Add theta locations in a polar plot http://matplotlib.org/api/pyplot_api.html#matplotlib.pyplot.thetagrids[Ref]
+| ax.*get_xticklabels*()                    |
+| list_of_gridlines = ax.get_xgridlines()   | https://matplotlib.org/api/_as_gen/matplotlib.axes.Axes.get_xgridlines.html#matplotlib.axes.Axes.get_xgridlines[Ref]
+| *grid*(True)                              | Turn grid on/off http://matplotlib.org/api/pyplot_api.html#matplotlib.pyplot.grid[Ref]
+| _which_="major"                           |
+| _axis_="both"                             |
+| axes.*grid*(_color_='b', _alpha_=0.5, _linestyle_='dashed', _linewidth_=0.5)  |
+|===
+
+=== Limits and direction
+
+[cols="m,d"]
+|===
+| *xlim*( (xmin, xmax) )                    | http://matplotlib.org/api/pyplot_api.html#matplotlib.pyplot.xlim[Ref]
+| *xlim*(_xmin_=.., _xmax_=..)              |
+| xmin, xmax = xlim()                       |
+| axis("equal")                             | Change limits of x/y for equal ratio
+| ax.*invert_xaxis*()                       | Invert axis
+|===
+
+* https://matplotlib.org/api/axes_api.html#axis-limits-and-direction[Axis limits and direction]
+
+=== Axis labels, title, legend
+
+[cols="m,d"]
+|===
+| *xlabel*(..)                              | http://matplotlib.org/api/pyplot_api.html#matplotlib.pyplot.xlabel[Ref]
+| *plot*(.., _label_="..") +
+| *legend*(_loc_="best")                    | Add legend, Label starting with _ are not shown (https://matplotlib.org/api/pyplot_api.html#matplotlib.pyplot.legend)
+| _frameon_=False                           |
+| legend.get_frame().*set_alpha*(..)        |
+| *figlegend*(handles, labels, loc)         | Place legend http://matplotlib.org/api/pyplot_api.html#matplotlib.pyplot.figlegend[Ref]
+| *colorbar*()                              | Add colorbar http://matplotlib.org/api/pyplot_api.html#matplotlib.pyplot.colorbar[Ref]
+| ax.legend_.remove()                       |
+|===
+
+* https://matplotlib.org/api/axes_api.html#axis-labels-title-and-legend[Axis Labels, Title, Legend]
+* https://matplotlib.org/devdocs/api/legend_api.html[Legend API]
+
+=== General axis commands
+
+[cols="m,d"]
+|===
+| *set_alpha*(alpha)                        | https://matplotlib.org/api/_as_gen/matplotlib.axes.Axes.set_alpha.html#matplotlib.axes.Axes.set_alpha[Ref]
+| *pcolorfast*()                            | experimental fast pseudocolorplot; and quadrilateral grid
+| *set_lod*()                               | Level of Detail; if artist examines pixel width and draws less
+| *set_url*()                               | url for artist
+| *set_xmargin*()                           | X data interval padding before scaling
+| *set_xscale*()                            |
+| *set_zorder*()                            |
+|===
+
+* https://matplotlib.org/api/axes_api.html#general-artist-properties[General properties]
+* http://www.leancrew.com/all-this/2013/07/multiple-axes-and-minor-tick-marks/[Ref]
+* https://matplotlib.org/api/axes_api.html#adding-artists[Adding artists]
+* https://matplotlib.org/api/axes_api.html#children[Children]
+* https://matplotlib.org/api/axes_api.html#drawing[Drawing]
+* https://matplotlib.org/api/axes_api.html#bulk-property-manipulation[Bulk manipulation]
+
+=== Date axis
+
+* `num`: Matplotlib internal format (float days since `01/01/01 UTC` + 1day)
+* `epoch`: Linux timestamp since 1970
+* `datetime`: Python type
+
+[cols="m,d"]
+|===
+| *plot_date*(x, y)                         | Plot data with dates http://matplotlib.org/api/pyplot_api.html#matplotlib.pyplot.plot_date[Ref]
+| _fmt_=".."                                | Format string
+| _tz_=..                                   | Time zone
+| _xdate_=True, _ydate_=False               | Whether to see as datess
+| **kwargs                                  | https://matplotlib.org/api/_as_gen/matplotlib.lines.Line2D.html#matplotlib.lines.Line2D[Line2D]
+| mpl.dates.*date2num*(d)                   | Convert date or sequence of dates to internal float
+| mpl.dates.*num2date*(x, tz=None)          | Convert internal format float or seq of float to `datetime`
+| mpl.dates.*epoch2num*(timestamp)          | Convert timestamp (seconds since 1970/01/01) to Matplotlib numerics
+| ax.*xaxis_date*()                         | Set ticks and labels and treat as date https://matplotlib.org/api/_as_gen/matplotlib.axes.Axes.xaxis_date.html#matplotlib.axes.Axes.xaxis_date[Ref]
+| ax.xaxis.major.formatter.scaled[1.0] = "%Y-%m-%d" +
+  ax.xaxis.set_major_formatter(mpl.dates.AutoDateFormatter(mpl.dates.AutoDateLocator()))    |
+| fig.*autofmt_xdate*(bottom=0.2, rotation=30, ha='right', which=None) | https://matplotlib.org/api/_as_gen/matplotlib.figure.Figure.html#matplotlib.figure.Figure.autofmt_xdate[Ref]
+| matplotlib.dates.*DateFormatter*          | https://matplotlib.org/api/dates_api.html#matplotlib.dates.DateFormatter[Ref]
+| mpl.dates.*num2timedelta*(x)              | Convert number of days to `timedelta` object
+| mpl.dates.*drange*(start, end, delta)     | Create date range a internal float format; `start`/`end` is `datetime`, `delta` is `timedelta`
+|===
+
+* may be enough to set data locator and formatter
+* some info on https://matplotlib.org/api/dates_api.html#module-matplotlib.dates[mpl.dates]
+* major_formatter needs to be after xtickslabel
+* set formatters and locators after `plot_date`
+* all functions timezone aware; default timezone in `rcParams` -> pass `tz=pytz.timezone(..)` if needed
+* there are also converters from/to `epoch` or `mxdates`
+
+* `logit` axis scale log10(x/(1-x))
+* `square` parameter for axis function?
+
+=== Scaling of plots and data
+
+[cols="m,d"]
+|===
+| *loglog*(..)                              | Like `plot()` but as log-log plot. Additional parameters for scaling http://matplotlib.org/api/pyplot_api.html#matplotlib.pyplot.loglog[Ref]
+| *semilogx*(..)                            | Like plot http://matplotlib.org/api/pyplot_api.html#matplotlib.pyplot.semilogx[Ref]
+| *xscale*("log")                           | `"linear"`, `"log"`, `"logit"`  http://matplotlib.org/api/pyplot_api.html#matplotlib.pyplot.xscale[Ref]
+| xscale("symlog", linthreshx=..)           | Combination of linear and log
+| axes(aspect="equal")                      | Creates `subplot(111)`
+| *axis*()                                  | Convenience method to get/set properties http://matplotlib.org/api/pyplot_api.html#matplotlib.pyplot.axis[axis]
+| axis("scaled")                            | Change plot box to make equal ratio; also `"square"`, `"equal"`, `"off"`, `"tight"`...
+| axis([xmin, xmax, ymin, ymax])            |
+| ax.*set_aspect*("equal")                  | Make plot square (not axis units)
+| *autoscale*(_axis_="both")                | Autoscale http://matplotlib.org/api/pyplot_api.html#matplotlib.pyplot.autoscale[Ref]
+| *margins*(..)                             | Set or retrieve autoscaling margins http://matplotlib.org/api/pyplot_api.html#matplotlib.pyplot.margins[Ref]
+|===
+
+* https://matplotlib.org/api/axes_api.html#autoscaling-and-margins[Autoscaling, Margins]
+* https://matplotlib.org/api/axes_api.html#aspect-ratio[Aspect ratio]
+* https://matplotlib.org/devdocs/api/units_api.html[Units API] for dates etc.
+
+
+== Annotations
+
+[cols="m,d"]
+|===
+| *title*(..)                               | Set current title of axis http://matplotlib.org/api/pyplot_api.html#matplotlib.pyplot.title[Ref]
+| *suptitle*(..)                            | Add centered title to a figure http://matplotlib.org/api/pyplot_api.html#matplotlib.pyplot.suptitle[Ref]
+| *annotate*(_s_="..", _xy_=(..,..))        | Text with arrow http://matplotlib.org/api/pyplot_api.html#matplotlib.pyplot.annotate[Ref]
+| *arrow*(x,y,dx,dy)                        | http://matplotlib.org/api/pyplot_api.html#matplotlib.pyplot.arrow[Ref]
+| *table*(..)                               | Add a table with content to the figure http://matplotlib.org/api/pyplot_api.html#matplotlib.pyplot.table[Ref]
+| *text*(x,y,text)                          | Add text to the axes http://matplotlib.org/api/pyplot_api.html#matplotlib.pyplot.text[Ref]
+| *figtext*(..)                             | Add text to figure. Arguments like `text()` http://matplotlib.org/api/pyplot_api.html#matplotlib.pyplot.figtext[Ref]
+|===
+
+== Artists commands
+
+[cols="m,d"]
+|===
+| art.*set_alpha*()                         |
+| art.*set_hatch*("/")                      |
+| *setp*(..)                                | Set a property of an artist http://matplotlib.org/api/pyplot_api.html#matplotlib.pyplot.setp[Ref]
+| *gci*()                                   | Get current colorable artist http://matplotlib.org/api/pyplot_api.html#matplotlib.pyplot.gci[Ref]
+| *findobj*(..)                             | Find artists by type, signature, ... http://matplotlib.org/api/pyplot_api.html#matplotlib.pyplot.findobj[Ref]
+|===
+
+* https://matplotlib.org/devdocs/api/artist_api.html[Artist]
+
+== Global configuration
+
+[cols="m,d"]
+|===
+| *rc*(..)                                  | Set parameters http://matplotlib.org/api/pyplot_api.html#matplotlib.pyplot.rc[Ref]
+| *style.use*("classic")                    | also "seaborn-bright", "seaborn-whitegrid", "seaborn-poster/talk", "dark_background", see `style.available` https://matplotlib.org/devdocs/gallery/style_sheets/style_sheets_reference.html
+| IPython.display.*set_matplotlib_formats*('pdf', 'svg')    | ?
+| with mpl.*rc_context*(..):                | Context manager for rc settings http://matplotlib.org/api/pyplot_api.html#matplotlib.pyplot.rc_context[Ref]
+| mpl.*rcdefaults*()                        | Restore default tc params
+| mpl.*get_backend*()                       | Get name of current backend
+| mpl.*use*(..)                             | Set backend
+| mpl.*rc_file*(fname)                      | Update rc params from file
+| *switch_backend*(..)                      | (experimental)
+|===
+
+=== rcParams options
+
+[cols="m,d"]
+|===
+| mpl.rcParams[..] = ..                     |
+| figure.figsize = (20,10)                  | Change plot size
+| date.autoformatter.year                   | format string for year scales
+| scatter.marker                            | default marker
+| lines.markersize                          | _**2 = default point size
+| hist.bins                                 | default hist bins
+| axes.prop_cycle                           | plot style cycle
+| lines.scale_dashes                        | whether line dash should scale with line width
+| axes.formatter.offset_threshold           | Min number of digits saved in tick labels that trigger using offset
+|===
+
+== Environment variables
+
+[cols="m,d"]
+|===
+| SOURCE_DATE_EPOCH                         | to control timestamp value of PS and PDF https://reproducible-builds.org/specs/source-date-epoch/[Comments]
+| MATPLOTLIBRC                              | points to `matplotlibrc` file
+|===
+
+== File input/output
+
+[cols="m,d"]
+|===
+| *imread*(..)                              | Read image from a file into an array http://matplotlib.org/api/pyplot_api.html#matplotlib.pyplot.imread[Ref]
+| *imsave*(..)                              | Save an array as an image file http://matplotlib.org/api/pyplot_api.html#matplotlib.pyplot.imsave[Ref]
+| *savefig*(..)                             | Save current figure http://matplotlib.org/api/pyplot_api.html#matplotlib.pyplot.savefig[Ref]
+| _metadata_={..}                           | Save metadata
+| matplotlib.use('Agg')                     | Avoid output after `savefig`
+| *figimage*(..)                            | Add non-resampled image http://matplotlib.org/api/pyplot_api.html#matplotlib.pyplot.figimage[Ref]
+| *plotfile*(fname)                         | Plot data from file http://matplotlib.org/api/pyplot_api.html#matplotlib.pyplot.plotfile[Ref]
+|===
+
+
+== Learning Matplotlib
+
+* http://matplotlib.org/users/index.html[Matplotlib user guide] (first few chapters)
+* http://matplotlib.org/users/pyplot_tutorial.html[Pyplot tutorial]
+* http://matplotlib.org/faq/usage_faq.html[Matplot FAQ]
+* http://matplotlib.org/api/pyplot_summary.html[Pyplot summary]
+* http://stackoverflow.com/questions/3872802/good-matplotlib-documentation-recommendation[Stackoverflow recommendations]
+* https://matplotlib.org/devdocs/resources/index.html[External resources]
+* https://github.com/rougier/matplotlib-tutorial[Matplotlib Tutorial!]
+* http://www.labri.fr/perso/nrougier/teaching/matplotlib/matplotlib.html#beyond-this-tutorial[Further Tutorials]
+* http://www.labri.fr/perso/nrougier/teaching/matplotlib/matplotlib.html#quick-references[Quick references]
+* http://matplotlib.org/gallery.html[Matplotlib Gallery]
+* http://www.labri.fr/perso/nrougier/coding/gallery/[Small Gallery]
+
+== Color
+
+Valid color names are:
+* one of "rgbcmykw"
+* "#RRGGBB"
+* ([0,1],[0,1],[0,1])s
+* HTML color names
+* float (grey scale)
+* for more options see https://matplotlib.org/devdocs/api/colors_api.html#module-matplotlib.colors[mpl.colors]
+
+[cols="m,d"]
+|===
+| *viridis*()                               | Set viridis colormap
+| *autumn*()                                | Set colormaps and apply to current figure
+| _cmap_="YlOrRd"                           |
+| mpl.cm.*cmap_d*                           | registered colormaps
+| mpl.cm.*get_cmap*("summer")(0.5)          | Get some color (use float)
+| mpl.colors.*ListedColormap*([..])         |
+| mpl.colors.LinearSegmentedColormap.from_list(..)  |
+| _cmap_=mpl.colors.ListedColormap(palettable.colorbrewer.qualitative.Accent_4.mpl_colors)  |
+| _colors_=sns.*color_palette*("Paired")    | Odd number index is stronger
+| *clim*(_vmin_=None, _vmax_=None)          | http://matplotlib.org/api/pyplot_api.html#matplotlib.pyplot.clim[Ref]
+| mpl.colors.*ListedColormap.reversed*      | Reverse colormap https://matplotlib.org/api/_as_gen/matplotlib.colors.ListedColormap.html#matplotlib.colors.ListedColormap.reversed[Ref]
+| *sci*(im)                                 | Set current image which is used for palette changes and `clim()` http://matplotlib.org/api/pyplot_api.html#matplotlib.pyplot.sci[Ref]
+| ax.*set_prop_cycle*(cycler)               | https://matplotlib.org/api/_as_gen/matplotlib.axes.Axes.set_prop_cycle.html#matplotlib.axes.Axes.set_prop_cycle[Ref]
+| *set_cmap*(cmap)                          | Set default colormap http://matplotlib.org/api/pyplot_api.html#matplotlib.pyplot.set_cmap[Ref]
+| help(colormaps)                           |
+| mpl.cm.*get_cmap*(name)                   | https://matplotlib.org/devdocs/api/cm_api.html#matplotlib.cm.get_cmap[Ref]
+| mpl.cm.*register_cmap*(name, cmap)        | https://matplotlib.org/devdocs/api/cm_api.html#matplotlib.cm.register_cmap[Ref]
+|===
+
+* Selected color palettes: "copper", "gray", "hot", "pink", "spring", "summer"; less useful "cool", "bone", "flag", "hsv", "prism", "nipy_spectral", "winter"
+* https://matplotlib.org/devdocs/api/colors_api.html[mpl.colors]
+* for cyclers it is best to use a `Cycler` object
+* https://matplotlib.org/devdocs/api/cm_api.html[mpl.cm API]
+* objects generated by scatter, contourf, imshow and pcolor subclass ScalarMappable as mixin
+* each ScalarMappable associated with Normalize (maps to [0,1]) and Colormap (maps to N RGBA colors)
+* basic colormap types: LinearSegmentedColormap, ListedColormap
+* easiest: LinearSegmentedColormap.from_list()
+* set color limits:
+** vmin, vmax in calls
+** argument cmin
+** clim(vmin, vmax); clim([vmin, vmax])
+** ScalarMappable.set_clim()
+-> sets lower and upper limits of Normalize
+* middle color at (vmax-vmin)/2
+* odd number of colors to display mid-color as color (opposite for "edge" or if using "contourf" which is effectively edge)
+* alternatively plot _v_=0 contour
+* for out-of-bound ranges or masked values:
+** Colormap.set_under, .set_over, set_bad
+** for contourf or colorbar: _extend_="neither", "min", "max", "both"
+* colormap([x1, x2,...]) [or single value]:
+** numpy array float [0,1]
+** int array [0, colormap.N]
+** returns RGBA tuple
+
+== Other general commands
+
+[cols="m,d"]
+|===
+| *connect*("..", func)                     | Connect event with function http://matplotlib.org/api/pyplot_api.html#matplotlib.pyplot.connect[Ref]
+| *xkcd*(..)                                | xkcd plotting style http://matplotlib.org/api/pyplot_api.html#matplotlib.pyplot.xkcd[Ref]
+|===
+
+== Interactivity
+
+[cols="m,d"]
+|===
+| *ioff*()                                  |
+| *ion*()                                   |
+| *isinteractive*()                         |
+| *pause*(seconds)                          |
+| *waitforbuttonpress*()                    | http://matplotlib.org/api/pyplot_api.html#matplotlib.pyplot.waitforbuttonpress[Ref]
+| *disconnect*(cid)                         |
+| *install_repl_displayhook*()              |
+| *uninstall_repl_displayhook*()            |
+| *ginput*(_n_=.., _timeout_=.., _show_clicks_=..)  | Get mouse-click input from user. Middle-click finishes. Right-click cancels last input http://matplotlib.org/api/pyplot_api.html#matplotlib.pyplot.ginput[Ref]
+| mpl.*interactive*(True)                   | Set interactive mode; Redraw after every command
+| mpl.*is_interactive*()                    |
+|===
+
+* https://matplotlib.org/api/axes_api.html#async-event-based[Event callbacks]
+* https://matplotlib.org/api/axes_api.html#interactive[Interactive]
+
+== Maps
+
+Use Basemap package.
+Map projection:
+* conformal (preserves circles; but not size)
+* area
+conformal:
+* Mercator
+* Stereographic
+* Lamber Conformal
+
+== Comment
+
+* Pitfalls: randomness in results of a program can be due to random order of dict keys
+* JSAnimation has been merged into Matplotlib 2.1
+* https://matplotlib.org/gallery/widgets/polygon_selector_demo.html#sphx-glr-gallery-widgets-polygon-selector-demo-py[Polygon selector demo]
+* new font DejaVu in Matplotlib 2.0 to include more characters
+* high resolution retina display supported
+* `wx` backend works with wxPython and Phoenix
+* `hold` etc is deprecated
+
+== UNSORTED
+
+[cols="m,d"]
+|===
+| matplotlib.rcsetup.interactive_bk         |
+| matplotlib.rcsetup.non_interactive_bk     |
+| matplotlib.rcsetup.all_backends           |
+|===
+
+ax.add_collection(mpl.collections.PolyCollection([[(0,0), (0,1), (1,1)], [(0.5,0.5), (2,3), (1,1)]], array=np.array([0,1]), cmap=mpl.cm.get_cmap("autumn"), edgecolor="none"))
+ax.autoscale_view()
+
+
+== Rotate Ticks
+
+	plt.xticks(rotation=45, ha="right")
+
+	for l in ax.get_xticklabels():
+	  	l.set_rotation(90)
+	
+== Save to PDF
+
+	fig.savefig(filename, format="PDF", bbox_inches="tight")
+	
+== Remove labels
+
+	ax.xaxis.set_ticks([])
+
+== Remove full axis
+
+	ax.xaxis.set_visible(False)
+
+== Disable offset for axis
+
+	ax.get_xaxis().get_major_formatter().set_useOffset(False) # otherwise offset +2e3 shown
+
+== Set Tick positions
+
+    plt.gca().xaxis.set_major_locator(mpl.ticker.MultipleLocator(1))
+    
+== Set Tick thousands separator
+
+	ax.xaxis.set_major_formatter(mpl.ticker.FuncFormatter(lambda x,i:format(x, "6,.0f").replace(",", ".")))

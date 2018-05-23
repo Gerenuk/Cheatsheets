@@ -1,0 +1,286 @@
+\documentclass{article}
+
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage[hmargin=1cm,vmargin=1cm, landscape, twocolumn]{geometry}
+\usepackage{array}
+\usepackage{txfonts}
+\usepackage{nicefrac}
+\usepackage{rotating}
+\usepackage{booktabs}
+\usepackage{color}
+\usepackage{longtable}
+
+\usepackage{enumitem}
+\setlist{nolistsep,leftmargin=*}
+
+\renewcommand{\tabcolsep}{0.1cm}
+\usepackage[geometry]{ifsym}
+
+%\pagestyle{empty}
+
+\newcommand{\good}{\textcolor{green}{\FilledTriangleUp}}
+\newcommand{\ok}{\textcolor{yellow}{\FilledDiamondshape}}
+\newcommand{\bad}{\textcolor{red}{\FilledTriangleDown}}
+
+\newcommand{\head}[1]{\textbf{#1}}
+\newcommand{\verthead}[1]{\rotatebox{90}{\textbf{#1}}}
+\newcommand{\method}[2]{\textbf{#1} - #2}
+
+\begin{document}
+
+%\begin{table}[h]
+\scriptsize
+\begin{longtable}
+%\begin{tabular}
+{||
+p{0.15\textwidth}
+p{0.2\textwidth}
+p{0.2\textwidth}
+p{0.2\textwidth}
+|
+>{\centering\arraybackslash}p{0.3cm}
+>{\centering\arraybackslash}p{0.3cm}
+>{\centering\arraybackslash}p{0.3cm}
+|
+>{\centering\arraybackslash}p{0.3cm}
+>{\centering\arraybackslash}p{0.3cm}
+>{\centering\arraybackslash}p{0.3cm}
+|
+>{\centering\arraybackslash}p{0.3cm}
+>{\centering\arraybackslash}p{0.3cm}
+>{\centering\arraybackslash}p{0.3cm}
+|
+>{\centering\arraybackslash}p{0.3cm}
+>{\centering\arraybackslash}p{0.3cm}
+>{\centering\arraybackslash}p{0.3cm}
+||
+}
+\toprule
+\toprule
+\head{Technique} &
+\head{Description} &
+\head{Strength} &
+\head{Weakness} &
+\verthead{Training speed} &
+\verthead{Prediction speed} &
+\verthead{Handle mixed type} &
+\verthead{Handle missing data} &
+\verthead{Robust to outlier} &
+\verthead{Insensitive to monotone} &
+\verthead{Computationally scalable} &
+\verthead{Deal with irrel. input} &
+\verthead{Extract linear feature combi.} &
+\verthead{Interpretability} &
+\verthead{Preditive power} &
+\verthead{Local minima}\\
+\toprule
+
+\textbf{SVM} - Support Vector Machine &
+&
+\begin{itemize}
+\item theoretical (but loose) bounds on generalization
+\item popular in text classification (high dimensionality)
+\end{itemize} &
+\begin{itemize}
+\item memory intensive
+\item need parameter tuning 
+\item hard to parallize
+\end{itemize} &
+\bad & \good & \bad & \bad & \bad & \bad & \bad & \bad & \good & \bad & \good & \good
+\\
+
+\midrule
+\method{LR}{Logistic regression} &
+&
+\begin{itemize}
+\item many ways to regularize
+\item can update model (online gradient descent)
+\item probabilistic interpretation possible
+\end{itemize} &
+\begin{itemize}
+\item
+\end{itemize} &
+& & & & & & & & & &
+\\
+
+\midrule
+\method{DT}{Decision Tree} &
+&
+\begin{itemize}
+\item few parameters to tune
+\end{itemize} &
+\begin{itemize}
+\item danger of overfitting
+\end{itemize} &
+\good & \good & \good & \good & \good & \good & \good & \good & \bad & \ok & \bad
+\\
+
+\midrule
+\method{MARS}{Multivariate adaptive regression splines} &
+Opensource implementations usually called "Earth"&
+\begin{itemize}
+\item
+\end{itemize} &
+\begin{itemize}
+\item 
+\end{itemize} &
+& & \good & \good & \bad & \bad & \good & \good & \bad & \good & \ok
+\\
+
+\midrule
+\method{kNN}{k Nearest Neighbor} &
+&
+\begin{itemize}
+\item
+\end{itemize} &
+\begin{itemize}
+\item 
+\end{itemize} &
+& & \bad & \good & \good & \bad & \bad & \bad & \ok & \bad & \good
+\\
+
+\midrule
+\method{GLM}{Generalized Linear Model} &
+\\
+
+\midrule
+\method{GAM}{Generalized Additive Model} &
+\\
+
+\midrule
+\method{RF}{Random Forests} &
+&
+\begin{itemize}
+\item little scaling or preprocessing
+\item classification and regression possible with same model
+\item can calculate variable importances
+\item can calculate variable correlations
+\item can calculate sample proximities and prototypes
+\item can estimate test error (OOB from bagging)
+\item easy to parallelize
+\end{itemize} &
+\begin{itemize}
+\item hard to make incremental
+\item bad if sparse feature vector since uninformative or correlated features selected
+\item slow when large number of features (exc. FEST)
+\end{itemize} &
+? & \bad
+\\
+
+\midrule
+\method{GBT}{Gradient Boosting Trees} &
+&
+\begin{itemize}
+\item
+\end{itemize} &
+\begin{itemize}
+\item
+\end{itemize} &
+& & & & & & & & & &
+\\
+
+\midrule
+\method{ANN}{Artifical Neural Network} &
+&
+\begin{itemize}
+\item can catch complex patterns
+\item used for image and speech classification
+\end{itemize} &
+\begin{itemize}
+\item hard to train (local minima)
+\item lots of parameter tuning
+\end{itemize} &
+\bad & \good & \bad & \bad & \bad & \bad & \ok & \bad & \good & \bad & \good & \bad
+\\
+
+\midrule
+\method{NB}{Naive Bayes} &
+&
+\begin{itemize}
+\item can outperform other algorithms if data set very small due to high bias
+\item simple counts
+\end{itemize} &
+\begin{itemize}
+\item features assumed to be uncorrelated
+\end{itemize} &
+\good & & & & & & & &
+\\
+
+\midrule
+\method{BN}{Bayesian Networks} &
+&
+\begin{itemize}
+\item
+\end{itemize} &
+& & & & & & & & & &
+\\
+
+\midrule
+\method{RB}{Rule based} &
+&
+\begin{itemize}
+\item
+\end{itemize} &
+& & & & & & & & & &
+\\
+
+\bottomrule
+\bottomrule
+%\end{tabular}
+%\end{table}
+\end{longtable}
+
+\footnotetext[1]{See "Elements of statistical learning" table 10.1 page 351}
+
+\section{Decision Trees}
+Hunt's algorithm is basis for decision trees like ID3, CART, C45. Tree grown in recursive fashion by partitioning records into successively purer subsets. If one node is pure, it is declared a leaf node with that class. An attribute test condition is selected and child nodes are generated. If child node is empty, then it is declared the majority class of the parent node. If child node has all equal attributes for a condition (no splitting  possible), then it is declared the majority class of that node. We need generation of test conditions and an objective measure to evaluate best. We need a condition when to stop. Conditions can be categorals tests of range checks for continous attributes.
+
+Objective by information gain
+\begin{align*}
+\Delta&=I(\alpha)-\sum_{\beta=\{\operatorname{children}(\alpha)\}}\frac{N(\beta)}{N(\alpha)}I(\beta)\\
+I_\text{gini}(\gamma)&=1-\sum_{c=\{\text{classes}\}} {p^{(\gamma)}_c}^2\\
+I_\text{entropy}(\gamma)&=-\sum_{c=\{\text{classes}\}} p^{(\gamma)}_c\log_2{p^{(\gamma)}_c}\\
+\end{align*}
+
+\section{Ensemble methods}
+Work best with unstable classifiers (sensitive to minor perturbations; e.g. decision tree, rule bases, neural network)
+\subsection{Constructing ensemble}
+\begin{itemize}
+\item Manipulate training set (bagging, boosting)
+\item Manipulate input features (subset of features chosen)
+\item Manipulate class labels (binary classifiers trained which accumulate classes to a particular split into two classes)
+\item Manipulate learning algorithm (e.g. change network topology in ANN)
+\end{itemize}
+
+\subsection{Combining classifiers}
+\begin{itemize}
+\item majority voting
+\item weighted voting by prediction accuracy of each classifier
+\end{itemize}
+
+\subsection{Bagging}
+Sampling with replacements. About 63.2\% of data will be used.
+
+\subsection{Boosting}
+Adaptively change distribution of training examples so that focus on what is hard to classify. Assigns weights to each training set. Weights can be used for bootstrap sampling or in model as weights.
+
+\section{Generalized Linear Model}
+\begin{align*}
+\operatorname{E}(\mathbf{Y})&=g^{-1}(\mathbf{X}\mathbf{\beta})
+\end{align*}
+Parameter determined by maximum-likelihood.
+
+\end{document}
+
+\midrule
+\textbf{..} - .. &
+&
+\begin{itemize}
+\item
+\end{itemize} &
+\begin{itemize}
+\item
+\end{itemize} &
+& & & & & & & & & &
+\\

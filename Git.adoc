@@ -1,0 +1,19 @@
+= Alternatives
+
+* http://gitless.com/: Claims to be simpler, superficially looks the same
+* http://www.git-legit.org/: Nice, just "git syns"
+
+= Gitignore
+
+dir/              # does not look into dir
+!dir/file.txt     # does not work (! means negate), since dir not inspected
+
+dir/*
+!dir/file.txt     # works; this file will be included
+
+= Commands
+
+|===
+| git help      		| Help
+| git help -g   		| Tutorials
+|===

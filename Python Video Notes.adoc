@@ -1,0 +1,1619 @@
+PyTables:
+* HDF5
+* Cython
+* compression for RAM and disk
+* easy numpy store
+* elements can be table
+* metadata
+* object mapper
+* datasets homogeneous
+
+Jupyter:
+* IPython idea not Python specific
+* protocols for network
+* communication, open formats
+
+IPython in Chrome
+coLaboratory (part of of jupyter)
+
+Interval arithmetic with Newton method to find *all* zeros
+
+mpld3:
+* brushing plugin
+* highlight plotlines
+* tooltips
+
+DistArray:
+* distributed numpy array
+* data lives locally; local processes
+
+yt:
+* interact with terabytes files on internet directly
+
+Colormaps:
+* saturation for low-freq data
+* luminance for high-freq data
+* human bad at interpolating hue
+* Weber-Fecher law for luminance
+
+Cubes
+* model, browser, backends, server (for creating OLAP server)
+* not for visualization but helps
+* describe all cubes
+* made of facts; facts measureable
+* fact has dimensions
+* hierarchy of levels (e.g. date year, month, day)
+* key attributes (to slice and dice)
+* label attributed (display to user)
+* aggregation browser
+* can store data in many formats
+* new schema can accept star schema SQL
+* cubes specified by config; labels, ...
+* need model+data
+* cell = context of interest in data
+* cuts for variables: point, set (of points), range
+* if no mapping specified: table.column
+* specify joins by master/details table
+* by default first attr is key
+
+super:
+* some inheritance illegal (e.g. B(A), C(A), D(A,B,C)
+* derived before base
+* base definition order preserved
+* super: proxy object; needs MRO and start
+
+Google API: manage VM; use with own binaries
+
+Python learn from Haskell
+* weak at concurrency, network programming
+* no static typing
+* other languages have algebraic data types (hacks like enum, namedtuple)
+
+Postgres
+* speaks Python stored procedures
+
+lzma: store file in chunks
+
+Elasticsearch: built on Lucene; make distributed computing
+
+Webscraping:
+* Request (usually best), urllib2, httplib (low-level)
+* Beautifulsoup: can handle broken, slow,
+* lxml: fast, best but not pure python
+* regex would be fastest
+* scrapy:
+  * crawling
+  * async
+  * define scraper, items, items pipeline
+
+Blaze:
+* unifys many data storage types (SQL, HDF5, CSV, ...)
+* compute types (FyND, pandas, spark, pytables)
+* pluggable (compute, storage)
+
+pip install rpy2
+%load_ext rpy2.ipython
+%load_ext rmagic
+%Rpush df
+%%R -w 1200 -o df
+...
+
+pip.main(["install", "..."])
+
+mETL:
+* declare types
+* write own transforms
+* modify, filter, expand, aggregate (many predefined)
+* by YAML config
+* process dir and append
+
+Street Fighting Trend Research
+
+can delete var (e.g. len) to recover built-in
+myfunc.func_code
+decorator assigns funcname to whatever the decorator returns
+if you assign function to attr in instance -> will be normal function
+checks instance first, then class
+class stmt = call "function" and put result into namespace -> type(name, bases, dict) used when creating the class
+A=type("A", (object,), {"var":"val"})
+if __metaclass__ defined -> will be called instead of type
+iter(): call __iter__() if exists; else __getitem__ starting at 0 (IndexError to StopIteration)
+for loop calls iter()
+"in" operator could use iterator protocol
+iter: need to return StopIteration even if exhausted
+
+Jedi: autocompletion; does dynamic value determination; understands a lot of python
+Also can lint
+
+Numexpr: JIT
+faster than numpy
+since can use memory better (3x faster since operates row-wise)
+memory speed behind CPU speed
+cache good if time or spatial locality
+Numpy weakness: appending data; compressed data; disk-based data
+-> bcolz addresses these weaknesses
+
+getattr: only if not in dict
+getattribute: takes all over
+__getattribute__ on class; data descr on class (having __set__); __dict__; non-data descr on class; simple value from class ; __getattr__ on class; AttributeError
+
+interned: -5...257, "", length 1 string, empty tuple
+(implementation dependent)
+mutable slightly over-allocated for eventual growth
+list alloc: 4, 8, 16, 25, 35, 46, ... (for large less than 12.5%)
+list shrink only when less than 50% of allocated space
+sometimes other malloc can help
+could delegate work to other process which you kill
+
+netaddr lib: many tools
+IP sets handled better
+
+getattr eats exceptions!
+
+DB:
+use read-only connections
+use .commit()
+
+Generators:
+can send in values
+or even exceptions
+can yield and same time return (this way stop iteration has return value on it)
+-> can use with asyncio.coroutine
+((yield 2*x) or 7 for x in [1,2,3])
+-> weird
+
+random numbers:
+entropy pools in OS
+rdrand command in intel processor
+merseinne twister usually used (period 2^19937-1)
+but not cryptographically secure (if you see 624 outputs you can find internal states; could also run backward once internal state known)
+randu bad (simple linear congruence)
+
+object() and "is" for singletons
+namedtuple memory efficient
+
+Sparse grid:
+fine in each dim, but not from all(?)
+often from component grids
+full grid 2^(l*d); sparse grid 2^L*L^(d-1)
+
+airbnb only random forest
+scikit learn
+java in production
+
+hash:
+djb2: start 5381; hash<-(hash<<5+hash)+key; but not good
+murmur2 fast
+simhash for LSH; use cosine distance to compare
+Hyperloglog, 2% error on counting; contains magic numbers in cardinality estimator
+Count-min sketches for frequent itemsets
+hash NLP: +1 for key with name <hash>
+hamming correlates with cosine
+
+probabilistic database: "sample data"; implement prob. data structure
+bounded errors and bounded reponse time
+e.g. avg() with 0.95 confidence
+
+
+if define __eq__ also need __ne__
+if __gt__ missing on first, will be called on second but operators not swapped
+subclassed comparisons used first!
+
+DyND:
+* like numpy, but also variable sized dimensions (if fancy indexing)
+* works CPU/GPU at once
+* more flexible data types
+* more languages
+
+Vispy:
+* on OpenGL
+* high performance interactive
+* embedding
+* IPython too
+* 3D dashboards
+* can group/clip/... many many lines
+
+Python and Spreadsheets
+* OpenPyXL
+* Python-Excel (xlrd, xlutils, xlrd)
+* ODS: see website
+* Python in spreadsheet:
+  * PyXLL (canopy), even async (no freeze), 99$
+  * xlwings, ExcelPython (planning to merge)
+  * PyInEx
+* Scripting:
+  * PyUno (script OO; doc limited)
+
+Biggus:
+* https://www.youtube.com/watch?v=7rpcWZJaGFo
+* large data sets
+* lazy operations on numpy
+* solves scalability, code cleaner, less space usage
+* can join data in various ways
+
+seaborn:
+* cube_helix; starting points
+
+mpld3:
+* brushing for scatter
+* can extend with JS
+
+Vispy:
+* OpenGL
+* when very large data sets
+* fast interactive visualizations
+* good if you know OpenGL
+
+FoundationDB:
+* consistency guarantees
+* ordered key-value
+* ordered -> range queries fast
+
+Rich comparisons:
+* when __eq__ need to define __ne__ too
+* careful: might call right side if left doesnt have __le__
+* if direct inheritance: tries more specific side first
+* could use operator.eq etc. to force specific operator
+* total_ordering: also have to define __ne__
+
+Nix:
+* packaging
+* functional languages
+* lazy eval
+* pypi2nix script
+
+Plots:
+* MayaVi easy
+* Vispy -> OpenGL; fast but need to know OpenGL
+* Chaco: interaction on Desktop; good at linked plots; but much boilerplate
+* Bokeh: browser
+* d3py: obsolete
+* Vincent: talks to Vega/D3
+* matplotlib:
+  * for interaction better chaco
+  * for scientific plots
+* seaborn
+* cartopy: maps
+* mpld3:
+  * useful for mpl interaction
+* plotly:
+  * mpl and web publishing
+  * interactive
+
+(None for g in g if (yield from g) and False)  # flatten list
+
+Python+Excel:
+* DataNitro:
+  * commercial
+  * but Python/Excel in different process space -> harder object sharing
+  * COM bridge used -> slow
+* PyXLL:
+  * commerical by Enthought
+  * embed Python interpret in Excel process space
+* Pyinex:
+  * revived
+  * Excel C++ addin
+  * pycall function
+  * looks for functions.py
+
+Zero dependency Python:
+* Chromium: Native client
+* Pepper API, pyppapi, nacl_io (for file systems)
+* expose folder to system
+* make intermediate sandboxed representation a.pexe
+* translate to a.nexe (native, machine specific)
+* modes:
+  * unpacked: anywhere on web; can visit in chrome
+  * packages: sockets, local file; chrome store or local machine
+* difficult if C modules
+* -> can run on supercomputers (but only 32bit pointers)
+
+Sparkling pandas:
+* Spark:
+  * keep data in memory
+  * Execution model: DAG, lazy
+
+Python for humans:
+* urllib2 close to techspec, but very complicating
+* -> rather requests library
+* hard to run external commands (need subprocess which is low-level)
+* sys/os/shutils/io mix
+* etree annoying; lxml difficult to install
+* pip or easy_install (latter no uninstall)? distribute or setuptools?
+* datetime/time/calendar/dateutil
+* timezones bad
+* can generate but not parse ISO8501 dates
+* unicode bad?
+* testing hard? but unittest2 is good
+* many different mysql libs
+* use datetime.utcnow()!
+
+New in pandas:
+* categorical data:
+  * can be ordered
+  * .cat.codes
+* .cut with labels to make useful names
+* dummies.stack() # reverse get_dummies
+* Python string: garbage collection overhread 37 bytes?
+* -> fixed length can be smaller
+* Timedeltas:
+  * tracks time from "zero"
+  * can construct ranges
+  * .astype: frequency conversion (floor division)
+  * .dt.components
+  * "4d" slicing for timeindex
+* MultiIndex slicers
+  * replace .xs
+  * allow to set
+  * always sort index!
+  * .loc[...,:]  # use last since safer
+  * .loc[idx[:,:,...]]
+  * .query("first in [...] and ...")
+* .dt accessors:
+  * also tab complete
+* Groupby enhanced:
+  * pd.Grouper
+  * e.g. for resample operation
+* for big data need Blaze
+* future:
+  * IntervalIndex (so that its not strings), CategoricalIndex
+  * pd.String (autom. conversions to string)
+  * timezone aware blocks
+  * dynd (numpy replacement; integer NA support; variable length string,...)
+  * bcolz; virtualized df (compressed on disk)
+
+Streets
+* Geopandas
+
+Elasticsearch
+* distributed search engine
+* start talking to each other if in same network
+* JSON over HTTP
+* based on Lucene
+* works with JSON documents
+* dynamic schema
+* relationships: nested (e.g. comments); parent/child (e.g. question/answer)
+* unstructed search; fuzzy; stemming; ...
+* API
+* filtering; ranges, geo, exact, ...; stored as bitsets
+* Suggestors
+* Completition (but need to supply scores for words manually)
+* only looks index; never looks document
+* can have index per some time interval; e.g. logs
+* aggregations:
+  * buckets: can be nested; e.g. on range or word
+  * metrics: on docs in buckets; e.g. significant terms, top_hits
+* Kibana for log visualization
+
+Automated documentation:
+* Markdown, Pandoc, Docbook
+* makefile + Python
+* automatic screenshots
+* create PDF (by latex in these tools) and webhelp
+
+raw numpy.vstack faster than pandas.concat
+
+MRO:
+* https://www.youtube.com/watch?v=JVVMMULwR4s
+* C(A,B) D(B,A) E(C,D) -> error since cannot create consistent MRO
+* Some impossible in Python; only if repeat superclasses
+
+Keyboard: need ISO (extra key next to left shift: <>|)
+Tenkeyless keyboard to have mouse closer
+
+PDB:
+* return to repeat command
+* PDB++ good; also ipdb, rpdb, remote-pdb
+* "until" to quit loop
+* can have conditional breakpoints
+* "interact" for prompt in pdb
+
+bytesarray:
+* list slightly faster than bytesarray (no need to create new int objects); unless PyPy
+* but uses min space
+* can be reusable buffer; good memory usage
+* linux "cat" faster than "dd" if use default block size
+* memoryview to have slice-able object with zero copy
+* network recv(1024) returns only 1 or more bytes
+* bytearray "+=" is fast
+
+iter(a) returns a if a is already iterator
+-> if iter(a) is iter(a) checks if a is iterator (and not class with __iter__)
+-> would cause problem when consuming twice
+
+Security
+YAML
+* can include python objects with "!!"
+* use safe_load()
+XML:
+* can define own entity -> can make huge outputs by nested definitions
+* can define entity to be file
+* -> many steps to protect from malicious XML (10x)
+* -> use defusedxml
+JSON:
+* almost safe (unless you use eval)
+
+Javascript number model gives Inf too often
+
+* unidecode accents
+* auto convert to categorical
+* remove missing
+
+* crawlera for IP rotation
+* or Tor (but slow)
+* use crawlera and scrapinghub
+
+* tfidf + LSI + SpectralClustering
+* tfidf + Chi2 + NaiveBayes
+
+Numba
+* performance: Numba.jit; Python Byte to Numba IR add type inference to LLVM IR to native
+* LLVM inline, loop unrolling, ...; even 1+...+N=N(N+1)/2
+* implemented special libs like math, random, numpy, cffi, ...
+* object mode if type inference not complete
+* not supported: comprehensions, yield from, with, except, recursion, classes, ...
+* can release GIL
+* @vectorize decorator to create new universal func from Python scalar func
+
+Pythran, PyPy, Numba, Parakeet, Hopy
+
+Pythran:
+* numpy centric Python to C++ translator
+* Python code optimizer
+* can optimize loops, parallelism, ...
+* Numba a bit faster (?)
+
+https://www.youtube.com/watch?v=tM41Dxlk_zs
+Spatial data analysis:
+* Web Mercator is like standard projection (e.g. Openstreetmap)
+* packages: shapely, geopandas, pysal, rasterio
+* plotting: descartes, cartopy
+* PySAL:
+  * autocorr, econometrics, smoothing, regionalization
+  * Markov Chains
+* spatial autocorreletion:
+  * global: entire landscape; -1..1  (clustered..none..dispersed)
+  * local: identify hotspots
+* Global Moran I value; (by CartoDB services link given)
+* Rasterio:
+  * raster calc across bands
+  * raster stacking and merging (e.g. stack color bands)
+  * histograms and color maps
+  * raster file conversion
+* Geopandas:
+  * pandas+shapely
+  * buffer, intersect, union, difference
+
+pyDAL:
+* http://www.pyvideo.org/video/3541/pydal-a-pure-python-database-abstraction-layer
+* consistent API and hide DB specifics
+* no more SQL strings -> rather object oriented
+* also for MongoDB, Ingres, Cubrid, SAPdb, Sqlite, ...
+
+Tuning Machine Learning Parameters using scikit-learn Gridsearch
+* https://www.youtube.com/watch?v=wOqRraHSXYw
+
+Gradual typing:
+* not transitive due to Any
+* type Unions; does smart simplifications
+* function arg types possible; but not keyword args
+* regex types
+* casting
+* overloading
+* IO types
+
+Docker and Python
+* https://www.youtube.com/watch?v=PMt98G4MOKg
+* build, ship, run, any linux app, anywhere (vm, cloud, bare, ...)
+* whereas VM needs guest OS -> docker no guest OS, can also share library
+* docker daemon: manage docker LXC containers
+* docker CLI: comm with daemon
+* docker image index: repo
+* define dockerfile, make image (class), run containers (object)
+* commands just create layer - can reuse
+* container id
+* can link containers
+* layer on LXC
+* no more puppet manifests needed
+* use fabric too
+
+HDF5
+* https://www.youtube.com/watch?v=nddj5OA8LJo&index=14&list=PLYx7XA2nY5Gcpabmu61kKcToLz0FapmHu
+* file format, also big C library and API!
+* simple object model
+  * data set [slicing, compression]
+  * groups [nested posix path]
+  * attributes [key value to data, groups, ...]
+* can slice directly on HDF
+* soon improved for parallel access (MPI) HDF5 1.10
+* pytables more full-featured/indexed based than  h5py
+
+Color maps
+* Parula: proprietary in Matlab
+* CIE XYZ: colors add as linear combination of vector
+* CIECAM02: more modern than CIE Lab, SOTA for hue/brightness, but not for color distance
+* Cie Lab: for color distance
+* CAM02-UCS: SOTA for color distance
+* Lab space only good for distant colors, not near
+* for colorblind use blue/yellow
+* -> dark blue to light yellow; but around green or red?
+* viscm, colorspacious as package
+* colorpalette: viridis (but less hue variation)
+
+Tools:
+* PyMC
+* seaborn.set()
+* xray:
+  * numpy+pandas
+  * labels, indices
+  * dense arrays
+* Dask:
+  * numpy and pandas multithreaded
+
+Bokeh Dashboard
+===============
+https://www.youtube.com/watch?v=Kojrxqgecx4&list=PLGVZCDnMOq0rbLTVoHGS2xcvp5E0ouOe8&index=5
+* JSON to communicate with bokehjs
+* can have server which communicates to bokehjs by json; rest calls back
+* ...
+
+Sparkling Pandas
+================
+https://www.youtube.com/watch?v=borv_KMI9Ac&list=PLGVZCDnMOq0rbLTVoHGS2xcvp5E0ouOe8&index=10
+* Spark can find JSON schema
+* ddf.toPandas()
+* spark-packages.org: many libraries
+* Apache Math for analytics functions(?)
+* as much JVM as possible, lazy operations, distributed
+* related:
+  * Blaze
+  * AdaTao distributed DataFrame
+  * Numba
+
+Blaze and Odo
+=============
+https://www.youtube.com/watch?v=EV6dSVHDGek&list=PLGVZCDnMOq0rbLTVoHGS2xcvp5E0ouOe8&index=31
+Blaze
+-----
+  * expressions and compute recipes
+  * interface/implementation -> pandas/cython, numpy/C
+  * Blaze only interface -> only tells other systems what to do
+  * expressions:
+    * name, data shape, type info
+    * extends missing values, variable length dimensions, ...
+    * groupby, join, ...
+    * compute recipes: depends on data source, written down as decorator on function implementation
+Odo
+---
+  * factored out from Blaze
+  * turn things into other things
+  * "cp with types for data"
+  * before needed all pairwise listings
+  * do connect dataframe > csv > hive automatically
+  * network of conversions
+  * has chunking mechanism
+
+SFrame and SGraph
+=================
+https://www.youtube.com/watch?v=UQg78_Ouo9c
+SFrame
+------
+* SArray: single type array with many types (int, dict, ...)
+* SFrame: dict to SArray; stored as files
+* highly scalable
+* import graphlab
+* can run sklearn on this
+* lazy eval (cache before disk write)
+* query optimization
+* often much faster than big data system (e.g. Redshift)
+* type aware compression (int: delta encoding, str: dict encoding, images: jpeg, ...)
+* but random access still difficult
+* implement many ML algorithms
+* fast CSV parser, JSON support in values, integrates with Spark, Numpy
+* streaming sketches (min, max, quartiles, unique)
+* visualization
+SGraph
+------
+* immutable disk-bases
+* optimized for bulk access (not individual vertex)
+* build on top of SFrames
+Distributed
+-----------
+* for embarrassingly parallel
+* faster communication
+
+Plotting with pandas
+====================
+https://www.youtube.com/watch?v=Uy_NKRoNYtI
+* cufflinks: Plotly +  Pandas
+* there is offline version of Plotly (enterprise)
+* ...
+
+Mistakes made
+=============
+https://www.youtube.com/watch?v=VWtsTIbFXxA
+* high variation for rates in small subsamples -> watch sample sizes -> need weighted regression, watch margin of error results
+* triangular distribution
+* A/B test: need to look at full normal bells to find real lift; hard since continous problem
+* dont drop small coef from logreg: a1+a2 (correlated) could contribute little compared to a3 -> uses regularization instead
+* PCA before regression: can hurt regression, if drop seemingly low variance contribution -> better use supervised PCA
+
+Python GIL
+==========
+* problems with:
+  * reference counting (race conditions, deadlock, ..)
+  * global frame point
+* GIL issues (bad behavior) fixed in Python 3.2
+* attempt to use atomic inc/dec -> slower
+* others use garbage collection (pypy, jython, ..), but also dont have C-APIs
+* garbage collection would change API, would break all extensions; will it be faster?
+* if change would need to break C API; rather atomic incr thinkable
+* JNI/V8, Lua/Julia use other C API types
+* CFFI: call C, expose Python functions to C; very fast on PyPy
+* STM: removing GIL without threads and locks; use memory between threads
+
+PyPy STM
+========
+* only one thread at time which does CPU and IO at same time
+* Software Transactional Memory
+* during transaction:
+  * flag all read objects
+  * record all written objects (later written to log)
+  * happy if no conflict
+  * if IO -> guaranteed to commit
+  * with atomic: -> large region for no switch of transactions
+
+Python conventions
+==================
+* header (doc str, imports [Python 3rd, appl], constants, globals,
+* tools (exceptions, helpers)
+* body (functions, classes, if main)
+* refactor: script -> functions -> classes -> adapt -> subclasses
+* % formatting slower than +
+
+Ruby vs Python
+==============
+* Braintree: uses Ruby now instead of Python
+* Ruby not good for:
+  * JVM (e.g. Kafka, Cassandra, ...)
+  * Smart Proxy (need high uptimes [e.g. tornado], big eco system)
+* Python not good:
+  * concurrency in tornado not enough and tornado moved too fast
+  * no SNI support
+  * logging is overhead
+-> solutions:
+  * NginX, HAProxy, PGBouncer
+  * Clojure + Kafka
+
+Matplotlib
+==========
+* other solutions:
+  * Mayavi: VTK
+  * Chaco
+  * VTK: hard to learn
+  * Vispy, Glumpy, OpenGL: fast, but low-level
+
+Python Bikeshed
+===============
+* speed:
+  * Cython
+  * Numexpr
+  * Numba
+* large homogeneous data: xray -> pandas like selection, grouping...
+* bcolz: homogeneous compressed data to do simple analytics (memory or disk)
+* dask: parallel out-of-core computing (blocked algos and task scheduling), can similat to numpy and pandas
+* dask can use toolz against dask sequence
+* need to tune JVM for production spark (garbage collection, ...=
+* other projects:
+  * bolt: ndarray in spark
+  * distarray: distributed array protocol
+  * biggus: virtual large array, lazy eval
+  * spartan: distributed numpy
+* SArray, SFrame: compressed on-disk arrays
+* Ibis: Impala + Hadoop; esp. for timeseries, correlated subqueries, self-joins, ...
+
+State of Jupyter multi-user
+===========================
+* open directly on Google Drive (easy option)
+* what about kernel sharing; data exchange
+* sharing kernel would be tricky since could show internals (e.g. 'javascript("login creds")')
+* "project" concept:
+  * need unix for kernel
+  * cannot track who did what when kernel shared; since Python dynamic
+  * -> rewriting Jupyter from scratch
+
+Dask out of core Numpy/Pandas
+=============================
+* for blocked algorithm
+* leverages numpy, ...
+* pure python
+* dask collections:
+  * array
+    * like numpy, broadast, almost all parallizable numpy operations
+    * some new algorithms (approx quantile, topk, slightly overlapping array [windowing, blocks talk each other], HDF5, ...)
+  * bag
+  * dataframe
+* scheduler, graph spec
+* param chunksize
+* operation graphs build lazily, .compute() to run
+* so that not all data in memory needed
+* only some pandas interface so far
+* could create dask graph directly
+* execution in parallel (multiprocess/multithread(?), trying to limit memory)
+
+Lightning talk
+--------------
+* YAML can run code -> use safe_load
+* XML can show files -> use defusedxml
+* Pytables will use h5py as backend soon
+
+Connascence
+-----------
+* when one component change requires change in other component to work correctly
+* increasing connascence strength: name, type, meaning, position, algorithm
+* dynamic connascence (stronger): execution, timing, values, identity
+* name: same name
+* type: needs same type
+* meaning: e.g. special value has special meaning
+* position: order of values; e.g. tuples
+* algorithm: e.g. diff value validation in frontend/backend
+* execution: instructions in order
+* timing: e.g. timeout
+* value: values change together
+* identity: when all should reference same entity (e.g. certain queue)
+
+Matplotlib new colormap
+-----------------------
+* CIELab: color distance; bad at brightness and hue
+* CIECAM02: SOTA brightness and hue; not color distance
+* CAM02-UCS: better for color distance -> used here
+* Parula in Matlab?: not that great since based on CIELAB
+* -> can use colorspacious (specify in CAM02-UCS)
+* need to go from dark blue to light yellow; but through red or green?
+* viridis colormap better
+* also magma, inferno, plasma (all reddish)
+
+Billions of rows per second in Python
+-------------------------------------
+https://www.youtube.com/watch?v=rXj5nayS7Yg
+* Vertica, Redshift, Hive, ...
+* Disco for Mapreduce
+* Deliroll in pure Python by Adroll; type in SQL
+* Redshift 10x faster than Hive?
+* Deliroll faster than Redshift (on aggregation)
+* Architecture: PostgresQL -> Multicorn -> Server/Worker -> Numba -> LLVM -> Densely encoded data
+* generated Python for Numba
+
+PyPy
+----
+* 7x faster than CPython
+* gets faster with running more often
+* needs to warm up to be really fast (enough iterations)
+* LuaJIT very fast
+* optimized assembler created
+* timeit bad; only shows minimum number, also disables gc
+* use vmprof
+
+Monads
+------
+https://www.youtube.com/watch?v=b0EF0VTs9Dc
+* axioms:
+  * bind(unit(val), f)=f(val)
+  * bind(mon, unit)=mon
+  * bind(bind(mon, f), g)=bind(mon, lambda v:bind(f(val), g))
+* OO notation:
+  * mon.bind(f).bind(g)=mon.bind(lambda v:f(v).bind(g))
+
+* promises very good for asyncronisity
+* in turn-based system cannot use exceptions since no past stack
+
+Names
+-----
+https://www.youtube.com/watch?v=bg1wdbKBRKg
+* if multiple nouns: remove one if still logic? combined word to one english?
+
+Dask
+----
+* collections, graphs, schedulers
+* can do multicore or work sequentially (by chunks)
+* has some operations like math, slicing, hdf5, reductions (std, mean)
+* always need to know shape and dtype
+* no argwhere(), nonzero() since need to know output shape!
+* dataframe
+* (castra binary format for csv)
+* multi-file partitions
+* dask.bag:
+  * parallelize across python data
+  * filter, fold, pluck, distinct, groupby, ...
+  * only Python speed
+  * avoid groupby in favor of foldby
+* dask.imperative:
+  * annotating code by Do, Value to create DAG of code
+  * e.g. do(sum)(..)
+* schedulers:
+  * threaded
+  * anaconda cluster
+  * multiprocessing
+
+Jupyter advanced
+----------------
+https://www.youtube.com/watch?v=38R7jiCspkw
+https://github.com/jupyter/scipy-advanced-tutorial
+* $ stands for jQuery
+* _ stands for Underscore
+* can modify live in developer tools (Ctrl+Shift+I in Chrome)
+* sometimes server-side extension at kernel
+  * python module: load_jupyter_server_extension(nbapp)
+...
+
+Bokeh
+-----
+https://www.youtube.com/watch?v=KsXJSuBLMyM
+* new: callbacks for interactive in static documents (no server)
+* later: latex, svg, new charts, validation/errors on plot serialized
+* authoring: can do live update
+* theming
+* less javascript
+* webgl
+* JSON modified (e.g. range)
+
+Dask tutorial
+-------------
+https://www.youtube.com/watch?v=ieW3G7ZzRZ0
+* numpy/pandas only in-memory and single-core
+* dask parallel computing for larger-than-memory data
+* dask:
+  * array: numpy+threading
+  * dataframe: pandas+threading
+  * bag: map, filter, ... + multiprocessing
+  -> all rely on dynamic, low-latency, memory-aware task scheduler
+* 10-100GB on single machine
+* https://github.com/blaze/dask-tutorial
+
+array
+.....
+* API very much like numpy (but with chunksize)
+* uses all cores
+* numpy on all chunks
+* blocked algorithms
+* ._visualize() to show graphviz graph
+* .from_array(): takes any object that supports numpy-like slicing (hdf5, ...)
+* blocks size best 1-10MB
+* .compute() to finally run
+* not: in/out (rather blosc)
+* only operations where you can infer shape
+* for multiple files just .stack()
+* .store() to store out-of-core style by blocks
+* ! dask.array.ghost: share borders
+* internals:
+  * dicts for the graphs
+  * tuples where first element is callable
+  * you could hand-create them and pass to the scheduler
+* range: threads/zeromq; joblib; dask; ipython parallel; luigi; pyspark; mrjob; hive/pig/impala
+* can do SVD (after research paper); randomized SVD too (.svd_compressed)
+* use dask.multiprocessing to have multiple processes
+
+dask.dataframe
+..............
+* only when really too big for memory;
+* not quite mature
+* not as good as .array (since pandas harder)
+* dask maintains divisions on top of index
+* report what you need from pandas
+
+data on disk
+............
+* hdf5 good
+* but for strings not better than csv
+* for < 1TB
+* dont use if better: database, elasticsearch, ...
+* castra:
+  * very small
+  * col store that partitioned along index
+  * compressed
+  * can categorize value lists
+  * bcolz much more sophisticated
+
+* sometime opportunistic caching?: easy to store, complex to compute
+
+Imperative programming
+......................
+* parallelize more custom workflows
+* do(f)(a,b) function: custom graphs without using dict
+
+Bag - parallel lists for semi-structured programming
+....................................................
+* unordered collection with repeats
+* like toolz + multiprocessing
+
+Python Whut
+===========
+* from dis import dis -> see byte code
+* id()s might be re-used -> dont use for comparison
+
+Mashable data source
+====================
+* Freebase:
+  * REST, Metaweb Query Language
+  * Free API key, Free RDF download
+  * Search widget
+* DBpedia:
+  * Wikipedia as linked data
+  * syncs 2x a year
+  * free RDF download
+* Dandelion.eu semantic API
+  * 1000 free requests/day
+  * links to DBpedia as well
+  * maps ambigious names to identifiers
+* gruff as software:
+  * e.g. load DBpedia data
+
+Pystruct
+========
+* sequence prediction without a lot of data
+* -> predict vector of outcomes
+* pystruct wrote for image segmentation (into regions of same object; correlated between pixels and classes [bottle above table])
+* f(x,w)=argmax_y g(x,y,w) -> pick labeling y that fits best
+* like MLE on argmax p(y|x,w), but hard to normalize
+* model in pystruct:
+  * argmax w^T psi(x,y)  [linear in x/y]
+  * =argmax {sum_i w_i^T psi(x,y_i) + sum_ij w_ij^T psi(x,y_i,y_j)}  [only single and pair interactions]
+  * -> example: HMM or CRF canbe put in this framework by specific network arrangement
+* need learn+model+inference
+*   e.g. model=ChainCRF(inference="max_product")
+    ssvm=OneSlackSSVM(model=model, ..params)
+    ssv.fit(X_train, y_train)
+* can define any network as model; pystruct best for grid models
+* needs less examples than ANN
+
+Naming of ducks
+===============
+* 45-75 line length; 66 ideal (typography)
+* trailing comma for version control
+* name part: song_url
+
+Standard data structures in memory
+==================================
+https://www.youtube.com/watch?v=fYlnfvKVDoM
+* stdlib does not consider memory hierarchy and alignment
+* objects: ref count, address of type, value
+* string: ref count, address of type (str), length, hash, flags, address, value
+* use low level with struct lib
+* array also lowlevel
+* StringIO?
+* to get value from array -> has to be recreated (header)
+* numpy array dont intermediate python objects
+* PyPy can sometimes detect if pure int or float array
+* amortization of list: spreads cost
+* dict: grows by 2x or 4x -> only 1/3 or 2/3 full
+* heapq to get top items
+
+Parsing horrible things with Python
+===================================
+* regex cannot do nesting
+* pyparsing difficult (debug, ..)
+* PLY:
+  * LALR; no look-ahead (so cannot cancel dirty syntax)
+  * good debug output
+  * weird; stuff in docstrings
+* Pijnu:
+  * weird, slow, inefficient
+* Parsimonious:
+  * wrote his own
+  * wanted: good error reporting, complete test coverage, readable grammar, frugal RAM, ...
+
+The might dictionary
+====================
+* dict just linear hash table region
+* hash(i)=i for ints
+* deleting keys need to leave dummy key (due to possible previous collision chains)
+* dict resize when 2/3 full; <50k:4x, >50k:2x
+* when expand just use more hash bits
+* average: <2 lookups; worst case can be 16(?), still lookup time not even doubled
+
+
+* pandas.read_pickle fast
+* HDF5 faster
+* hash: md5 fastest, sha1 ok; python hash() faster
+* dateutil.parser: slow; strptime faster; for date could also pre-store
+
+* couple logic and IO in small function only; don't hide IO in subfunctions
+* -> can test now (e.g. without network)
+* or use dependency injection; pass in function for IO access
+* but need to inject too much for all levels?
+* could use mock.patch to patch individual (library) functions
+* -> dont make deep linear dependence
+* functional progr good because its data, not a moving process
+* step-wise transformation of data
+
+strace
+======
+* $? : last exit code
+* 1 runtime error; 2 command line error; ...
+* if any fail (not in if/while) of command -> script fails
+* "set -e" or "command || true" to make script not fail
+* ldd <exec> # show shared lib dependencies
+* os.py used for virtualenv to identify python
+* easy_install old and created overhead -> use virtualenv+pip instead
+* man -s 2,3 mkdir # understand system calls
+* if terminal: flushed at \n
+* os._exit() # no buffer flush
+* strace -f # to follow operations
+* ltrace: traces library calls; more expensive
+
+Subprocess to FFI
+=================
+* iconv program to convert encodings
+* copy-on-write with fork() possible; dont copy unless needed
+* kernel does overbook memory ("overcommit"); sysctl -a | grep vm.overcommit [kernel settings]
+* -> OOM Kill with really overbooked memory
+* subprocess: simple, flexible, throws native python exceptions
+  * but IO overhead (cannot share memory); fork overhead; deadlock issues; buffer/flush issues; no API
+* FFI: foreign function interface:
+  * translate between functions
+* CFFI to address ctypes shortcomings; best option for shelling out
+  * simplifies C part a lot
+  * many automatisms
+
+recipy
+* data provenance
+* sys.meta_path used for monkey patching
+
+PyMC3
+* based on Theano
+* automatic differentiation, GPU
+* currently book BMH being ported
+
+Flexx
+* web based GUI in Python
+* react + pyscript + webruntime + ui (indep components when importing)
+* Python to JS transpiler
+* reactive programming: use signals
+* Python/Javascript object pairs
+* currently some widgets (e.g. for plotting)
+
+Python interpreters
+* PyPy: tracing JIT
+* IronPython: .NET
+* Jython: JDK7
+* Pyjion: add JIT to CPython
+* Pyston: Dropbox, LLVM
+* VOC: Python on mobile by CPython to Bytecode (transpile); Android apps in Python
+* Skython: no GIL?; C re-implementation; maintained?
+* Cython, Numba, CFFI
+* Jython: OK, some compatibility problems
+* IronPython: OK, compatibilty problem
+* PyPy4: fastest (only pickle slow)
+* Python3.5 vs 2.7: similar; some thing slightls faster; Decimal much faster
+* PGO optimization makes it a bit faster
+* Pyjion: sometimes faster/slower
+
+Variables:
+* numerical
+* boolean (e.g. for filtering; often from comparisons)
+* categorical (e.g. for cross-product)
+* symbolic computation
+  * e.g. theano, tensorflow, blaze, dask, ...
+  * can simplify e.g. x+x+x->3*x)
+  * static checks catch errors
+
+Async: minimize resources for idle connections
+* Memory-bound
+* Single threaded
+* Non-blocking sockets
+* epoll on Linux
+* event loop
+
+HDF5
+* tables.open_file()
+* create_group, get_node
+* Arrays:
+  * contiguous arrays (immediately reserved)
+  * chunked arrays (most interesting; save only chunks where data in)
+  * enlargeable arrays
+  * variable lengths arrays
+* blosc compression
+* pytables has not all HDF5 features
+NetCDF4
+* variables grow dynamically along unlimited dimensions
+* returns masked array
+* multifile read access (one table split into multiple files)
+* small API, more restrictions, more metadata enforced
+
+GraphX
+* other: Pregel, Giraph, GraphLab
+* Graph-Parallel abstraction
+* Pregel: abstraction send messages to neighbours
+* GraphLab 16x faster than regular Spark
+* GraphX:
+  * merges tables and graphs; unified view!
+  * embeds graph-parallel model in Spark
+* unified graph view:
+  * vertex table, edge table
+  * introduce graph operators
+* 2 essential operators: triplets, mapreduce triplets
+  * triplets: joins vertices and edges
+  * mrTriplets: perform neighborhood computation; key operator
+* can handle high degree vertices (better than Giraph)
+* implementations:
+  * vertex RDD
+  * edge RDD
+  * can balance edges across machines
+  * routing table: vertex to which edge partition
+  * cache vertex attribute at edge partitions
+  * mrTriplets:
+    * run map on each edge triplet, local aggregate
+    * results send to vertex tables
+* optimizations:
+  * incremental updates to mirror caches
+  * join elimination
+  * index scanning for active sets
+  * local vertex and edge indices
+  * index and routing table reuse
+* performance:
+  * pagerank: Graphlab 833, GraphX 579, Giraph 1235
+  * connected components: almost as fast as GraphLab
+* future:
+  * time-varying graphs
+  * graph serving (point-like operations; like in Titan)
+  * operations on compressed graphs
+
+XRay
+====
+https://www.youtube.com/watch?v=X0pAhJgySxk
+* reuses index/factorize from Pandas
+* netCDF data model
+* N-dim data (pandas only 2D)
+* DataArray (like Series):
+  * axis name
+  * coordinate label
+* Dataset (like DataFrame(
+* indexing:
+  * by name possible
+  * nearest match
+* broadcasting
+* big data with dask
+
+Python internals
+================
+https://www.youtube.com/watch?v=cKcrcJjpv78
+* integers full blown object despite being used eveywhere
+* -> -5 to 256 cached
+* identifiers interned (hence faster since will try "is" first)
+* literals intern, if look like identifier (?)
+* peephole optimizer
+  * pre-calc expressions (check func.__code__.co_consts to see) if not too large (<20 times)
+  * literal set becomes frozenset (unless saved in variable)
+  * literal list becomes tuple
+* import dis: to disassemble
+
+Distributed arrays:
+* Bolt (backed by spark)
+* DistArray
+* Biggus
+* Dask.array
+
+Speed: Numba, Cython, PyPy
+
+PySpark
+=======
+www.youtube.com/watch?v=WThEk88cWJQ
+* Py4J + pickling
+* RDDs of pickled objects
+* SparkSQL and DataFrame can avoid this!
+* workers: data serialized and send by unix pipes Python-JVM
+* double serialization cost, whenever cannot pipeline together
+* Python memory not controlled by JVM -> easy to go over container limits
+* shuffled in JVM
+* suggested: do DF first; only later use RDD
+* word count on dataframes? -> need split words -> RDD or UDF or Datasets!
+  * UDF still double-serialization (if Python used); or use Scala code
+* don't use big schemas (many columns) since serialized as JSON from JVM
+* DataFrames not as lazy as RDDs; e.g. complains about non-existing columns
+* key-skew; end of with too big partitions?
+* reduceByKey: reduce before shuffle
+* shuffle explosion can happend since all keys go to one partition
+  * could end random value to key
+* staged reduce, so that not all send to worker?
+* sc.addPyFile
+* pssh or puppet to install
+* add with --zip-file
+
+Pyspark
+=======
+* Driver: Py4J: execute on Java objects
+* Workers: RDD of bytes
+* CloudPickle used
+* need to pickle functions to send
+* static_method to avoid self references which might break serializable
+* SparkTestingBase
+* yarn logs <id>
+
+= DyND
+* Numpy like but for multiple languages; array-oriented computing
+* type system, array container, callable objects, C++
+* dynamic objects
+* solves (better than Numpy):
+  * missing data treatment better
+  * variable length string better (without Python objects)
+  * custom types (categorical, ragged dimensions, GPU data)
+  * overloads on ufuncs
+  * multi-language
+* Datashape for typing
+* parametrized arrays (option[T] etc); tuples/structs
+* types/callables extendable (C++)
+* pluggable: plugin libraries
+* poolable and allocatable in custom memory
+* reduce functional etc.
+
+= Future numpy indexing
+* can do: lookup_array[x_array]
+* outer indexing (cross product between slice indices)
+* ...
+
+= Spark internals 2012
+https://www.youtube.com/watch?v=49Hr5xZyTEA
+* app master: RDD graph, scheduler, block tracker, shuffle tracker
+* worker: task threads, block man ager
+* each RDD remember whether it should cache
+* partition: formely called "split" (in code)
+* job:
+  * make RDD
+  * make DAGScheduler (graph at partition level; do pipelining; do stages; submit stages [task sets]; doesnt know about operator logic)
+  * make TaskScheduler (launch tasks via cluster manager; retry failed or stragglers; does not know about dependency between stages)
+  * worker (execute tasks; store and serve blocks)
+* simple straggler heuristic (old): median others * 1.5
+* RDD abstraction:
+  * partitions
+  * dependencies (parent RDDs and result partitions; e.g. 1-to-1 for filter)
+  * function to compute partition (given parents); parent partition iters -> iter
+  * prefered location (optional): locality preferences like HDFS; can also ask parent
+  * partitioning info (optional): data distribution; can be used to optimize
+* e.g. JoinedRDD:
+  * partitions: one per reduce task
+  * dependencies: "shuffle" on each parent (special dependency)
+  * computer: read and join shuffled
+  * location: none
+  * partitioner: hash(numtasks)
+* hashed join sometimes can be a "narrow" dependency
+* DAGScheduler:
+  * run job
+  * listener callback for task completion
+* task:
+  * from external data or fetch map outputs
+  * run chained functions
+  * map to output file or return to master; save output to allow retries
+  * usually 1 task per CPU core (?)
+* worker:
+  * receives objects
+  * calls run() in thread pool
+  * send results back to master
+* BlockManager:
+  * like write-once key-value store
+  * serves shuffle data and cached RDDs
+  * tracks storage level; can drop data; can replicate across nodes
+* CommunicationManager:
+  * async IO networking lib
+  * allows feteching blocks from BlockManager; allows priotization and chunking across connections
+  * tries to optimize for block size
+* MapOutputTracker:
+  * track where each map tasks in a shuffle ran
+  * tells reduce tasks the map locations
+  * each workers caches locations
+  * "generation ID" passed with each tasks allows invalidation cache when map output lost
+* Extending:
+  * RDD: new operators or new input sources
+  * SchedulerBackend: new clusters
+  * spark.serializer: object storage
+
+= Pandas
+https://www.youtube.com/watch?v=2RW9zSQF1Sk
+* write: HDF good; pickle and msgpack (bson) faster; for text: JSON(?)
+* write and query: hdf, sql
+* write and iterate: csv, hdf, sql
+* write and multiple-in-one-file: hdf, msgpack
+* for Python object pandas calculates size only of pointers
+* usually filter gives views
+* .ix: when combine integer and label
+* should have sort_index() on all indices for performance
+* idx() to explicitly define indexer
+* query: accepts @ variables
+* groupby: Series, function, dict, levels; does not do computation yet
+* groupby agg:
+  * own function -> just loop
+  * agg can do specified functions for each column in df
+* stack, unstack inverses
+* groupby:
+  * agg
+  * transform per group; but using like df-df.mean can be better
+  * apply
+* melt inverse pivot
+* pipe: e.g. easy for plotting in chained methods
+* inferdate: guesses separator etc
+* pd.Grouper: to combine with other group
+* computational tools: rolling_mean
+* pandas good with cython or numba
+
+Python best practices
+=====================
+* Smalltalk Pattern: good
+* Compose: keep method same abstraction level
+* for each in ...
+
+Jetbrains Datalore (in private beta)
+
+datreant
+========
+* persistent pythonic trees
+* pythonic interface to file system
+* store parameters of simulation
+* treant:
+  * directory with metadata
+  * uuis
+* manipulate by Python object
+* tags, ...
+* filter, set operations, ...
+
+Python dictionary
+=================
+https://www.youtube.com/watch?v=p33CVV29OG8
+* in 2.7: 280 bytes; in 3.6 112 bytes (for example dict)
+* in 3.6: Ordered; same order as put in -> can pre-sort
+* hash tables double when needed
+
+Type annotations
+================
+https://www.youtube.com/watch?v=ZP_QV4ccFHQ
+* mypy --strict-optional
+
+
+Text, Unicode, Comparing
+========================
+https://www.youtube.com/watch?v=bx3NOoroV-M
+* Unicode 9 + Annexes
+* >100.000 assigned codepoints
+* private use code points (never assigned)
+* surrogates, noncharacter, ...
+* codepoints have properties (>100; name, age/version, general category, Case_folding_codepoint...)
+* often fallbacks if glyph not in font
+* sometimes different order combinations of codepoints result in same glyph
+* use NFC normalization (instead of NFD) -> unique codepoint seq for same glyphs
+* normalize: to compare strings
+* casefolding:
+  * full-folding: some characters get longer (ß->ss)
+  * Py3 regex does simple case-fold (ß->ß)
+  * special treatment for Turkish needed
+* collation:
+  * sorting for humans (so that looks right); also disregard quotes
+  * can be tweaked (pip pyuca)
+  * German has two diff orderings
+  * multi-level sort key (ignore case, then accents, ...) -> UCA returns sort tuple
+  * PyICU allows some tweaking; but no docs
+  * could concat sorting tuples for tabular data; use CLDR, special joining str FFFE
+
+
+Python Visualization Packages
+=============================
+* Vega: Vincent
+* Vegalite: Altair
+* Vaex: render to all; large data
+* datashader: with Bokeh or MPL; large data
+* Holoviews: links datashader, Bokeh, MPL
+  * data has intrinsic way to visualize -> wrap data in object with repr
+* Plotly
+* Altair:
+  * pass data+metadata instead of pixels (e.g. on web)
+  * Altair 2.0: Grammar of interaction
+
+Pandas optimization
+===================
+https://www.youtube.com/watch?v=HN5d490_KKk
+* Numpy has less overhead than Pandas (indices, types, ...)
+* if Cython: add typing, replace function  C math libs (from libc.math import) [vectorizing still much better]
+
+
+= Python packaging
+https://www.youtube.com/watch?v=xSbezLCJ87E
+* requirements not enough: need setuptools
+* install: pip, virtualenv, conda
+* package: setuptools, bdist_wheel
+* setuptools_scm: always bump versions automatically
+* eggs deprecated -> use wheels
+* wheel: no pyc files, C does not require compiler
+* doc.devpi.net:
+  * proxy to PyPI
+  * private packages too, fallback PyPI if not exist
+  * need .pypirc file
+* test.pypi.org
+* roadmap: https://www.pypa.io/en/latest/roadmap/
+
+= Transducer
+* separate map/filter from containers (iterables)
+* in pure Python slow
+* rewrite map/filter
+* naive implementation tied to list!
+* Reducer: used in reduce(reducer, data[, init])
+* Transducer: transforms reducer to new reducer
+* combining reducer trouble since need to create all list first
+* doesnt work for infinite
+* https://youtu.be/z_cmmbRQXh4?t=23m30s
+* also needs:
+** association of seed value with reduce operation
+** early termination (like backpressure on take(10))
+** clean up state; reduction to final value
+* https://pypi.python.org/pypi/transducer/ (but not fast)
+
+= PyPy
+*! extracting functions for readability: code not slower -> automatic inlining
+* even using full classes still similar speed
+* even if you use class for points in image
+*! but may not work if many nested loops
+* https://www.youtube.com/watch?v=NQfpHQII2cU 20:15 pypytools.codegen tricks
+* -> generate code (by loop) and then compile
+* JIT only sees last version of loop -> may need some more loops before noticing that loop has two "if" versions
+* PyPy uses check "guards" to make sure "dynamic" tricks do not do unexpected (e.g. monkey patching)
+* JIT only compiles after a few times (warm up)
+
+= Pandas surprises
+* df._data.blocks: underlying data
+* ...
+
+= Green threads in Python
+* threads handled by OS and not very predictable
+* green threads: user-level-thread (from Java "Green" team)
+* ... stopped
+
+= Workflows with Python and Airflow
+https://www.youtube.com/watch?v=XJf-f56JbFM
+* entirely in Python
+* Framework; Scheduler, Executor; Web UI
+* operator:
+** should be idempotent
+** retry automatically
+** has execute() method
+* sensor:
+** long running tasks
+** for monitoring external processes
+** has poke() method; return bool
+* xcom:
+** cross-comm between tasks
+** save things in database as pickles
+** context["instance"].xcom_push(..)m xcom_pull(..)
+* can also scan all upstream tasks
+* branch operator: follow only some branch
+* AirflowSkipException (on other exceptions retried)
+* can run bash (also from jinja)
+* many Plugins (AirflowPlugin in /Plugins)
+* can create admin viewa in UI (since Flask)
+
+= Jupyter notebook with arguments
+* IPython.notebook.kernel.execute(window.location); but not perfect
+%%js
+Jupyter.notebook.kernel.comm_manager.register_target("channelname",
+(comm, msg) => comm.send(window.location.href)
+);
+-> registers named channel to communication Python/JS
+* bit.ly/talk-to-jupyter
+
+= Python with warnings
+* run "python -Wd -b"
+* -> lots of useful warnings for faulty behaviour
+
+= Debugging
+sys.settrace(tracefunc): can do actions for each line
+faster with features from https://www.youtube.com/watch?v=sAvOZlbh9mQ
+PyCharm special debugger for Python 3.6
+
+= Visualize ML with ELI5
+* https://github.com/TeamHG-Memex/eli5
+* eli5.show_weights(clf, feature_names=..)
+* with sklearn, xgboost, lightgbm; lightning, sklearn-crfsuite, lime
+* also visualize text processing
+* to explain blackbox: train inspectable model on same predictions
+* LIME
+** use local neighbourhood
+** need distance function and neighborhood size
+** need similar/fake/more examples(?)
+* general permutation importance
+* special LIME test
+
+= Scaling Sklearn
+https://www.youtube.com/watch?v=KqKEttfQ_hE
+* joblib
+** much more efficient serialization for numpy
+** easy swapping of parallelization backend
+** civis.parallel for cloud parallelization
+** can write custom backends
+** use TransportableException for easier debugging
+* sklearn with custom parallelization by changing backend
+* civis.ml.ModelPipeline
+
+== Imbalanced
+* use Tomek for pre-cleaning
+* dont use vanilla SMOTE -> use SMOTE variants(?)
+
+== Prob programming
+* STAN, PyMC
+* Uber Pyro: PyTorch
+
+== Ibex Scikit+Pandas
+https://www.youtube.com/watch?v=boXOVvu43ZI
+* sklearn does not track col names; difficult, e.g. SelectK Best, Unions, ...
+* Inter-Pipeline munging
+* `clf=ibex.frame(CLF)` (mixin); higher level exists too
+* works with Pandas now
+* aligns on col names and labels
+* can combine estimators now with `|` and `+` to union
+* unions give hierarchical dataframe
+* could subclass own classes with mixin
+* higher level: auto wrap sklearn, tensorflow/keras, xgboost
+* -> prepend ibex.sklearn.*
+* dynamic loading of sklearn version (import tricks)
+
+== tsfresh
+* Time Series Feat Extraction by Scalable Hypothesis test
+* features from full time series + selection
+* 60 extractors, 500 feats (global max, FFT, stddev, ...)
+* multi-hypothesis test by p-values
+* fast
+* could do rolling window
+* now also with dask
+
+== Dask
+* dask+numpy=dask.array
+* dask+list=dask.bag
+* dask+pandas=dask.dataframe
+* dask+futures=dask futures
+* dask+build your own
+* geopandas+cython+dask
+* joblib support backend swap ` joblib.parallel_backend("dask.distributed"); for paralle compute, not large data
+* dask_ml (good for large data; extensible functions)
+
+== GPU with Python
+https://www.youtube.com/watch?v=Xu0SCd58kYQ
+* GoAI: GPU Open Analytics Initiative
+* Shared GPU DataFrame stays on GPU
+* to work with Anaconda, H20ai, MapD, BlazingDB, GunRock, Graphistry
+* pygdf.DataFrame.from_pandas(df)
+* use Numba decorators after
+* soon GPU in Arrow
+* 25-100x faster than Spark
+
+== Pandas, Ibis
+
+* block storage of common types -> adding column does copy!
+* -> make parts and concat at end
+* Ibis:
+** declarative language, lazy execution
+** was developed to run on Impala - now extended to many engines (Spark, ...)
+** compiler
+* Arrow
+** working on kernel functions; simple atomic computations
+** operators, parallelism
+* still need to add row indices by Pandas2 for use Ibis and Arrow
+
+== Python time
+* time zone database aka "Olson database"; /usr/share/zoneinfo; tzres.dll
+* ISO 8601/RFC3339 for format for computers
+* when tick based: time since "epoch"
+* datetime: microseconds
+* datetime quite fast
+* datetime limitations: no timezone database, microseconds only, inconvenient API
+* -> pytz: own copy of tz database; use tz.localize(..)
+*! -> use pytz.UTC.localize(datetime.utcnow())
+* alternative to pytz: dateutil; has copy of tz db but also uses system tz db
+** convenient parsing
+* Babel: time for languages
+* udatetime: very fast parsing and formatting
+* humanize: can do something like "4 minutes ago"
+* Delorean: wraps, +pytz, integrates humanize; no separate date/time class
+* Arrow: wraps, dateutil.tz; well designed convenience methods; can shift/replace/...
+* !Pendulum: ambitous, date/time/tzinfo/timedelta extension; subclasses so can be drop-in; pytzdata for timezones; smart parsing, formatting; many convenience function; most features!
+* for efficient storage:
+* Numpy datetime64[ns], datetime64[D]
+* Pandas: uses and adds features to datetime64[ns]; adds localization
+** Timestamp objects to have operations (datetime64 has None)
+* Performance: udatetime fastest for what it does; Delorean slowest
+* pytz faster than dateutil
+
+* Pandas Index does string parsing (also words)

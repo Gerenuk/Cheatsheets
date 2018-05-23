@@ -1,0 +1,10 @@
+C4.5
+K-Mean
+SVM
+Apriori
+EM
+PageRank
+AdaBoost
+kNN
+Naive Bayes
+CART

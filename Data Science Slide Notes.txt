@@ -1,0 +1,27 @@
+Decision tree:
+* http://de.slideshare.net/pierluca.lanzi/machine-learning-and-data-mining-11-decision-trees
+* impurity measure should:
+  * zero when pure node
+  * maximal when all classes equally likely
+  * multistage property (decision can be made in several stages)
+* -> satisfied by entropy; but biased towards attributes with large number of values
+* -> Gain ratio reduces this bias
+* GainRatio=Gain / IntrinsicInfo
+  IntrinsicInfo(S,A) = sum |S_i|/S * log |S_i|/|S|
+* GainRatio may overcompensate (chose attribute just because IntrinsicInfo low) -> consider attributes only with greater than average information gain
+* Biases:
+  * Information gain: towards multivalued attributes
+  * Gain ratio: prefers when one partition much smaller than others
+  * Gini index: prefers multivalued attributes; problems when number of classes large; favors equal-sized partitions and purity in both
+  
+* latest C4.5: J4.8 in Weka (or commercial C5.0 from Rulequest)
+
+Graph DBs and Python
+* http://de.slideshare.net/MaxKlymyshyn/odessapy2013-pdf
+* ArangoDB; Bulbflow, py4neo
+* Arango:
+  * AQL: Arango query language
+  * support Gremlin graph query
+  
+Clustering:
+* Subspace clustering: cluster may exist only on subspace

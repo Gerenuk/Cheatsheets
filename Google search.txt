@@ -1,0 +1,15 @@
+﻿Google search:
+abc-def  # strongly connected
+abc_def  # search "abcdef" or "abc_def"
+"abc * def"  # joker
+1..5  # number range
+site:  # on site
+link:  # link to certain page
+related:  # related to given url
+OR
+cache:  # cached version
+
+Advanced search:
+language, region, last update
+terms in title, url, ...
+reading level  (trained by teacher judgement and [google scholar as advanced])

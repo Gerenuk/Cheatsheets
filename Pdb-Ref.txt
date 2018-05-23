@@ -1,0 +1,12 @@
+Features:
+- Conditional breaks
+- Jump between lines of code
+- Execute own statements
+Commands:
+b [[<file>:] <line>|<func> [,<condition>]]
+s(tep)	# step into functions
+n(ext)
+r(eturn)
+c(continue)
+l(ist)	# list source code around
+pp <var>

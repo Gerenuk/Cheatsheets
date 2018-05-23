@@ -1,0 +1,61 @@
+\begin{equation}
+\begin{gathered}	only one label
+
+\begin{equation}
+\begin{split}	alignment, but only one label
+
+\begin{gather}		centered formula 
+
+\begin{subequations}	subnumbering for equations
+
+\hdotsfor{cols}		creates dots for cols matrix columns
+
+\overset{top}{symbol}	create something above a symbol
+
+\usepackage{nath}
+has tensor option
+handles displaymath issues (e.g. fractions)
+automatic better \left(
+\double, \triple creates multiple delimiters
+\mid, \middle| creates middle delimiter
+\delimgrowth increases nested delimiters
+<, > as delimiters possible (geometry option)
+\int\int\int collects integrals
+backquote for roman (i.e. \imi)
+\root{3}{x} instead of \sqrt[3]{x}
+\to takes sub- and superscripts
+\adot is a dot for placeholder
+\hat scales with argument
+arrays shrink as superscripts
+\wall, \return, \padded for complicating equation alignments
+\eqno{A} own equation number
+numbered paragraphs with \paritem
+"\ " breakable space
+\begin{tight} to shrink the maths
+
+\usepackage{numprint}
+\numprint[unit]{123.45e20} formats number
+\usepackage[np]{numprint} use shortcut \np for \numprint
+\degree
+\celsius (from gensymb)
+\npfourdigitnosep -> no separator for 4-digit numbers
+\addmissingzero -> for ".123" or ""123."
+\npaddplus always adds sign
+\nprounddigits{dig}, \nproundexpdigits{dig} rounds digits
+\nplpadding adds padding on left (e.g. "0")
+\npdefunit
+\selectlanguage{English} (or ngerman)
+column alignment in tables with new column types
+
+\usepackage{commath}
+\dif,\Dif is differential
+\od is ordinary derivative
+\pd is partial derivative
+\md is mixed partial derivative
+\del, \cbr, \sbr are delimiters of different sizes
+\eval[size]{f(x)}_{x=0} means evaluated at
+\abs is modulus
+\figref, \secref ... creates references
+
+\usepackage{empheq}
+\begin{empheq}[box=...]{align*}

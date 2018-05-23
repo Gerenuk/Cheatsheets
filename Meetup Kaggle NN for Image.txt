@@ -1,0 +1,5 @@
+Image neural networks:
+* e.g. use diff ResNet architectures
+* 2nd layer build by out-of-fold predictions(?)
+* fast.ai good; maybe cs231
+*

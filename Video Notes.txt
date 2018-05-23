@@ -1,0 +1,1212 @@
+* random forest variable important may not have good cutoff
+* backward selection
+
+future of interactive R graphics:
+* "the grammer of graphics"
+* ggplot started in 2005
+* work with revolution analytics to make ggplot for big data (will be open source)
+* tour in high dim space; watch
+
+neural net solution:
+* https://www.youtube.com/watch?v=vShMxxqtDDs
+* early problem solution by -> initialize weights better; more labelled data; faster computers
+* restricted boltzmann machine: pretrain (approx to optimal max likelihood, but good enough)
+* learn layers sequentially; new hidden layers alway improve (lowr bound on log prob)
+* for a lot of labeled data, just try all possible scales of weights
+* object recognition:
+  * many hidden layers
+  * moving window
+  * rect LU faster and better
+  * dropout
+  * transformation for extra training
+* speech: convolution in frequeny
+* sum of sigmoids -> rectLU
+* ensemble of neural nets? -> dropout; at test time just half weights
+* prob average: arithmetic or geometric; diff results on entropy and KL divergence
+* dropout on input but with higher keeping prob
+* NB: like dropout where you keep only 1
+* use dropout only when overfitting
+
+Plugin API:
+* https://www.youtube.com/watch?v=7K72DPDOhWo
+* ideas from blogofile, sphinx, mercurial, nose, trac, django, pyramid, sqlalchemy, diamond, nova
+* -> ceilometer created
+* plugins:
+  * find plugin (file or import reference; scan or explicit)
+  * enabling explicit or implicit
+  * importing by importing or pkg_resources
+  * integration: fin/coarse; prompt/inspect; ask plugin to integrate itself
+  * API enforcement at runtime: runtime/base class/interface
+  * invocation: driver (invoked directly); dispatcher (call depending on event); iterator (pass events to all)
+  * automatic self-disabling
+  * -> package stevedore
+
+algorithms
+* https://www.youtube.com/watch?v=jKBwGlYb13w
+* skiplists:
+  * alternative to balanced trees
+* hyperloglog:
+  * count how many different objects
+  * "use longest run of 0s in hash"
+  * use multiple hash functions and harmonic mean
+* bloom filters
+
+Sphinx:
+* extensible by plugins
+* use
+  * roles (inlines) -> :abc:`...`
+  * directives -> .. abc:: args    :option:    body
+  * write python and return node structure
+* e.g. sqlite querier
+
+Chaco:
+* easy zoom
+* easy add regression lasso
+
+Elastic search:
+* JSON documents accessed by HTTP
+* powerful search (polygon query,...)
+* analyzer, tokenizer, stemming,... -> indexing
+
+Yelp stack
+https://www.youtube.com/watch?v=MLM2acV_1yo
+* switched to Pyramid (from Tornado); better for testing
+* application server uWSGI
+* logging with Scribe
+
+DyND (part of Blaze):
+* adv numpy
+* more types, ragged arrays (diff sizes of dim), variable size string, ....
+
+Naming of ducks:
+* 66 character line in typesetting
+* PEP8 max 79 chars line
+* trailing comma for better git diffs
+* most function names should start with verbs (unless a method, or math-like, or "new")
+* name part: not song="Grease" but song_name="Grease"
+* always singular: person_list, person_seq, person_map
+
+peep: pip with hash checks
+enaml: simple GUI layout and connect to model, MVC
+pyrasite: inject code by GDB
+
+shelve=pickle+dbm; not needed
+pickle:
+* __init__ not run; __new__ run
+* pickled classes must be at module scope and consistently named
+* only single calls can detect identifcal objects -> use single object (e.g. dict) to store
+
+Bokeh:
+* build on Chaco
+
+PyPy: 10x speedup
+Shedskin: converts to C++ code (50x speedup)
+Numpy+Parallel: 300x faster
+
+Conda: package, dependencies
+Binstar: repo for everyone
+Anaconda launcher: point to package and run
+sklearn-image: can add interactive tests skimage.viewer; interactive
+BLZ: fast IO for Blaze; can append data, ...
+
+Canvas/SVG; brower rendering pixel/vector
+jQuery/Prototype: JS better written
+REST: URLs can be API requests
+JS very fast now
+http://vimeo.com/53063185
+data, model, web framework, HTTP/JSON, Client:HTML/CSS/JS(dynamic)
+JS libs: jQuery (70% use it; abstracts DOM operations), Backbone (deoouple data from DOM; dont attack to elements directly), D3 (data transf, for vis)
+JS main purpose to manipulate DOM
+pack data in dict and pass per web req to JS
+
+How to get started with ML
+* Vincent&Vega for visualization
+
+Landscape Multidim Scaling
+* PCA: preserve variance; Autoencoder: functional reconstruction; Multidim scaling: distance information represented
+* non-linear optimization problem; gradient descent
+* with landscape instead of plane (use extra height) you can always reduce distance error to zero; distance defined as shortest path
+* but would need tunnels to make better visualization
+
+Machine learning from relevance:
+* more topics than user sees
+* topic merged from many taxonomy sources
+* hierarchy
+* track dwell time on story; how far scroll
+* declared topics matter less than reality
+
+Structural control:
+* make statements even if you don't know weights of directed network
+* degrees distribution has strong correlation to number of needed controls
+* assumption: a node can influence only one (non-splitting) path in network
+* count sources, sinks and internal dilations (usually small number)
+
+Performance gains vs Python (Bubblesort):
+* Numba: 1.4x
+* Cython types: 5.2x
+* Numba numpy: 80x
+* Cython int C array or numpy memoryview: 266x
+
+Pandas cheatsheet
+Plot cheatsheet
+Explore large data table; make fast scatter matrix
+logging, joblib, seaborn, compile mydatadoc
+pdb fallback on error
+flask web interface test
+make seaborn cheatsheet
+make automatic seaborn overview over all variables
+divergent color hexbin plot of binary class densities
+modify colormap if deviation from poisson/normal (use alpha)
+
+Firefox: F6 highlight all address
+Alt+Enter: open in new tab
+
+Approval voting:
+* less susceptible to clone candidate
+* tends to elect candidate who would win pairwise
+* everyone gets measure of support
+* resistant to tactical voting
+
+
+Drake: java prog; command-line workflow file which calls commands; all steps saved to file, can invalidate steps (by timestamp; specify name by e.g. regex); can call extra steps (e.g. for report); can data branch: create extra file extension (e.g. for testing) for parallel branch; can read HDFS metadata; ; method to reuse some code; protocols: e.g. Python (run interpreter and put in filename); parallelization in development
+
+SPAMS: SPAarse Modeling Software
+
+Test counts for Poisson? Extremes?
+-> Color histogram by Poisson or Normal lift
+
+Local "perceptron" for kNN?
+
+joblib:
+https://pythonhosted.org/joblib/memory.html
+from joblib import Memory
+from tempfile import mkdtemp
+mem = Memory(cachedir=mkdtemp())
+func1=mem(func1) # returns special callable objects
+@memory.cache(ignore=["argname"]) # ignore some args
+def func2():
+func1.clear() # clear func cache
+mem.clear()  # clear cache dir
+
+* better suited than memoize for large I/O objects
+* uses hash on numpy arrays
+* for large array also mem mapping possible
+* don't use on functions with same name
+* cannot use on complex objects with __call__ method
+* object methods cannot be decorated; use self.method=mem.cache(self.method) in __init__
+
+joblib parallel:
+https://pythonhosted.org/joblib/parallel.html
+from joblib import Parallel, delayed
+res=Parallel(n_jobs=2)(delay(func) for ...<generator expr>)
+in Windows protect all code by __main__
+default: uses multiprocessing (but needs to serialize data to exchange)
+use threading only if your function is compiled which release GIL
+mem map for large numpy: https://pythonhosted.org/joblib/parallel.html#automated-array-to-memmap-conversion
+
+longest increase subsequence solvable in NlogN
+Longest common subsequence NP-hard (polynomial time if number of sequence constant)
+longest alternating subsequence in N time
+
+Tools:
+Eclipse AnyEdit, Grep Console
+
+shlex: for simple command line languages; and parsing quotes strings
+
+dict performance:
+if key likely doesnt exists test for key; otherwise exception
+
+Realtime predictive analytics with sklearn and RabbitMQ:
+* randomized PCA -> .explained_variance_ratio
+* don't use randomized on sparse matrices (see doc); use TruncatedSVD
+* RandomizedSearchCV to find values
+* save parameters, since pickle might be incompatible with future sklearn
+* RabbitMQ: queue to ensure that any message is processed; uses message protocol (AMQP)
+* book "RabbitMQ in depth"
+* alternatives: ZeroMQ, beanstalkd, ...
+* Flask ReST API
+* consumer gets messages whenever he wants to; use tracking_ids
+* could also use web sockets
+* can start new consumers
+* TTLQ to prevent RabbitMQ backups
+* track performance metrics
+
+Which guarantees does MongoDB give?
+gnuplot magic
+
+Bokeh:
+https://www.youtube.com/watch?v=hjW4gL9hioY
+* library
+* interactivity
+* for large data sets (e.g. dynamic down sampling)
+* HTML5 canvas (not D3)
+* integration with Google maps
+* no need to learn Javascript
+* can do realtime updates
+* plots based on glyphs; can be attached to a vector of data; every plot is kind-of scatter plot
+* can attach tools (e.g. pan, wheel_zoom, previewsave,...)
+* (large) categorical axes support
+* easy hover tool (tooltips)
+* widget interactions
+
+Learn: RBM, Stacked Autoencoder, Spare Representations
+
+combine kNN with SVM
+local perceptron
+distance measure such that no effect of dim; but still it should be convex for planes?!
+combine with kind-of bagging?
+
+Clojure:
+lisp-like, concurrency, dynamic, DSLs, functional, lazy eval, basic syntax; more contraints, but gives simpler programs(?)
+
+Scala:
+closer to Java, OOP, static types, more mature (4 more years)
+
+ToDo:
+Duda, Pocket, Seaborn, Cheatsheet, Printouts, GoogleDrive
+Dataflow tool? Flask? Bamboo?
+
+Percentile: smallest number from list that is at least as large as p% of the list (-> round p% to some position)
+Linear trans leaves r unchanged (unless negative number)
+r measures "linear relation"
+sensitive to outliers
+slope of lin reg in std units is correlation y=rx
+percentile -> normal, std units -> times corr -> normal, std units -> percentile
+corr < 1 -> other var slightly less above average (regression)
+fraction of variance explained away: r^2
+68% are in 1 rms error from regression line (constant tube)
+residuals plot centered and without linearity
+if you regress on averages -> corr too high (since less scatter)
+sampling without replacement: o/sqrt(n)*sqrt((N-n)/(N-1)) [finite population correction]; mean is the same
+for estimate sample size matters; less so the population size
+cluster sample: pick classes at random; but be careful; equations for one random sample might not work for other
+confidence interval contains real mean in 95% of experiments (note that all is fixed per experiment)
+"highly statistically significant": p=1%
+exact tests would be hypergeometric
+significance level: H0 is real, but HA chosen (should be small value)
+power: HA is real and HA chosen
+Neyman-Pearson lemma: define number of positives large so that max power for given significance level -> the "usual" test is the best
+p-value = observed significance level
+t: fatter tails; only if small sample and o unknown
+o1^2+o2^2 -> pythagoras of random variables
+for proportions: use normal approx with binomial o^2 estimate; but should use same p for difference o^2?! -> use pooled estimate (take both samples together -> hat{p} -> use this as p but still use n1 and n2 for o1^2+o2^2->odiff^2); but not much different if you dont do pooling (unless samples very diff size)
+paired samples:
+* use single sample of differences
+* H0: population mean=0
+* use o^2 of differences
+* sdiff^2=sx^2+sy^2-2*r*sx*sy ! (or just calc on differences)
+nonparam paired sample:
+* do binomial on sign of diff; also works kind-of
+* no assumptions about distribution
+Randomized controlled experiment:
+* there is no population
+* random is which student got into which group
+* score of test/control group: only one score know; other score (not done) is hypothetical
+* hypothesis about combined group all taken together
+* but still can do s1^2/n1+s2^2/n2=s^2 ! don't pool
+* even though population size finite and groups not independent [negatively associated] (first would make s^2 bigger and second smaller -> cancel); only very small overestimate algebraically
+Chi^2 test for categorical:
+* use counts! compare to expected values
+* sum o-e=0
+* sum(o-e)^2/e -> approx chi^2
+* df = #categ - 1
+* binomial test better for 2 categories (for large sample size same result)
+Chi^2
+* exp=df; var=2*df
+Fisher vs Mendel:
+* assume model good; but data too good?
+* check std dev (i.e. chi^2)
+* check left tailed p-value
+Chi^2 of indep:
+* use expected counts
+* df=(n-1)*(m-1)
+
+plot chi^2 for 95%
+
+Berkeley Stat courses:
+* introduction; many exercises and practice; "only" 5 weeks per course
+* important and interesting notes; solid insights
+* too mathematical for Business Analyst
+
+what happens to entropy when you add variables; combine variables
+
+Learn Markov ineq.
+Plot normalized residuals plot
+
+Parallel axis plot
+Cumsum step plot
+
+Plotly:
+* plots basic plots
+* quite interactive
+* share online; even realtime
+
+Merck challenge:
+* sample all 15 case; minibatch learning for ReLU NN; dropout
+* ensemble with GBM and Gaussian Processes; very simple ensemble
+* training and test set were diff distribution
+* still low total correlation
+* multi-task NN
+* http://videolectures.net/nips2012_dahl_activity/
+
+http://vimeo.com/80151339
+* 25000 topics
+* merge taxonomies from many sources (reddit, NYT, ...)
+* track dwell time on story
+* implicit multiplication with Hessian inverse(?)
+* user interaction also higher for earlier articles
+* search engines might randomly permute some order
+* some imbalanced classes might give extreme weights when considering negative/positives training -> dont have some particular publishers
+* statistical bleeding: new article -> explorer shows this to user -> user likes -> exploiter shows this to other people
+* -> different rankers affect same weights; one ranker does better than it should
+* simpsons paradox; rankers when split to different mobile devices (e.g. people spend longer time on web than on mobile device) -> better always look at individual contributions
+* first build deterministic before making ML analysis
+
+Hierarchical text classification:
+* product categorization
+* taxonomy known; need to label products
+* unigram/bigram; add LDA topic suggestion (gensim)
+* hierarchy: either just flat; or create classifier for each split node (used here)
+* here multiclass logistic regression (didnt try much more)
+* calibration: check that value 0.9 corresponds to 90% samples
+* active learning for improvement: ask about points close to boundary or far away from existing samples -> mechanical turk
+* MapReduce for training; Python tool Dumbo
+* partial labeling: stop when probability low
+* most time feature engineering
+* too deep classifier hierarchy deteriorates quickly -> at some point rather flat multiclass classifier
+
+Sentiment Classification:
+* dictionary based: SentiWordnet, SenticNet, WordNet-Affect, LIWC
+* with ML: ratio of positive to negative; negations(not)/quantifiers(very)
+* Stanford deep learning 80% accuracy (Socher2013); pos/neg/neu labelled by humans; takes into account hierarchy
+* "not", "not very"
+* in facebook people can tag with emotions
+* chi^2 to select features (threshold 0.95)
+* can also use hash trick to limit feature size
+* could also use 2 classifiers for positive and negative
+* accuracy 80%, FPR 7-24%; fnr 9-24%
+* Turkish performs best (easiest to parse); French/Italian hard
+* use Hive, Presto, Dataswarm
+* sklearn can do incremental batch learning
+* Thrift service for classification
+
+Find a Bayesian Network
+* BNFinder
+* Bayesian network: no cycles (in reality hard to have)
+* scoring: usually with Bayesian or hypothesis testing
+* need to make sure that no cycles
+* or Dynamic Bayesian Networks have temporal dependence; can have cycles
+* BNFinder: assumes that either dynamical or contraints to make it acyclical
+*
+
+Gradient Boosted Regression Trees:
+* often in search engine ranking
+* RF bit better than GBRT on Kaggle
+* adv: diff loss functions (e.g. huber), detects non-linear feature interactions, heterogeous data
+* disadv: requires careful tuning, slow to train (but fast to predict), cannot extrapolate (like other trees)
+* not total black box
+* each tree is like gradient descent procedure
+* can do any differential loss function
+* 100 citation for algos for sklearn
+* sklearn.ensemble.GtadientBoostingClassifier
+* n_estimators, max_depth, loss
+* boosting: very shallow trees and only little randomizer
+* deviance plot to check overfitting; test error vs n_estimators
+* tune:
+  * tree structure: number, depth (better <6; has most influence), min_samples_leaf (e.g. 3)
+  * shrinkage: shrink predictions by learning rate; will run longer (training error closer)
+  * stochastic gradient boosting: subsample samples and features (latter often better when many features); better accuracy and runtime
+* gridsearch uses fork and therefore copies data
+* make final model on all data and slightly more complex
+* logreg can train on subsets and merge result
+* ridge regression no feature interactions
+* best first overfit; then generalize
+* sklearn.ensemble.plot_partial_dependence
+* baseplot(?), maps for matplotlib
+* similar results to R GBM
+* instead of onehot encoding: ordinal encoding, assign random number to level
+
+Most winning A/B test results are illusory
+------------------------------------------
+* statistical power:
+  * prob to detect true effect
+  * statsmodel.stats.power
+  * usually need 80%
+  * 5% uplift hard -> need 6000 conversion; 1600 for 10%
+* count how many tests you run
+* dont stop early (dont always look at results)
+* estimates of uplift generally too high
+* do second validation test
+
+MCMC vs NHST
+------------
+MCMC to estimate distribution of parameters of an arbitrary model
+no need for corrections in multiple tests(?)
+you could accept null if full interval (or normalized parameter) is still within -0.1...0.1
+
+Skymind and Deeplearning4j
+--------------------------
+* models:
+  * RBM (bipartite graph until equilibrium; hidden and visible states; OCR; restricted since no connection between visible or hidden)
+  * Deep Belief Net (best for sound; can do bag of word and also real tagging; is stacked RBM; LogReg at end)
+  * Convolutional Net (slice up image; best for object recognition)
+  * Stacked Denoising Autoencoder (similar to RBM; introduce and then learn)
+  * Deep Autoencoder (for information retrieval; to identify similar images)
+  * Recursive Neural Tensor Network (tree of feature vectors -> great for sentiment analysis; meant for sequential data; learn context [e.g. of words]; parse natural scene; how to compose; trains up and down; identify boundaries)
+  * Recurrent nets (for sequential data; very good to detect next character)
+* Netflix: RBM+collaborative filter
+* debug neural nets only visually
+* Gaussian rectified for continous
+
+Clustering:
+* Spectral clustering:
+  * works with any similarity; e.g. gaussian kernel on euclidean
+  * uses connectedness; close to some but not all
+  * estimates num of clusters
+  * use k-means on space of graph laplacian
+  * optional normalization
+  * unnormalized tries to balance size of clusters
+  * normalized tries to balance degree (approx to maxcut)
+  * can be slow due to NxN SVD
+
+Visual:
+* position, length, slope, angle, volume, color
+* vary saturation and luminance
+
+SQL:
+* clustered index: ordering same as that of data records; only one possible; e.g. primary k^ey
+* usually B+ trees
+* cursor: do operations by rows; very slow; OPEN cursor.... FETCH...CLOSE
+* trigger: executed on INSERT, UPDATE, DELETE
+* SciDB: column oriented; numerical arrays; ACID
+* NewSQL: relational + NoSQL; Google Spanner
+
+Coding:
+* simplest: project on dictionary
+* skd.sparse_encode(..., algorithm=...); e.g. threshold
+* matching pursuit (algo=omp): greedy remove of best code vectors (but failed if code book no orthogonal)
+* -> maybe this is best
+* how to get code book?
+* PCA cannot do overcomplete dict
+* k-means for dict
+* sparse coding: skd.dict_learning; whitening data first!
+* Hessian-free training useful
+* autoencoder:
+  * can add noise
+  * can make intermed layer sparse
+
+Unreasonable effectiveness of ConvNets, LeCun:
+* previously object detection: feature preprocessor MFCC, SIFT, HoG, Cuboids -> unsuperv: Gaussian, k-mean, sparse coding -> Pooling -> superv: linear classifier -> graphical model
+* now Filter+ReLU -> Pooling -> again... -> Filters+ReLU -> Graphical Models
+* soon even more unsuperv.
+* pooling = aggregate certain clusters
+* normalization: average removal, high pass filter; local contrast norm, variance norm
+* filter bank: dimension expandsion, project to overcomplete
+* non-linearity: sparsification, saturation, lateral inhibition, ReLU, shrinkage
+* pooling: max, Lp, logprob
+* often local minima equivalent
+* ImageNet new result 15% error (in top5 suggestions)
+* ImageNet: 2014 GoogLeNet won, VGG Oxford second
+* cheap to apply convnet as windows to full images
+* Image similarity metrics: siamese architecture
+* stereo vision from 2 images with convnet
+* scene parsing/labeling: label all pixels but what it belongs to (tree, sea, road, ...)
+* Torch7: extension of Lua
+
+
+HMM:
+* https://www.youtube.com/watch?v=jY2E6ExLxaw
+* prediction; filtering; swimming
+
+Postgres:
+* template DB for easy copy
+* hstore: store key/value in one cell
+* create index concurrently
+
+Dark knowledge:
+* little knowledge per parameter
+* ensembles: overfitting per model good
+* make small production model from ensemble
+* each neural net target put logN bits of constraint (output N-way softmax)
+* use high temperature softmax
+* combine model: take mean or geom mean
+* a lot of information in low wrong probabilities
+* -> raise temperature of softmax
+* try to match soft and hard targets
+* dropout: like training ensemble, but with weight sharing
+* much better than L1/2 since does not pull to zero, but to other model
+* dropout + run final with halfing = geometric mean of all 2^H ensembles
+* !use high temperature soft targets from learned neural net to train other neural net
+* -> small net can learn better from soft strong net, rather than from hard input directly
+* information in second best guesses (rather than single class hard target)
+* can even not show one class at all on soft targets; could raise bias of missing class to get same performance
+* e.g. train only 7/8; -> 50% error on others; adjust bias; -> 87% on other digits
+* -> e.g. training example does more work now
+* labels in hierarchy good, but not as good as soft targets; cant capture visual similarity
+* soft targets prevent overfitting
+* might need soft and hard targets to learn
+* also good if ensemble models watch others and adjust
+* can also train specialist models on some categories
+* better if you could show similar examples together
+* specialist models to refine within class; often best to use multiple specialist
+* train specialist on enriched data for short time
+* for big data: train one generalist model; many specialist models (regularize with generalist model)
+
+
+LSH (locality sensitive hashing)
+* good in high-dim
+* complexity well studied
+* hash likely to be equal if points near
+* (multiple hashes) e.g.: random projections and make bits by sign (aligned or not)
+  * vector: zero-mean, unit variance, Gaussian random vector
+  * number of hashes and bit determines recall and precision
+  * -> a will hash points whose angle is low
+  * equal if all of bits for one hash matches
+
+https://www.youtube.com/watch?v=omSTAwSjYc8
+Storm+Trident instead of Hadoop
+Clojure
+Storm: Marceline
+Spark: Flambo
+Web REPL: Cubert
+needs better visualization and linear algebra
+
+Lyft uses Amazon Redshift with Pandas/Python
+
+Whats wrong with deep learning
+==============================
+http://techtalks.tv/talks/whats-wrong-with-deep-learning/61639/
+* need unsupervised, memory
+* unsupervised: how make energy of unseen high?
+* deconvolutional net?
+
+Airbnb
+======
+* Aerosolve: interpretable for humans
+  * control forest interaction, quantization, ..
+  * non-linearity from additive splines
+
+Buy car
+=======
+* select 3 cars for test driving
+* go home to think
+* must have options?
+
+ML with Clojure at Yieldbot
+===========================
+* JVM
+* easy to deploy Jar to production
+* Cascalog on Hadoop first; now Marceline on Trident on Storm
+* Flambo: Clojure on Spark
+* Cubert: Web REPL for data exploration; like ipython notebook etc
+* visualization and linear algebra not good enough
+
+Luigi
+=====
+* not really for scheduling (use CRON)
+* supports Pig, Spark, ...
+* complete, output, requires functions
+* seems not so in depth
+
+Airbnb Frontend Evolution
+=========================
+https://www.youtube.com/watch?v=gMvvb6F8dgk
+* O2 CSS framework based on Bootstrap
+* Rails 3, Node.js
+* MySQL, Redis, HDFS, Postgres, DynamoDB, Kafka, RabbitMQ
+* jQuery, Backbone, Handlebars, React, CommonJS, ES6
+* hit wall with Backbone, Handlebar when components more complex and dynamic; no data binding (rerender slow) -> use React.js (good for stateful UI)
+* trying Flux
+* Narval: Javascript to JVM
+
+Spark Dataframes
+================
+https://www.youtube.com/watch?v=xWkJCUcD55w
+* DataFrames uses same optimization engine as Spark SQL
+* DF faster than Python/Scala RDD
+
+Docker
+======
+https://www.youtube.com/watch?v=GVVtR_hrdKI
+* Puppet great, but need to learn languages
+* VM: big disk image, long time to boot
+* !Docker in between: small and fast
+* VM: Multiple Guest OS on 1 Hypervisor on Host OS
+* Docker: Multiple Bin/Libs on 1 Docker engine on Host OS
+* looks like isolated system
+* one process per container
+* ship all containers
+* you can snapshot entire environment
+* image: how store/send application; container: how run appl.
+* docker cluster
+* docker-compose useful; more than 1 docker container
+* docker-machine, docker-swarm
+
+How to speak
+============
+* Start with promise: how they will empowered
+* Outline: Talk begins; people know where they are
+* Big 4:
+  * Cycle in on material: say again and again; since some people don't listen
+  * Verbal punctuation: verbal boundaries (e.g. "first..., second...")
+  * Near miss: explain something that isn't the concept but almost
+  * Ask a rhetorical question to the audience: should be frequent and answerable; wait a while to get answer
+* time and place: best time 10:30
+* well lit hall; ideally outside light; don't turn off light even for slides
+* hall should be full; choose size accordingly
+* room: slope -> people expect theatre
+* black board: you can draw, make lists, target to point at
+* reading slides is annoying
+* don't stand far from slides
+* don't use pointer to distract
+* props?
+* story; story only from you (not books)
+* stopping talk:
+  * don't thank [like you not sure the material is for audience]
+  * maybe joke
+  * deliver; remind promise and tell how fullfilled
+  * salute audience: it's been great to be here
+
+Google effective teams
+======================
+* Most important:
+  * Psychological safety: able take risk without being embarrassed -> team can learn
+  * Dependability: members get things done, high quality results on time
+  * Structure and clarity: clear goals, individual role responsibility, clear execution plan
+  * Meaning: find work personally important
+  * Impact: believe that work matters?
+* Imagine this was a big failure -> write down why -> discuss path around that
+* Leader: determine team philosophy
+* Manager: should display these attributes
+* Team: measure and reflect
+
+Trends in big data
+==================
+https://www.youtube.com/watch?v=sup9wgUxW94
+
+* stream analytics (Beam unifies batch and stream API)
+* in-memory (Alluxio, RocksDB key-value store, Arrow using modern SMID for columnar)
+* rapid devel (microservices connected by Kafka)
+* hybrid clouds
+
+Food as medicine
+================
+https://www.youtube.com/watch?v=d0IhZ-R1O8g
+
+* fish/chicken worse than beef?!; but both bad
+* animal protein: meat, egg white, dairy -> also bad
+* heme-iron (in animal) excess bad (also in beef)
+* cow milk too many hormones
+* less dairy -> less twins
+
+Spark mistakes
+==============
+https://www.youtube.com/watch?v=vfiJQ7wg81Y
+
+* dont make executors most granular -> doesnt use multiple tasks
+* leave out 1 core and 1 GB for OS
+* one executor per node wrong
+* --executor-memory: YARN adds 7% (max 384MB) for more memory (spark.yarn.executor.memory.overhead) fpr off heap memory
+* keep in mind YARN cluster mode -> 1 less core
+* HDFS throughput -> cores 4-6 per executor
+* leave out 1 core per node
+* #executor = #nodes*(#corespermachine-1)/5
+* #memory = (#totmemory-1GB)/(#executor/#nodes)*0.93
+* 5 cores / executor
+* 1 executor for AM
+* dynamic allocation: solves executor number problem
+
+* !java.lang.IllegalArguemtnException: Size exceeds Integer.MAX_VALUE -> no Spark shuffle block can be larger than 2GB (Spark uses ByteBuffer)
+* bad for SparkSQL since default partition number 200 (-> sprk.sql.shuffle.partitions); SPARK-6235
+-> increase number of partitions; reduce data skew
+* !should have about 128MB per partition
+* Spark uses different book-keeping when partitions > 2000 (diff. compression)
+* !-> bump 1900 partitions to 2001 for higher compression
+
+* slow join if data skew -> salting, add random data to key
+* for some small high cardinality value sets in join -> could do a simple separate map-join
+* nested types instead of cartesian joins
+
+* avoid shuffles (re-use keys, nested tables, pre-sorted storage)
+* treereduce over reduce
+* !use complex/nested types; ordered nested structures
+
+* java.alng.NoSuchMethodError (e.g. from protobuf) -> needed shadedPattern dependency in config; for using diff. library version
+
+Scheduling with Airflow
+=======================
+https://www.youtube.com/watch?v=60FUHEkcPyY
+* file based, lightweight: Drake
+* medium: Luigi (still file dependency)
+* abstract, scheduling, monitoring, batteries included: Airflow, Pinball
+* Pinball not so active, Airflow rather active
+* file based: cached data, simple, but no scheduler, poor alerting
+* abstract orchestration: no targets, just dependency, scheduling, monitoring, but more complex
+-> decided to use -> Airflow
+* wrote smart-airflow to also have file-based; to add data transfer between tasks; can find out in/out filenames
+* a lot of profiling visualizations
+* authentication
+* customers can trigger
+
+Rust
+====
+* memory freed automatically when scope left -> no GC cost
+* no cheating with pointers possible
+* compile time checks
+* markers for mutability; also checked
+
+Pony for Fintech
+================
+https://www.infoq.com/presentations/pony
+* data-race free type system
+* Rust also data-race free but different
+* type system sound
+* GC Actor when know that won't be active anymore
+* implemented order management
+* actors: modify message in queue, modify own state, create other actors, send messages to other actors
+* algorithms bit different (but similar to reactive programming)
+* every behavior on actor is logically atomic; cannot see heap mutation apart from its own
+* (guarantees only broken by calling C)
+* 240 bytes per object overhead
+* can reason about actors locally
+* if I can write, nobody can read
+* topology aware scheduling with work stealing; any number of cores (linear performance)
+
+Leadership
+==========
+* ethics, safety: everything dealt with fairly
+* provide goals
+* encourage organisational learning and new ideas
+* commitment to employees growth, feel supported
+* communicate often, success and fail together
+
+Alluxio
+=======
+* caching for any data source
+* useful when dataframe >=40GB
+
+Dynamic resource allocation
+===========================
+https://www.youtube.com/watch?v=oqWDeC1zmQw
+* driver: contains scheduler
+* cluster manager
+* worker: has executors
+* ask for new executors, when some tasks wait too long
+* ask cluster manager to give back executor, when idle too long
+* but data on executor might be killed
+* external shuffle service:
+  * shuffle write by separate daemon
+  * tracks where data is stored
+* config:
+  * enabled, initialExecutors, max/minExecutors
+  * schedulerBacklogTimeout: when ask for new executor
+  * exeutorIdleTimeout: when return executor
+  * sustainedSchedulerBacklogTimeout: when to ask again for executor, if not delivered
+  * spark.shuffle.service.enabled, .port -> use it!
+* it may time to start executor
+
+Neural Turing Machines
+======================
+https://www.youtube.com/watch?v=XwqWTX1pW4s
+* challenges:
+  * many parameters even after architecture (how many vectors read/write) -> very sensitive
+  * many parameters -> RAM
+  * sequential -> GPU not helpful
+  * numerically instable (big mistakes)
+  * often stuck
+  * need smart optimization
+* need gradient clipping -> so dont wipe parameters
+* loss clipping
+* Graves RMSprop: smooth out gradients
+* Adam optimizer
+* initialization important
+* curriculum learning
+* extension: Dynamic Neural Computer
+  * no index shift based addressing -> search direction
+  * allocate/deallocate memory -> easier to flag regions as off-limited to protect
+  * native sequence writing, temporal memory
+
+Smola lectures
+==============
+https://www.youtube.com/watch?v=QJzHp74UO00
+* P(min x_i>c*mu)<=c^-k
+* F of min/max is just power
+* 0.95**59 ~ 0.05
+* Chernov bound requires boundedness
+* median(avg(x_ij)) -> better tail bound
+* find k missing from all numbers [1...N] -> track sum x^p -> set of equations
+* stream: find moments sum n_i^p
+  * p=0: num distinct
+  * p=1: sum
+  * p=2: like variance
+* Flajolet-Martin counter
+
+Causality
+=========
+https://www.youtube.com/watch?v=X2j6QT4UDSs
+* Granger, Rubin, Pearl, Additive
+* uncorr=indep only if Gaussian
+* Causality = Mechanism
+* structual equation +  exogeneous randomness
+* for 2-var need interventions
+* for >2 var can learn some causality from prob distr
+* causality with graphs complicated
+* Immorality: learn some directions in a graph
+* learn undirected structure first
+* find immoralities
+* do interventions to learn remaining directions
+* if cannot intervene: make more assumptions
+* alternatives:
+  * numerical variables -> additive error
+  * entropy caisality for categorical variables
+
+H2o.ai
+======
+* Java
+* no high availability (one failure kills all) -> in development
+* + Spark: Sparkling water
+* new algorithms and parameters
+* H2O in each Spark executor in same JVM -> new devel with external H2O cluster
+* support for high cardinality joins
+* Zeppelin support
+* GPUs with DeepWater
+
+Sklearn
+=======
+* FeatureUnion: np.hstack; n_jobs?
+
+Optimal learning
+================
+* very few queries
+
+k-means new tricks
+==================
+https://www.youtube.com/watch?v=rtXeauFFCE4
+-> initialization, large data/parallel, many clusters
+* random init bad
+* take furthest point ok, but picks up noise
+* k-means++: sample propto (distance to nearest)^alpha
+* outliers less picked since only few
+* -> guarantees logK approx
+* init can be parallelized better
+* need about 5-10 diff initializations
+* indices for high k
+
+Spark monitoring
+================
+https://www.youtube.com/watch?v=mVP9sZ6K__Y
+* Spark uses Netty-based RPC
+* Event buses and Listeners
+* Spark UI only while context running -> or activate Spark history server
+
+Manage creative creativity
+==========================
+https://www.ted.com/talks/linda_hill_how_to_manage_for_collective_creativity
+Creative abrasion: constructive discussion, diversity/conflict
+Creative agility: act instead of plan, experiments instead of pilots
+Creative resolution: combine solutions
+Leader: set the stage, dont perform on it
+Everybodies slices of genius
+
+Apex (vs Spark)
+===============
+https://www.youtube.com/watch?v=sNqOX1Y4tcU
+* streaming needs windows and stateful even with failure
+* Apex can maintain state
+* low latency
+* lower level API with DAGs; slowly also make declarative API
+* schedule once and then process
+* parallel pipelines (without shuffles)
+* back-pressure automatic
+
+Security with X11 and Qt
+========================
+https://www.youtube.com/watch?v=-T1LoHTZDvs
+* X11:
+  * keylogger always possible
+  * command ingestion (e.g. into root windows)
+  * easy phishing by replacing windows
+* -> never run graphical applications as root
+* Wayland:
+  * fixes keylogger
+  * no injection
+  * currently still in KWin/Wayland
+  * but not all fixed
+
+What makes teams smarter
+========================
+* more than 50% women better
+* worse if few members dominate (bad apple)
+* better if high EQ (team driven by lowest EQ member; bad apple)
+
+Samza
+=====
+https://www.youtube.com/watch?v=fU9hR3kiOK0
+* things would be much easier if everything stream and subscribe+notify (instead of request/response)
+* subscribe to particular changes
+* maintain multipl "materialized views" for data log
+
+H20
+===
+https://www.youtube.com/watch?v=yjqmVHA2cFM
+* compute engine, algorithms in Java
+* can export as single Java file
+* distributed
+* gradient boosting even slightly faster than XBG from 10M instances
+* H20 Steam for production
+* also Web interface for data flow work (import, model, export)
+* use Pandas and convert to H20Frame
+* on cluster: run h2o.jar and connect to IP/port (multiple IPs if you have multiple machines)
+* h20 Flow: similar to notebook
+* use special .hex format for data
+* performance on https://github.com/szilard/benchm-ml
+* may have good distributed ML
+
+Faster Adhoc queries in Spark - OAP
+===================================
+https://github.com/Intel-bigdata/OAP
+https://www.youtube.com/watch?v=inG4jAyFmPE
+* user defined index
+* cache layer
+* 5x faster
+* open-source
+* on Spark 2
+* oap.jar included; OAP table format
+* also parquet compatibility layer to use existing parquet
+* data locality
+* Baidu + Intel
+
+Arrow
+=====
+https://www.youtube.com/watch?v=44Bu0o1nsD4
+* Apache standard for all columnar formats as *in-memory* data format
+* for inter-operability with Spark, Hive, Drill, Kudu, ..
+* easy serialization
+* 7GB/s data movement, 10GB/s Pandas integration
+* Arrow + Pandas + Vectorized
+* Pandas zero copy to/from Arrow
+* -> can use vectorized Pandas instead of UDF/for-loops
+* 5x faster
+* also for group-udf soon
+* groupBy().apply() with Pandas data frames
+* but Spark is row based;
+* hard to do local aggr. Jira 10915
+* soon RPC, IPC transfer
+* Spark 20396
+
+Rayleigh measures
+=================
+https://www.youtube.com/watch?v=oBH3vtyvRC8
+* log-concave can efficiently sample with MCMC
+* also find mode
+* many operations still keep log-concave property
+* what is analog of log-concavity?
+* 1D log-concave ok
+* plain log-concavity not good since would capture all of {0,1} coor distr
+* -> Strongly Rayleigh
+* 1D: Strongly Rayleigh <-> Sum of indep Bernoulli
+* Sum of Bernoulli is ultra log-concave
+
+Kubernetes
+==========
+https://www.youtube.com/watch?v=R-3dfURb2hA
+* Deployment
+* Scale
+* Monitoring
+* for Docker or others
+* Master knows about cluster
+* spec CPU, RAM, Filestorage
+* can restart/heal containers; recover
+* figures out where to deploy container
+* put to best spots
+* can tweak what to prioritize
+* rolling deployment
+
+== Pony
+https://www.youtube.com/watch?v=0XFhTrtOGK4
+* no latency (due to GC); per actor heap, concurrent GC
+* high concurrency
+* Hadoop 20% faster if sync all JVM GCs
+* data safety: reference capabilities
+* -> use only for high concurrency
+
+== Weld and Spark
+https://www.youtube.com/watch?v=OGVA79jWCf4
+* often memory-bound (rather than CPU)
+* often recreating intermediate results in memory
+* -> 5-30x slow-downs if many functions *piped*
+* !-> Weld: all map to "Common Intermediate Representation"
+* -> optimized
+* run on CPU, GPU
+* lazy evaluation
+* concepts:
+** parallel loops
+** builders/accumulators/reducer
+* can merge loops into one pass
+* !basically merges operations and optimizes; skip writing out large memory
+* faster than Numpy/BLAS, bit slower than Numexpr
+* Tensorflow added XLA doing a similar concept
+* easy to parallelize
+* Grizzly: integration with Pandas
+
+== How to build a great team
+https://www.youtube.com/watch?v=xMMBpRDwp1s
+* Psychological safety (risk without embarrassed; admit mistake, ask for help, learn)
+* Dependability (rely on team members to get things done on time)
+* Structure & Clarity (clear goals, plans, roles)
+* Meaning (personally meaningful to each of us)
+* Impact (believe the work matters)
+
+== Cloud providers for Spark
+https://www.youtube.com/watch?v=3uq8IiaV7fM
+* Amazon newest
+* BigBench benchmark
+* Google Dataproc: Hive MR 2x slower than Spark 2.1
+* !EMR, Azure HDInsight: Hive 2.1 Tez faster than Spark 2.1 at smaller data (10GB); similar at large data
+* above 1TB more tuning needed
+* Spark faster for ML
+* HDInsight: good Hive performance
+* Spark faster for large data
+
+== Parquet and Arrow
+https://www.youtube.com/watch?v=GGzkIoXqHXc
+* On-disk: multi-query, IO heavy, mostly streaming access
+* In-memory: single-query, CPU bound, also random access
+* Parquet:
+** compact, type encoding
+** optimized IO, projection/filter push down
+* Arrow:
+** optimized for modern CPUs (pipeline [instr already started, branch prediction], SIMD, cache local)
+** also nested data
+** scatter/gather IO (send raw binary buffers; no serialization)
+* can work on Arrow from other engines directly in Python (e.g. shared memory)
+* Non-volatile memory: half as slow than memory, but much cheaper
+* Xpoint flashdrive: 10x faster than SSD
+
+== Spark Data Skew
+https://www.youtube.com/watch?v=6zg7NTw-kTQ
+* some tasks slow and more data
+* e.g. SortMergeJoin
+* maybe BroadcastHashJoin small table
+* if not so small -> iterative Broadcast (broadcast *chunks* of smaller table); when smaller data has only unique keys
+* multiple passes
+
+== Activation functions
+https://www.youtube.com/watch?v=InwYnUNidzw
+* sigmoid: not zero centered -> always increase of decrease _all_ weights the same-> zigzag in backprop
+* -> tanh: max gradient larger than sigmod; output zero centred; but still vanishes at large values
+* ReLU:
+** fragile during training -> can die (when in zero gradient region)
+** but is it bad? can mean sparsity as well
+** -> maybe Leaky ReLU (flat linear in negative)
+* sigmoid bad; tanh might be slow; ReLU suggested
+* even though all end up same accuracy, but ReLU 5x faster than tanh (num steps)
+
+== Spark performance
+* https://www.youtube.com/watch?v=CRMmI9OZp-w
+* Spark metrics focused on compute only
+* monotasks (dont mix types so much); better telemetry; almost as fast
+
+== IPython protocol
+https://www.youtube.com/watch?v=GExKsQ-OU78
+* websocket Browser-Notebook
+* ZeroMQ Notebook-Kernel
+* different channels for ZeroMQ (as ports?)
+** Shell: private to notebook (e.g. execution request, object introspection, code completion)
+** IOPub: broadcast
+** stdin: ?
+* %connect_info to see connection details
+
+== Dashboards in Jupyter
+https://www.youtube.com/watch?v=i40d8-Hu4vM
+* traits: to send events
+* can set values or use UI -> connected
+* use .observe to update other objects on changes
+* ipywidgets
+* bqplot (2d plot)
+* pythreejs, ipyvolume (3d plots)
+* ipyleaflet (maps)
+* bqplot: also widgets and connected, e.g. fitting lines
+*! bqplot: interactivity
+*
+
+Making sense of JVM stack traces
+================================
+https://www.youtube.com/watch?v=LQHMMCf2ZWY
+* Python integration:
+  * Py4J + pickling
+  * pipes between Python and JVM
+* many logs returned -> rather guess what is going on first -> then check logs
+* logs:
+  * console (mixed with spark info)
+  * web ui: better since only logs
+  * jupyter: important parts missing -> check console instead (Spark-19094 can make cloud messages available in Jupyter)
+* -> use spark history server to get info after it has failed; 5 knobs
+* yarn.nodemanager.delete.debug-delay-sec -> higher number to ssh to container
+* use sc.setLogLevel interactively, otherwise too much or too little
+* JVM usually not interesting
+* web ui: click on error
+* Python pipelining opaque to Scala (only Scala map-map pipelining visible to debugging)
+* -> you could .cache() -> then required to go to JVM
+* could try take(1) or count()
+* functions with names better to debug than lambda
+* spark-testing-base provides examples for testing
+* don't put too much data in accumulators
+* accumulators may double-count, but good enough for debugging (counting errors)
+* "-mtrace" does not work (assumes PYSPARK_PYTHON points to a file and arg[0] has meaning)
+* OOM:
+  * JVM exception (OOM on joins, GC timelimit)
+  * Application Overhead exceeded (from YARN)
+  * Exceptions on Driver program
+  * Reasons:
+    * unbalanced shuffles (-> use more partitions)
+    * buffering of rows with Pyspark+UDF (-> use data subset selection more upstream)
+    * big records after pickling (esp. when forgot about references)
+    * too little memory for Python worker (YARN default 10% for Python -> increase)
+    * eager entire partition eval (e.g. sort + mapPartitions)
+    * too large partitions (unbalanced or too few)
+    * some low-level libs memory-leak
+* Debug:
+  * DAG in WebUI (less useful in Python)
+  * toDebugString (less useful in Python)
+  * Sample and run locally!
+  * try Python or JVM debugger (Python debugger: use broadcast +  singleton hack to start remote debugger on all interpreters!)
+* "Fast data processing with Spark" outdated!
+* "High performance Spark" good
+
+Spark and Parquet in Depth
+==========================
+https://www.youtube.com/watch?v=_0Wpwj_gvzg
+* Parquet Snappy fast with column selection (Snappy default)
+* Parquet Gzip fast with table scan
+* binary, columnar, encoded, compressed, machine-friendly
+* arbitrary nesting
+* spark.read.json for nested data
+* parquet-tools.jar can do parquet "cat"; "meta" for meta-data (some extra info)
+* files _SUCCESS, etc. off by default (in newer versions of Spark)
+* encodings:
+  * incremental encoding (e.g. only string changes)
+  * dictionary encoding (if only few distinct values)
+  * run length encoding, delta encoding, ..
+* parts of file:
+  * metadata
+  * group of rows (e.g. on nodes)
+  * each column as chunk; dont store null values
+  * shared "page" header in each column chunk
+  -> github.com/apache/parquet-format
+* pull only columns you need
+* .write.partitionBy(...).parquet(..)
+* spark.sql.parquet.filterPushdown = true (default) [PushedFilters]
+* -> only get what you get
+* PushedFilters limitations:
+  * doesnt work on nested column (SPARK-17636)
+  * doesnt work on strings (SPARK-17213) (only numeric)
+  * doesnt work on object stores (AWS S3) since no random access
+* cannot mutate Parquet on disk -> maybe partition folders instead, or combine with Cassandra, or write mode append
+* Tuning:
+  * S3A: df.read.option("mergeSchema", "false").parquet("s2a://..")
+  * coalesce changes number of compressed files produced
+  * make Parquet block size = HDFS block size
+  * sc.hadoopConfiguration.set("spark.sql.parquet.output.committer.class", "org.apace.spark.sql.parquet.DirectParquetOutputCommitter")
+  
+* 

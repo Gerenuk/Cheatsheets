@@ -1,0 +1,27 @@
+puts "Hello"
+set var "value"
+$var
+[FCT]
+[expr {$i*10}]
+
+if expr1 [then] body [elseif expr2 [then] body2 ... ] [else ...]
+
+switch $var {
+"a" {...}
+"b" {...}
+default {...}
+}
+
+while {$var<5} {...}
+
+for {set $i 0}{$i<10}{iner i} {...}
+
+proc $sum {a {b "def_b"}} {
+set x [expr {$a+$b}];
+return $x
+}
+
+set List {"a" "b" "c"}
+set List [split "a,b,c" ","]
+
+Math in Tcl6.html 

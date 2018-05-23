@@ -1,0 +1,642 @@
+////
+Status: Spark 1.6.2; some additions of Spark 2.0
+////
+
+= Spark
+
+:toc:
+
+== Initializing
+
+[cols="m,d"]
+|===
+| rdd = sc.*parallelize*(_data_)            | Upload data object to cluster
+| sqlContext = pyspark.sql.*HiveContext*(sc)    | Recommended. With HiveQL, Hive UDF, read Hive tables. `pyspark.sql.*SQLContext*(sc)` is deprecated since it is less powerful than `HiveContext` when the latter is available.
+| sqlContext.*setConf*(_key_, _value_)      | Set some configuration
+| pyspark.sql.SparkSession(ctx)             | Main entry point for DataSet and DataFrame (new in 2.0)
+| SparkSession.createDataFrame(data)        | Create DataFrame from RDD, list of pandas.DataFrame (new in 2.0)
+| SparkSession.range(start, end=None, step=1)   | Create single LongType column named "id"
+|===
+
+== Reading and writing data
+
+[cols="m,d"]
+|===
+| df = sc.parallelize([*Row*(a=1, b=2), *Row*(a=3, b=4)]).*toDF*()  | Create dataframe from RDD
+| df = sqlContext.*createDataFrame*([(1, 2), ..], schema=["_col1_", ..]) | Create DataFrame from tuple/list RDD
+| samplingRatio=..                          | Ratio of rows for schema inference; Only first row if `None`
+| df = sqlContext.*createDataFrame*([Row(a=1, b=2), ..])    | Create dataframe
+| df = sqlContext.*createDataFrame*([(1, 2), ..], schema=StructType([StructField("a", StringType(), True), ..])) | Create DataFrame from tuple/list RDD
+| df = sqlContext.*createDataFrame*(pd.*DataFrame*(..))     | Create dataframe
+| df.*registerTempTable*("_name_")          | Register RDD of Rows to a Dataframe for SQL
+| sqlContext.*registerDataFrameAsTable*(_df_, "_tablename_")    | Register DataFrame as temporary table
+| sqlContext.*refreshTable*("_tablename_")  | If Hive metastore updated externally
+| sqlContext.*range*(start, end=None, step=1)   | Create DataFrame with counting `id=..` column
+| df = sqlContext.*table*("_tablename_")    | return SQL table as DataFrame
+| sqlContext.*tableNames*(dnName=None)      | Return list of tables in database; use `.*tables*()` to get same result in DataFrame format
+| df.*createTempView*(_name_)               | Create atemporary view tied to SparkSession of DataFrame
+| df.*createOrReplaceTempView*(_name_)      | Creates or replaces temporary view
+|===
+
+=== DataFrameReader
+
+[cols="m,d"]
+|===
+| SparkSession.*read*                       | Get `DataFrameReader` for the following operations.
+| SparkSession.*readStream*                 | Returns DataStreamReader
+| SparkSession.*streams*                    | Return StreamingQueryyManager for managing StreamingQuery
+| sqlContext.*read*                         | Get `DataFrameReader` for the following operations.
+| .*csv*(path, ...)                         | CSV reader (new in 2.0)
+| .*json*(_path_, schema=None)              | Load JSON and return DataFrame
+| .*orc*(_path_)                            | Load ORC and return DataFrame
+| .*parquet*(_paths_)                       | Load Parquet file and return DataFrame; will discover partitioning sub-directories automatically
+| .*table*(_tablename_)                     | Load table and return DataFrame
+| .*text*(_paths_)                          | Load text file and return DataFrame
+| .*load*(_path_=None, format="parquet", schema=None)   | Load data and return DataFrame
+| .*jdbc*(_url_, _table_, ...)              | JDBC connection
+| .*schema*(_schema_)                       | Set input schema
+| .*format*("json")                         | Fix format
+| .*option*(_key_, _value_), .options(_**options_)  | Add input options
+| .*udf*                                    | Returns UDFRegistration for UDF registration
+|===
+
+=== DataFrameWriter
+
+[cols="m,d"]
+|===
+| sqlContext.*write*                        | Get `DataFrameWriter`
+| .*save*("_filename_", format="parquet")   | Write file
+| .*csv*(_path_, ...)                       | Write CSV; (new in 2.0)
+| .*json*(_path_)                           | Write JSON
+| .*orc*(_path_, partitionBy=None)          | Save in ORC format. Specify name of partitioning columns
+| .*parquet*(_path_, partitionBy=None)      | Save in Parquet format. Specify name of partitioning columns
+| .*parquet(_path_, *mode*="overwrite")     | Overwrite file
+| .*text*(_path_)                           | Save contents as Text file
+| .*save*(_path_, format=spark.sql.sources.default) | Save contents to data source
+| .*insertInfo*(_table_name_, overwrite=False)      | Insert contents into specified table
+| .*format*("json")                         | Specify output data format
+| .*mode*(_savemode_)                       | Specify savemode (`append, overwrite, error, ignore`)
+| .*jdbc*(_url_, _table_, ..)               | Save contents into external database via JDBC
+| .*option*(_key_, _value_), .*options*(_**options_)    | Add output options
+| .*partitionBy*(_*cols_)                   | Partition output by given columns
+| .*saveAsTable*(_name_)                    | materialize data and create pointer in HiveMetastore; creates managed table (location controlled by MetaStore)
+| df.*writeStream*                          | Interface to save content of stream into external storage
+|===
+
+Overwriting data is controlled with the SaveMode parameters (error, append, overwrite, ignore). When writing Parquet, all columns are automatically converted to nullable for compatibility.
+
+=== Streaming
+
+[cols="m,d"]
+|===
+| pyspark.sql.streaming.StreamingQuery      | (new in 2.0)
+| pyspark.sql.streaming.StreamingQueryManager   | (new in 2.0)
+| pyspark.sql.streaming.DataStreamReader(_spark_)   | (new in 2.0)
+| pyspark.sql.streaming.DataStreamReader(_df_)  | (new in 2.0)
+|===
+
+== Getting information
+
+[cols="m,d"]
+|===
+| df.rdd.count()                            | Force evaluation
+| df.rdd.*getNumPartitions*()               | Return number of partitions
+| df.*columns*                              | Return list of columns as list
+| df.*describe*(_*cols_)                    | Compute statistics for columns
+| df.*dtypes*                               | Get list of types `[("_col1_", "_type_"), ..]`
+| df.*explain*()                            | Print execution plan for debugging
+| df.*isLocal*()                            | True if `collect()` or `take()` can run locally without Spark executors
+| df.*printSchema*()                        | Print column names and types
+| df.*schema*                               | Return `StructType` schema
+| df.*show*(n=20, truncate=True)            | Print first rows; Truncate long values if needed
+| df.*first*()                              | Return first row
+| df.*head*(n=1)                            | Return first rows; If n=1 then only Row object returned
+| df.*take*(_n_)                            | Return first rows
+|===
+
+== Metadata
+
+[cols="m,d"]
+|===
+| df.*rdd*                                  | Return RDD from DataFrame
+| df.*stat*                                 | Returns DataFrameStatFunctions
+| df.*alias*("_newname_")                   | New name for DataFrame
+| df.*name*(alias)                          | Same as `alias`
+| df.*toDF*()                               | Return new DataFrame
+| df.*toJSON*()                             | Return RDD of JSON string
+| df.*toPandas*()                           | Return as Pandas DataFrame
+| df.*withColumnRenamed*(_oldname_, _newname_)  | Return new DataFrame with renamed column
+| df.*isStreaming*                          | True if Dataset contains sources that are streaming
+| df.schema.fields                          | Get column data (name, type, nullable, ..)
+|===
+
+== Query data
+
+[cols="m,d"]
+|===
+| sqlContext.*registerFunction*("_funcname_", _pythonfunc_, returnType=StringType) | register Python function as UDF so that it can be used in SQL; `returnType` is of `DataType`
+| df = sqlContext.*query*(_sqlQuery_) +
+  df = sqlContext.*sql*(_sqlquery_)         | Execute SQL
+| df._varname_, df["_varname_"]             | Column access
+| df.*collect*()                            | Collect as data as list of Row
+| df.*count*()                              | Number of rows
+| df.*distinct*()                           | Return distinct rows
+| df.*drop*(_col_)                          | Drop a column
+| df.*dropDuplicates*(subset=None)          | Drop duplicate rows; alias `drop_duplicates()`
+| df.*filter*(_condition_)                  | Filter rows; alias `.*where*()`; Condition is `Column` of `types.BooleanType` or a strong of SQL expression (?)
+| df.*groupBy*(_*cols_)                     | Return `GroupedData`; `_cols_` is name or `Column`; alias `.*groupby*()`
+| df.*intersect*(_othertablename_)          | Return new DataFrame with intersection of rows
+| df.*join*(_other_, on=None, how="inner")  | `on=` is column name, list of column names, join expr (Column) or list of columns; `how=` in `["inner", "outer", "left_outer", "right_outer", "leftsemi"]`
+| df.*limit*(num)                           | Limit result count
+| df.*orderBy*(_*cols_, ascending=True)     | Return new sorted DataFrame; `ascending=` can be list of Boolean for multiple columns; alias for `.*sort*()`
+| df.*select*(_*cols_)                      | Select columns and return new DataFrame
+| df.*selectExpr*(_*expr_)                  | Project a set of SQL expressions and return new DataFrame
+| df.*sortWithinPartitions*(_*cols_, ascending=True) | Sort within each partition; see `.*sort*()`
+| df.*subtract*(_other_)                    | Return new DataFrame with rows which are only in first DataFrame
+| df.*union*(_other_)                       | Return new DataFrame with union of rows; same as `UNION ALL`; in Spark <2.0 use `unionAll`
+| df.*withColumn*(_colname_, _colexpr_)     | Return new DataFrame by adding column or replacing existing with same name
+| df.select(F.mean("_col_")).collect()[0][0]    | Get mean value
+|===
+
+Shorthands on DataFrames:
+
+* like `df.*rdd*`: `df.*map*()`, `df.*flatMap*()`, `df.*foreach*()`, `df.*foreachPartition*()`, `df.*mapPartitions*()`
+* like `DataFrameNaFunctions`: `df.*dropna*()` (`.*drop*()`), `df.*fillna*()` (`.*fill*()`), `df.*replace*()`
+* like `DataFrameStatFunctions`: `df.*corr*()`, `df.*cov*()`, `df.*crosstab*()`, `df.*freqItems*()`, `df.*sampleBy*()`
+
+== Analytics queries
+
+[cols="m,d"]
+|===
+| df.*randomSplit*([weight1, ..], seed=None)    | Random split of DataFrame with weights (will be normalized if sum!=1)
+| df.*sample*(_withReplacement_, _fraction_, seed=None) | Return sampled subset
+| df.*cube*(_*cols_).*count*()              | Create multidimensional cube (groupBy?) to run aggregations
+| df.*rollup*(_*cols_).*count*()            | Create multi-dimensional rollup (?)
+| df.*toLocalIterator*()                    | Returns iterator; size same as largest partition (new in 2.0)
+|===
+
+== Optimizations
+
+[cols="m,d"]
+|===
+| df.*coalesce*(_numPartitions_)            | New dataframe with new number of partitions
+| df.*persist*(storageLevel=..)             | Set persist storage level
+| df.*repartition*(_numPartitions_)         | Return new has-partitioned DataFrame; if Column given, then will be used as first partitioning column (?)
+| df.*unpersist*()                          | Mark as non-persistent
+|===
+
+== Grouped Data
+
+[cols="m,d"]
+|===
+| .*agg*(_*exprs_)                          | Aggregate with available functions (`avg, max, min, sum, count`); `_exprs_` can be `{_name_:_aggfunc_}`; `_expr_` can also be a `Column` expression (`pyspark.sql.functions`)
+| .*avg*(_*cols_)                           | Average for all numeric columns; alias `.*mean*()`
+| .*count*()                                | Number of rows in each group
+| .*max*(_*cols_)                           | Max for all numeric columns
+| .*min*(_*cols_)                           | Min for all numeric columns
+| .*sum*(_*cols_)                           | Sum for all numeric columns
+| .*pivot*(_colname_, _values_=None)        | Pivot and perform specified aggregation; `_values_` is list of value to be used on columns
+|===
+
+== Column Data
+
+[cols="m,d"]
+|===
+| .*alias*(_*alias_)                        | Return column with new name; Multiple names needed for `explode` etc.
+| .*asc*() +
+  .*desc*()                                 | Return sort expression based on column order
+| .*astype*(_datatype_)                     | Convert column into new datatype; alias `.*cast*()`
+| .*bitwiseAND*(_other) +
+  .*bitwiseOR*(_other) +
+  .*bitwiseXOR*(_other)                     | Binary operator
+| .*getField*(_fieldname_)                  | Unpack values which are Rows and get field
+| .*getItem*(_key_)                         | Unpack dict or list and get value by dict-key or list-index
+| F.*when*(_cond_, _value_).*when*(_cond_, _value_).*otherwise*(_value_)    | Case conditions
+| .*substr*(_startpos_, _length_)           | Return substring
+|===
+
+=== Boolean column result
+
+[cols="m,d"]
+|===
+| .*between*(_lower_, _upper_)              | Boolean expression whether `lower <= x <= upper`
+| .*isin*(_*values_)                        | Boolean if values in given set; alias `.*inSet*()`
+| .*isNotNull*()                            | If not null
+| .*isNull*()                               | If null
+| .*like*(_other_)                          | Binary(?)
+| .*rlike*(_other_)                         | Binary(?)
+| .*startswith*(_other_) +
+  .*endswith*(_other_)                      | Binary(?)
+|===
+
+=== Windowing
+
+    from pyspark.sql import Window
+    window=Window.partitionBy("name").orderBy("age").rowsBetween(-1, 1)
+    df.select(rank.over(windows), min("age").over(window))
+
+[cols="m,d"]
+|===
+| Window.*orderBy*(_*cols_)                 | Create `WindowSpec` with ordering; can also be applied on `WindowSpec`
+| Window.*partitionBy*(_*cols_)             | Create `WindowSpec` with partitioning; can also be applied on `WindowSpec`
+| WindowSpec.*rangeBetween*(_start_, _end_) | Frame boundaries _by value_ (start/end inclusive) 
+| WindowSpec.*rowsBetween*(_start_, _end_)  | Frame boundaries _by row index_ (start/end inclusive)
+| F.*window*(_timeCol_, _windowDuration_, _slideDuration_=None, _startTime_=None)   | Bucketize rows into one or more time windows given timestamp specifying column (new in 2.0)
+| F.*cume_dist*()                           | Return cumulative distribution with window (fraction of rows below current row)
+| F.*dense_rank*()                          | Return rank of rows within a window partition (without any gaps when ties; e.g. 1,2,2,2,3)
+| F.*lag*(_col_, count=1, default=None) +
+  F.*lead*(_col_, count=1, default=None)    | Return value that is offset rows before/after current row; `default` if there are not enough rows
+| F.*ntile*(_n_)                            | Return ntile group id (1 to n) in an ordered window
+| F.*percent_rank*()                        | Return relative percentile (use column in `Window.orderBy`)
+| F.*rank*()                                | Return rank of rows within partition
+| F.*row_number*()                          | Returns sequential number starting at 1
+| F.percent_rank().over(Window.orderBy("col"))  |
+|===
+
+* `rangeBetween`: default window is `(-inf, now)`; a future (positive) value for `_end_` also works
+
+== Row data
+
+[cols="m,d"]
+|===
+| .*asDict*(recursive=False)                | Return dict
+|===
+
+== DataFrameNaFunctions
+
+[cols="m,d"]
+|===
+| df.*na*                                   | Return `DataFrameNaFunctions` for handling missing values
+| df.*drop*(how="any", tresh=None, subset=None) | Drop rows with null valeus; `how` in `["any", "all"]`; `thresh` is integer as specifies minimum number of required non-null columns (overwrites `how=`)
+| df.*fill*(_value_, subset=None)           | Replace null values; Use `dict` for `_value_` to specify individual fill values (in that case `subset` ignored); type mismatching columns ignore for filling
+| df.*replace*(_toreplace_, _value_, subset=None) | Replaces values with another; `dict` for `_toreplace_` allows multiple replacements (then `_value_` ignoreed); both parameters can also be a list for multiple replacement
+|===
+
+`NaN` semantics:
+
+* `NaN`==`NaN` is true
+* in aggregations `NaN` grouped together
+* `NaN` is normal value in join keys
+* `NaN` are sorted larger than any other value
+
+== DataFrameStatFunctions
+
+[cols="m,d"]
+|===
+| df.*sampleBy*(_col_, _fractions_, seed=None)  | Return stratified sample without replacement based on fraction given on each stratum
+| df.*corr*(_col1_, _col2_)                 | Get correlation; currently only Pearson
+| df.*cov*(_co1l_, _col2_)                  | Get covariance
+| df.*covar_samp*(_col1_, _col2_)           | New column with sample covariance (new in 2.0)
+| df.*covar_pop*(_col1_, _col2_)            | New column with population covariance (new in 2.0)
+| df.*crosstab*(_col1_, _col2_)             | Get contingency table; Less than 1e4 distinct values; At most 1e6 non-zero pair frequencies returned; Result is table with columns ["col1_col2", "valcol2_1", "valcol2_2", ..]
+| df.*freqItems*(cols, support=0.01)        | Find approximate frequent items (false positives possible); `support=` minimum frequency (must be >=1e-4)
+| df.*approxQuantile*(_col_, _prob_, _relerr_)  | Approximate quantile (by Greenwald-Khanna); rank = N*(p +/- relerr)
+|===
+
+== Types
+
+[cols="m,d"]
+|===
+| from pyspark.sql.types.DataType import *  | Import types and helper functions
+| .*fromInternal*(_obj_)                    | Convert from internal SQL object to native Python object
+| .*toInternal*(_obj_)                      | Convert Python object to internal SQL object
+| .*json*()                                 | ?
+| .*jsonValue*()                            | ?
+| .*needConversion*()                       | Test to avoid unnecessary conversion of `ArrayType, MapType, StructType`
+| .*simpleString*()                         | ?
+| .*typeName*()                             | ?
+|===
+
+Possible types are `NullType`, `StringType`, `BinaryType` (byte array), `BooleanType`, `Datetype`, `TimestampType`, `DecimalType(precision=10, scale=0)`, `DoubleType`, `FloatType`, `ByteType`,
+`IntegerType`, `LongType`, `ShortType`, `ArrayType(_elementtype_)`, `MapType(_keytype_, _valuetype_)`, `StructType(_fields_)`/`StructField(_name_, _type_)`
+
+== Functions
+
+[cols="m,d"]
+|===
+| import pyspark.sql.functions as F         | Import functions
+| *approxCountDistinct*(_col_, _rsd_=None)  | ?
+| *array*(_*cols_)                          | Create array column
+| *array_contains*(_col_, _value_)          | True of array contains given value
+| *asc*(_col_) +
+  *desc*(_col_)                             | Return ascending/descending sort expression
+| *ascii*(_col_)                            | Numeric value of first character of string column
+| *broadcast*(_df_)                         | Mark as small enough to be used for broadcast
+| *coalesce*(_*cols_)                       | Return first column which is not Null
+| *col*(_name_)                             | Return column based on given name; alias `column()`
+| *collect_list*(_col_)                     | Return list of objects
+| *collect_set*(_col_)                      | Return set of objects
+| *count*(_col_)                            | Return number of items in group
+| *countDistinct*(_*cols_)                  | Return new `Column` for distinct count
+| *crc32*(_col_)                            | Calculate cyclic redundancy check of binary column
+| *explode*(_col_)                          | Return new row for each element in given array or map (new in 2.1)
+| *posexplode*(_col_)                       | Returns a new row for each element with position in given array or map
+| *expr*(_str_)                             | Parse source code into expression that it represents
+| *get_json_object*(_col_, _jsonpath_)      | Extract json object from json path specified
+| *greatest*(_*cols_) +
+  *least*(_*cols_)                          | Return greatest/smallest value in list of columns; null ignored; return null iff all null
+| *input_file_name*()                       | Create column for file name of current Spark ask
+| *isnan*(_col_)                            | True if column is NaN
+| *isnull*(_col_)                           | True if column is Null
+| *json_tuple*(_col_, _*fields_)            | Create new row for a json column according to given field names (extract from json)
+| *lit*(_value_)                            | Create column of literal value
+| *md5*(_col_)                              | MD5 hash
+| *monotonically_increasing_id*()           | Generates monotonically increasing 64-bit integers; They do not need to be consecutive since it is calculated with partitionId! (generates values >8e9)
+| *nanvl*(_col1_, _col2_)                   | Return col1 if not NaN or col2 otherwise
+| *sha1*(_col_)                             | Return hex hash
+| *size*(_col_)                             | Return length of array or map
+| *sort_array*(_col_, asc=True)             | Sort input array
+| *spark_partition_id*()                    | Partition ID
+| *struct*(_*cols_)                         | Return struct column
+| *udf*(_func_, returnType=StrinType)       | Create `Column` expression representing a user defined function
+| *when*(_condition_, _value_)              | Evaluate condition and return value; None is `otherwise()` not used; `condition` is boolean Column; `value` is literal or `Column`
+| *create_map*(_*cols_)                     | Create a new map column
+|===
+
+    >>> df.select(create_map("name", "age").alias("mymap")).collect()
+    [Row(mymap={"Alice":2}), Row(mymap={"Bob":5})]
+
+=== Math functions
+
+[cols="m,d"]
+|===
+| *avg*(_col_)                              | Average
+| *cbrt*(_col_)                             | Cube root
+| *conv*(_col_, _fromBase_, _toBase_)       | Convert number base
+| *hash*(_*cols_)                           | Hash code of columns
+| *hypot*(_col1_, _col2_)                   | Compute sqrt(a^2+b^2)
+| *kurtosis*(_col_)                         | Return Kurtosis
+| *max*(_col_)                              | Return maximum
+| *mean*(_col_)                             | Aggregate function to return average
+| *min*(_col_)                              | Return minimum
+| *rand*(seed=None)                         | Generate uniform random column 0 to 1
+| *randn*(seed=None)                        | Generate standard normal
+| *rint*(_col_)                             | Return double that is the closest integer
+| *round*(_col_, scale=0)                   | Round to scale decimal places
+| *bround*(_col_, scale=0)                  | Round using HALF_EVEN mode
+| *shiftLeft*(_col_, _numBits_)             | Shift bits left
+| *shiftRight*(_col_, _numBits_)            | Shift bits right
+| *shiftRightUnsigned*(_col_, _numBits_)    | Shift bits right
+| *skewness*(_col_)                         | Return skewness
+| *stddev*(_col_)                           | Return unbiased sample standard deviation
+| *sum*(_col_)                              | Return sum
+| *sumDistinct*(_col_)                      | Return sum of distinct values
+| *unhex*(_col_)                            | Inverse of hex
+| *var_pop*(_col_)                          | Aggregate function for population variance; alias `variance()`
+| *var_samp*(_col_)                         | Aggregate function for unbiased sample variance
+|===
+
+There are many more mathematical functions.
+
+=== Aggregation functions
+
+[cols="m,d"]
+|===
+| df.*agg*({"_col_": "max"})                | Aggregate; shorthand for `df.groupBy.*agg*()`
+| df.*agg*(F.*min*(df._col_))               | Aggregate; `from pyspark.sql import functions as F`
+| *first*(_col_)                            | Aggregate function to return first element
+| *last*(_col_)                             | Aggregate function to return last value in a group
+| *grouping*(_col_)                         | Indicate 1 when specified column is aggegrating in result set
+| *grouping_id*(_*cols_)                    | Return bit-vector of level of `grouping`s
+|===
+
+    df.cube("name").agg(grouping("name"), sum("age")).show()
+
+=== String functions
+
+[cols="m,d"]
+|===
+| *concat*(_*cols_)                         | Concat multiple string columns to one
+| *concat_ws*(_sep_, _*cols_)               | Concat multiple string columns to one with separator
+| *decode*(_col_, _charset_) + 
+  *encode*(_col_, _charset_)                | De-/encode binary to string
+| *format_number*(_col_, _numDecimals_)     | Format number to number of decimal places
+| *format_string*(_format_, _*cols_)        | Format arguments in printf style
+| *initcap*(_col_)                          | Capitalize first letter of each word
+| *instr*(_str_, _substr_)                  | Locate position of first occurence of substring; 1-based; 0 if not found; null if either null
+| *length*(_col_)                           | Calculate length of string or binary expression
+| *levenshtein*(_left_, _right_)            | Compute Levenshtein distance
+| *locate*(_substr_, _str_, pos=0)          | Locate position of first occurrence of substr in a string column, after position pos; 1-based; 0 if not found
+| *lower*(_col_)                            | Make strings lower-case
+| *lpad*(_col_, _len_, _pad_) +
+  *rpad*(_col_, _len_, _pad_)               | Left/Right-pad string column to width `len` with character `pad`
+| *ltrim*(_col_) +
+  *rtrim*(_col_)                            | Trim spaces from the left/right
+| *regexp_extract*(_str_, _pattern_, _idx_) | Extract specific idx group identifier by Java regex
+| *regexp_replace*(_str_, _pattern_, _replacement_) | Replace all matching subtrings
+| *repeat*(_col_, _n_)                      | Repeat string column n times
+| *reverse*(_col_)                          | Reverse strings in column
+| *soundex*(_col_)                          | Return SoundEx
+| *split*(_str_, _pattern_)                 | Split string around pattern
+| *substring*(_str_, _pos_, _len_)          | Substring starts at `pos` is of length `len` (for byte array returns slice for binary)
+| *substring_index*(_str_, _delim_, _count_)    | Substring before/after (for `count`>0/`count`<0) the `count`-th occurence of `delim`; case-sensitive
+| *translate*(_col_, _oldChars_, _newChars_)    | Translate characters by translation table
+| *trim*(_col_)                             | Trim spaces from both ends of string
+|===
+
+=== Time functions
+
+[cols="m,d"]
+|===
+| *year*(_col_)                             | Extract year
+| *quarter*(_col_)                          | Extract quarter
+| *month*(_col_)                            | Return Month
+| *dayofmonth*(_col_)                       | Extract day of the month
+| *dayofyear*(_col_)                        | Extract day of the year
+| *weekofyear*(_col_)                       | Return week of the year as integer
+| *hour*(_col_)                             | Extract hours
+| *minute*(_col_)                           | Return minutes of time
+| *second*(_col_)                           | Extract seconds
+| *trunc*(_datecol_, _format_)              | Truncate to unit specified (`format` is `year, month`)
+
+| *add_months*(_start_, _months_)           | Add number of months to date
+| *months_between*(_date1_, _date2_)        | Return number of months between dates
+| *date_add*(_start_, _days_)               | Add number of days to date
+| *date_sub*(_start_, _days_)               | Remove number of days from date
+| *datediff*(_end_, _start_)                | Return number of days difference
+
+| *current_date*()                          | Return current date as column
+| *current_timestamp*()                     | Return current timestamp as column
+| *last_day*(_col_)                         | Return last day of the month
+| *next_day*(_datecol_, _dayOfWeek_)        | Return next weekday after given date; `dayOfWeek` can be `mon, tue, wed, thu, fri, sat, sun` (case-insensitive)
+
+| *date_format*(_col_, _format_)            | Format date to string as `java.text.SimpleDateFormat`
+| *from_unixtime*(_timestamp_, format)      | Convert seconds since 1970 to string (current timezone)
+| *from_utc_timestamp*(_timestamp_, _tz_)   | Assume timestamp is UTC and convert to given timezone
+| *to_date*(_col_)                          | Convert StringType or TimestampType into DateType
+| *to_utc_timestamp*(_timestamp_, _tz_)     | Assume timestamp is in timezone and convert to UTC
+| *unix_timestamp*(timestamp=None, format="yyyy-MM-dd HH:mm:ss")    | Convert time with given pattern to unix time stamp; default timezone
+| *date_format*(_col_, "u")                 | Day of the week as number 1=Monday (https://docs.oracle.com/javase/8/docs/api/java/text/SimpleDateFormat.html)
+|===
+
+== Reading and creating data
+Call `.table` on SQLContext with name of table to get DF. Type inference performed if `spark.sql.sources.partitionColumnTypeInference.enabled=true`.
+Schema and evolution and merging supported if `spark.sql.parquet.mergeSchema=true`. Spark SQL can infer JSON schema. JDBC connection possible.
+
+=== Hive and Spark
+Hive needs to be enabled when compiling Spark. Hive jar needs to be present on all worker nodes to access serializer (SerDes). Hive config in `hive-site.xml`, `core-site.xml` and `hdfs-site.xml`.
+In YARN cluster mode, `datanucleus`jars and `hive-site.xml` need to be available on driver and all executors. Internally Spark will compile again Hive 1.2.1 and use this for internal execution,
+independent of the version of Hive connected to.
+
+Spark SQL tries to use own Parquet support rather than Hive SerDe if `spark.sql.hive.convertMetastoreParquet=true`).
+Hive case-insensitive, Parquet not. In Hive all columns nullable, Parquet not.
+
+Optimizations in Hive that are not used in Spark yet:
+
+* Hive buckets
+* UNION type
+* Unique join
+* column statistics collecting (currently only sizeInBytes)
+* Block level bitmap indexes and virtual columns
+* automatically determine number of reducers for joins
+* meta-data only query
+* skew data flag
+* STREAMTABLE hint in join
+* merge multiple small output files to avoid overflowing HDFS metadata
+
+== Performance
+
+[cols="m,d"]
+|===
+| sqlContext.*cacheTable*("_tablename_")    | cache table
+| sqlContext.*uncacheTable*("_tablename_")  | uncache
+| df.*cache*()                              | cache table
+| spark.sql.inMemoryColumnarStorage.compressed=true | select codec based on column statistics
+| spark.sql.inMemoryColumnarStorage.batchsize=10000 | Batch size for columnar caching; Larger can improve memory and compression, but risk OOM
+| sparl.sql.autoBroadcastJoinThreshold      | Max bytes of table that will be broadcast on join; default 10MB, disable with -1; only for pre-analyzed Hive Metastore tables; may be automated in future
+| spark.sql.shuffle.partitions=200          | Number of partitions to use when shuffling data for joins or aggregations; may be automated in future
+|===
+
+== Querying data
+
+    schema=StructType([StructField(_fieldName_, _sparkType_), ...])
+    sqlContext.*createDataFrame*(_tupleRdd_, schema)
+
+Datasets: use specialized Encoder, Spark can filter/sort/hash without derserializing
+
+== Cookbook
+
+    df.withColumn("name", df.col.cast("timestamp"))
+    df.withColumnRenamed("name", "newname")
+    df.describe().show() # modify with pandas for better output
+
+    from pyspark.sql.functions import udf
+    from pyspark.sql.types import ArrayType, StringType
+    func_udf=udf(func, ArrayType(StringType()))
+    result=test_df.withColumn("match", func("col"))
+
+    
+== TODO
+
+.http://spark.apache.org/docs/latest/api/python/pyspark.html#pyspark.RDD[RDDs]
+|===
+| command                                   | description
+| groupByKey([numtasks])                    | without numtasks depends on parent
+| pipe(command, [envVars])                  | pipe through shell command, 
+| cogroup(other)                            | `(K,V), (K,W) -> (K, It<V>, It<W>)` (aka `groupWith`)
+| coalesce(numPart)                         | decrease number of partitions (e.g. after filter)
+| repartition(numPart)                      | shuffle
+| rdd.subtractByKey(other)                  | Remove keys which are also in other
+|===
+
+== Partition operations
+
+|===
+| mapPartitions                             | `It -> It` on each partition
+| mapPartitionsWithIndex                    | `(Idx, It) -> It` on each partition
+| repartitionAndSortWithinPartitions(partitioner)   | sort keys (pushes sorting into shuffle machinery)
+|===
+
+Common functions `map`, `filter`, `flatMap`. +
+Set functions `union`, `intersection`, `cartesian`. +
+Reduce list with `sample`, `distinct`. +
+Joins for paired RDD `join`, `leftOuterJoin`, `rightOuterJoin`.
+
+Common actions `reduce`, `collect`, `count`.
+Sample with `first`, `take(n)`, `takeSample(withRepl, num)`, `takeOrdered(n, [orderfunc])`
+
+Saving with `saveAsTextFile`, `saveAsSequenceFile`, `saveAsObjectFile`
+
+|===
+| countByKey()                              | return `(K, cnt)`
+| foreach(func)                             | for side-effects; usually for accumulator
+|===
+
+.http://spark.apache.org/docs/latest/api/python/pyspark.sql.html#pyspark.sql.DataFrame[DataFrame]
+|===
+| df.show()                                 | content
+| df.printSchema()                          | columns and types
+|===
+
+== New in Spark 2.0
+
+* DataFrame = DataSet of Row (in Python no DataSet though)
+* SparkSession instead of SQL/HiveContext
+* new Py4J bridge
+* slightly different persistence levels
+* better SQL filter push down
+* Better:
+** accumulator
+** aggregator for DataSets
+** performance (whole stage code generation)
+** parquet, orc, catalyst, window
+* SQL2003 support, subquery support
+* New:
+** native CSV
+** Hive style bucketing
+** approx statistics (quantil, Bloom, count-min sketch)
+** ML persistence
+** Structured Streaming to use same API against streaming sources
+
+== Future ideas
+
+* faster Python<->Spark (Tungsten, Arrow) (13391, 13534)
+* Dask integration?
+
+== Tips
+
+* out-of-date: Fast data processing with Spark
+* buy: High performance Spark
+
+== Tuning
+
+* not nice: Graph tools, counters/accumulators
+* DataFrame can even do some operations on serialized data
+* write Scala UDFs (use on DataFrames) -> need to use internal variables though (_jvm, _j..., ...)
+* if >1e9 columns -> schema slow since JSON
+
+== Pyspark
+
+* Py4J (call Java<->Python through sockets) + pickling (slow)
+* RDD usually from pickled objects
+* Spark SQL keeps in JVM longer
+* on workers JVM<->Python through pipe
+* Python workers take extra time
+* Jython pull request exists (13571)
+
+== YARN
+
+* https://stackoverflow.com/questions/33099601/how-are-containers-created-based-on-vcores-and-memory-in-mapreduce2[Container creation]
+
+== Using with PyCharm
+
+* Go to File > Preferences > Project: [Project Name] > Project Structure
+* Click 'Add Content Root'
+* Add <SPARK_PATH>/python
+* Click 'Add Content Root'
+* Add <SPARK_PATH>/python/lib/py4j-[version]-src.zip
+* Go to Run > Edit Configurations... > Defaults > Python > Environment Variables
+* Add name: "SPARK_HOME", value: <SPARK_PATH>
+
+* Use  `spark-submit` with Python script
+
+== UNSORTED
+
+filter("true") selects all
+size(collect_set(..).over(..))   | Do count distinct of set (since `countDistinct` sdoesnt work on window?)
+F.instr(col(".."), "substr")>0  # search substring
+df.sort(F.desc("col"))
+df.orderBy(F.desc("col"))
+
+* https://developer.ibm.com/hadoop/2016/08/03/is-cpu-scaling-impacting-your-hadoop-performance/[CPU scaling] may affect performance
+

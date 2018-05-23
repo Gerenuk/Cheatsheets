@@ -1,0 +1,26 @@
+Weka:
+* 4 choices:
+  * Explorer
+  * Experimenter (performance comparisons)
+  * Knowledge flow (graphical interface)
+  * Simple CLI (command line interface)
+* a lot of classifiers
+* classifiers give text output
+* J48: C4.8 (last free) in Java
+* can do manual classifier (UserClassifier [tree]): select rectangle and polygons in data
+* 10cv better variance than 10x random cv?!
+* tree can be pruned by confidence (keep default values)
+* kNN = Weka IBk
+* kNN n\to\infty, k\to\infty k/n\to 0 --> error approaches theoretical minimum
+* Weka boundary visualizer (visualization menu)
+* trees/m5p: trees of regression models
+* many methods; not fully logical interface; boundary visualizer but ugly
+
+stratified CV: each fold has right ratio of classes
+Click on data point
+set colors
+does new dataframe from df[] inherit properties?
+graph language to easily do things 
+baselinr classifier: guess majority; or a simple tree? 1 level; OneR method (when too simple or too complex) Rob Holte 1993
+classes output their parameters
+

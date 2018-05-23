@@ -1,0 +1,318 @@
+Blogs:
+FastML
+PyData Videos
+ShapeOfData
+DataElixir NL
+DataScienceWeekly NL
+
+David Chudzicki
+Jake VanderPlas
+
+Coolinfographics
+DataScienceInGermany (Scoop)
+KaggleBlog
+
+Reddit/ML
+DataTau
+
+Regex: \w
+Text Analysis
+Dirichlet Mixture Models
+Plot quick ROC of Rote Classifier
+Make quick RF
+
+Database normalization:
+* divide tables with relations to minimize redundancy
+* no insert/update/deletion anomalies; update only one place
+* denormalization only for performance
+
+Motivated: business case that helps people
+
+Algorithms:
+
+Supervised:
+Regression: OLS, LR, LOESS, MARS
+Regularization: Ridge, Lasso, ElasticNet
+Classification: DT (CART, C4.5, GBM), NaiveBay, SVM, LDA, RF
+ANN: Perceptron, ConvNet, RBM (learn prob.distr.; bipartite; hidden/visible units; stack -> deep believe), Autoencoders
+Timeseries: ANN, Linear
+Recommendation: Collaborative filtering
+EM, PAC, VC, Boosting
+
+Unsupervised:
+* Clustering: kNN, DBSCAN
+* Dim Red: PCA, SOM, Mappings, t-distr. stochastic neighbor embedding
+* Association: Apriori
+* ICA (min. mutual info; split into additive; into non-gaussian)
+
+Ensembles:
+* boosting: adding weighted weak learners; data reweighted; e.g. AdaBoost; but easily overfits if noise (unless branching program based booster)
+
+Reinforcement Learning
+* Q-learning
+
+PCA:
+* first component explains most variance; others orthogonal and also explain most of remaining variance
+* alternatively minimize variance from line (line through multidimensional mean); others minizmize variance after correlation with previous subtracted
+* sensitive to variable scaling
+* need mean centering first (for above interpretations of max. variance); otherwise first EV will look like mean
+* eigenvalues and -vectors of XT*X
+
+MARS:
+* Multivariate adaptive regression splines
+* Opensource "Earth"
+* c_0+sum c_i*B(x)
+* B=max(0,x-const) or B=max(0,const-x)
+* B=product of hinges
+* can be combined with link function for GLM
+
+LDA:
+* GDA = LDA + QDA(unequal cov.)
+* find linear combination of features which characterize or separate classes; assumes normal distribution
+* related to ANOVA (ANOVA: cat. indep + cont dep.; DA: cont. indep. + cat. dep.); LR and Probit Regr. more similar to DA (use these if no Gaussian)
+* vs PCA: PCA does not model differences
+* vs Factor analysis: factor analysis treats indep./dep. equal
+* for cat. indep. -> Discriminant Correspondence Analysis
+
+Hadoop (2005):
+* distributed FS (HDFS) + processing (MapReduce)
+* fail-tolerant resource management; replication
+* scale-free; doesn't know about size of hardware
+* one master (for small networks)
+* Java (or other)
+* ML: Mahout
+* Pig, Hive,  Spark (2009; keep in-memory; MLlib)
+
+Factor analysis:
+* explain variables by fewer underlying unobserved factors
+* variables are linear combination of factors plus error term (equiv. to low-rank approximation)
+* related to PCA but not equal
+
+Compressed sensing:
+* for reconstructing a signal
+* theorem 2004 and fewer samples than sampling theorem needed
+* solve underdetermined linear system
+* optimization; constraint: sparsity/incoherence
+* use L1 or L0 norm for sparsity
+* for many problem L1 equiv to L0 (Candes)
+* L1 linear program; but with noise basis pursuit denoising preferred since preserves sparsity despite noise
+* multiply both sides by wide matrix Q; know alpha from (QD)a=(Qx); knowing QD and Qx only
+
+HMM:
+* Markov process with unobserved hidden states
+* transition probabilities in hidden states; output/emission probabilities from hidden states
+* "simplest dynamic Bayesian network"
+* for temporal pattern recognition, speech, handwriting, ...
+* generalization to pair/triple models for more complex data structures and nonstationary data
+* forward algorithm; forward-backward algorithm; Viterbi algorithm
+
+BIC:
+* BIC=-2 ln(likelihood)+ #freeparam * ln(#datapoints)
+* asymptotic result if data distr is from exponential family
+
+word2vec (2013):
+* words to high dim space
+* similar words near
+* similar relations are parallel lines
+* meaning from words around them
+* shallow ANN
+* multiple algorithms (CBOW, Skip-gram, ..)
+* scales well
+
+Sparse modeling:
+* L0 norm on alpha NP-hard:
+  * L1 norm as relaxation -> basis pursuit
+  * greedy methods -> matching pursuit, orthogonal MP
+  
+Hypersearch: monotonic; single mode; golden search; incremental search (search one param first); log-golden; 2D golden
+
+= Support Vector Machines =
+* Kernels:
+  * linear faster than RBF
+  * RBF (tuned) always as good or better than linear kernel
+  * linear good enough if a lot of features
+  * linear of number of features larger than number of observations
+  * RBF when more observations than features
+  * if number of observations larger than 50000 use linear instead of RBF due to speed
+
+*********
+* glmnet from R uses and approximation which makes it faster but less accurate
+
+
+signals, multiply sin^2 window
+cluster on 32 sample long; sparse coding or kmeans
+see where reconstruction doesnt match signal
+
+for text classification multigram model do only slightly better than plain unigram model
+event model with naive bayes better: xi=index of i-th work in email (rather than xi=0/1 depending
+on whether word appears in email); not understoof why first works better
+  
+
+SVM large margin = small VC dimension
+
+mean-mode \approx 3(mean-median)
+
+Cluster measure:
+* modularity: number of edges in cluster / (number of edge you'd expected from a random graph with same total number of edges)
+
+Tweets can predict citation numbers
+
+Structured prediction:
+* predict vector of output variables y=(y1,..,yn)
+* e.g. multilabel classification, sequence tagging, image segmentation (want locality)
+* labels correlated
+* pairwise structured models:
+  * argmax_alllabels weight*scoring(x,y) -> need to approx alllabels
+  * make assumptions about correlation structure; e.g. say where you want to model correlations (e.g. neighbor pixels)
+  * Estimator =
+    Learner (learns weights w)
+    + Model (how does correlation graph look like)
+    + Inference (computes argmax; hard)
+* model=ChainCRF(inference="max_product")
+  ssvm=OneSlackSSVM(..)
+  ssvm.fit(X, y)
+* have transition parameters
+* for chain model inference easy by dynamic programming in linear time
+* for loops hard; can do in pystruct
+* classes:
+  * exact algorithms: "max-product" for chain or tree; {"ad3":{"branch_and_bound":True}} (slow, but always work)
+  * relaxed: "lp" linear programming (slow); "ad3" dual decomposition
+  * approximate/heuristics (fast): "max-product" loopy message passing; "qpbo"
+* OpenGM good C++ lib for many inference algorithms for PyStruct
+
+Bengio Deep Learning
+* https://www.youtube.com/watch?v=exhdfIPzj24
+* AI:
+  * need knowledge
+  * need learning (prior, optimization, efficient computation)
+  * need generalization (guess probability mass)
+  * need fight curse of dim
+  * need to disentangle underlying explanatory factors (make sense of data)
+* Curse of dim: need smooth assumption
+* most data concentrates on manifold -> map to new space
+* GG Image search (Bengio/Weston NIPS2010, Bengio NIPS 2000):
+  * map images to (100 dim) space
+  * map keyword to space, too
+* Machine translation improvements (encoding/decoding problem -> parametrization grows linearly with languages, not quadratic); like universal language
+* some functions a lot more efficiently if multiple hierarchies (would need exponential size with 2 layers)
+* deep learning: can split input space in may more not-independent linear regions with constraints (e.g. mirror responses by folding)
+* 2006: unsupervised pretraining (RBM, auto-encoder, sparse coding)
+* each parameter can influence many regions
+* Bengio: gradual disentangling manifolds
+* limitation of backprop: relies on infinitesimal representations; but very deep nets yield too sharp non-linearities; also not biologically plausible
+* idea: neurons try to predict future value and also match past; observation also clamped
+* 
+
+Learned from Kaggle:
+* https://www.youtube.com/watch?v=9Zag7uhjdYo
+* example competitions:
+  * automated graders; just as good as human grader (disagreement between humans the same as to machine) for large essays (worse for short answers to questions)
+  * toxicity prediction: many features
+  * yandex: personalize results
+* computer vision, NLP harder; good results slower
+* automated grading:
+  * lowercase, alphanum, porter, spelling correction
+  * 1-3 word grams
+  * many regex hand-engineered; predict regex probabilities
+  * Boruta, RF, GBM
+  * OR: alternatively character 4-6 grams, 200 LSI
+* usually winning method already ensemble and best
+* Merck: log transform, Multiclass of NN with dropout on all input; Gaussian process regression
+* rapid iteration useful!
+* thinking about problem deeply rarely useful
+* RF feature importance (boruta in R)
+* RF, GBM often useful
+* NLP: porter stemmer (normalize words to stem)
+* deep learning (caffe, theano, torch7)
+* factorization machines!
+* usually code not production quality
+* usually no computationally efficient solution
+* good to normalize single measure (many approaches)
+* evaluate many approaches on one problem
+* often finds data leakages (target variable info which won't be there in test set; e.g. future info, ids, ...)
+
+
+Merck:
+* clusters in 2nd vs 3rd PCA but didnt help
+
+
+News
+----
+* DARPA awards 3M$ to "Continuum Analytics" to develop:
+  * scientific computation library "Blaze" [make numpy more useful for Big Data; out-of-core computations/distributed/stream]
+  * visualization systen "Bokeh" (part of 100M$ XData Big Data effort)
+* 4M$ to KnowledgeVis/universities for open source "Visualization Design Environment"
+* 3M$ to Georgia Institute of Technology for scalable ML
+
+Software
+--------
+Storm & Kafka: stream processing
+Dremel (e.g. Google SaaS with BigQuery) & Drill (Opensource): very fast analytics on huge data
+R: works with Hadoop
+SAP HANA: free in-memory analytics
+Gremlin: Graph analysis
+Pregel: Google graph processing
+Giraph: free Apache iterative Graph processing with high scalability
+Neo4j & InfiniteGraph: Graph DB
+Julia http://julialang.org/: new language for technical computing; parallelism
+
+
+Python frameworks
+-----------------
+Bulbflow (http://bulbflow.com/)
+- for graph databases
+- Gremlin query
+- pluggable to neo4j or rexster
+
+Bokeh
+- DARPA financed open source ggplot equivalent for Python
+
+PySpark
+
+NumbaPro
+PyCUDA
+
+PiCloud
+- Python bundled with packages (numpy, scipy, pandas, scikit,...)
+
+Augustus https://code.google.com/p/augustus/
+- building statistical models too large for memory
+
+H20 http://0xdata.github.io/h2o/
+- maths and statistics for Hadoop
+
+
+Python
+------
+RPython
+- subset of Python
+- very fast
+- statically typed (ML-like)
+- but many features missing
+
+ML Algorithm shoud be
+---------------------
+- consistent: for N->\infty converges to true underlying process (e.g. uniform distribution without patterns)
+- confidence: how probable is the result for a given sample
+
+Single linkage clustering:
+can be dont in O(n^2) with SLINK
+
+Probabilistic programming:
+http://probabilistic-programming.org/wiki/Home
+
+
+http://blog.kaggle.com/2016/07/21/approaching-almost-any-machine-learning-problem-abhishek-thakur/
+* for text do TFIDF and TruncatedSVD
+* greedy feature selection for AUC: https://github.com/abhishekkrthakur/greedyFeatureSelection
+* for feature selection with RF keep n_estimators low and not much tuning (to avoid overfitting)
+* feature selection possible with SelectKBest(chi2)
+* models:
+  * classification: RF, XGB, LR, NaiveBayes, SVM, kNN
+  * regression: RF, XGB, LR, RIdge, Lasso, SVR
+* abhishek4@gmail.com
+
+
+You can try this: In one of the 5 folds, train the models, then use the results of the models as "variables" in logistic regression over the validation data of that fold. Weights obtained in this manner will be more accurate, and I bet the SVM, elastic net and LR will have negative weights or close to zero.
+
+CoCoA: Communication Efficient Coordinate Ascent

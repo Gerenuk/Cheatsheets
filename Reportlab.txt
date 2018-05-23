@@ -1,0 +1,38 @@
+Reportlab
+* create PDFs, create charts
+* usually Adobe Tools, JAWS PDF creator; to automate: Quark, Word, Framemaker
+* global config reportlab/rl_config.py
+
+pdfgen:
+* lowest level; paint on canvas
+* page 10
+* draw on canvas or change state (e.g. current fill, stroke color, ...)
+* operations page 13
+* need PIL to show images
+* .drawImage prefered (image stored only once; can use multiple times)
+* .drawInlineImage (stores bitmaps; if image small and not repeated)
+* canvas.showPage() to end page; will forget all state changes
+* state changes: page 15
+* colors gray, additive, subtractive
+* metadata: page 16
+* position on page: from lower, left corner
+* use canvas.translate(...) to move origin
+* scaling changes everything; linewidths too
+* .saveState(), .restoreState()
+* overlap: overPrint for printer; alpha for screen
+* CMYK: better control for printers
+* .setFont()
+* .drawString()
+* for text use: textobject objects (page 28)
+* character and word spacing
+* lines with different corner joins possible (page 36)
+
+* fonts and encodings page 47
+* outline trees page 56
+
+Platypus:
+* for page layout, page 59
+* DocTemplates: outmost container
+* PageTemplates: page layouts
+* Frames: regions for flowing text
+* pdfgen.Canvas: lowest level

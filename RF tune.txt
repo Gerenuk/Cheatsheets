@@ -1,0 +1,11 @@
+* max_features: higher when many useless features; may slow down quadratically; if higher -> need less trees
+* n_estimators: choose large, but will be slow
+* min_sample_leaf: >0.01%?
+
+* deeper trees -> less bias
+* more trees -> less variance
+* exponential in max_depth
+
+* maybe: first feature select (but with min_sample_leaf) -> retrain; tweak n_estimators, min_sample_leaf
+
+* limit depth (~5) if few samples

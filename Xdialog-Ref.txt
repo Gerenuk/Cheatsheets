@@ -1,0 +1,17 @@
+Xdialog [<common options>] [<transient options>] <box option>
+
+Exit code after one Xdialog command:
+0: OK, Yes, Next
+1: Cancel, No
+2: Help
+3. Previous
+255: Error or Windows manager close
+
+Results go to stdout with (default) separator "/"
+
+common options:
+-title <title>
+-center | -left | -right | -fill		# text alignment
+
+box options:
+"Text" 0x0		#	in this case: 0x0=autosize

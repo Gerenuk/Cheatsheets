@@ -1,0 +1,58 @@
+= Sorting
+* minimum comparisons ceil(log2(n!)) up to n=11
+* sorting networks optimal in comparisons up to at least n=12
+* best general purpose sorting network is Nlog^2N
+* there are N.logN algorithms but they either have very large factors or are incorrect for a few inputs
+* most sorting networks not stable
+* network being able to sort 0s and 1s only, can sort any numbers (theorem)
+
+= Top 10
+* Monte Carlo method or Metropolis algorithm, devised by John von Neumann, Stanislaw Ulam, and Nicholas Metropolis;
+* simplex method of linear programming, developed by George Dantzig;
+* Krylov Subspace Iteration method, developed by Magnus Hestenes, Eduard Stiefel, and Cornelius Lanczos;
+* Householder matrix decomposition, developed by Alston Householder;
+* Fortran compiler, developed by a team lead by John Backus;
+* QR algorithm for eigenvalue calculation, developed by J Francis;
+* Quicksort algorithm, developed by Anthony Hoare;
+* Fast Fourier Transform, developed by James Cooley and John Tukey;
+* Integer Relation Detection Algorithm, developed by Helaman Ferguson and Rodney Forcade; (given N real values XI, is there a nontrivial set of integer coefficients AI so that sum ( 1 <= I <= N ) AI * XI = 0?
+* fast Multipole algorithm, developed by Leslie Greengard and Vladimir Rokhlin; (to calculate gravitational forces in an N-body problem normally requires N^2 calculations. The fast multipole method uses order N calculations, by approximating the effects of groups of distant particles using multipole expansions)
+
+= Very simple hash
+Fowler-Noll-Vo hash:
+hash0=OFFSET
+forall x:
+   hash <- (hash*PRIME) XOR x
+   
+= Red-Black-Tree
+Average and Worst case:
+* Search/Insert/Delete: Log
+* Space: N
+* efficient in-order traversal
+* analogous to B-tree of order 4 (B-tree more general though)
+
+= BK-Tree
+* quickly find fuzzy string matches
+* using triangle inequality
+
+= Point location (http://en.wikipedia.org/wiki/Point_location):
+* determine which region (from disjoint set) a query point lies
+* clever decomposition techniques (e.g. slab decomp., hierarchy of triangles, monotone lines decomp., randomized trapezoidal decomp. (most practical))
+* trapezoidal decomp.: lines up and down from each point (until hits an edge); build directed acyclic graph for querying
+* 2D: query logN, space N
+* 3D: query log^2N, space N logN (maintain several planar point location data)
+
+= Generate random permutation iteratively
+* http://stackoverflow.com/questions/28990820/iterator-to-produce-unique-random-order
+* http://preshing.com/20121224/how-to-generate-a-sequence-of-unique-random-integers/
+* use variable width encryption since 1-1-mapping (e.g. Hasty Pudding, Feistel (at least 4 rounds))
+* use Permutation polynomials of finite fields
+* use A*k mod N (where N and A relatively prime; i.e. ggT=1)
+
+
+++++++++++
+* lowest common ancestor: find ancestor in tree
+* multi-string search: Aho–Corasick algorithm
+* maximum subarray problem: find the contiguous subarray within a one-dimensional array of numbers which has the largest sum (can contain negative numbers!)
+
+scipy.optimize.fmin: simplex downhill optimization

@@ -1,0 +1,49 @@
+Need Icons for: Begin Cases
+
+Start typing:
+Ctrl-Space	# complete command	
+Alt-Space	# complete environment
+
+Movement:
+Ctrl-Alt-Arrow	# Bullets
+Ctrl-Alt-E		# Environme
+Ctrl-Alt-G		# TeX Group
+
+Selecting (Ctrl-Alt-S), Deleting (Ctrl-Alt-D):
+Paragraph, Environ.,...
+
+Ctrl-Shift-F 	# Full Screen Mode
+
+Move:
+Ctrl-PgUp		# Linewise
+
+Preview:
+Ctrl-Alt-P		# Environ, Selection
+
+Selection:
+Ctrl-Shift-6		# to matching bracket
+
+Editing:
+Ctrl-K			# Delete Line
+
+Quick:
+Alt-Shift-D		# Subscript
+Alt-Shift-U		# Superscript
+Alt-Shift-L		# \left
+Alt-Shift-R		# \right
+Alt-Shift-H		# \item
+Alt-I				# insert (graphics)
+
+Wizard:
+Precreate Math, Float, Tabular
+
+Bookmark
+
+Edit:
+Comment out lines
+Join lines
+Indent
+
+Own:
+Ctrl-Alt-
+Itemize, Align, Cite, En

@@ -1,0 +1,5 @@
+= Misc
+* San Francisco housing prediction features: Num jobs, salary jobs, num places to live -> very good performance
+
+= Time series
+* hard to beat SARIMAX (e.g. Python https://github.com/tgsmith61591/pyramid)

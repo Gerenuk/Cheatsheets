@@ -1,0 +1,83 @@
+Low rank matrix factorization
+* https://www.youtube.com/watch?v=kfEWZA-b-YQ
+* kMeans also just matrix approx if regarded as perfect solution (each point to only one cluster; min quadric)
+* V \approx WH
+* solve linear equations, transform data, compress data
+* methods: kMean, SVD, NMF, Archetypal Analysis, Binary matrix factorization, CUR decomposition, ...
+* Python Toolbox: PyMF (from Fraunhofer); support HDF, sparse matrices
+* can also keep W fixed and find H only
+* PCA:
+  * not non-negative (not perfect for data analysis)
+  * WT*W=1
+  * for compression or filter out noise
+  * always perfectly optimal for given k; always be orthogonal
+  * finds average faces
+* mdl=PCA(data, num_bases=..)
+  mdl.factorize()
+  V_approx=np.dot(mdl.W, mdh.H)
+* NMF:
+  * W,H>=0
+  * NP hard for global solution (but known to exist)
+  * often W converges to partial representation (reconstruct data by summing)
+  * -> not complete faces but rather parts which have to be summed (ear, ..)
+* Archetypal analysis:
+  * min_WH ||V-VWH||^2; W,H>=0 (convexity); sum columns W,H=1
+  * probabilistic combination
+  * archetypes are most extreme data points!
+  * allow probabilistic interpretation of archetypes (due to constraints) -> good for data analysis (interpretable)
+  * archetypes have highest pairwise distance between them
+  * O(n^2) solver; but efficient for large data exist
+* PCA: compressed; kMeans: groups; NMF: parts; AA: opposites
+* simplex volume maximization fast
+
+Introduction to CV
+* https://www.youtube.com/watch?v=O4_kWEDd52o
+* SimpleCV
+
+Decreasing uncertainty
+* https://www.youtube.com/watch?v=jtkSaHC6Hy0
+* curse of dim -> use weakly informative priors or penalized regression
+* Weakly informative priors:
+  * Y~N(X*b,sigma); likes Cauchy-0.25(l,s) prior for coef b
+  * credible interval: chance of being in limit right now
+  * confidence interval: chance of being in limit if repeated experiment
+  * weakly informative prior: confidence intervals much smaller
+  * -> Andrew Gelmans secret weapon
+  * "Stan" package for MCMC (faster than BUGS)
+* Penalized regression:
+  * penalty term added to regression
+  * glmnet: gives coef: which minimize; and which minimize when error still within 1std error
+  * penalized regression can't do confidence intervals easily
+* Bayesian interpretation of penalized regression:
+  * look at posterior mode
+  * -> ridge prior: normal; lasso prior: laplace prior (exp.)
+  * -> tighter confidence intervals; greater interpretability
+
+Hochreiter Neural Network Notes
+===============================
+Solution to vanishing gradient:
+* pre-train network
+* ReLU
+* LSTM
+* Highway net
+* ResNet
+* Ky Fan: showed that if activation=activation-old+term then solved
+
+* SGD actually good since creates entropy and reaches flat minima
+
+Self-Normalizating NN
+---------------------
+* ANN Kaggle successes (apart from images) actually only HIGGS, Tox21, Merck Activation
+* ReLU+norm best at 2-3 layers only
+* !usually ANN unstable on inhomogeneous data (cannot do too much regularization either), but Self-Normalizing NN work
+* best slope 1.05 (>1)
+* only SeLU start to become better than RF
+* SeLU can work with 8 layers
+
+GANs
+----
+* use two-time-scale to avoid oscillations
+* Coulomb GANs: go along high field direction
+
+
+

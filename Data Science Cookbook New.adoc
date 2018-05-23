@@ -1,0 +1,6 @@
+== Integrate with Sympy
+
+    from sympy import *
+    init_printing()
+    a, b=symbols("a b")
+    simplify(integrate(a, (a, -oo, oo)))

@@ -1,0 +1,73 @@
+TXT2TAGS
+http://txt2tags.org/userguide/
+
+Structure:
+ - Header: first 3 lines, or the line blank if no header; first line is title
+ - Config: after header, ends when body starts
+ - Body: first valid text line (not comment or setting)
+
+Config:
+%! keyword : value
+keywords: target (html), options (command line), style (css), encoding, preproc (find replace of strings), postproc
+%!preproc: STR_ABBREV STR_SUBST
+
+User config:
+%HOMEPATH%\_t2trc
+
+Commands:
+| %!include: OTHER.t2t | include other document; options for verbatim or raw inclusion |
+| %!includeconf: CONFIG.t2t | include other config |
+
+Text formatting:
+**BOLD**, //Italic//, __underline__, --strike--, ``monospaced``, ""raw"", ''tagged''
+(no spaces between)
+
+Sections:
+= Title1 =
+== Title2 ==
++ NumberedTitle1 +
+++ NumberedTitle2 ++
+
+Lines:
+% comment line
+``` verbatim line
+""" raw line
+''' tagged line
+
+Paragraphs:
+``` verbatim lines ```
+""" raw lines """
+''' tagged lines '''
+%%% comment lines %%%
+
+Lists:
+- list
++ numbered list
+: definition
+  def text
+<TAB> quote
+nesting by indent
+two blank lines to close all lists
+one empty line closes current list
+
+Elements:
+| ---- | separator; at least 20 chars |
+| ==== | strong line; at least 20 chars |
+| %%toc | table of contents |
+
+Tables:
+|| Title
+| A | B | C |
+space before first pipe means centered align
+final pipe only in first row needed
+closing with more than one pipe means column span
+
+Formatting:
+| = Title = | title, more marks is deeper nested (max 5) |
+| + Numbered Title + | numbered title, more marks is deeper nested (max 5) |
+| [Label URL] | URL Link |
+| [FILE.jpg] | image (must end gif, jpg, png or similar) |
+| [anchor] | anchor |
+| [link # anchor] | link to anchor |
+
+

@@ -1,3 +1,6 @@
+= Machine Learning Notes
+
+:toc:
 :stem:
 
 == Linear regression
@@ -167,3 +170,222 @@ asciimath:[Sigma(X)=sf"cov"(X,X)]
 * for normal data, for each CI procedure there is an equivalent Bayesian with a certain prior (Jeffrey, Lindley)
 * CI have difference shape in result parameter space (even 100% CI may be nested in some 50% CI)
 * checking whether a parameter is included in credible interval is wrong
+
+== Imbalanced data
+
+=== Oversampling
+
+* Naive
+* SMOTE (generate new)
+** no relation to kNN results, no specific to whether in/out-lier
+** 3 variants in imblearn: generate new at border (kind=borderline1, borderline2, svm)
+* AdaSYN (generate new):
+** generate new next to original which are "wrong" by kNN
+** focusses on outliers only
+* SMOTE and AdaSYN use same algorithm to generate http://contrib.scikit-learn.org/imbalanced-learn/stable/over_sampling.html#mathematical-formulation[Ref]
+** generate new X on line to one of nearest neighbours
+* effect: http://contrib.scikit-learn.org/imbalanced-learn/stable/over_sampling.html[imb_learn]
+** SMOTE generates peculiar streaks  between existing samples
+** AdaSYN seems to fill within "simplex"
+* can do multiclass; one-vs-rest if need neighbourhood
+
+=== Undersampling
+
+http://contrib.scikit-learn.org/imbalanced-learn/stable/under_sampling.html#mathematical-formulation[Imblearn Explanation]
+
+* controlled: specifying desired sample numbers
+** RandomUnderSampler
+** NearMiss: adds heuristics to select sample; 3 different types with parameter `version` (http://contrib.scikit-learn.org/imbalanced-learn/stable/auto_examples/under-sampling/plot_nearmiss.html#sphx-glr-auto-examples-under-sampling-plot-nearmiss-py [Ref])
+* cleaning: automatic determination of samples to clean
+** Tomek: two different class samples nearest neighbors from each other -> remove one (?)
+** OneSidedSelection: use TomekLinks to remove noise (?)
+** EditedNearestNeighbours: Remove what does not agree enough with neighbours
+** RepeatEditedNearestNeighbours: apply ENN multiple times
+** AllKNN: like R-ENN, but increase number or neighbours
+** CondensedNearestNeighbour: Iterative consider 1 nearest neighbour, sensitive to noise
+** NeighbourhoodCleaningRule: Clean data before condensing
+** !InstanceHardnessThreshold(estimator): Remove samples which are misclassified
+
+=== Over- with Under-sampling
+
+* SMOTE
+* SMOTEENN
+* SMOTETomek
+
+=== Ensemble
+
+http://contrib.scikit-learn.org/imbalanced-learn/stable/ensemble.html[Imblearn Ensemble]
+
+* EasyEnsemble(n_subsets): ensemble of randomly undersampled
+* BalanceCascade(estimator)
+* BalancedBaggingClassifier: to allow balance of subset (unlike plain sklearn)
+
+== Clustering
+
+=== Guideline
+
+https://github.com/lmcinnes/hdbscan/blob/master/notebooks/Comparing%20Clustering%20Algorithms.ipynb[Rules]:
+
+* Be conservative; Show rather no clustering than wrong clustering
+* Better if intuitive parameters
+* Stable to seed/sampling
+* Fast enough on large data
+
+Algorithms:
+
+* k-Means: too eager, need number of cluster, fast
+* Affinity Propagation: too eager, globular, stable, slow
+* Mean Shift: conservative ok, globular, intuitive parameters, not quite stable, slow
+* Spectral clustering: too eager, not globular, need to know number of clusters, not very stable, slowish
+* Agglomerative clustering: too eager, not globular, need number of clusters, stable, fast
+* DBSCAN: first which is reasonably conservative, parameter not too intuitive, stable, fast
+* HDBSCAN: even better than DBSCAN - varying density compensated, `min_samples` not intuitive but not too sensitive, stable, can be fast
+
+-> HDBSCAN recommended
+
+=== Performance
+
+* http://scikit-learn.org/stable/modules/clustering.html#clustering-evaluation[Sklearn Userguide Clustering performance]
+* http://scikit-learn.org/stable/modules/classes.html#clustering-metrics[Sklearn Clustering metrics]
+
+=== Order clustering results
+
+For example use http://scikit-learn.org/stable/auto_examples/bicluster/plot_spectral_biclustering.html[Spectral Biclustering] to get checkerboard structure (not diagonal yet).
+
+More functions in https://docs.scipy.org/doc/scipy/reference/cluster.hierarchy.html[Scipy Hierarchical Clustering].
+
+== Multiclass
+
+* http://scikit-learn.org/stable/modules/multiclass.html#multiclass[Sklearn Userguide Multiclass]
+
+== Modelling tips
+
+* scale any distance dependent algorithm
+* also linear models with regularization
+* SVM probabilities from CV?
+* GaussianNB like LogReg+L2?
+
+== Model comparison
+
+* LogReg more robust to outliers than LDA
+
+== Cross decomposition
+
+* find best latent variable linear relation between two matrices X and Y
+* http://scikit-learn.org/stable/modules/cross_decomposition.html[sklearn cross decomposition]: PLSRegression, PLSCanonical, CCA, PLSSVD
+* PLS esp. when more variables than observations
+
+== Factorization machines, Polynomial networks
+
+* https://github.com/scikit-learn-contrib/polylearn[Polylearn]
+* Capture feature interaction through polynomial terms
+* Low rank
+* uni
+
+== Fitting binary observations
+
+A conversion rate may depend on a variable (e.g. price). Instead of fitting on aggregated values (e.g. average conversion rate per price bin), one can also fit on 0/1 values per each un-/successful application.
+A linear fit will reproduce the correct coefficients/slope if P(1|x) was linear. Careful: A logistic regression (even though range 0...1 seems nice) will give incorrect results (predict_proba curve) if the ground truth is linear.
+The stddev given by statsmodels.OLS corresponds roughly to what the deviation from the real (toy data) slope would be.
+
+== Regression
+
+=== AIC
+
+* https://en.wikipedia.org/wiki/Akaike_information_criterion[Wikipedia AIC]
+* Model selection for one data set (relative model quality) -> smaller is better
+* AIC = 2k-2ln(L); k:number estimated param, L:max likelihood
+* estimates (differences) in information lost from some model to the real process
+* exp((AIC_min - AIC_k)/2)~P(Model k closest to reality)
+* -> only differences matter: dAIC=6 means other model is ~5% likely better (but in test an irrelevant column caused only dAIC=2)
+* -> omit all, but the best models and look at these probabilities now -> weighted mean of those (or say it's inconclusive, or get more data)
+* works for non-nested models (unlike likelihood test)
+* may need correction when few data points (otherwise it selects too many parameters [overfit])
+* -> use AICc (which has special equations depending on model, k and sample size; usually included k^2 term)
+* if same k and AICc equations -> can use AIC just as well
+* for linear the parameter count is number of coef (incl. bias) plus 1 for the variance of the gaussian errors
+* need to use same distribution of target -> otherwise https://en.wikipedia.org/wiki/Akaike_information_criterion#Transforming_data[transform data] (multiply by derivative)
+* some software may drop constant terms from the likelihood
+* AIC ~ LOO CVs
+* for LMSE: AIC=2k+n*ln(RSS)+const -> for same k: AIC same as RSS (residual sum of squares)
+* same as Mallow Cp for Gaussian linear regression
+
+=== BIC
+
+* model selection -> smaller is better
+* BIC=ln(n)*k-2*ln(L)
+* derived assuming data is for exponential family
+* approx minimum description length
+* can be used to choose clusters
+* need n>>k
+* not good for variable selection in high-dim
+* difference in BIC of 5 would be good (2 is negligible)
+
+=== AIC vs BIC vs ...
+
+* https://en.wikipedia.org/wiki/Akaike_information_criterion#Comparison_with_BIC[Wikipedia AIC vs BIC]
+* BIC assumes constant prior prob over all models -> not sensible? (models should be unequal)
+* if true model in in candidates, BIC will (asymptically) always select it [but true model is never in candidates?] -> AIC won't for sure (even for infinite data)
+* AIC might yet select even better model, which is not the real (??)
+* however, BIC has a higher probably of selecting a very bad model
+* AIC could select even better model than true model(?)
+* AIC selects model closest to true model by information loss
+* AIC optimal for LMSE when true model is not in candidate set
+* BIC penalized free parameters stronger than AIC
+* For F-test and likelihood test, models need to be nested
+* Adjusted R^2 only for nested models (?)
+
+
+==== Simulated data test
+
+* distinguish at 50/50 model linear/cubic (small high order terms) -> guess correct model from noisy data points
+* AIC best performance (~85% precision on both classes)
+* LOO-CV (Predicted R^2, PRESS) asymptotically like AIC, but can be worse and is much slower
+* CV seems worse than LOO-CV (?)
+* BIC prefered simple model too often
+
+=== Other
+
+* https://en.wikipedia.org/wiki/Deviance_information_criterion[Deviance Information Criterion]: Generalization for hierarchical modelling; e.g. MCMC
+
+== Logistic regression
+
+P(y=1|x)=1/(1+exp(-(b_1*x+b_0)))
+
+###########
+Convolutional neural network:
+* https://www.youtube.com/watch?v=n6hpQwq7Inw
+* edges most valueable; normalize image (increase training speed); contrast normalization (like edge detector)
+* 32x32 image (need to rescale and shift)
+* convolution: expresses amount of overlap; use Gabor filters (detects orientation; vertical, horizontal, +45, -45)
+* 1. filters (not quite Gabor filters) which are effectively similar to edge detection
+* 2. use Tanh, Abs
+* 3. subsampling, Tanh layer
+* 4. convolution map
+* 5. linear classification
+
+Mahout:
+* Hadoop
+* starting to support Spark and H20 (http://gigaom.com/2014/03/27/apache-mahout-hadoops-original-machine-learning-project-is-moving-on-from-mapreduce/)
+
+Oryx:
+* ML with Hadoop by Cloudera
+
+MLlib:
+* Spark ML
+
+Apache Spark:
+* open-source data analytics cluster computing framework
+* on top of Hadoop but with in-memory loading
+* 100x faster than Hadoop
+
+Plot:
+Box-Plot (by Tukey): plot Median, Q25, Q75, Min, Max; but consider values  x < Q25-1.5*(Q75-Q25) and x>Q75+1.5*(Q75-Q25) outliers
+
+K-Means:
+Disadv
+* worst case is superpolynomial
+* results can be arbitrarity bad wrt objective function of optimal clustering
+* fro small data initial grouping can determine clusters
+* need to set K
+* don't know attribute weighting

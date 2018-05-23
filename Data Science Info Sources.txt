@@ -1,0 +1,11 @@
+Newsletters:
+* datascienceweekly.org
+* dataelixir.com
+* hadoopweekly.com
+* deeplearingweekly.com
+* pythonweekly.com
+* maybe: "Data Analytics & R" wordpress
+
+Not:
+* unclear: mlweekly.com
+* aiweekly

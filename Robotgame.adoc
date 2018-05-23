@@ -1,0 +1,65 @@
+== General rules
+* 19x19 grid
+* winner with most bots after 100 turns
+* every 10 turns 5 bots spawn randomly; bots already standing there die
+
+Implement:
+
+    import rg                  # pip install rgkit
+    class Robot:
+        def act(self, game):
+            ...
+            return [...]
+
+== Actions
+`return` one of these values from `act()` method:
+
+* move `["move", (x, y)]`
+* attack (after all movement) `["attack", (x, y)]`
+* suicide `["suicide"]`
+* guard `["guard"]`
+
+== Statistics
+* initial health 50 HP
+* collision lose 5 HP (not movement)
+* attack removes 8-10 HP
+* suicide removes 15 HP to all next
+* guard takes half damage
+* no friendly damage (attack, suicide, movement)
+
+== Coding
+* class and module global vars shared between calls; called once per bot
+* library methods `rg.` on https://robotgame.net/rgdocs (mainly for location calc, distances, ...)
+* `rg.settings.` for default properties
+* some timeouts for security (https://robotgame.net/security)
+
+== Data
+
+As robot instance attributes:
+
+* `self.location = (x, y)`
+* `self.hp`
+* `self.player_id` (team)
+* `self.robot_id` (unique per robot)
+
+Passed as parameter to `def act(self, game)`:
+
+    game = {
+        "robots": {(x1, y1): {"location":(x1, y1),
+                              "hp":...,
+                              "player_id":...,
+                              "robot_id":...},  # only for own bots
+                   (x2, y2): {...},
+                   ...
+                   }
+        "turn": <num>                           # starts at zero
+        }
+
+For convenience you can also use attribute access `.robots`, `.location`, ... instead of dictionary `["robots"], ...` access.
+
+== Running
+* `rgrun bot1.py bot2.py`
+* `-H` for headless (not GUI)
+* `-c <num>` for multiple games
+
+

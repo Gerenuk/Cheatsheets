@@ -1,0 +1,112 @@
+News
+----
+* DARPA awards 3M$ to "Continuum Analytics" to develop:
+  * scientific computation library "Blaze" [make numpy more useful for Big Data; out-of-core computations/distributed/stream]
+  * visualization systen "Bokeh" (part of 100M$ XData Big Data effort)
+* 4M$ to KnowledgeVis/universities for open source "Visualization Design Environment"
+* 3M$ to Georgia Institute of Technology for scalable ML
+
+Software
+--------
+Storm & Kafka: stream processing
+Dremel (e.g. Google SaaS with BigQuery) & Drill (Opensource): very fast analytics on huge data
+R: works with Hadoop
+SAP HANA: free in-memory analytics
+Gremlin: Graph analysis
+Pregel: Google graph processing
+Giraph: free Apache iterative Graph processing with high scalability
+Neo4j & InfiniteGraph: Graph DB
+Julia http://julialang.org/: new language for technical computing; parallelism
+
+
+Python frameworks
+-----------------
+Bulbflow (http://bulbflow.com/)
+- for graph databases
+- Gremlin query
+- pluggable to neo4j or rexster
+
+Bokeh
+- DARPA financed open source ggplot equivalent for Python
+
+PySpark
+
+NumbaPro
+PyCUDA
+
+PiCloud
+- Python bundled with packages (numpy, scipy, pandas, scikit,...)
+
+Augustus https://code.google.com/p/augustus/
+- building statistical models too large for memory
+
+H20 http://0xdata.github.io/h2o/
+- maths and statistics for Hadoop
+
+
+Python
+------
+RPython
+- subset of Python
+- very fast
+- statically typed (ML-like)
+- but many features missing
+
+ML Algorithm shoud be
+---------------------
+- consistent: for N->\infty converges to true underlying process (e.g. uniform distribution without patterns)
+- confidence: how probable is the result for a given sample
+
+Why momentum works
+==================
+http://distill.pub/2017/momentum/
+* example convex quadratic xAx+bx
+  * closed form solution for gradient descent
+  * in eigenvector basis: exponential error decay with (1-alpha*lambda)^k
+  * small error decay relevant when large errors decayed
+  * best alpha=2/(lambda_min+lambda_max)
+  * convergence determined by condition_number=lambda_max/lambda_min
+* with momentum
+  * coupled system of alpha and beta
+  * alpha*lambda<2+2*beta with beta<=1 (beta=0 is without momentum)
+  -> larger step size possible
+-> but best when sweet spot between alpha and beta
+* best value has (1-sqrt(alpha*lambda)) convergence -> extra sqrt
+
+-> when conditioning poor: set beta~1; alpha as larger as possible to converge
+* expect oscillations/ripples when not perfectly tuned
+
+* convex Rosenbrock function is tough
+* cannot do better than momentum for linear algo since information spread needs time
+
+* high momentum in SGD can compound error
+* but SGD noise can also regularize
+
+Kaggle Kazaonva
+===============
+* time series: ARCH, GARCH, ARIMA
+* high cardinality: FTRL, LibFFM, Vowpal, LibFM, SVD, Linear
+* Keras, Nolearn, Gensim
+
+Duplicate question detection
+============================
+https://www.youtube.com/watch?v=vA1V8A69e9c
+TFIDF params: min_df=3, strip_accents="unicode", ngram_range=(1,2), sublinear_tf=True, stop_words="english"
++ sklearn defaults
+features:
+* fuzzywuzzy comparisons
+* length, difference in lengths
+* num words, common words
+* TruncatedSVD(120)
+* word2vec
+* NLTK word tokenizer
+*
+
+Frechet distance:
+- measure of similarity between curves that takes into account the location and ordering of the points along the curves
+- is the minimum length of a leash required to connect a dog and its owner, constrained on two separate paths, as they walk without backtracking along their respective curves from one endpoint to the other
+
+== Median vs Mean
+median(avg(...))
+need avg since otherwise behaviour at median too uncertain
+cnt in avg drives bounds (sqrt(c)); cnt in median for confidence (exp(-c/8))

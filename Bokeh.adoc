@@ -1,0 +1,449 @@
+////
+Status: Bokeh 0.12.13
+TODO: *highlighting*
+////
+
+= Bokeh
+
+:toc: left
+
+== Basic usage
+
+    from bokeh.plotting import *
+    output_notebook()
+
+    p = figure()
+    p.circle(..)
+    show(p)
+   
+* Set layout by:
+** `figure(..)` parameter
+** `p.` figure object attribute
+** `p.add_layout(..)`
+* models: low-level for developer
+* plotting glyphs: compose visual glyphs
+* most command in this Cheatsheet are from `bokeh.plotting`
+* https://bokeh.pydata.org/en/latest/docs/reference/models.html[bokeh.models] hierarchy
+
+== General commands
+
+[cols="m,d"]
+|===
+| output_notebook()                         | Activate notebook inline plotting (for convenience in multiple modules)
+| .visible = False                          | All renderers, axes and grids have `.visible = False` to turn off.
+|===
+   
+== Creating a figure
+
+[cols="m,d"]
+|===
+| p = figure(..)                            | https://bokeh.pydata.org/en/latest/docs/reference/plotting.html#bokeh.plotting.figure.figure[Figure] https://bokeh.pydata.org/en/latest/docs/reference/models/plots.html[Plot (superclass)]
+| title=".."                                |
+| x_range=(..,..)                           |
+| x_axis_label=".."                         |
+| x_axis_type="datetime"                    | Uses `DatetimeAxis` https://bokeh.pydata.org/en/latest/docs/reference/models/axes.html#bokeh.models.axes.DatetimeAxis[Ref]
+| x_axis_type="log"                         |
+| plot_width=.. +
+  plot_height=..                            |
+| tools="..,.."                             |
+|===
+
+* http://bokeh.pydata.org/en/latest/docs/user_guide/styling.html#axes[Userguide Axes]
+* http://bokeh.pydata.org/en/latest/docs/user_guide/styling.html#tick-locations[Userguide Ticks]
+* http://bokeh.pydata.org/en/latest/docs/user_guide/styling.html#grids[Userguide Grids]
+* http://bokeh.pydata.org/en/latest/docs/user_guide/styling.html#legends[Userguide Legends]
+
+== Attributes on figure
+
+[cols="m,d"]
+|===
+| p.x_axis.axis_label=..                    |
+| p.axis.*                                  |
+| grid                                      |
+| p.x_range=Range1d(..,..)                  |
+| p.x_range=[..,..,..]                      | factors axis
+| p.title.text=".."                         |
+| p.title.align="center"                    |
+| p.xaxis.axis_label = "..."                |
+| p.legend.location = "top_left"            |
+| ..=None                                   | To disable
+| p.xaxis.bound = (..,..)                   | Axis only on some range, but show full plot!
+|===
+
+== Plotting glyphs on figure
+
+* https://bokeh.pydata.org/en/latest/docs/reference/plotting.html[bokeh.plotting]
+* many glyphs accept `source=..` and column names for the data
+* use `float("nan")` for missing points
+
+[cols="m,d"]
+.Common
+|===
+| p.line(..)                                | Connected lines https://bokeh.pydata.org/en/latest/docs/reference/plotting.html#bokeh.plotting.figure.Figure.line[Ref]
+| p.scatter(x, y)                           | https://bokeh.pydata.org/en/latest/docs/reference/plotting.html#bokeh.plotting.figure.Figure.scatter[Ref]
+| size=..                                   |
+| marker=..                                 |
+| color=..                                  |
+| p.step(x, y)                              | https://bokeh.pydata.org/en/latest/docs/reference/plotting.html#bokeh.plotting.figure.Figure.step[Ref]
+| p.hbar(y, height, right)                  | https://bokeh.pydata.org/en/latest/docs/reference/plotting.html#bokeh.plotting.figure.Figure.hbar[Ref]
+| left=..                                   |
+| p.vbar(x, width, top)                     | https://bokeh.pydata.org/en/latest/docs/reference/plotting.html#bokeh.plotting.figure.Figure.vbar[Ref]
+| bottom=..                                 |
+| p.hbar_stack(stackers)                    | https://bokeh.pydata.org/en/latest/docs/reference/plotting.html#bokeh.plotting.figure.Figure.hbar_stack[Ref]
+| p.vbar_stack(stackers)                    | https://bokeh.pydata.org/en/latest/docs/reference/plotting.html#bokeh.plotting.figure.Figure.vbar_stack[Ref]
+|===
+
+.Marks
+[cols="m,d"]
+|===
+| p.cross(x, y)                             | https://bokeh.pydata.org/en/latest/docs/reference/plotting.html#bokeh.plotting.figure.Figure.cross[Ref]
+| p.x(x, y)                                 | https://bokeh.pydata.org/en/latest/docs/reference/plotting.html#bokeh.plotting.figure.Figure.x[Ref]
+| p.asteriks(x, y)                          | https://bokeh.pydata.org/en/latest/docs/reference/plotting.html#bokeh.plotting.figure.Figure.asterisk[Ref]
+|===
+
+.Area Glyphs
+[cols="m,d"]
+|===
+| p.square(..)                              | https://bokeh.pydata.org/en/latest/docs/reference/plotting.html#bokeh.plotting.figure.Figure.square[Ref]
+| angle=..                                  |
+| p.quad(left, right, top, bottom)          | Axis-aligned rectangle https://bokeh.pydata.org/en/latest/docs/reference/plotting.html#bokeh.plotting.figure.Figure.quad[Ref]
+| p.rect(x, y, width, height)               | Rotated rectangles around a center https://bokeh.pydata.org/en/latest/docs/reference/plotting.html#bokeh.plotting.figure.Figure.rect[Ref]
+| dilate=True                               | Grow fractional pixels (e.g. from rotation) to avoid gaps for multiple
+| angle=..                                  |
+| p.quadratic(x0, y0, x2, y2, cx, cy)       | https://bokeh.pydata.org/en/latest/docs/reference/plotting.html#bokeh.plotting.figure.Figure.quadratic[Ref]
+| p.oval(x, y, width, height)               | Fat ellipse https://bokeh.pydata.org/en/latest/docs/reference/plotting.html#bokeh.plotting.figure.Figure.oval[Ref]
+| p.ellipse(x, y, width, height)            | Ellipse https://bokeh.pydata.org/en/latest/docs/reference/plotting.html#bokeh.plotting.figure.Figure.ellipse[Ref]
+| angle=..                                  |
+| p.circle(..)                              | Circles https://bokeh.pydata.org/en/latest/docs/reference/plotting.html#bokeh.plotting.figure.Figure.circle[Ref]
+| p.patch(..) +
+  p.patches(..)                             | Polygon(s) https://bokeh.pydata.org/en/latest/docs/reference/plotting.html#bokeh.plotting.figure.Figure.patch[Ref patch] https://bokeh.pydata.org/en/latest/docs/reference/plotting.html#bokeh.plotting.figure.Figure.patches[Ref patches]
+|===
+
+.Lines
+[cols="m,d"]
+|===
+| p.segment(..)                             | One line https://bokeh.pydata.org/en/latest/docs/reference/plotting.html#bokeh.plotting.figure.Figure.segment[Ref]
+| p.multi_line([[..],[..],..])              | Multiple lines https://bokeh.pydata.org/en/latest/docs/reference/plotting.html#bokeh.plotting.figure.Figure.multi_line[Ref]
+| p.ray(x, y, length, angle)                | Rays by position and angle https://bokeh.pydata.org/en/latest/docs/reference/plotting.html#bokeh.plotting.figure.Figure.ray[Ref]
+|===
+
+.Images
+[cols="m,d"]
+|===
+| p.image(..)                               | Scalar data https://bokeh.pydata.org/en/latest/docs/reference/plotting.html#bokeh.plotting.figure.Figure.image[Ref]
+| p.image_rgba(..)                          | RGBA data https://bokeh.pydata.org/en/latest/docs/reference/plotting.html#bokeh.plotting.figure.Figure.image_rgba[Ref]
+| p.image_url(..)                           | https://bokeh.pydata.org/en/latest/docs/reference/plotting.html#bokeh.plotting.figure.Figure.image_url[Ref]
+|===
+
+.Special
+[cols="m,d"]
+|===
+| p.text(x, y, text)                        | https://bokeh.pydata.org/en/latest/docs/reference/plotting.html#bokeh.plotting.figure.Figure.text[Ref]
+| p.bezier(..)                              | Cubic curves https://bokeh.pydata.org/en/latest/docs/reference/plotting.html#bokeh.plotting.figure.Figure.bezier[Ref bezier]
+| p.graph(nodes, edges, layout)             | https://bokeh.pydata.org/en/latest/docs/reference/plotting.html#bokeh.plotting.figure.Figure.graph[Ref]
+|===
+
+* there are many glyphs:
+** circles/ellipses, crosses, diamonds, asterisks, triangles (and inverted)
+** _combinations_ with cross or X
+** annulus/annulus_wedge, arc, wedges
+
+Can use `p.select(..)` to find correct objects.
+
+    renderer = p.circle(..)
+    glyph = renderer.glyph
+    glyph.size = ..
+    
+Selected und unselected glyphs
+
+    renderer.selection_glyph = Circle(..)
+    renderer.nonselection_glyph = Circle(..)
+
+Models interface:
+
+    p.add_glyph(data_source, initial_glyph, selection_glyph, nonselection_glyph)
+    
+Overlay tools also may have parameters
+
+
+== Glyph options
+
+[cols="m,d"]
+|===
+| size=..                                   |
+| color=".."                                |
+| alpha=..                                  |
+| line_color=".."                           |
+| line_width=..                             |
+| line_alpha=..                             |
+| line_join="miter"                         | How to join lines `"miter", "round", "bevel"`
+| line_cap=".."                             | `"butt", "round", "square"`
+| line_dash=".."                            | `"solid", "dashed", "dotted", "dotdash", "dashdot"`, array of integer pixel distance, string of spaced integers
+| line_dash_offset                          |
+| fill_color=".."                           |
+| fill_alpha=..                             |
+| text_font=".."                            |
+| text_font_size=..                         |
+| text_font_style="italic"                  | `"normal", "italic", "bold"`
+| text_color=".."                           |
+| text_alpha=..                             |
+| text_align="left"                         | `"left", "right", "center"`
+| text_baseline="top"                       | `"top", "middle", "bottom", "alphabetic", "hanging"`
+| background_fill_* +
+  border_fill_*                             | color, alpha
+| outline_*                                 | Box around plot
+| min_border_left                           | Border on plot
+| selection_* +
+  nonselection_*                            | Set styles of these
+| hover_*                                   | Set hover properties
+|===
+
+== Colors
+
+Palettes from `bokeh.palettes` (e.g. `bokeh.palettes.Set1_9`). Color names:
+
+* named CSS colors (http://www.w3schools.com/colors/colors_names.asp)
+* `"#RRGGBB"`, `"#RRGGBBAA"`
+* `(r, g, b)` from 0 to 255
+* `(r, g, b, a)` with a from 0 to 1
+* for lists of colors do not use tuples, but hex values or `bokeh.colors.RGB()` objects or CSS-format RGB(A) `rgb(..,..,..)` strings
+
+=== Color Mappers
+
+* https://bokeh.pydata.org/en/latest/docs/reference/models/mappers.html[Models Mappers]
+* Categorical, Linear, Continuous, Log-scale
+
+    color_mapper = CategoricalColorMapper(factors=[..], palette=[..])
+    p.circle(.., color=dict(field="..", transform=color_mapper, legend="Name")))
+
+== Legend
+
+[cols="m,d"]
+|===
+| p.line(.., legend="..")                   | Legend label for this plot
+| p.legend.location = "bottom_left"         |
+|===
+
+Legend outside plot:
+
+    legend = Legend(items=[("A", [a1, a2]), ["B", [b2]])
+    p.add_layout(legend, "right")
+
+== Layout
+
+http://bokeh.pydata.org/en/latest/docs/user_guide/layout.html[Userguide Layout]
+
+    from bokeh.layouts import column
+    ...
+    show(column(s1, s2))
+
+[cols="m,d"]
+|===
+| column(s1, s2)                            |
+| row(s1, s2)                               |
+| widgetbox(button, slider)                 | Widgets in column
+| gridplot([[s1, None], [s2, s3]])          | Gridlayout; None for empty space; Also only one Toolbar
+| gridplot([s1, s2, s3], ncols=2)           | Simple way to pass layout (cannot use None here)
+| plot_width=.., plot_height=..             |
+| layout([[..],..])                         | Arbitray number of items in each row
+|===
+
+Widgets are inside WidgetBox. All need to have the same sizing mode (Layout functions do this automatically).
+Nested rows, columns. Widgets only inside widgetbox (built-in widget will be put automatically in widgetbox).
+Sizing modes react to browser window resize.
+
+
+== Styling
+
+http://bokeh.pydata.org/en/latest/docs/user_guide/styling.html[Userguide Styling]
+
+== Adding layout elements
+
+[cols="m,d"]
+|===
+| p.add_layout(.., "right")                 | Add a layout
+| ColorBar(color_mapper=LogColorMapper(..)) |
+| Arrow(..)                                 |
+| Title(text="..")                          |
+| BoxAnnotation(..)                         | background color regions
+| LabelSet(x=.., y=.., ..)                  | Multiple labels
+| Span(location=.., dimension="height")     | horizontal or vertical line
+|===
+
+* Can use `source=..` too
+
+== Plot tools
+
+http://bokeh.pydata.org/en/latest/docs/user_guide/tools.html[Userguide Tools]
+
+    p = figure(tools="box_select,box_zoom,lasso_select,pan,xpan,ypan,resize,poly_select")
+    p = figure(tools=[BoxZoomTool(), ResetTool()])
+    
+[cols="m,d"]
+|===
+| box_select                                | Use `dimensions` to select only one dimension
+| lasso_select                              |
+| tap                                       | Tap select single points
+| box_zoom                                  |
+| wheel_zoom, xwheel_zoom, ywheel_zoom      | 
+| zoom_in, xzoom_in, yzoom_in               |
+| zoom_out, xzoom_out, yzoom_out            |
+| reset                                     |
+| pan, xpan, ypan                           | Drag plot
+| xwheel_pan, ywheel_pan                    |
+| undo, redo                                |
+| save                                      |
+| crosshair                                 |
+| hover                                     | Popup over Glyph
+|===
+
+== Tooltips
+
+    from bokeh.models import HoverTool
+    fig=figure()
+    p=fig.scatter("a", "b", source=df)
+    fig.add_tools(HoverTool(tooltips=[("a", "@a")], renderers=[p]))
+    show(fig)
+
+== Interaction
+
+http://bokeh.pydata.org/en/latest/docs/user_guide/interaction.html[Userguide Interaction]
+
+== Bokeh command line
+
+http://bokeh.pydata.org/en/latest/docs/user_guide/cli.html[Userguide CLI]
+
+* to run server (http://bokeh.pydata.org/en/latest/docs/user_guide/server.html)
+* to create output from py-file (without `show()` command)
+
+Write Python code without an `output_*` call and use different output with `bokeh <outputtype> <inputfile>`. The input can be
+
+* Python file `myapp.py`: generates `app_script.*` output
+* Juypter notebook file `myapp.ipynb`: generates `app_notebook.*` output
+* Directory with `main.py` file: generates `app_dir.*` output
+
+Output type can be
+
+* `html`: standalone HTML
+* `json`: JSON representation
+* `serve`: interactive server will be opened on default `http://localhost:5006/app_script`
+
+The server can use multiprocessors. You can use cryptographic sessions ids to control who can connect.
+
+
+== Large data with WebGL for hardware plotting
+
+http://bokeh.pydata.org/en/latest/docs/user_guide/webgl.html[Userguide WebGL]
+
+To render with WebGL on GPU use plot option `webgl=True`. Supported are circle, line and scatter glyphs.
+
+== Geo data
+
+http://bokeh.pydata.org/en/latest/docs/user_guide/geo.html[Userguide Geo]
+
+Support for `bokeh.models.GeoJSONDataSource`.
+
+[col="m,d"]
+|===
+| bokeh.models.GeoJSONDataSource            | Plot Geo data
+| bokeh.models.GMapPlot                     | Plot on Google Maps
+| bokeh.tile_providers                      | Can consume XYZ tile services which use Web Mercator projection. Contains pre-configured tiles in `bokeh.tile_providers`
+|===
+
+== Other snippets
+   
+=== Adaptive plot size
+
+Plot size can be adaptive with the `responsive` flag. `plot_width` and `plot_height` will still be used for initial aspect ratio. But will not resize smaller than 100px.
+See `bokeh.models.layouts`, e.g. `sizing_mode` of `LayoutDOM`.
+
+=== Changing plots with handles
+
+http://bokeh.pydata.org/en/latest/docs/user_guide/notebook.html
+
+    output_notebook()
+    handle=show(p, notebook_handle=True)
+    ...
+    push_notebook(handle=handle)
+    
+See also http://bokeh.pydata.org/en/latest/docs/user_guide/notebook.html#jupyter-interactors for Jupyter interactors.
+
+
+=== Level-of-detail
+
+Draw only a fraction of the points during operation. Properties `lod_factor`, `lod_interval`, `lod_threshold`, `tod_timeout`.
+
+
+== Updating plots
+
+    from bokeh.io import push_notebook
+
+    source=ColumnDataSource({..})
+    p.circle("x", "y", source=source)
+    handle = show(p, notebook_handle=True)
+
+    source.data={..}          # Update data
+    push_notebook(handle)
+
+== Linking and Brushing
+
+For linking, share range objects between figure() calls (e.g. share range object; ColumnDataSource).
+
+
+Linked brushing by sharing data sources. For example
+
+    source = ColumnDataSource(data={"col1":arr1, ..})
+    p1.circle("col1", ..., source=source)
+    p=gridplot([[p1, p2]])
+    show(p)
+
+== Widgets
+
+Can
+
+* drive new computations
+* update plots
+* connect to programmatic functionality
+* run arbitrary Python code if used with Bokeh server
+
+Widget functionality programmed by
+
+* `CustomJS` callback (object with JS code as string parameter). Works for standalone HTML
+* `.on_change` (for some `.on_click`) event handler if using Bokeh server
+
+Provides buttons, checkboxes, tables (SlickGrid based), dropdown menu, multiselect, radiobuttons, radiogroup, optionlist, slider, tabs for plots, textinput, toggle button, html text
+
+== Bokeh server
+
+For exploration, deployment or shared publishing. Respond to UI and events with Python code or do streaming updates.
+
+Run server with `bokeh serve`. For client connection use `bokeh.client.*` (`output_server()` deprecated). Can do load balancing with Nginx.
+
+Bokeh server:
+* computations and plot updates
+* server-side downsampling of large datasets
+* streaming data
+* glyph rewriting and transformations for large data
+* dashboard publishing
+
+== Further info
+
+* Guides (grid, axis, band, tick, label)
+* Annotations
+* Ranges (default DataRange1d)
+* Application: rendered document
+* Document: organizing data structure
+* Models: lower-level objects that comprise scenegraphs
+* `bokeh html` to create output from py-file (with "show()")
+
+Source:
+* Mailing list
+* Gitter chat channel
+* Examples: http://nbviewer.jupyter.org/github/bokeh/bokeh-notebooks/blob/master/index.ipynb[Bokeh Notebooks]
+* Learning more http://bokeh.pydata.org/en/latest/docs/user_guide/info.html[Userguide Info]
+
+
+== UNSORTED
+
+* properties accept vector values
+

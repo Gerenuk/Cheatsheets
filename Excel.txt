@@ -1,0 +1,18 @@
+In CSV: first line
+sep=;
+for auto detect
+
+"1" kopieren; Inhalte einfügen/Multiplizieren -> entfernt komische Formatierung (z.B. Hyperlink)
+Datei/Optionen/Erweitert: Dezimalkomma
+
+Substring: =TEIL(...)
+Find string: =SUCHEN(...)
+
+http://www.excelformeln.de/formeln.html?welcher=7
+KALENDERWOCHE(A1;21)  # ab Montag und korrektes ISO
+
+Excel: multiple format copy: double-click
+
+VERGEICH(wert;bereich;0)   -> gibt Zeilennummer zurück (engl. MATCH)
+
+IF(ISNUMBER(SEARCH("word", field));"yes";"no")

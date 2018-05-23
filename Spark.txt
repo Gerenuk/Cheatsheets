@@ -1,0 +1,1166 @@
+﻿* written in Scala; runs on JVM
+
+conf=SparkConf().setMaster(..).setAppName(..)
+sc=SparkContext(conf=conf)
+sc.stop()  # or sys.exit()
+
+sc.textFile(..)
+data.saveAsTextFile(..)
+
+rdd.persist()
+rdd.cache()    # persist with default storage level
+Python: pickled in JVM heap
+Scala/Java: unserialized objects in JVM heap
+can choose storage level: Mem/Disk; only/both; serialized/not
+(no eval until action)
+unpersist()
+if mem-only -> automatically evict old partitions by LRU
+
+sc.parallelize(..)
+
+lineage graph: to recompute RDD if needed
+
+passing functions which contain object references (e.g. method) -> everything has to be pickled
+
+union(): bag
+distinct(): expensive
+intersection(): expensive set operation
+
+fold(): takes zero value
+fold, reduce: return type same as element type -> need map() before
+-> or use aggregate()
+
+foreach(): execute on all, but dont return result
+
+Scala: need specialized/typed RDD to do numeric or ByKey operation; implicit in Scala if you import org.apache.spark.SparkContext._
+
+Pair RDD
+--------
+* Scala: implicit conversion to PairRDD if mapped to tuples
+* reduceByKey: transformation, since too large for action
+* combineByKey: to customize combining behavior (most general; like aggregate())
+  * call createCombiner() for newly seen keys
+  * call mergeValue() if key seen before
+  * call mergeCombiners() to merge partitions
+  * !can disable map-side combines if wouldn't save space (e.g. groupByKey only appends to list); -> need to specify partitioner; for now can use myrdd.partitioner
+* specialized reducer function can be much faster than manual grouping/reducing
+
+Parallelism
+-----------
+* each RDD has number of partitions
+* for aggregations or grouping can tell number of partitions
+* usually Spark guesses num. part. based on size of cluster
+* repartition(..) to change data; shuffles
+* coalesce(..); less expensive repartition (avoid data movement), but only to decrease number of partitions; check rdd.getNumPartitions()
+* use groupByKey instead of groupBy+reduceByKey
+
+Cogroup:
+* merge multiple RDD by key (like join) -> RDD[(K, (It[V], It[W]))]
+* each data grouping normally (non-unique keys fine)
+
+Joins
+-----
+* join
+* leftOuterJoin, rightOuterJoin: None in Python; Option in Scala
+
+Sorting
+-------
+* sort by key -> later collect()/save() will be sorted
+
+Partitioning
+------------
+* not useful when data scanned only once
+* only if scanned multiple times with key-oriented operations -> group by keys
+* hash partition; sorted partition
+* partitionBy(..): returns new RDD; persist after!; in Python pass number instead of HashPartitioner
+* partitioning information saved in RDD; but map() destroys this information
+* Scala: partitioner() -> Option -> isDefined(), get() -> spark.Partitioner()
+* useful for: cogroup, groupWith, join, joins, groupByKey, reduceByKey, combineByKey, lookup
+* fro cogroup: one RDD (with partitioner) not shuffled
+* mapValues: preserves partitions
+* if both RDDs created with same partitioner: join no shuffle
+* partitioner being set in values for: cogroup, groupWith, joins, groupByKey, reduceByKey, combineByKey, partitionBy, sort
+* partitioner set if parent has: mapValues, flatMapValues, filter
+* for binary RDD operations: use hash partitioner; or partitioner of RDD (first if possible)
+* can also user customer partitioner to user domain knowledge (implement numPartitions, getPartition(key), equals())
+
+Loading and Saving data
+-----------------------
+* can use InputFormat/OutputFormat from MapReduce/Hadoop; but most often use higher-level API
+* access files (JSON, Sequence, text, ...), Spark SQL (JSON, Hive), Key-value databases (Cassandra, JDBC, ...)
+* sc.textFile("file///home..")
+  * load single file: element per line
+  * load multiple files: key=filename, value=content
+  * supports wildcard expansion
+  * pass directory to load all
+  * sc.wholeTextFiles(<dir>): key=filename, value=content
+* rdd.saveAsTextFile(<dir>): multiple files (so that many nodes can write); no control of data segments in files
+* mapPartitionss() to reuse (JSON) parser, if constructive the parser expensive
+* Hadoop CSVInputFormat in Scala (but doesnt support records with newlines)
+* SequenceFiles: Hadoop format with key-value pairs; have sync markers, so that multi-read can sync on record boundaries
+  * loading: sequenceFile(path, keyClass, valueClass, minPartitions); e.g. sc.sequenceFile(inFile, "org.apache.hadoop.io.Text", "org.apache.hadoop.io.IntWriteable")
+  * in Scala: sequenceFile[Key, Value](path, minPartitions): get native Scala types automatically; no need to convert Writeable to Scala types
+  * saving: PairRDD:saveAsSequenceFile(path)
+* ObjectFiles:
+  * wrapper around SequenceFiles to save just values
+  * values written using Java serialization; can be slow -> but require almost no work to save arbitrary objects
+  * load: objectFile()
+  * saveAsObjecFile()
+  * for Python rather: saveAsPickleFile(); pickleFile()
+* Hadoop file: LSp84
+* textFile and sequenceFile can handle automatic compression; some codecs can guess type when reading
+  * split-table formats: can find start of record without reading whole file
+    * split-table yes: LZO, BZIP2
+    * no: GZIP, ZLIB, Snappy
+    * Snappy not pure Java; others are
+    * Fast: LZO, Snappy, (not BZIP, ZLIB)
+    * Effective on text: GZIP, BZIP!, (not: Snappy)
+    -> Split-table: LZO much faster; BZIP higher compression
+    -> dont use: ZLIB, Snappy
+    -> LZO better in all; GZIP effective and fast; BZIP2 very effective but slow
+  * textFile() can handle splittable, but automatically disables if if splittable -> skip wrapper and use newAPIHadoopFile file with specified codec instead
+  
+Filesystems
+-----------
+* local files: need to be in same path on all nodes -> put on HDFS (otherwise load locally and sc.parallelize)
+* Amazon S3: LSp90
+* Spark can use HDFS locality; use "hdfs://master:port/path"
+* Hadoop version needs to match to binary (specify SPARK_HADOOP_VERSION when compiling)
+* Spark SQL
+  * query -> RDD of Row objects; in Python access with ["attr"] or .attr
+  * can load Hive; copy hive-site.xml to Spark/conf dir. -> create HiveContext object; write HQL
+  from pyspark.sql import HiveContext
+  hivectx=HiveContext(sc)
+  rows=hivectx.sql("select ... from ..")
+  firstrow=rows.first()
+  firstrow.name
+* JSON data:
+  * create HiveContext (but don't actually need Hive set up)
+  data=hivectx.jsonFile("...json")
+  data.registerTempTable("table")
+  results=hivectx.sql("select .. from table")
+* JDBC: LSp93
+* Cassandra: LSp94
+* HBase, Elasticsearch
+
+Advanced operations
+-------------------
+* accumulator: aggregate information
+* broadcast
+* batch operations for tasks with high setup costs
+* interact with other programs by pipe()
+* tools for numeric key/value data
+
+Accumulator
+...........
+* acc=sc.accumulator(<initval>)
+  ..
+  def func(..):
+      global acc
+  acc.value   # but execute action first
+* at least in Spark 1.2.0: !accumulator guarenteed to run only once [due to recovery, pre-emptive on slow, ...] only for *actions* (not transformation) -> might need foreach()
+* for custom Acc. (apart from numeric): extend AccumulatorParam
+
+Broadcast variables
+...................
+* send large read-only data to workers by Bittorrent-like communication
+* select spark.serializer since default Java slow when not primitives
+
+Working per-partition
+.....................
+* version of map and foreach
+* to avoid doing an expensive operation for each element (e.g. not create a JSON parser for each element)
+* mapPartitions(lambda iter1:<iter2>) # input partition data; output iterator -> function called only once
+* mapPartitionsWithIndex((partid, it)->it)
+* foreachPartition(it->nothing)
+* mapPartitions could also replace some reduces on machines
+
+Piping to non-Python/Scala
+..........................
+* rdd.pipe() : used with process that does unix stdin/stdout
+* e.g for R
+* newlines as separators
+sc.addFile(distScriptNameWithPath)  # will be stored in SparkFiles.getRootDirectory
+rdd.pipe(SparkFiles.get(distScriptBasename)) # need bash-bang
+rdd.pipe(Seq(SparkFiles.get(distScriptBasename),","))
+
+Numeric on RDD
+..............
+* rdd.stats() -> StatsCounter object with count, mean, sum, max, min, variance, sampleVariance, stdev, sampleStdev
+
+Running on cluster
+------------------
+* Driver: own Java
+  * converts user input to tasks (atomic)
+  * DAG createdM optimizations (like merging maps) -> convert execution graph into stages
+  * each stage has multiple tasks
+  * spark UI: port 4040
+* Executors: own Java
+  * each executor registers with driver; can run tasks and store RDDs
+  * driver will try to schedule task based on data placement
+  * typical live for lifetime of application
+  * in-memory storage for cached RDDs by Block Manager
+* Cluster manager: pluggable in Spark; so that can run on YARN etc.
+* master/worker = centralized/distributed portions of cluster manager (not quite same as driver/executor; can both be on worker nodes)
+* spark-submit to submit jobs; spark_submit --master yarn myscript.py <scriptargs>...
+  * user runs spark-submit
+  * launches driver, invokes main()
+  * driver contacts cluster manager and asks for resources to launch executors
+  * cluster manager launches executors
+  * driver sends work to executors; executors calculate results
+  * release resources when sc.stop() or main() exits
+* master:
+  * spark://host:port
+  * yarn # YARN cluster, HADOOP_CONF_DIR variable for config
+  * local, local[N] (n cores), local[*] (all cores)
+* --help: show options
+* --deploy-mode: client (driver locally), cluster (driver on worker)
+* --name <appname>: for UI
+* --py-files <.py, .egg, .zip>: files to add to pythonpath
+* --files <file1, file2>: files to distribute
+* --jars <jar1, jar2>: jars to place in classpath
+* --executor-memory 512m: memory in executors
+* --driver-memory 512m: memory in driver
+* --conf <prop>=<val>: extra SparkConf
+* --properties-file <file>: key/value file for SparkConf
+* Spark itself automatically distributed
+* for JARs with dependencies best to create complete "uber JAR" / "assembly JAR" (e.g. by Maven or sbt [Scala build tool])
+* don't request more executor-memory than available on workers
+* "cluster mode": driver launched in cluster (--deploy-mode cluster)
+* settings:
+  * --executor-memory (default 1GB): each application at most one executor*processorcore per worker
+  * --total-executor-cores (default unlimited, also spark.cores.max): how many executors
+  * see settings in http://masternode:8080
+  * setting spark.deploy.spreadOut=false in conf/spark-defaults.conf to squeeze executors to single machines
+  * for YARN: set HADOOP_CONF_DIR=HADOOP_HOME/conf (containing yarm-site.xml) --> --master yarn
+  * use cluster mode for the driver to run on YARN
+  * --num-executors (default 2): usually best to small number or large executors (can optimize communication); however sometime clusters have executor memory size limit
+  * --queue: select queue
+* Mesos LSp134
+  * fine-grained sharing option: can interactively scale down CPU between commands -> good for multi-user
+  
+conf=SparkConf()
+conf.set("spark.app.name", ..)   # or setAppName(..)
+conf.set("spark.master", ..)     # or setMaster(..)
+sc = SparkContext(conf)
+
+spark-submit:
+* --properties-files myconf.conf  # whitespace key/value; searched in conf/spark-defaults.conf
+
+Other settings:
+* spark.executor.memory (--executor-memory): def 512m
+* spark.executor.cores (--executor-cores): def 1?
+* spark.cores.max (--total-executor-cores): def none
+* spark.speculation: def false; rerun slow tasks pre-emptively
+* spark.storage.blockManagerTimeoutIntervalMs: liveness of executors; check doc if not general timeout
+* spark.executor.extraJavaOptions, spark.executor.extraClassPath, spark.executor.extraLibraryPath: JVM
+* spark.serializer: def org.apache.spark.serializer.JavaSerializer; general but slow; suggestion use org.apache.spark.serializer.KryoSerializer
+* spark.<X>.port: X={driver, fileserver, broadcast, replrClassServer, blockManager, executor}
+* spark.eventLog.enable: def false
+* spark.eventLog.dir: def file:///tmp/spark-events
+
+Not in sparkconf:
+* env SPARK_LOCAL_DIRS in conf/spark-env.sh: comma-separated locations for local storage for shuffle data (needed for standalone or Mesos)
+
+Execution
+=========
+* merge logic into tasks
+* rdd.toDebugString: show DAG
+* shuffles are persists even if you don't do it -> can re-use
+* job = set of stages
+* inspect stage runtime (is it inconsistent across runs)
+* possible data skew -> do few tasks take much more time?
+* check tasks: reading/computing/writing time
+* "Storage" page: what's persisted
+
+Logs
+====
+* Standalone: work/
+* YARN: `yarn logs -applicationId <appID>` (after application finished, since has to collect)
+  * logs while running from ResourceManagerUI Nodes page/containers
+* format example: conf/log4j.properties.template -> copy to log4j.properties; use spark-submit --files to add this file
+
+Performance
+===========
+* partitions: single task for each
+* typically chooses partitions by underlying storage (i.e. parition for hdfs-block)
+* partitions after shuffle depend on parent partitions
+* in program: repartition(); or coalesce() if only reduce partitions [no shuffling here]
+* e.g. reduce partitions heavily if you select only small subset of data; otherwise many free
+* serialization:
+  * when shuffling over network or spilling to disk
+  * Kryo serializer may be faster; also register classes you want to serialize (saves long class names) [spark.kryo.registrationRequired=true to force]
+  * if cannot find which class caused serialization error: JVM option "-Dsun.io.serialization.extended DebugInfo=true" with --driver-java-options and --executor-java-options
+  * classes need to implement Java Serializable
+* memory inside each executor:
+  * RDD storage: when persist(); limit by spark.storage.memoryFraction
+  * Shuffle and aggregation buffer: limit by spark.shuffle.memoryFraction
+  * user code
+  * default: 60% RDD, 20% shuffle, 20% user code
+  * if do persist with MEMORY_AND_DISK: spills to disk (default MEMORY_ONLY -> drops old) -> good for very expensive RDDs
+  * can improve caching by setting MEMORY_ONLY_SER or MEMORY_AND_DISK_SER storage levels: serialization slightly slower, but can reduce garbage collection time a lot (stores many records as single serializable buffer) -> check GC time in UI (pauses);
+* hardware:
+  * spark.executor.memory
+  * YARN: spark.executor.cores, --num-executors
+  * Mesos, Standalone: as many as possible executors; can limit by spark.cores.max
+  * check ratio of cached data
+  * YARN: local disk config read directly from YARN
+  * Standalone: local disks from SPARK_LOCAL_DIRS in spark-env.sh
+  * Mesos: spark.local.dir: comma-sep list
+  * too much memory can be hurt by GC collection pauses
+  * Mesos and YARN can run multiple executors on a node
+  * Standalone: multiple workes by SPARK_WORDER_INSTANCES
+
+
+
+
+For broadcast variables: resolve .value only inside function, otherwise it is slow (slow: rdd.foreach(lambda row:var.value))
+
+Cluster managers
+
+Standalone:
+* master
+* resilient to worker failures; recovery by standby masters in ZooKeeper quorum
+* resources per application
+* on Hadoop with HDFS
+* authentication with shared secret; configure each node; encrypted transfer
+
+Mesos:
+* distributed systems kernel
+* master
+* support for Docker
+* makes resource offers to application
+* control over cpu, memory, disks, ports
+* entities authenticate with Cyrus SASL (default); access control lists for services
+
+YARN:
+* distributed computing
+* job scheduling, resource manager
+* Docker support
+* Kerberos for user and service
+
+Mastering Spark
+===============
+* Catalyst query optimizer:
+  * all as tree of Catalyst expressions with further optimization (Logical Query Plan Optimizer, code generation, predicate push down)
+* Tungsten execution engine
+  * own Internal Binary Row Format
+  * data in off-heap format; no GC
+* Dataset
+  * compressed columnar format outside JVM heap
+  * internally a logical plan that describes computation
+  * DataFrame: Dataset[Row], untyped
+  * default storage: MEMORY_AND_DISK
+  * emptyDataset or createDataset create local datasets and can run without Spark executors
+* functions:
+  * UDF: value to value for a row
+  * Aggregate functions: group of rows with single return value per group
+  * Windowed Aggregates: group of rows and single value per row in group
+* catalog implementations (spark.sql.catalogImplementation):
+  * in-memory (default)
+  * hive
+* SparkSession
+  * merge of SQLContext and HiveContext
+  * internally requires SparkContext and SharedState (shared across SparkSessions)
+* SerDe:
+  * Encoder for serialization and deserialization framework
+  * serialize records in Dataset (faster than default Java or Kryo since know schema)
+* Column operators:
+  * .over(windowspec): window computations
+* UDF:
+  * in Scala 0 to 10 arguments possible
+* Parquet:
+  * supports predicate pushdown (https://jaceklaskowski.gitbooks.io/mastering-apache-spark/content/spark-sql-catalyst-optimizer-PushDownPredicate.html#parquet)
+* Groups:
+  * groupBy, rollup, cube, pivot: returns RelationalGroupedDataset -> agg, count, mean/avg/max/min/sum, pivot
+  * groupByKey: returns KeyValueGroupedDataset -> agg, mapGroups, flatMapGropus, reduceGroups, count, cogroup
+* Window:
+  * partition
+  * ordering
+  * frame (what window)
+* Join:
+  * broadcast option in join?
+  * spark.sql.autoBroadcastJoinThreshold
+* SparkUI Stages page:
+  * https://jaceklaskowski.gitbooks.io/mastering-apache-spark/content/spark-webui-StagePage.html
+  * duration: executorRunTime
+  * scheduler delay: time to ship task from scheduler to executor and send results back
+  * task deserialization time
+  * GC time: executor paused for Java GC while task running
+  * result serialization time: serializing task result before sending back to driver
+  * Getting result time: time driver spends fetching task results from workers (if large -> decrease anizbt if data returned from task)
+  * Peak execution memory (only when Tungsten enabled): sum of peak sizes of internal data structures created during shuffles/agg/joins
+  * Input Size/Records: of data read from storage
+  * Output Size/Records: of data written to storage
+  * Shuffle Read Blocked Time: waiting for shuffle data from remote machines
+  * Shuffle Read Size/Records: local+remote data
+  * Shuffle Remote Reads: remote data
+  * Shuffle Write Size/Records
+  * Shuffle spill (memory)
+  * Shuffle spill (disk)
+* Architecture: https://jaceklaskowski.gitbooks.io/mastering-apache-spark/content/spark-architecture.html
+* Accumulators: long, doubles or collections (https://jaceklaskowski.gitbooks.io/mastering-apache-spark/content/spark-sparkcontext.html#creating-accumulators)
+* Test command: sc.parallelize(0 to 999, 50).zipWithIndex.groupBy(_._1 / 10).collect
+* /metrics/json: to get metric values
+
+Tips
+====
+* identifiers in Parquet are lower-cased for compatibility with Hive
+* "Error: Size exceed Integer.MAX_VALUE": partition data never above 2GB (https://issues.apache.org/jira/browse/SPARK-6190 ?)
+* "java.lang.OutOfMemoryError: Java heap space":
+  * more spark.executor.memory
+  * more partitions (2-4 per CPU)
+  * decrease shuffle memory fraction (but shuffles might spill to disk); increase if shuffle does OOM
+  * memory leak: often closing over objects you don't need in lambdas; check "task serialized as ...", should be at most very few kB
+  * avoid nested Java structures
+  (* old Spark: decrease spark.storage.memoryFraction (can be 0 if don't use cache))
+  
+Spark memory
+============
+https://0x0fff.com/spark-memory-management/ (starting Spark 1.6.0)
+
+|----------------------------------------------------------------| 
+|                             Java Heap                          |
+|----------------------------------------------------------------|
+| Reserved  | Storage            / Execution       | User Memory |
+|-----------|--------------------------------------|-------------|
+| Spark     | cache, broadcast     shuffle buffers |             |
+| internals | serialized unroll    hash agg.       |             |
+|-----------|--------------------------------------|-------------|
+
+* total = "Java Heap"
+* "Reserved memory" (default 300MB):
+  * hard-coded (spark.testing.reservedMemory only for testing); used for Spark internal objects; -> executor min. size 450MB
+* "Spark Memory" = (JavaHeap - ReservedMemory) * spark.memory.fraction (default 0.75)
+  * dynamically split into
+    * Storage Memory (set by spark.memory.storageFraction ~ 0.5): cached data, temp serialized data unroll, broadcast vars; can be evicted (HDD fallback)
+    * Execution Memory: required for execution; e.g. shuffle intermediate buffer on map side; hash tables for hash agg.; supports spill to disk
+* "User Memory":
+  * anything user wants
+  * e.g. store own data structures to use in RDD
+-> if Execution Memory grows beyond limits, cannot shrink
+
+* 10G YARN container - spark.storage.safetyFraction ~0.9 -> 9GB usable space
+
+Rules of thumb for memory
+=========================
+* JVM <=64GB, e.g. 40GB sweet spot (otherwise GC)
+* executor <= 4cores (beyond that inefficient)
+* fewer large executors better (otherwise more network traffic)
+* many small executors of ETL with many map() tasks
+* remember Application Master takes one core
+* deprecated params: shuffle.memoryFraction, storage.memoryFraction, storage.unrollFraction
+
+Shuffle
+=======
+* 1 file per reduce task from each map task
+* relies on OS for buffering
+
+Performance
+===========
+* map, distinct, .. lose partitioner -> use mapPartitions, mapValues instead of map or reduceByKey instead of distinct
+* maybe:
+  * spark.executor.extraJavaOptions = "-XX:+UseG1GC"
+  * spark.io.compression.codec = "lz4"
+  
+  
+Python UDAF: not planned yet https://issues.apache.org/jira/browse/SPARK-10915
+
+
+* written in Scala; runs on JVM
+
+.map(..).filter(..) has almost identical performance to .flatMap(..[x] else []) w
+
+conf=SparkConf().setMaster(..).setAppName(..)
+sc=SparkContext(conf=conf)
+sc.stop()  # or sys.exit()
+
+sc.textFile(..)
+data.saveAsTextFile(..)
+
+rdd.persist()
+rdd.cache()    # persist with default storage level
+Python: pickled in JVM heap
+Scala/Java: unserialized objects in JVM heap
+can choose storage level: Mem/Disk; only/both; serialized/not
+(no eval until action)
+unpersist()
+if mem-only -> automatically evict old partitions by LRU
+
+sc.parallelize(..)
+
+lineage graph: to recompute RDD if needed
+
+passing functions which contain object references (e.g. method) -> everything has to be pickled
+
+union(): bag
+distinct(): expensive
+intersection(): expensive set operation
+
+fold(): takes zero value
+fold, reduce: return type same as element type -> need map() before
+-> or use aggregate()
+
+foreach(): execute on all, but dont return result
+
+Scala: need specialized/typed RDD to do numeric or ByKey operation; implicit in Scala if you import org.apache.spark.SparkContext._
+
+Pair RDD
+--------
+* Scala: implicit conversion to PairRDD if mapped to tuples
+* reduceByKey: transformation, since too large for action
+* combineByKey: to customize combining behavior (most general; like aggregate())
+  * call createCombiner() for newly seen keys
+  * call mergeValue() if key seen before
+  * call mergeCombiners() to merge partitions
+  * !can disable map-side combines if wouldn't save space (e.g. groupByKey only appends to list); -> need to specify partitioner; for now can use myrdd.partitioner
+* specialized reducer function can be much faster than manual grouping/reducing
+
+Parallelism
+-----------
+* each RDD has number of partitions
+* for aggregations or grouping can tell number of partitions
+* usually Spark guesses num. part. based on size of cluster
+* repartition(..) to change data; shuffles
+* coalesce(..); less expensive repartition (avoid data movement), but only to decrease number of partitions; check rdd.getNumPartitions()
+* use groupByKey instead of groupBy+reduceByKey
+
+Cogroup:
+* merge multiple RDD by key (like join) -> RDD[(K, (It[V], It[W]))]
+* each data grouping normally (non-unique keys fine)
+
+Joins
+-----
+* join
+* leftOuterJoin, rightOuterJoin: None in Python; Option in Scala
+
+Sorting
+-------
+* sort by key -> later collect()/save() will be sorted
+
+Partitioning
+------------
+* not useful when data scanned only once
+* only if scanned multiple times with key-oriented operations -> group by keys
+* hash partition; sorted partition
+* partitionBy(..): returns new RDD; persist after!; in Python pass number instead of HashPartitioner
+* partitioning information saved in RDD; but map() destroys this information
+* Scala: partitioner() -> Option -> isDefined(), get() -> spark.Partitioner()
+* useful for: cogroup, groupWith, join, joins, groupByKey, reduceByKey, combineByKey, lookup
+* fro cogroup: one RDD (with partitioner) not shuffled
+* mapValues: preserves partitions
+* if both RDDs created with same partitioner: join no shuffle
+* partitioner being set in values for: cogroup, groupWith, joins, groupByKey, reduceByKey, combineByKey, partitionBy, sort
+* partitioner set if parent has: mapValues, flatMapValues, filter
+* for binary RDD operations: use hash partitioner; or partitioner of RDD (first if possible)
+* can also user customer partitioner to user domain knowledge (implement numPartitions, getPartition(key), equals())
+
+Loading and Saving data
+-----------------------
+* can use InputFormat/OutputFormat from MapReduce/Hadoop; but most often use higher-level API
+* access files (JSON, Sequence, text, ...), Spark SQL (JSON, Hive), Key-value databases (Cassandra, JDBC, ...)
+* sc.textFile("file///home..")
+  * load single file: element per line
+  * load multiple files: key=filename, value=content
+  * supports wildcard expansion
+  * pass directory to load all
+  * sc.wholeTextFiles(<dir>): key=filename, value=content
+* rdd.saveAsTextFile(<dir>): multiple files (so that many nodes can write); no control of data segments in files
+* mapPartitionss() to reuse (JSON) parser, if constructive the parser expensive
+* Hadoop CSVInputFormat in Scala (but doesnt support records with newlines)
+* SequenceFiles: Hadoop format with key-value pairs; have sync markers, so that multi-read can sync on record boundaries
+  * loading: sequenceFile(path, keyClass, valueClass, minPartitions); e.g. sc.sequenceFile(inFile, "org.apache.hadoop.io.Text", "org.apache.hadoop.io.IntWriteable")
+  * in Scala: sequenceFile[Key, Value](path, minPartitions): get native Scala types automatically; no need to convert Writeable to Scala types
+  * saving: PairRDD:saveAsSequenceFile(path)
+* ObjectFiles:
+  * wrapper around SequenceFiles to save just values
+  * values written using Java serialization; can be slow -> but require almost no work to save arbitrary objects
+  * load: objectFile()
+  * saveAsObjecFile()
+  * for Python rather: saveAsPickleFile(); pickleFile()
+* Hadoop file: LSp84
+* textFile and sequenceFile can handle automatic compression; some codecs can guess type when reading
+  * split-table formats: can find start of record without reading whole file
+    * split-table yes: LZO, BZIP2
+    * no: GZIP, ZLIB, Snappy
+    * Snappy not pure Java; others are
+    * Fast: LZO, Snappy, (not BZIP, ZLIB)
+    * Effective on text: GZIP, BZIP!, (not: Snappy)
+    -> Split-table: LZO much faster; BZIP higher compression
+    -> dont use: ZLIB, Snappy
+    -> LZO better in all; GZIP effective and fast; BZIP2 very effective but slow
+  * textFile() can handle splittable, but automatically disables if if splittable -> skip wrapper and use newAPIHadoopFile file with specified codec instead
+  
+Filesystems
+-----------
+* local files: need to be in same path on all nodes -> put on HDFS (otherwise load locally and sc.parallelize)
+* Amazon S3: LSp90
+* Spark can use HDFS locality; use "hdfs://master:port/path"
+* Hadoop version needs to match to binary (specify SPARK_HADOOP_VERSION when compiling)
+* Spark SQL
+  * query -> RDD of Row objects; in Python access with ["attr"] or .attr
+  * can load Hive; copy hive-site.xml to Spark/conf dir. -> create HiveContext object; write HQL
+  from pyspark.sql import HiveContext
+  hivectx=HiveContext(sc)
+  rows=hivectx.sql("select ... from ..")
+  firstrow=rows.first()
+  firstrow.name
+* JSON data:
+  * create HiveContext (but don't actually need Hive set up)
+  data=hivectx.jsonFile("...json")
+  data.registerTempTable("table")
+  results=hivectx.sql("select .. from table")
+* JDBC: LSp93
+* Cassandra: LSp94
+* HBase, Elasticsearch
+
+Advanced operations
+-------------------
+* accumulator: aggregate information
+* broadcast
+* batch operations for tasks with high setup costs
+* interact with other programs by pipe()
+* tools for numeric key/value data
+
+Accumulator
+...........
+* acc=sc.accumulator(<initval>)
+  ..
+  def func(..):
+      global acc
+  acc.value   # but execute action first
+* at least in Spark 1.2.0: !accumulator guarenteed to run only once [due to recovery, pre-emptive on slow, ...] only for *actions* (not transformation) -> might need foreach()
+* for custom Acc. (apart from numeric): extend AccumulatorParam
+
+Broadcast variables
+...................
+* send large read-only data to workers by Bittorrent-like communication
+* select spark.serializer since default Java slow when not primitives
+
+Working per-partition
+.....................
+* version of map and foreach
+* to avoid doing an expensive operation for each element (e.g. not create a JSON parser for each element)
+* mapPartitions(lambda iter1:<iter2>) # input partition data; output iterator -> function called only once
+* mapPartitionsWithIndex((partid, it)->it)
+* foreachPartition(it->nothing)
+* mapPartitions could also replace some reduces on machines
+
+Piping to non-Python/Scala
+..........................
+* rdd.pipe() : used with process that does unix stdin/stdout
+* e.g for R
+* newlines as separators
+sc.addFile(distScriptNameWithPath)  # will be stored in SparkFiles.getRootDirectory
+rdd.pipe(SparkFiles.get(distScriptBasename)) # need bash-bang
+rdd.pipe(Seq(SparkFiles.get(distScriptBasename),","))
+
+Numeric on RDD
+..............
+* rdd.stats() -> StatsCounter object with count, mean, sum, max, min, variance, sampleVariance, stdev, sampleStdev
+
+Running on cluster
+------------------
+* Driver: own Java
+  * converts user input to tasks (atomic)
+  * DAG createdM optimizations (like merging maps) -> convert execution graph into stages
+  * each stage has multiple tasks
+  * spark UI: port 4040
+* Executors: own Java
+  * each executor registers with driver; can run tasks and store RDDs
+  * driver will try to schedule task based on data placement
+  * typical live for lifetime of application
+  * in-memory storage for cached RDDs by Block Manager
+* Cluster manager: pluggable in Spark; so that can run on YARN etc.
+* master/worker = centralized/distributed portions of cluster manager (not quite same as driver/executor; can both be on worker nodes)
+* spark-submit to submit jobs; spark_submit --master yarn myscript.py <scriptargs>...
+  * user runs spark-submit
+  * launches driver, invokes main()
+  * driver contacts cluster manager and asks for resources to launch executors
+  * cluster manager launches executors
+  * driver sends work to executors; executors calculate results
+  * release resources when sc.stop() or main() exits
+* master:
+  * spark://host:port
+  * yarn # YARN cluster, HADOOP_CONF_DIR variable for config
+  * local, local[N] (n cores), local[*] (all cores)
+* --help: show options
+* --deploy-mode: client (driver locally), cluster (driver on worker)
+* --name <appname>: for UI
+* --py-files <.py, .egg, .zip>: files to add to pythonpath
+* --files <file1, file2>: files to distribute
+* --jars <jar1, jar2>: jars to place in classpath
+* --executor-memory 512m: memory in executors
+* --driver-memory 512m: memory in driver
+* --conf <prop>=<val>: extra SparkConf
+* --properties-file <file>: key/value file for SparkConf
+* Spark itself automatically distributed
+* for JARs with dependencies best to create complete "uber JAR" / "assembly JAR" (e.g. by Maven or sbt [Scala build tool])
+* don't request more executor-memory than available on workers
+* "cluster mode": driver launched in cluster (--deploy-mode cluster)
+* settings:
+  * --executor-memory (default 1GB): each application at most one executor*processorcore per worker
+  * --total-executor-cores (default unlimited, also spark.cores.max): how many executors
+  * see settings in http://masternode:8080
+  * setting spark.deploy.spreadOut=false in conf/spark-defaults.conf to squeeze executors to single machines
+  * for YARN: set HADOOP_CONF_DIR=HADOOP_HOME/conf (containing yarm-site.xml) --> --master yarn
+  * use cluster mode for the driver to run on YARN
+  * --num-executors (default 2): usually best to small number or large executors (can optimize communication); however sometime clusters have executor memory size limit
+  * --queue: select queue
+* Mesos LSp134
+  * fine-grained sharing option: can interactively scale down CPU between commands -> good for multi-user
+  
+conf=SparkConf()
+conf.set("spark.app.name", ..)   # or setAppName(..)
+conf.set("spark.master", ..)     # or setMaster(..)
+sc = SparkContext(conf)
+
+spark-submit:
+* --properties-files myconf.conf  # whitespace key/value; searched in conf/spark-defaults.conf
+
+Other settings:
+* spark.executor.memory (--executor-memory): def 512m
+* spark.executor.cores (--executor-cores): def 1?
+* spark.cores.max (--total-executor-cores): def none
+* spark.speculation: def false; rerun slow tasks pre-emptively
+* spark.storage.blockManagerTimeoutIntervalMs: liveness of executors; check doc if not general timeout
+* spark.executor.extraJavaOptions, spark.executor.extraClassPath, spark.executor.extraLibraryPath: JVM
+* spark.serializer: def org.apache.spark.serializer.JavaSerializer; general but slow; suggestion use org.apache.spark.serializer.KryoSerializer
+* spark.<X>.port: X={driver, fileserver, broadcast, replrClassServer, blockManager, executor}
+* spark.eventLog.enable: def false
+* spark.eventLog.dir: def file:///tmp/spark-events
+
+Not in sparkconf:
+* env SPARK_LOCAL_DIRS in conf/spark-env.sh: comma-separated locations for local storage for shuffle data (needed for standalone or Mesos)
+
+Execution
+=========
+* merge logic into tasks
+* rdd.toDebugString: show DAG
+* shuffles are persists even if you don't do it -> can re-use
+* job = set of stages
+* inspect stage runtime (is it inconsistent across runs)
+* possible data skew -> do few tasks take much more time?
+* check tasks: reading/computing/writing time
+* "Storage" page: what's persisted
+
+Logs
+====
+* Standalone: work/
+* YARN: `yarn logs -applicationId <appID>` (after application finished, since has to collect)
+  * logs while running from ResourceManagerUI Nodes page/containers
+* format example: conf/log4j.properties.template -> copy to log4j.properties; use spark-submit --files to add this file
+
+Performance
+===========
+* partitions: single task for each
+* typically chooses partitions by underlying storage (i.e. parition for hdfs-block)
+* partitions after shuffle depend on parent partitions
+* in program: repartition(); or coalesce() if only reduce partitions [no shuffling here]
+* e.g. reduce partitions heavily if you select only small subset of data; otherwise many free
+* serialization:
+  * when shuffling over network or spilling to disk
+  * Kryo serializer may be faster; also register classes you want to serialize (saves long class names) [spark.kryo.registrationRequired=true to force]
+  * if cannot find which class caused serialization error: JVM option "-Dsun.io.serialization.extended DebugInfo=true" with --driver-java-options and --executor-java-options
+  * classes need to implement Java Serializable
+* memory inside each executor:
+  * RDD storage: when persist(); limit by spark.storage.memoryFraction
+  * Shuffle and aggregation buffer: limit by spark.shuffle.memoryFraction
+  * user code
+  * default: 60% RDD, 20% shuffle, 20% user code
+  * if do persist with MEMORY_AND_DISK: spills to disk (default MEMORY_ONLY -> drops old) -> good for very expensive RDDs
+  * can improve caching by setting MEMORY_ONLY_SER or MEMORY_AND_DISK_SER storage levels: serialization slightly slower, but can reduce garbage collection time a lot (stores many records as single serializable buffer) -> check GC time in UI (pauses);
+* hardware:
+  * spark.executor.memory
+  * YARN: spark.executor.cores, --num-executors
+  * Mesos, Standalone: as many as possible executors; can limit by spark.cores.max
+  * check ratio of cached data
+  * YARN: local disk config read directly from YARN
+  * Standalone: local disks from SPARK_LOCAL_DIRS in spark-env.sh
+  * Mesos: spark.local.dir: comma-sep list
+  * too much memory can be hurt by GC collection pauses
+  * Mesos and YARN can run multiple executors on a node
+  * Standalone: multiple workes by SPARK_WORDER_INSTANCES
+
+
+Shuffles
+========
+* small buffer before writing to disk: spark.shuffle.file.buffer.kb
+* implementations hash or sort (default) from spark.shuffle.manager
+* spark.shuffle.consolidateFiles=true: mappers use same file (one per reducer)
+* sort based:
+  * each map tasks creates single, sorted file with all reducer-segments; together with index file which knows the splits
+  * if #reducers <= 200 (spark.shuffle.sort.bypassMergeThreshold) and no aggregation or ordering: do hash way (?)
+  
+  
+Get configs
+===========
+sc._conf.getAll()
+
+= UI
+Black dots: RDD
+Green dots: cached RDD
+Stages: when pipelining
+Skipped stages: grey; e.g. if shuffle files exist
+MLLib ALS for demo
+
+DataFrames: have special "SQL" tab in UI
+Streaming: have special "Streaming" tab in UI
+
+"===" operator in Scala/Spark; e.g. for join(..., format(a)===format(b)) -> knows how to optimize; does not have to do full cartesian anymore
+
+Event timeline:
+Each bar a task
+
+
+
+== Shared variables
+
+* broadcast: cache value in memory on all nodes
+* accumulator: only add to
+
+== Linking with Spark
+* Python 3.4+, PyPy 2.
+3+
+* spark-submit for Python
+* needs to be linked with correct HDFS version
+
+[source,python]
+----
+conf = SparkConf().setAppName(appName).setMaster(master)
+sc = SparkContext(conf=conf)
+----
+
+== Running
+
+* pyspark invokes `spark-submit`
+* `PYSPARK_DRIVER_PYTHON=ipython`
+* `PYSPARK_DRIVER_PYTHON_OPTS=notebook`   if needed
+* deployed by JAR, `.py` or `.zip` (for Python)
+
+== RDDs
+
+* 1 task per partition
+* 2-4 partitions per each CPU in cluster
+* 1 task on every executor
+* don't use global variables to pass (in local mode it may partyly work however)
+
+== http://spark.apache.org/docs/latest/programming-guide.html#external-datasets[External data]
+
+* can use `hdfs://`, etc
+* `sc.textFile(..)`; default one partition per block (default 64MB); partitions>=blocks
+* local file must have same path on all machines
+* supports as sources: directories, wildcards (e.g. `*.txt`), compressed (e.g. `*.gz`)
+* `whoteTextFiles`: read directory, return `(filename, content)`
+* `rdd.saveAsPickleFile()`, `sc.pickleFile()`
+* `rdd.saveAsSequenceFile()`, `sc.sequenceFile()`: loads RDD of key-value in Java, converts to Java Writables, pickles with Pyrolite
+* Hadoop I/O
+
+== Passing functions
+
+* `self.field` will need to send whole object -> make local `field=self.field`
+
+== Shuffles
+
+* shuffles only on key-value RDDs
+* from `repartition`, `coalesce`, `*ByKey` (except counting), joins
+* creates map tasks (to organize) and reduce tasks (to aggregate)
+  * map: kept in memory until cannot fit; then sorted by target partition and written to single file
+  * reduce: read relevant sorted blocks
+* some tasks need a lot of heap to organize: `reduceByKey` and `aggregateByKey` on map side; `*ByKey` operations on reduce side; spill to disk if overflow
+* temporary files from shuffle kepts (in `sparl.local.dir` config)
+* can http://spark.apache.org/docs/latest/configuration.html#shuffle-behavior[adjust] behavior
+
+== Persistence
+
+* `persist` or `cache`
+* fault-tolerant: re-computed on failure
+* behavior set by passing http://spark.apache.org/docs/latest/api/python/pyspark.html#pyspark.StorageLevel[StorageLevel] object
+* options:
+  * memory/disk
+  * serialize (but in Python always pickled anyway)
+  * use off-heap Alluxio (experimental)
+* http://alluxio.org/[Alluxio] (formerly Tachyon):
+  * less garbage collection
+  * executors smaller and share pool of memory
+  * check suggested version pairings
+  * cache not lost when executors crash
+* automatic drop of partitions by LRU
+* for manual `rdd.unpersists()`
+
+== Broadcast variables
+* broadcast algorithm to reduce communication cost
+* only useful when multiple stages need data (otherwise spark already broadcasts in serialized form)
+* `sc.broadcast(obi).value
+
+== Accumulators
+
+* added through associative operation
+* shown in Spark UI (if name given) [not yet in Python?]
+* only driver can read value
+* natively only float accumulator
+* custom with subclass of `AccumulatorParam`
+  * `zero(init)` return value
+  * `addInPlace(v1, v2)` return value
+  * `sc.accumulator(init, MyAccParam())`
+* only in actions applied exactly once; in transformations may be re-executed
+
+== SQL
+
+* SQL or HiveQL
+* can read from Hive
+* results are DataFrame
+* interact with SQL interface by command-line or JDBC
+* `sqlContext=pyspark.sql.SQLContext(sc)`
+* `HiveContext` has more functions (HiveQL, Hive UDF, read Hive tables); recommended if not scared about Hive dependencies; works without Hive too
+* `spark.sql.dialect` setting; but defaults are fine
+* `sqlContext.sql("..")`
+* to run SQL on dataframe `df.registerTempTable("tablename")`
+* `saveAsTable` to persist; `sqlContext.table(..)` to load; default: "managed table" (location controlled by metastore; files deleted if table dropped)
+* `sqlContext.read.load("...", format="json")`
+* query on file also possible `sqlContext.sql("select * from parquet.`file.parquet`")`
+* `SaveMove` for how to overwrite (error [default], append, overwrite, ignore)
+* disable `spark.sql.sources.partitionColumnTypeInference.enabled` to avoid numeric type detection
+* supported http://spark.apache.org/docs/latest/sql-programming-guide.html#data-types[data types] (does support decimal, datetime, date, ..)
+
+== DataFrames
+
+* `df = sqlContext.read. .. ("..")`
+* `df.col`, 'df["col"]`
+* created from RDD:
+  * list of `pyspark.sql.Row(..)`
+  * RDD of lists or tuples
+  
+[source,python]
+---
+from pyspark.sql.types import *
+schema=StructType([StructField("name", StringType(), True),
+                   ..])
+df=sqlContext.createDataFrame(rdd, schema)`
+---
+
+== Datasets
+
+* strongly types, powerful lambda, SQL optimization engine
+* created from JVM objects
+* new in Spark 1.6; but no Python yet
+* uses http://spark.apache.org/docs/latest/api/scala/index.html#org.apache.spark.sql.Encoder[Encoder] to serializer -> allows filtering, sorting and hashing without deserialization
+
+== Parquet
+
+* on write, columns automatically converted to nullable for compatibility
+* `.read.parquet`, `.write.parquet`
+* can detect Hive partitioned data (i.e. special directory names per feature value)
+* -> use `basePath` if you intend to load a specific partition directly and want to keep table schema
+* schema evolution: add columns
+  * -> multiple parquet files
+  * expensive -> off by default (set `mergeSchema` on load or see  `spark.sql.mergeSchema`)
+  * e.g. merge directories with slightly different schemas
+* when connecting to Hive, Spark uses own Parquet support (instead of Hive SerDe, see `spark.sql.hive.convertMetastoreParquet`)
+* different to Hive:
+  * Spark Parquet case-sensitive
+  * Spark Parquet columns not forced to be nullable
+  * Hive metastore and Parquet http://spark.apache.org/docs/latest/sql-programming-guide.html#hiveparquet-schema-reconciliation[reconciled]
+* Spark caches Parquet metadata (if updated by external tools, do ``sqlContext.refreshTable("tablename")`)
+* Parquet http://spark.apache.org/docs/latest/sql-programming-guide.html#configuration[Config] options
+
+== JSON data
+
+* automatically infer schema
+* one JSON object per line
+
+== http://spark.apache.org/docs/latest/sql-programming-guide.html#hive-tables[Hive tables]
+
+* Hive support needs to be enabled on build with `-Phive -Phive-thriftserver` (needed on all nodes)
+* `HiveContext`adds support for finding MetaStore and HiveQL
+* different versions of Hive metastores can be queries if http://spark.apache.org/docs/latest/sql-programming-guide.html#interacting-with-different-versions-of-hive-metastore[configured]
+* supported  and unsupported http://spark.apache.org/docs/latest/sql-programming-guide.html#supported-hive-features[Hive features]
+* selection of unsupported: buckets, column statistics, ..
+
+== http://spark.apache.org/docs/latest/sql-programming-guide.html#jdbc-to-other-databases[JDBC]
+
+* connect to JDBC and get DataFrame (better) or RDD
+* include to `SPARK_CLASSPATH`
+
+== Performance tuning
+
+* can http://spark.apache.org/docs/latest/sql-programming-guide.html#caching-data-in-memory[cache tables] using in-memory columnar format `sqlContext.cacheTable("tablename")` or `df.cache()`
+* -> Spark will only scan required columns and tune compression
+* `sqlCtx.uncacheTable("tablename)"`
+* config `spark.sql.inMemoryColumnarStorage.compressed`, `spark.sql.inMemoryColumnarStorage.batchSize`
+
+== http://spark.apache.org/docs/latest/sql-programming-guide.html#distributed-sql-engine[Distributed SQL Engine]
+
+* JDBC or CLI (`bin/spark-sql`)
+
+== NaN
+
+* NaN == NaN is true
+* in aggregations NaN groups
+* NaN normal key in groups
+* Nan larger than any value in sorting
+
+== RDD
+
+* properties:
+  * partitions
+  * dependencies
+  * compute function (return iterator)
+  * optional partitioner (hash, range, ..)
+  * optional preferred location of partitions
+* narrow/wide dependency (former can pipeline, latter after shuffle)
+
+
+== Spark execution
+
+* DAG into stages (separated by shuffle; not pipelineable)
+* multiple tasks per stage into executor -> result: prepare for shuffle or return
+* tasks send to lower level scheduler (re-schedule if needed)
+* tries to reduce shuffle communication (e.g. keep some partitions where they are on joining)
+* shuffle:
+  * map: write buckets to disk (often in OS buffer in memory)
+  * reduce task: fetch data
+
+== Debugging
+
+* Web UI:
+  * port 4040
+  * find slow stages, stragglers?
+* Executor logs:
+  * work folder on worker nodes
+* task stragglers: max duration high; time per task
+  * -> can try task speculation (re-launcheds tasks), `spark.speculation`
+* data skew: algorithm specific
+* if tasks just slow:
+  * garbage collection: check GC time ratio from full duration (memory pressure?)
+  * just code performance
+* if still running: can check task logs; turn on JVM GC options (-verbose:gc to extra Java options)
+* jmap -histo:live <pid> (Java tool) to see what is allocating; jps to show whats running; ...
+* mapPartition can sometimes save memory compared to map (if you do allocation once)
+* local debugging if just slow: jstack (run sometime and see where your are), YourKit, VisualVM, ..
+* can try local mode and use normal debugging tool
+
+== SQL
+
+* Catalyst optimizer (optimize DAG; rel. algebra, expressions, query optimization)
+* (Shark: was too tightly coupled)
+* `sqlCtx.inferSchema(rdd)` -> schema rdd
+* in Scala: use case class as RDD elements -> RDD automagically schema RDDs
+* on schema RDD you can do SQL after registering as table
+* SQL cache table (lazy operation): big buffer for each column, compression (e.g. delta encoding for integers); cachetable not cache() atm
+* can register UDF in Python and use them in Scala
+* wrappers for Hive UDFs exist
+* HQL queries lazy
+* Parquet: self describing (schema, column names)
+* reading parquet gives schema RDD
+* nested data in Parquet supported
+
+
+== Streaming
+
+* Storm: only at-least-once; Trident: exactly-once, but slow
+* latency 1 sec
+* DStream (discretized stream)
+* need to set batch size
+* `.window(period, steps)`
+* can continously `.updateStateByKey(func)` (-> internally joins with old state)
+* `.transform()`: to intermix RDD and DStream (e.g. for historical data); query streaming data with SQL
+* batches of input replicated in-memory
+* easy to write data receivers
+
+== MLLib
+
+* MLOpt: auto optimizer (hyper-param)
+* can exploit sparsity (storage, computation)
+
+== Performance
+
+* tasks unit of work on one machine
+* tasks save output for shuffle; other machine fetch parts
+* academic work on optimizing: disk, network, stragglers
+* observations https://www.youtube.com/watch?v=mBk4tt7AEHU[Ousterhout]
+  * network optimizations help only 2%
+  * CPU often bottleneck (often >90% utilization)
+  * disk <19% improvable
+  * stragglers often can be fixed (5-10% improvement)
+* spark task:
+  * request shuffle data in parallel
+  * already start on local data; later get network data
+* shuffle data only 30% of input data
+* network only important for e.g. highly optimized matrix multiplication
+* currently spilled data not measured by Spark
+
+== Parquet
+
+* language indep. data format
+* encoding/compression per column
+* nested representation (Dremel paper)
+* saves statistics per data block (e.g. min/max per block)
+* CPU optimized; e.g. avoid wasted cycles on branch speculation ("bubble"), cache misses
+* encodings:
+  * delta encoding (e.g. for time stamp or sorted); use min-delta offset to make positive
+  * prefix coding (delta encoding for strings)
+  * dictionary encoding (<60k values)
+  * run length encoding (repetitive data)
+
+== Tuning Spark
+http://blog.cloudera.com/blog/2015/03/how-to-tune-your-apache-spark-jobs-part-1/
+http://blog.cloudera.com/blog/2014/05/apache-spark-resource-management-and-yarn-app-models/
+
+* Stage: collection of tasks; one stage no shuffleing
+* Task: same code on different data chunks
+* Executors: run multiple tasks from multiple jobs
+* Security only with YARN through Kerberized Hadoop(?)
+* modes:
+** yarn-cluster: driver in application master; for production, not for interactive work; client can go away
+** yarn-client: driver inside client process; application master merely requests resources
+* if two datasets already grouped:
+** don't ungroup with flatMap-join-groupby
+** -> use `cogroup` instead
+* broadcast, if one dataset small
+* more shuffles (partition) sometimes useful to increase parallelism
+* `repartitionAndSortWithinPartitions` sometimes useful
+* --executor-cores, spark.executor.cores
+** vcores<=5, otherwise HDFS client has problems with throughput of too many tasks
+** vcores=1 would throw away advantage of having multiple processes in single JVM (e.g. less broadcast variables)
+* --num-executors, spark.executor.instances
+** remember that AM will take a container (1 core)
+* yarn.nodemanager.resource.memory-mb: max memory of all containers on each node
+** leave 1GB/node to OS
+* yarn.nodemanager.resource.cpu-vcores: max cores of all containers on each node
+** leave 1 core/node to OOS
+* executor memory:
+** spark.executor.memory:
+*** spark.shuffle.memoryFraction
+*** spark.storage.memoryFraction
+*** better <=64GB, otherwise too much GC delays
+** spark.yarn.executor.memoryOverhead:
+*** ask for more memory than executor-memory, since JVM can also have off-heap data (interned strings, direct by buffers, ...)
+*** default max(384, 0.07*spark.executor.memory)
+** yarn.scheduler.minimum-allocation-mb, yarn.scheduler.incre,emt-allocation-mb: may change requested memory slightly
+* application master memory:
+** yarn-client mode: 1024MB, 1 vcore
+** yarn-cluster mode:
+*** --driver-memory
+*** --driver-cores
+* spark.default.parallelism: default num partitions if not specified (e.g. `sc.parallelize`)
+** check with `rdd.partitions().size()`
+** best to have enough tasks for slots; otherwise also more memory pressure
+** set by experimentation: start with parent partion number and multiply by 1.5 until no performance improvement
+** run enough tasks so that data for each task fits into memory
+*** roughly `spark.executor.memory*spark.shuffle.memoryFraction*spark.shuffle.safetyFraction/spark.executor.cores`
+*** default memoryFraction=0.2, safetyFraction=0.8
+*** in-memory shuffle data ~ observed_shuffle_write * observed_shuffle_spill_memory/observed_shuffle_spill_disk
+*** divide last by the previous and round up to get parallelization level
+* use spark.serializer=org.apache.spark.serializer.KryoSerializer
+
+
+== Bugs
+
+Spark 2.0.0. may throw ArrayIndexOutOfBounds and have weird behaviour on comparing ints to strings.
+First error fixed with "--spark.sql.parquet.enableVectorizedReader=false"
+
+Spark 2.0.0 and 1.6.2 (both in HDP 2.5) have data corruption for >200 columns using cache (Jira 16664). Fixed in all versions above.
+
+
+fillna(2e10) will lose rows depending on cache or no cache! even if column type is LongType
