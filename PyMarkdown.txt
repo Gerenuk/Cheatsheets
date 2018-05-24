@@ -1,7 +1,0 @@
-Python module
-markdown.markdown(<string>)
-markdown.markdownFromFile(<file>)
-
-python -m markdown <input.txt>
-
-Extensions possible

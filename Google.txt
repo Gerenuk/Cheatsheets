@@ -1,8 +1,0 @@
-"phrase search"
-phrase-search 
-~house							will also search for synonyms ("home")
-2000..2005					searches "2000 2001 2002 2003 2004 2005"
-define:css					looks up definition of css
-link:site.com				find backlinks
-apples OR pears
-apples | pears

@@ -640,3 +640,69 @@ df.orderBy(F.desc("col"))
 
 * https://developer.ibm.com/hadoop/2016/08/03/is-cpu-scaling-impacting-your-hadoop-performance/[CPU scaling] may affect performance
 
+= Spark
+
+== Spark execution model
+* narrow dependence: independent of data (e.g. coalese), can pipe
+** map..., filter...
+* wide dependencies: need shuffle
+* join narrow if partitions co-partitioned
+* partitioner:
+** numPartitions (max index)
+** getPartition (key to index)
+* .partitionBy(..)
+** assigns partitioner
+** can reduce shuffle if co-partitions (same partitioner)
+** preservesPartitioning=True: if sure keys do not modify
+* Kryo: not useful for Python
+* Spark tries to pipeline inside Python process
+* mapPartitions: for faster map
+* check rdd.partitioner to see setting
+* use `preservePartitioning=True` for co-partitioner
+* use numPartitions=old.getNumPartitions() in new (shuffled?) data
+* mapValues: preserved partition
+* -> much less tasks
+
+
+= Spark SQL
+* .explain(True) to see plans
+* can push filters even to Parquet
+* pushdown: is option that needs to be enabled
+
+== Joins
+
+* hashjoin: supports only equality join; creates hash map
+* sort-merge join: no extra data structure, for huge tables; need sortable keys; can do more than equality
+* 4 types of join
+** spark.sql.join.preferSortMergeJoin=True; default
+** shuffle hash join: key not sortable; one side smaller; can use spark.sql.autoBroadcastJoinThreshold=10MB to tricks Spark; also can use spark.sql.shuffle.partitions to influence (since decision depends on these values); size < autobroad*numshufflepart, sizeA * 3 <= sizeB
+** broadcast join: autoBroadcastJoinThreshold again; could also manually sc.broadcast(dfB)
+* faster than Python UDFs: use Hive UDFs or Scala
+
+== Optimizations
+* persistence: MEMORY_ONLY_2: stores 2 replicas
+* checkpoint(): reliable write to HDFS and cut lineage
+** sc.setCheckpointDir(..)
+** cannot checkpoint Dataframe; need to checkpoint RDD
+** checkpoint in noisy cluster
+* spark.memory.storageFraction: guaranteed for cache
+
+== Resources
+* Executors can manage multiple tasks
+* leave at least 1 core and 1GB on each node
+* also leave 1 container to application master
+* use 5 cores per executor (due to HDFS reading)
+* use 90% of memory since off-heap
+
+== Dynamic allocation
+* since Spark usually uses long running containers
+* spark.dynamicAllocation.enabled=true
+* spark.dynamicAllocation.executorIdleTimeout=60s
+* spark.dynamicAllocation.cachedExecutorIdleTimeout=infinity -> need to lower this! otherwise cached data executors always stay
+* min/maxExecutors
+* shuffles will be lost with executors -> o YARN: spark.shuffle.service.enabled=ture, yarn.nodemanager.aux-service
+
+= Other
+* register udf for  SQL: spark.udf.register
+* F.unix_timestamp(.., <format>)
+* .astype("timestamp")

@@ -1,4 +1,4 @@
-= Sorting
+== Sorting
 * minimum comparisons ceil(log2(n!)) up to n=11
 * sorting networks optimal in comparisons up to at least n=12
 * best general purpose sorting network is Nlog^2N
@@ -6,7 +6,7 @@
 * most sorting networks not stable
 * network being able to sort 0s and 1s only, can sort any numbers (theorem)
 
-= Top 10
+== Top 10
 * Monte Carlo method or Metropolis algorithm, devised by John von Neumann, Stanislaw Ulam, and Nicholas Metropolis;
 * simplex method of linear programming, developed by George Dantzig;
 * Krylov Subspace Iteration method, developed by Magnus Hestenes, Eduard Stiefel, and Cornelius Lanczos;
@@ -18,41 +18,139 @@
 * Integer Relation Detection Algorithm, developed by Helaman Ferguson and Rodney Forcade; (given N real values XI, is there a nontrivial set of integer coefficients AI so that sum ( 1 <= I <= N ) AI * XI = 0?
 * fast Multipole algorithm, developed by Leslie Greengard and Vladimir Rokhlin; (to calculate gravitational forces in an N-body problem normally requires N^2 calculations. The fast multipole method uses order N calculations, by approximating the effects of groups of distant particles using multipole expansions)
 
-= Very simple hash
+== Very simple hash
 Fowler-Noll-Vo hash:
-hash0=OFFSET
-forall x:
-   hash <- (hash*PRIME) XOR x
+
+    hash0=OFFSET
+    forall x:
+       hash <- (hash*PRIME) XOR x
    
-= Red-Black-Tree
+== Red-Black-Tree
 Average and Worst case:
 * Search/Insert/Delete: Log
 * Space: N
 * efficient in-order traversal
 * analogous to B-tree of order 4 (B-tree more general though)
 
-= BK-Tree
+== BK-Tree
 * quickly find fuzzy string matches
 * using triangle inequality
 
-= Point location (http://en.wikipedia.org/wiki/Point_location):
+== Point location (http://en.wikipedia.org/wiki/Point_location):
 * determine which region (from disjoint set) a query point lies
 * clever decomposition techniques (e.g. slab decomp., hierarchy of triangles, monotone lines decomp., randomized trapezoidal decomp. (most practical))
 * trapezoidal decomp.: lines up and down from each point (until hits an edge); build directed acyclic graph for querying
 * 2D: query logN, space N
 * 3D: query log^2N, space N logN (maintain several planar point location data)
 
-= Generate random permutation iteratively
+== Generate random permutation iteratively
 * http://stackoverflow.com/questions/28990820/iterator-to-produce-unique-random-order
 * http://preshing.com/20121224/how-to-generate-a-sequence-of-unique-random-integers/
 * use variable width encryption since 1-1-mapping (e.g. Hasty Pudding, Feistel (at least 4 rounds))
 * use Permutation polynomials of finite fields
 * use A*k mod N (where N and A relatively prime; i.e. ggT=1)
 
+== Optimization
 
-++++++++++
-* lowest common ancestor: find ancestor in tree
-* multi-string search: Aho–Corasick algorithm
-* maximum subarray problem: find the contiguous subarray within a one-dimensional array of numbers which has the largest sum (can contain negative numbers!)
+* scipy.optimize.fmin: simplex downhill optimization
 
-scipy.optimize.fmin: simplex downhill optimization
+
+== Linear Programming
+* Simplex usually pretty good; worst case exponential
+* Ellipsoid algorithm always polynomial (m+n^2)n^5
+log(n*U) (n dimension, m num. equations, U size of coef); but in practical not great
+  * only determines whether there is a solution
+  * bound solution set by ellipsoid
+  * if center not in solution set -> make hyperplane through center
+  * solution set must be on one side
+  * -> bound by new smaller ellipsoid
+  * ellipsoid doesn't need actual equation, but only separation oracle which finds hyperplane which doesn't cross set
+
+== Dynamic programming
+* travelling sales man: n^2*2^n
+
+== Heavy hitters
+* k most frequent items
+* space complexity k*log(n)
+* space log(n)
+* ApproxPointQuery: approx tell the frequency of an element so far
+
+Simple block:
+* for each element add C+=hash(x) where result is -1 or +1
+* final estimate of element x frequency is C*hash(x)
+-> show that expected value is unbiased and variance small
+* noise term hash(x)hash(y) has average zero since E[hash]=0
+* for variance use Chebyshev
+* variance = sum f^2 (frequency squared)
+* -> not necessarily small; depends on stream
+* -> works well for most frequent elements
+
+Algorithm:
+* hash into b disjunct substreams determined by hash(element value)
+* use ~log(n) of these substream bunches and take median when estimating one item
+* within each bunch use yet another fixed hash->+1/-1 hash function and add
+* (small items estimated from substreams where frequent element doesnt appear much)
+* see CountSketch screenshot for condition on how many buckets one needs (also depends on sequence frequency tail)
+* b at least 8*k (if search top k items)
+
+
+== String algorithms
+
+=== Substring search
+* substring search easy; but with multiple patterns?
+-> could construct trie which contains all patterns
+* but trie could be huge in memory
+-> suffix trie of whole text! trie with all "suffixes"; add $ as final letter
+* but also need to include information about position
+-> add starting position to bottom leaf
+* but need Text^2/2 size
+-> can compress into suffix Tree: edges save partial strings
+* store position+length in suffixtree only
+* there is linear Weiner algorithm to construct suffix tree
+* but 20*|Text| memory footprint
+* also approximate matching not clear
+
+=== Burrows-Wheeler transform
+* transform substring repeats into runs
+-> frequent words generate runs: e.g. from many "and" you get sorted "nd" with "a" as final letter
+* faster inversion: 1st, 2nd, ... "a" in first/last column correspond to same words
+-> need only first and last column and back and forth jumping
+
+=== BWT for pattern matching
+* can use first-last property (first/last column) to search for pattern
+* previous letter of first column always in last column
+* but slow since checking all letters -> introduce counts for runs
+* but where are the matches?
+* basically BWT allows for doing step by step (reverse) letters
+
+=== Suffix arrays
+* only store starting position of BW suffixes
+* is also depth-first traversal of suffix tree
+* Manber-Myers algo
+* could store only some values and recalc intermediate positions
+* can build in N*logN
+* like suffixes sorted (from left side)
+* last artifical character $ which is smaller than all
+* tag of suffix is their starting position -> order by suffix -> single list of numbers
+* BWT (starts) is same as suffix array
+* can build suffix tree from this in linear time
+
+=== Approximate pattern matching
+* esp. for many test patterns
+* BWT again
+* can search with number of mismatches
+
+=== Knuth-Morris-Pratt
+* Running time |Text|+|Pattern|
+* match prefixes; if (partial) match, skip as sensible
+
+
+== GLOSSARY
+
+* https://en.wikipedia.org/wiki/List_of_algorithms
+
+[glossary]
+Lowest common ancestor:: find ancestor in tree
+Aho–Corasick algorithm:: multi-string search
+Maximum subarray problem:: find the contiguous subarray within a one-dimensional array of numbers which has the largest sum (can contain negative numbers!)
+
