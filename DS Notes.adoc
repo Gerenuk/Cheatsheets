@@ -1,0 +1,1020 @@
+== TS analysis Blue Yonder
+* https://www.youtube.comwatch?v=U4p46XdXy6A
+* use conda install requirements file
+* pydse package
+* web.mta.info/developers: passengers from subway
+* ARMA: need to remove trend and saisonality first
+
+== Whats wrong with convolutional nets
+http://techtv.mit.edu/collections/bcs/videos/30698-what-s-wrong-with-convolutional-nets
+-> REWATCH!
+* no notion of entity
+* too few levels of structure (only neurons, layers, whole net)
+* want: layer; group subsets; different activities represent different properties of same entity
+* one entity per "mini-column"
+* capsule:
+** if entity is present; describe properties (pose, orientation,...)
+** take predictions from low level capsules; look for predictions that agree tightly
+** output probability that present -> output cluster center of properties (ANN cant do this well)
+** high dim dont agree just by chance
+* convnets:
+** local features; replicated across space
+** but interleaved pooling layers (only take most active one indep. of position) -> some translational invariance but not good
+* pooling bad since:
+** bad to psychology of shape perception
+** ...
+* neural nets arent good at high order parity problem (is it left hand or right hand)
+* ...
+
+== AA
+https://www.youtube.com/watch?v=ek9jwRA2Jio&spfreload=10
+* Empirical risk minimization consistent iff VC finite
+* Reichenbach: X and Y dependent if X<-Z->Y; or directly X->Y
+* X indep of non-descendants given parents
+* functional causal model
+* can we recover causal graph if prob known
+* -> we can infer consistent graph with independences
+* may contain accidental independencies
+* Markov condition: X indep of non-descendants given parents
+* Functional Causal Model:
+** more specific information than Graphical model -> predict effect of interventions
+** can argue about counter-factuals
+** observables connected by arrows; determined by parents and unexplained (noises random; indep)
+** Graphical model in this notations wouldn't be unique
+* Question:
+** by conditional independence testing you can infer class of graphs consistent with observed independencies; and will also contain correct graph
+** track how noise spreads in graph
+** problems:
+    * distribution may contain accidental conditional independencies
+    * if functions are complex, test for cond indep becomes arbitrarily hard
+    * cant solve problem for 2 vars (since no conditional indep possible)
+* with additive noise can find direction of causality for two variables
+* semisupervised learning fails where prediction causal
+
+== OpenCV
+* Object detection:
+** Haar cascades: more reliable looks for certain rectangular transitions
+** Local binary pattern: faster; detect transition dark to light in any direction
+* look at different scales
+* use data stored in XML
+* neither can detect rotated or flipped objects; need standardization
+* gray=cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)
+* cv2.equalizeHist first
+* detectMultiScale; neighbors: same face detected some pixels shifted
+* CV_HAAR_SCALE_IMAGE f or flags good
+* eyes need to be standard height
+* rectangle of cats should include much more than cat; no background -> no ears included
+* for face recognition:
+** Eigenfaces
+** Fisherfaces: build average face plus differences
+** local binary pattern histogram: fast; good for realtime training
+
+== Intro to Gaussian processes
+* Williams is bible
+* http://videolectures.net/gpip06_mackay_gpb/
+* similar application to ANN
+* solve just with Gaussian distribution
+* parallel coordinate plot of multiple variables (Gaussian)
+* variables are high dim Gaussian
+* marginalized variables: can just remove cols/rows in covariance matrix
+* -> think of covariance matrix in Gaussian processes
+* covariance matrix like modes; inverse covariance like forces
+* like non-linear regression
+* cov(yi,yj)=Gaussian(xi-xj)+diagonal term
+* -> use for non-linear regression
+* GP: collection of random variable s.t. joint distr. of any finite subset is Gaussian
+* Bayes theorem for hyperparam
+* have like infinite number of parameters
+* automatic relevance determination: large sigma for that variable
+* can do prediction of mean/var with (N+N^2)N* instead of (N+N*)^3 operations for inverting matrix [N number of training points; ]; full computations only for all covariances
+* -> or even faster approximate answer
+* need to chose covariance function
+* linear regression possible; Brownian; can do 1 layer infinite ANN
+* classification by sigmoid link of Gaussian
+* special cases: RBF; Splines; ANN 1-layer
+* problems:
+** ill-conditioned
+** N^3 hard for N>1000
+
+== LeCun deep learning
+http://videolectures.net/sahd2014_lecun_deep_learning/
+* many effective paths through network
+* almost like random matrix theory or high-order spherical spin glasses
+* use rectification, contrast normalization,
+* convnet on sliding window is cheap
+
+
+* Regularization indep of data
+* -> large alpha decreases dependence on data
+* balance data loss + regularization loss -> should be tangent when sum is minimized
+* Lp; p<1 non-convex -> only L1 sparse and convex
+
+* gradient descent iteration like "fitting on error" in GBT
+
+2014 Google Imagenet 7% error on top-5
+
+NMF = finding simplex which contains all points (with many points at vertex)
+
+Linear models in sklearn
+*
+
+== AA
+https://www.youtube.com/watch?v=TB3axpIpCiQ
+explain:
+* what if change variable? sensitivity
+* feature contribution; path approach
+** feature importances
+* compare subsets
+
+== AA
+https://www.youtube.com/watch?v=9Zag7uhjdYo
+Learned from Kaggle
+
+== Probabilistic programming in quantative finance
+https://www.youtube.com/watch?v=MeKucat_gw8
+* MCMC works for all right away
+* approx posterior with MCMC
+* -> PyMC3 package (uses Theano which compiles to C code)
+* use NUTS() sampler
+* t-distribution more stable and can give totally diff result; it's in the tails
+* t-distribution more robust to outliers
+
+== Winning data science competitions
+https://www.youtube.com/watch?v=spYNo8TU0fs
+* tuning GBM:
+** 1000 trees and tune learning rate
+** how many obs in leaf
+** interaction depth 10+ ok; roughly number of leave nodes
+* help GBM:
+** for high cardinality features (zip codes, ...); slow if all one-hot or overfit
+** convert into numerical with preprocessing - out-of-fold average, counts, ...
+** use ridge regression and out-of-golf predication as input to GBM or blend
+** use N-way interactions (e.g. even 7-way)
+* dont use in sample prediction for stacking (overfitting first steps get high weights later) - since first model (early in stack) already used target -> use different data (e.g. half/half and swap around)
+* strong interactions benefit from being explicitely defined for GBM (esp. ratio, sum, diff....)
+* GLMnet:
+** complements GBM well (since GLM global model)
+** need work for missing, outliers, transformations, interactions
+** work with small number of rows
+* tricks text mining:
+** tau package (R)
+** L2 penalty
+** N-grams
+** many text-mining dominated by structured fields
+** include trivial features (length, number of words, ...)
+* encode categorical:
+** use avg. response of level
+** use counts of that category
+** leave-one-out encoding: avg(Y) for same category rows apart from current row; for testing data just avg without leave out -> A0,A1,A1,A0 -> 0.6,0.3,0.3,0.6
+** add random noise (factor 0.98-1.02 to features)
+* VW good
+* Allstate for 7 labels:
+** baseline last quoted hard to beat
+** model chain of models (assume you know one label part - predict next one)
+** one model to decide whether to use baseline
+* Time series:
+** linear approach
+** or translate to GBM
+
+== Frequentism and Bayesianism
+https://www.youtube.com/watch?v=KhAUfqhLakw
+* multiple measurements as gaussian
+* freq=weighted average with 1/sigma_i^2
+* differences when:
+** handling nuisance parameters (intermediate latent param)
+** interpreting uncertainty
+** incorporating prior info
+** comparison and evaluation of models
+
+Taking Humans out of the Deep Learning Loop
+* https://www.youtube.com/watch?v=VG2uCpKJkSg
+
+== Introduction to information theory
+http://videolectures.net/mlss09uk_mackay_it/
+
+=== Error correction
+* Shannon: reliable communication over unreliable channel
+* care about error correct ratio and transmission ratio
+* can do much better than repetition codes
+* some of the first: (7,4) Hamming -> 3 parity bits, linear block code; corrects 1/7 errors, transmits 4 bits
+* BCH(1013,101)
+* !below the capacity of channel (rate): an arbitrary small error is theoretically possible
+* for channel which flips with probability f:
+** C_CSB(f)=1-H_2(f)
+** H_2(f)=-f ld(f)-(1-f)ld(1-f)
+** e.g. C(f=0.1)=0.53..
+* since 1993 we know how to make good codes
+* DVBS2 - sparse graph codes
+* Fountain codes, ...
+* Hamming: H*t=[0,0,0]' mod 2 (H is 7x3 matrix)
+* !sphere packing never got to shannon limit of error correction
+* Shannon averaged over all codes and shows that average probability of error is small
+* Factor graph:
+** bipartite graph (for each matrix)
+** spare, only few connections
+** parity constraints
+** loopy belief propagation, need iterations to settle code word (sum-product algorithm) -> not good to get marginal probabilities
+** can get arbitrary close to Shannon limit
+
+=== Compression
+* Huffmann within 1 bit of optimal (entropy)
+* symbol codes (single character) bad if Markov chain (since +1 bit is very large for extreme distributions)
+* arithmetic coding:
+** learning probabilities on the fly
+** identical twin learning
+** encode binary
+** within 2 bits of optimal of whole file
+
+== Linear algebra
+* Tr log A=log det A
+* SVD of nxp matrix: O(max(n,p)min^2(n,p)) time
+* positive definite: xTAx>=0, invertable, all eigenvalues positive
+
+Due to Cauchy:
+df/dx=Im(f(x+i*h))/h   # much less floating round-off errors
+only if analytic
+
+== Tribes of machine learning
+https://www.youtube.com/watch?v=UPsYGzln-Ys
+* Pedro Domingos
+* Symbolists
+** Induction/Deduction
+** -> composable rules
+** master algoritm: inverse deduction
+* Connectionist:
+** deep learning, Bengio/Hinton/LeCun
+** assignment to which part is important
+** -> emulate brain
+** master algorithm: backprop
+* Evolutionaries
+** John Koza, John Holland! (dead), Hod Lipson
+** -> discover structure
+** master algorithm: genetic programming
+* Bayesians:
+** David Heckerman, Judea Pearl, Michael Jordan
+** -> model uncertainty
+** master algorithm: probabilistic inference
+* Analogizers:
+** Peter Hart, Vladimir Vapnik, Douglas Hofstadter
+** -> generalize to very different situations from very little examples
+** nearest neighbor, analogies
+** SVM: only consider border points, also amooth border
+** master algorithm: kernel machines
+* Recommender system: 1/3 of Amazon business, 3/4 of Netflix business
+* Universl learner to enable:
+** home robots
+** world wide brain
+** cure cancer
+** recommendation on every data available about you
+
+== Deep learning
+https://www.youtube.com/watch?v=kxp7eWZa-2M
+* recommenders: Matrix factorization or RBM (in Netflix both)
+* ReLU: derivatives are such as to make same optimal learning rate in each layer due to weight convergence
+* machine translation: run RNN; hidden state is then thought vector (on very big data not as good as google though)
+* brain and backprop? -> explanation why still possible
+
+== Machine learning that changes behavior in wild
+https://www.youtube.com/watch?v=QWCSxAKR-h0
+
+== LeCun keynote
+https://www.youtube.com/watch?v=fe-uxTUnoCs
+* memory in networks?
+
+== Deep learning
+* optimization RMSProp w Mom.m ADaM (easiest to tune); SGD w/ Mom. (harder)
+
+== Introduction to Gaussian Processes
+https://www.youtube.com/watch?v=JSY2rha7qOw
+* sum of Gaussians is Gaussian
+* scaling Gaussian also Gaussian
+* multivariate Gaussian to put prior directly on function
+* ???
+
+https://www.youtube.com/watch?v=rrBhHDzmgUA
+* Taken theorem: just single coordinate x(t), but together with x(t-D), x(t-2D) can reconstruct
+Lyapunov coef and topology if dynamics (e.g. Lorenz attractor)
+* -> could use convergent cross-mapping by comparing x(t),x(t-D) - y(t),y(t-D)
+
+== Tensorflow
+* Python and C++ frontend to specify computations graph
+* all data flows are tensors (N-dim arrays)
+* distributed; multiple devices possibly simultaneously
+* useful for many ML algorithms
+* abstracts away hardware
+* extensible
+* auto differentiation
+* stateful nodes; no parameter server
+
+== Tensor methods
+https://www.youtube.com/watch?v=KmvZu9qJNzg
+* Spectral methods
+* spectral on tensors: higher order relations (not just pairwise Cov)
+* Orthogonal Tensor Power Method
+* tensor decomposition
+
+https://www.youtube.com/watch?v=TFIMqt0yT2I
+* Invariance by neural activities bad -> better equivariant in shape
+* you notice if right angles slightly off in square but not diamond (turned square)
+* capture affine tranformation between parts; they should chain as "multiplication"
+* capsules find: x,y,prob of some object part
+* factor analysis to pose vectors
+
+HTM
+http://numenta.com/learn/principles-of-hierarchical-temporal-memory.html
+* cortex 75% of brain; 2.5mm think; uniform functionally
+* ~4 layers; mini-columns
+* 1000 synapses
+* only 10% are close to cell body, rest far away
+* new synapses formed -> most learning
+* all regions memory of sequencesM sequence unfolding
+* 2 layers forward, 2 backward
+* stable, if predict whats next
+* connection: in layer and also next layer
+* synapses dont always work; fail often
+* very few active, 2%
+* SDR overlap -> similar
+
+== Stable conservative clustering for exploration
+* not k-means
+* DBSCAN OK
+* Robust Single Linkage: hierarchical, robust to outliers
+* HDBSCAN even better
+
+=== Sparse distributed representations
+https://www.youtube.com/watch?v=LbZtc_zWBS4
+* w bits on of n -> (n over k) representations
+* overlap by AND and count
+* failure tolerant
+
+== Tensor methods
+https://www.youtube.com/watch?v=B4YvhcGaafw
+* beat local optima by tensor factorization
+* discriminative model: learn conditional distr of output given input
+* generative model: learn joint distr of input and output
+* generative models make NN tractable
+* transform input
+* XOR has local optima
+* multivariate moments methods
+** use E(x*y), E(x*x*y), E(phi(x)*y)
+** here use the transform
+** class of score function: S=-grad log pdf(x)
+** -> look at correlation with label
+** also higher order score functions
+** derivatives nicely related to parameters
+** with matrix not enough constraints; with tensors more coverery possible
+
+== Recent advanced in deep learning
+* LSTM better than RNN; gating mechanism; long-range "memory" due to forget gates
+* seq2seq: for let it run with only input; generate representation vector
+* also possible to take image features and output text description
+* Sequences are now first class citizens
+* Sets as features?
+
+== RNN
+* trick to avoid vanishing/exploding gradients: clip gradients to prevent instability
+* but too "powerful": model become too complex
+* ht=o(A*xt+R*h(t-1)); yt=f(U*ht)
+* Structurally constraint recurrent networks: diagonal layer keep state, has single constant for self-connections of nodes; accumulates long history
+* less parameters than LSTM; computationally cheaper
+* cannot do well:
+** variable-length patterns
+** algorithmic paterns
+** a^nb^n
+
+== Trend estimation in time series signals
+https://www.youtube.com/watch?v=likDxYXhNQY
+* median filtering: more robust to outliers, non-linear; could shadow mid-term if large window
+* exponential weighted moving average: not robust to outliers; pd.stats
+* bandpass filtering: extract mid-term (high=noise; low=bias); similar to Hodrick-Prescott filter; scipy.signal
+* hodrick-prescott filter:
+** one of best for trends
+** decompose into trend (mid-term growth) and cyclical component
+** minimize optimization function with smoothness constraint
+** good when noise Gaussian
+** bandpass at heart
+** cycle: short term; trend: medium term
+** linear
+** Python statsmodels
+* L1 trend filtering:
+** L1 error
+** more robust
+** piecewise linear!
+** nonlinear
+** good when noise exponentially distr.
+** computationally expensive
+** library from Bugra
+
+== Survival analysis in Python
+https://www.youtube.com/watch?v=XQfxndJH4UA
+* lifelines package
+* -> measure durations
+* know "when does someone die?" (without waiting for too long)
+* censorship problem; don't see end of all patients
+* survival curve S(t)=P(T>t)
+* KaplanMeier curve for fitting
+
+== Spark
+* DataFrame: same performance for all languages due to Catalyst optimizer
+* Tungsen:
+** today often CPU bound (only network and disk speed [SSD] increased)
+** -> improve CPU efficiency
+** dynamic/runtime code generation
+** exploit more cache locality (L1, L2)
+** off-heap memory management (do manual memory; otherwise JVM messes up GC)
+** easier with DataFrame -> Tungsten enabled only there yet
+* Dataset API:
+** in Scala want more type safety
+** typed interface over dataframes/Tungsten
+** define arbit Java objects; convert any object to DataSet object
+** tells how to map to Tungsten types, SPARK-9999
+* Streaming DataFrames
+** dataframe concept to streaming also
+* Amazon 2TB bytes soon
+* new memory 3D XPoint (large as SSD, last as RAM)
+* could optimize for more than JVM: LLVM, SIMD (vectorized), 3D XPoint, ...
+
+== Learning Theory - Domingos
+* from Coursera
+* VC generalizes PAC to continuous spaces
+* Gibbs learner: pick random hypothesis by probability from data; use that to classify; is <= 2*bayesoptimal
+* NFLT: since there is always and exactly opposite concept which give accuracy 1-x instead of x for a particular learner
+* anti-concepts is basically one where all test samples are assigned the opposite label
+* -> proved with function bool->bool; accuracy on unseen examples relevant
+* <Acc(Learner)>_concepts=0.5
+* loss=bias+variance+noise; if noise->need more attributes
+* only noise unavoidable
+* bias&variance is about random variations in training set
+* bias: deviation of avg predicted model from reality
+* variance: oscillation of predicted model around avg predicted model when training set changes
+* variance has nothing to do with truth; diff between avg model and data
+* bias: truth-avg
+* variance: avg-data
+* general: main prediction y-bar = argmin E(loss(y,y')); for squared loss argmin is mean
+* bias/variance measured at particular point; but could also avg
+* in classification variance can be good; unstable classifier gives good results; unlike in regression
+* PAC learning:
+** learn about generalization error from training error
+** how much data is enough?
+** hypothesis space H finite; m indep instances
+  -> prob. that version space (training consistent hypothesis) contains hypoth.
+  with error greater eps, goes down as |H| exp(-eps*m) [probabilistic statement]
+  -> prob goes down exponentially with instance numbers [bad hypothesis won't get all right; prob. decreases fast]
+  -> to bound error by delta: m>=1/eps*(ln|H|+ln(1/delta))
+** making delta small not so costly; but also |H|=2^2^d
+* Agnostic learning:
+** dont assume that concept is in hypothesis space
+** write 2*eps, if care about bound on difference between train/test error
+* for infinite hypothesis space -> VC dimension
+** replace ln|H| by VC
+* shattering:
+** relation between set of instances and hypothesis space
+** if for every dichotomy, there is always a consistent hypothesis
+* VC = largest finite subset of instance space that shattered by H
+*! adversary makes label; but you choose any point positions
+* hyperplane in d-dim: VC=d+1
+* 1 param could also have infinite VC
+* SVM: E(error)<=E(#sup.vec)/(#instances)
+
+== Random project ensemble classifiers - Schclar, Rokach
+* general johnson-lindenstrass: any metric with N points can be embedded by a bi-Lipschitz map into an Euclidean space of logN dimension with a bi-Lipschitz constant of logN [4]
+* single run of random projections unstable -> use ensemble [10]
+
+== The separation plot - a new visual meothd for evaluation the fit of binary models - Greenhill
+* best cutoff and implications unclear
+* ROC curve tells little about actual model fit
+* evaluation calibration:
+  * Brier score
+  * Expected PCP [Herron99]: (sum_(y=1) p_i + sum_(y=0) (1-p_i))/N
+* plot rag-plot on probability as x-axis for all classes (mb with cumul too)
+
+== On multi-class cost-sensitive learning - Zhou, Liu
+* example dependent cost-learning: [Zadrozny01]...[Maloof03]
+* cost-sensitive good for imbalanced: [Chawla02], [Weiss04]
+* rebalancing not helpful for multiclass [ZhouLiu06]
+* Elkan theorem: to make target prob threshold p* correspond to p0 -> number of 2nd class examples multiplied by p*/(1-p*)*(1-p0)/p0
+
+== Cost-sensitive learning and the class imbalance problem - Ling, Sheng
+* theory of cost-sensitive learnign [Elkan01][ZadroznyElkan01]
+=> check ICET [Turney95], cost-sensitive decision tree [DummondHolte00, Ling04]
+
+== Multiclass cost-sensitive classification
+* see refs [_1]
+=> check regs [4][5]
+
+== Feature-weighted linear stacking - Sill, Lin
+* stack by linear model, where coef are linear of raw features again (-> actually linear model with interaction terms again)
+* sum (sum a_ij f_j)*p_i ; where p_i is prediction of model i and a_ij is raw feature j of model i
+* use non-negative weights for stacking [6]
+* netflix features: number of movies rated by user, number of users rated for a movie, log/binary versions, mean user rating with bayesian shrink to overall mean, norm of 10-factor SVD trained on residuals of global effects,
+  correlations, ... (see table 1)
+
+== Class imbalance
+* different reason for problem possible [_2]
+* SVM-ensemble good if low imbalance; SVM-THR good if high imbalance and correlated features [_2]
+=> check [19] for effect of high dimensions with imbalance
+=> check [37] for threshold method (threshold change leaves accuracy same, but adjusts precision/recall)
+* one-class SVM good for high imbalance [27]
+* Meta Imbalanced Classification Ensemble (MICE) [40], good but requires algorithmic modification
+* feature selection described in [_3]
+* many sampling-based references in [_3]; many are similar, SMOTE good for large training, some ideas on imbalanced rules
+=> [_3]: [38-39] WE and RUS good
+* cost-sensitive references in [_3]
+=> cost-sensitive RF by sampling+thresholding [_3:61]
+* empirical thresholding [_4:ShenLing06]
+* references in [_5]; some comparisons
+* SMOTE-ENN (in sklearn/imbalanced-learn) good (?)
+* cost-sensitive SVM not so successful
+* C5 cost-sensitive was same as oversampling (both better than under-sampling(?))
+* some references in [_6]
+* balanced random forest and weighted random forest in [_6]
+
+[_1] Cost-sensitive classification - Status and beyond - Lin
+[_2] Class-imbalanced classifiers for high-dimensional data - Lin, Chen
+[_3] A review of class imbalance problem - Elrahman
+[_4] Cost-sensitive learning and the class imbalance problem - Ling, Sheng
+[_5] Analysis of preprocessing vs cost-sensitive learning for imbalanced classification - Lopz, Herrera
+[_6] Using random forest to learn imbalanced data - Chen
+
+== Decision tree
+* http://de.slideshare.net/pierluca.lanzi/machine-learning-and-data-mining-11-decision-trees
+* impurity measure should:
+  * zero when pure node
+  * maximal when all classes equally likely
+  * multistage property (decision can be made in several stages)
+* -> satisfied by entropy; but biased towards attributes with large number of values
+* -> Gain ratio reduces this bias
+* GainRatio=Gain / IntrinsicInfo
+  IntrinsicInfo(S,A) = sum |S_i|/S * log |S_i|/|S|
+* GainRatio may overcompensate (chose attribute just because IntrinsicInfo low) -> consider attributes only with greater than average information gain
+* Biases:
+  * Information gain: towards multivalued attributes
+  * Gain ratio: prefers when one partition much smaller than others
+  * Gini index: prefers multivalued attributes; problems when number of classes large; favors equal-sized partitions and purity in both
+
+* latest C4.5: J4.8 in Weka (or commercial C5.0 from Rulequest)
+
+== Graph DBs and Python
+* http://de.slideshare.net/MaxKlymyshyn/odessapy2013-pdf
+* ArangoDB; Bulbflow, py4neo
+* Arango:
+  * AQL: Arango query language
+  * support Gremlin graph query
+
+== Clustering
+* Subspace clustering: cluster may exist only on subspace
+
+== Pomegranade
+* https://youtu.be/YBknijEiABA?t=8m15s
+* fast and intuitive
+* combine HMM, GMM, NB, Graphical, ...
+* even faster than numpy, scipy, sklearn... for prob tasks
+
+== Decreasing uncertainty
+* https://www.youtube.com/watch?v=jtkSaHC6Hy0
+* curse of dim -> use weakly informative priors or penalized regression
+* Weakly informative priors:
+  * Y~N(X*b,sigma); likes Cauchy-0.25(l,s) prior for coef b
+  * credible interval: chance of being in limit right now
+  * confidence interval: chance of being in limit if repeated experiment
+  * weakly informative prior: confidence intervals much smaller
+  * -> Andrew Gelmans secret weapon
+  * "Stan" package for MCMC (faster than BUGS)
+* Penalized regression:
+  * penalty term added to regression
+  * glmnet: gives coef: which minimize; and which minimize when error still within 1std error
+  * penalized regression can't do confidence intervals easily
+* Bayesian interpretation of penalized regression:
+  * look at posterior mode
+  * -> ridge prior: normal; lasso prior: laplace prior (exp.)
+  * -> tighter confidence intervals; greater interpretability
+
+== Hochreiter Neural Network Notes
+Solution to vanishing gradient:
+* pre-train network
+* ReLU
+* LSTM
+* Highway net
+* ResNet
+* Ky Fan: showed that if activation=activation-old+term then solved
+
+* SGD actually good since creates entropy and reaches flat minima
+
+=== Self-Normalizating NN
+* ANN Kaggle successes (apart from images) actually only HIGGS, Tox21, Merck Activation
+* ReLU+norm best at 2-3 layers only
+* !usually ANN unstable on inhomogeneous data (cannot do too much regularization either), but Self-Normalizing NN work
+* best slope 1.05 (>1)
+* only SeLU start to become better than RF
+* SeLU can work with 8 layers
+
+=== GANs
+
+* use two-time-scale to avoid oscillations
+* Coulomb GANs: go along high field direction
+
+== Hinton at Stanford - Backprop in Brain
+https://www.youtube.com/watch?v=VIRCybGgHts
+* neuro scientists have arguments why backprop cannot be
+* -< show that there is a way
+* Wake-Sleep algo (Hinton'95): double direction connection; try to reconstruct; no need for backprop
+* Goodfellow Image generation: 2nd net tries to detect whether image real -> internals can be used in generative net
+* -> don't have to inject label for supervision
+* stochastic 0/1 fine
+* regularizer: let models share information (dropout -> softmax = geometric mean ensemble); parameter want to be like in other model (better than zero)
+* there is a way to represent derivatives
+
+== McKinney
+* Feather:
+** build on columnar Arrow
+** minimal structure to include Python and R dataframes
+** libfeather C++
+** Rcpp for R and Cython for Python dataframe
+** not as fast as native though
+* with Blueyonder: Arrow based adapter to parquet
+
+== Yamal by Blueyonder
+https://www.youtube.com/watch?v=R1em4C0oXo8
+* splitter: split data into chunks and execute following pipeline on all chunks in parallel
+* fork: fork same data stream to different functions
+* reduce: combine different streams
+* scope: assign labels to data; case-when-label structure
+* all functions single argument
+* different execution backends: local parallel, remote parallel (self-made cluster backend)
+* pipelines are lists of functions
+* pickled with dill
+* scheduled with asyncio
+* pipeline observers: e.g. graph observer, performance observer
+* top-level Airflow to schedule tasks; yamal in between as pipelines
+
+== What's new in deep learning
+https://www.youtube.com/watch?v=mw-NfRO1jv0
+* different weight initialization guidelines; but simple theory doesnt work
+-> Batch Normalization from Google'15: adapative re-parametrization of data
+* mean and variance calc during training -> normalized data to mean 0, variance 1
+-> gradient won't harm; don't need penalization to cost function anymore
+* now also need to increase learning rate
+* also remove dropout
+* accelerate annealing
+* shuffle training data better
+* better to train on real data only (not artifical/augmented)
+* currently 152 layers, ResNet 2015
+* ResNet: shortcut, residual connections (?)
+* ResNet'16: no max pool, no hidden fully connected, no dropout, simple network
+
+== Pragmatic data scientist
+* https://www.youtube.com/watch?v=HS7mObQttxU
+ Optimize NN search for cosine distance
+* cosine distance not metric
+** but cos(X,A)>cos(X,B) -> can also look at euclidean distance of normalized vectors -> use space partitioning tree for nearest neighbor search
+ Missing value in X of test set
+* marginalized over missing value, once you have full classifier
+
+== Survival analysis
+https://www.youtube.com/watch?v=fli-yE5grtY
+* covariates <-> time of event
+* birth event: start of observation period; death event: end of o.p.; censorship: don't always see death
+* Kaplan-Meier estimator: MLE estimate survival curve from empirics
+* Nelson-Aalen: same for cumulative durvival function
+* Cox model: proportional hazard hi(t)=h0(t)exp(sum beta x)
+** -> partial likelihood
+* Additive Hazards model: when covariates time-dep and Cox cant be used
+** lambda(t)=Y(t)*alpha(t)
+* evaluate: concordance index (generalization of ROC AUC)
+* beyond Cox:
+** GAM (mgcv in R)
+** Random Survival Forest (randomForestSRC in R): only 3 parameters to fix and no assumptions about covariates
+
+== Hyperparam search
+* Gaussian processes: only for not too many continuous parameters
+* Random Forest Based (SMAC): discretize all
+* Non-parametric TPE: for condition param; need prior distr.
+* Spearmint seems best
+* Random search at 2x eval is better
+* auto-sklearn; SMAC search; explicit parameter list
+* Autoweka; SMAC or TPE; no meta-learning; no pipeline selection
+* Hyperopt-sklearn; TPE; list of parameters
+* TPot; genetic algorithm for pipelines
+* Spearmint; only model based optimization; can use for own search
+* Scikit-optimize; GP
+* in sklearn soon: BayesianSearchCV, Pipeline search, parameter lists
+* hyperband: subsample data
+
+== Gaussian processes II
+https://www.youtube.com/watch?v=KcB8c3a4LYU
+
+=== Kernel choices
+* exponentiated-square: smooth functions
+* rational quadratic: like weighted sum of exp-sqr; mixed long/short range corr
+* periodic: exp(sin^2|dt|)
+* non-stationary kernels: not k(ti-tj)
+** Wiener process: k=min(ti,tj); prior growing like random walk; draws are random walks
+** Linear regression: k=ti*tj
+* own kernels:
+** kernels linear (for positive coef); or integrate or differentiate
+** product of kernels
+** warping: k(h(ti),h(tj))
+* stationary semi pos-def iff Fourier positive
+* GP gives distibution over functions
+
+=== Other likelihood choice
+* not noisy Gaussian cloud anymore; e.g. classification
+* still need to approximate by Gaussian for tractability
+* GP & SVM related
+
+=== Shortcomings
+* not all Gaussian (or use approx inference)
+* non-parametric flexibility, but we have to compute all data (invert matrix)
+
+=== Possible
+* temporal linear Gaussian
+* ARMA
+
+== Deep learning and physics
+https://www.youtube.com/watch?v=5MdSE-N0bxs
+* multiplication gate with sigmoids:
+** input u,v
+** node weights: (a,a) (-a,-a) (a,-a) (-a,a)
+** node weights: b,b,-b,-b
+** result: uv(1+O(u^2+v^2)
+
+== Unbalanced dataset
+https://www.youtube.com/watch?v=-Z1PaqYKC1w
+* here between class imbalance only
+* weighted loss in LogReg (class_weight="balanced")
+* kNN-based "NearMiss" undersampling to retain useful examples
+** keep negatives where avg distance to positives small -> close to boundary
+** (usually best) keep negatives that avg distance far from positives -> negatives far from boundary -> keep points that close to all positives
+** keep nearest neighbors to all positives
+** condensed near.neigh: remove negatives where n.n. same anyway; may be slow
+** (can be good) edited n.n.: remove samples which unlike n.n.
+* tomek link removal: n.n. pair with different class labels
+* random oversampling: may lead to overfitting
+* SMOTE: add synthetic minority points (line between positive and n.n.)
+* SMOTE+Tomek
+* SMOTE+ENN
+* EasyEnsemble: Adaboost on 1:1 undersampled
+* BalanceCascade: similar, but following subset only take what's incorrectly classified
+
+== Getting best performance with Pyspark
+https://www.youtube.com/watch?v=V6DkTVvy9vk
+* Py4J + pickling + magic
+* Python memory not controlled by JVM -> YARN kills memory
+* checkpoint: writes out; loses graph
+* key skew with groupbykey
+* partition explosion? -> add part to key
+* shuffle files no garbage collected -> may need manual GC trigger
+* Python UDF slow
+* can call Scala UDFs easily (22m30s)
+* downsides of Python DF:
+** schema serialized as JSON and passed
+* future UDFs: better; translate simple UDFs to SQL
+* Arrow?
+*
+
+== Neighbourhood components analysis
+http://videolectures.net/mlss06tw_roweis_nca/
+* allround often simple classifiers good, e.g. kNN
+* but kNN: needs distance metric and algorithm to find neighbours
+* LOO-CV to find best metric? (see if nearest neighbors predict each point)
+* but NN depend only on nearest neighbours -> discontinuos over metric
+* -> randomized neighbour selection; probability is softmax on distances
+* -> avg LOO error smooth
+* -> optimize metric with continuous parameter by GD
+* e.g. quadratic (Mahalanobis); like linear transf on data + Euclidean
+* complicating gradient, but you can subsample and also truncate
+* = Neighbourhood Component Analysis
+* scale of distance learned; is like learning K
+* can also make transf matrix projecting into *lower* space; do same optimization
+* -> learn projection where Euclidean kNN works
+** good for dim. reduction with many noisy dimensions; better than LDA, PCA
+> learns Mahalanobis distance for kNN, by SG on softmax-NN LOO test
+=> can also reduce dimensionality (into where kNN L2 works)
+
+== Julia
+https://www.youtube.com/watch?v=Cj6bjqS5otM
+\  -> backsolve
+myfunc.(X)  -> map(myfunc,X)
+inbuilt matrices, arrays, frctions,...
+type hierarchy Any
+borrows a lot from lisp, matlab, ...
+many functional ideas
+macros
+multiple dispatch, types dont have methods, autom compiles version when needed
+no multiple inheritance
+only leaves can be instantiated -> tree
+default args also compile to extra functions
+for performance concrete types
+
+== Order statistics
+f_order(x1,x2,...)=n!f(x1)f(x2)... if x1<x2<...
+0 otherwise
+
+fXj(xj)=(n over j-1,1,n-j) f(xj)F(xj)^ (j-1)*(1-F(xj))^(n-j)
+
+min(exp(l))=exp(n*l)
+
+== Polynomial fitting
+* Savitzky-Golay filter
+* windows polynomial in frequeny domain (linear time-invariant system) interpretation facilitates free parameter interpretation
+! any LTI system can be described by single impulse response
+* using impulse response with convolution same as smoothing
+* = pointwise multiplication in frequency domain
+* -> degree increase low-pass threshold
+* -> window length also increases low-pass threshold, but also cutoff less sharp
+
+== Facebook Prophet
+* single time series with daily stamp
+* sklearn API
+* uses Stan for parameters
+* changepoint detection
+* weekly/yearly Fourier
+* holiday events
+* input: dataframe, changepoints (time of change), holidays
+* output: forecasts, uncertainties, model components
+
+== Diagnosing ML models
+https://www.youtube.com/watch?v=ZD8LA3n6YvI
+Find multicollin
+* yes/no from statsmodels condition number
+* clustered correlation plot with affinity propagation (no need to num cluster)
+* could take ratios if corr var
+
+== Scalable and modular machine learning
+https://www.youtube.com/watch?v=XBQzhjiaqhA
+* XGBoost:
+** could place monotonic contraints target/feature
+** new histogram based speed-up (like FastBDT and LightBGM) -> 10x single thread, 5x multithread
+** GPU based speed-up
+** Python, Scala, R, YARN, Flink, Spark
+** XGBoost4J
+* declarative: Theano, Tensorflow, (maybe more optimized)
+* imperative: PyTorch, Chainer, (more flexible)
+* MXNet:
+** declarative + imperative possible
+** auto-parallelization: checks dependencies
+** can scale to multi machine or GPU
+** memory optimization -> can train bigger models; may be re-computation for memory
+* NNVM:
+** different frontend (TF, MXNet, ..) and backends (CPU, GPU, ARM, Torch) possible
+** challenges: new optimizations, new operators, ...
+
+== Fast template periodogram
+https://www.youtube.com/watch?v=7STeeVnfYFM
+* Fourier-like fitting to signals
+* Lomb-Scargle periodidigram:
+** for evenly sampled equiv to Fourier
+** other convenient propereties -> chi-squares distributed -> hypothesis testing
+** equiv to least-squares fitting of (single?) sinusoids to data
+* fitting explained well in video
+* template periodigram: template function
+* tricks to run FFT on unevenly sampled data
+
+== Robust ML
+https://www.youtube.com/watch?v=tu0TKlizuos
+* Kruskal-Wallis: non-param F-test, diff in variance
+* Mann-Whitney U: non-param t-test, diff in mean, non-Gaussian
+* Kendal tau, Spearman rank: non-param r-squared, association
+* t-test: Gaussian, equal variance
+* MWU: prob that random item bigger
+* F-test: Gaussian, compare variances
+* KW: variance of ranks, approx chi^2 if n>5
+* Kolmogorov-Smirnov: cumu distr on ranked data, deviation from expected distr, really good test
+* parametric tests often work even if distr incorrect; unless black swan
+* sign up/down robust but low power
+
+== t-SNE
+https://www.youtube.com/watch?v=aStvaXMhGGs
+* PCA conserves large distance (variance) -> local structure bad
+* SNE: preserve neighbours
+* perplexity eff. number of neighbors; often 5-50 or just default
+* early_exaggeration: higher if want more space betw cluster in result
+* learning rate to avoid local min
+* t-SNE assumes local linearity
+* -> bad if noisy data -> PCA to smooth data (see sklearn); do PCA 50 first
+* -> if data too complex -> use auto-encoder first
+
+Uncertainty in neural networks
+* noise (maybe or not be constant per point)
+* model uncertainty
+
+== Entropy estimation
+http://techtalks.tv/talks/entropy-estimation-and-streaming-data-sebastian/59433/
+* Plugin estimator (naive): consistent, but biased
+* need adjustment: some address bias/variance/infinite classes
+* decision trees with Grassberger estimator in trees: slightly better (ICML2012 Improved information gain estimates)
+* more difficult for differential entropy since not parametric
+* best unbiased estimator for continuous normal distribution exists: UMVUE (IEEE TIT'89 Entropy expressions...)
+* but does not work if non-normal (e.g. t-distr)
+* non-parametric estimation video12:50
+* e.g. compute all nearest neighbor distance and use equation
+* in streaming: how many samples do I need to wait?, before I accept tree split
+* -> Hoeffding Trees '00 Mining high-speed data streams
+* basically about variance in entropy gain for split
+
+== Tensorflow lattice
+https://www.youtube.com/watch?v=kaPheQxIsPY
+* interpolated lookup table
+* can include constraints like monotonicity (for interpolation values)
+
+== Smaller ANN
+https://www.youtube.com/watch?v=AgpmDOsdTIA
+* SqueezeNet has FireModules (like bottleneck); smaller net at good accuracy; with DeepCompression even smaller (overall 510x smaller)
+* MobileNet: Convs on subsets of channel
+* smaller nets:
+** replace last fully connected by convs
+** replace 3x3xChannel -> 1x1xChannel; re-organise channels only; not much loss
+** channel reduction: convert to fewer channels
+** downsampling *gradually* from beg to end
+** depthwise separable convs; each conv to only some channels
+* -> most params will be in 1x1 convs
+* but need Shuffle to exchange info between 1x1; shuffle channels
+* compression and distillation; train on high accuracy bigger NN
+
+== Features
+* DL may need help with ratios
+
+== Multiarmed bandit
+https://www.youtube.com/watch?v=o6HBIGzQfJs
+* you cannot play suboptimal arms few than log(T) times
+* worst case regret sqrt(NT)
+* !Upper Confidence Bound algorithm achieves near optimal upper bounds
+* Thompson Sampling
+** still better
+** converges and achieves instance-wise and worst-case regret lower bounds
+** start with uniform believe about payout (Beta(1,1))
+** play arm with it's probability to be best (this is optimal amount of "doubt")
+** or: sample theta from Beta(a+1,b+1) and pick highest theta
+** Bayesian update of belief (e.g. Beta(a+1,b) or Beta(a,b+1))
+** Regret <= O(sqrt(NT log(T)))
+** with Gaussian priors possible
+** best if you don't make assumptions about reward function
+* Contextual Bandits
+** too many products/customers -> utilize similarity
+** similar features mean similar preferences
+** parametric models, learn parameters (e.g. Linear Contextual Bandits)
+
+== Quantile regression
+* predict v such that P(Y<v|X)=q
+* instead of mean
+* utility function
+* minimize asymmetric penalities for over-/underprediction (1-q) vs q)
+
+== Random Kitchen Sinks
+https://www.youtube.com/watch?v=Nqi2iU7kbD0
+* f(x)=sum^N a_i k(x,x_i)
+* same as linear f(x)=<w, phi(x)> with <phi(x),phi(y)>=k(x,y) [Representer theorem]
+* but large k(i,j) matrices
+* -> or just take dot product of suitable random mappings; such that result classifier very similar
+* Fourier for shift invariant kernels: Fourier transform is distribution and we only sample finite number of terms -> take a few sampled Fourier frequencies as features (vector)
+* !Random binning features [19:50]: Make grid in x and indicator features on it -> to get grid sizes randomly sample from hat transform of kernel
+* !need to define kernel -> can find a few random features which work with a linear classifier (train kernel machines faster)
+* greedy approx decays as 1/sqrt(num_terms)
+* instead of greey and sequence, just pick random terms (frequencies)
+* !weights are important, but not frequencies (param of functions)
+
+== Neural surface loss function
+http://www.ipam.ucla.edu/abstract/?tid=14548&pcode=DLT2018
+* too slow to calc loss function for many points
+* flat generalize better (?)
+* but also opposite possible (Dinh'17)
+* flat when: small batch, SGD
+* sharp when: big batch, ADAM
+* but weight decay can change batch size effect around
+* but actually you only plot size of weights -> smal weights look sharp on scale
+* ReLU: only layer *10 and other layer /10 yields same
+* -> sharpness wrt to weights not meanigful
+* filter normalization captures better flatness; plot over 2 random dims
+*! skip connections make loss surface much simpler (even for deep nets)
+*! wider nets simpler surface
+* GAN: when trying to find saddle, min/max collapse, one wins
+*! there is a fix to get stable saddle (change minmax optmization slightlx)
+* Successful nets: Inception, ResNet, FractalNet, DenseNet
+
+== Best practices for Random Forest
+* factor out linear dependence (otherwise linear may overpower rest); for example use transformed target
+* still add interaction effects
+* check trees for directions of top features
+* vary one parameter with synthetic pts
+
+== Bengio Deep Learning
+* https://www.youtube.com/watch?v=exhdfIPzj24
+* AI:
+** need knowledge
+** need learning (prior, optimization, efficient computation)
+** need generalization (guess probability mass)
+** need fight curse of dim
+** need to disentangle underlying explanatory factors (make sense of data)
+* Curse of dim: need smooth assumption
+* most data concentrates on manifold -> map to new space
+* GG Image search (Bengio/Weston NIPS2010, Bengio NIPS 2000):
+** map images to (100 dim) space
+** map keyword to space, too
+* Machine translation improvements (encoding/decoding problem -> parametrization grows linearly with languages, not quadratic); like universal language
+* some functions a lot more efficiently if multiple hierarchies (would need exponential size with 2 layers)
+* deep learning: can split input space in may more not-independent linear regions with constraints (e.g. mirror responses by folding)
+* 2006: unsupervised pretraining (RBM, auto-encoder, sparse coding)
+* each parameter can influence many regions
+* Bengio: gradual disentangling manifolds
+* limitation of backprop: relies on infinitesimal representations; but very deep nets yield too sharp non-linearities; also not biologically plausible
+* idea: neurons try to predict future value and also match past; observation also clamped

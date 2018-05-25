@@ -8,7 +8,7 @@ drop outliers
 
 Kaggle learnings
 ----------------
-* don't overfot
+* don't overfit
 * not needed: all predictors, all data rows
 * tune algorithm
 * reduce data set (average, select particular samples)
