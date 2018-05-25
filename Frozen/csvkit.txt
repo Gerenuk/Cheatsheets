@@ -1,0 +1,33 @@
+csvcut           # filter and truncate
+   -c <colincl>
+   -C <colexcl>
+   -x  # del. empty rows
+Common args:
+   -t  # assume tab delimiter
+   -l  # line numbers
+csvcut -n <file>   # show column names
+csvcut -c <col1>,<col2>,<..> <file> | csvlook # show only these columns (can refer by name)
+csvlook <file>   # print table
+
+csvstat    # simple statistics, like distinct value count
+
+can read compressed gzip or bz2
+
+csvgrep -c <col>
+   -m <matchtext>
+   -r <regex>
+   -i   # invert match
+   -f <file>
+csvsort -c <col>
+
+csvstack <file1> <file2>   # stack vertically (by col name)
+
+csvpy    # launch python and preload in csvkit.CSVKitReader (not much useful in Py3)
+
+csvjoin -c <col> <file1> <file2>
+csvsql   # generate sql table (e.g. sqlite)
+sql2csv  # execute SQL on database and output CSV
+csvjson  # convert to JSON
+csvformat # output certain format (e.g. delimiter), instead of nice table format
+in2csv   # convert various formats to CSV
+csvclean # do basic checks (e.g. column numbers); output *_out.csv and *_err.csv

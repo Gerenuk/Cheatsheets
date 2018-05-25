@@ -1,0 +1,57 @@
+-- File dodo.py
+def task_*
+    def myfunc():
+        ...
+    return {"actions": [myfunc], ...}
+
+>>> doit
+
+
+All task_* bodies executed on doit
+
+"actions" (http://pydoit.org/tasks.html#actions); list of:
+* callable
+* (callable, *arg, **kwargs)
+* str command to be executed in subprocess
+* pathlib
+* list of str -> without shell
+* CmdAction(func) -> returns str
+* tools.LongRunning
+* no list, but None if just for grouping dep tasks
+
+myfunc:
+* success: return None, True, dict, str
+* fail: return False, Exception, TaskFailed, TaskError
+
+passing task meta data to action:
+* python parameter with same name
+* command keyword subst (" ".join)
+* keyword "task" for all metadata
+
+"basename": task name (if not func name)
+
+yield {..}  to generate many tasks
+use "name" to give name
+
+not same target in diff tasks
+
+DOIT_CONFIG={"default_tasks":[...]}   # execute if no target specified
+
+doit specifying tasks:
+* also glob "*" possible
+
+tasks names starting with "_" not shown in output
+
+"title": to show when executing
+"verbosity": 1 (default) show stdout, 0 mute, 2 show stdout and stderr from task
+
+"uptodate": [..]
+* True, False, None, Callable
+* command str; exit 0 = up-to-date
+* also not up to date if input or output missing
+
+"task_dep": "<dep task name>"
+* calculated dep if do not want to include in task creators
+
+setup/teardown tasks
+save computed values from task

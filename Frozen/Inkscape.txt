@@ -1,0 +1,148 @@
+Scroll:		middle mouse
+Zoom:		+ -
+Selector:	space or F1
+		Ctrl to restrict moving or rescaling
+Selector:	click again
+		rotate or skew (Ctrl for 15deg steps)
+Selector:	keys:
+		arrows (move), </> (scale)
+		[/] (rotate)
+		shift: increase steps
+		alt: step=one screen pixel
+Fill&Stroke:	F7=pick colour (shift click for stroke colour)
+Selection:	Tab selects by z-order (shift to select from top)
+		Alt-click to select hidden objects
+Paste style:	Fill, Stroke, Font
+Path:		see tutorial-advanced.html
+		Boolean operations for fills possible
+		Inset/Outset: displace point perp to path, linked offset possible
+		Simplification reduces number of points
+Text:		Alt+</> changes letter spacing
+		Ctrl+Alt+</> changes line spacing
+		Alt+arrow shifts one letter
+
+
+|===
+| Shift + Wheel | Scroll horizontally
+| Plus, Minus | Zoom
+| Backtick | Previous Zoom
+| Help/KeyAndMouse | Open website
+| Ctrl+Tab | Cycling in Inkscape
+| F1, Space | Selector; Click again to rotate
+| F7, Click | Select fill color from other point
+| F7, Shift+Click | Select stroke color from other point
+| Ctrl+D | Duplicate
+| Ctrl+Shift+A | Align dialog
+| PgUp, PgDown | Raise/lower
+| Pos1, End | Raise/lower max
+| Tab, Shift+Tab | Select bottom/top object; cycle
+| Alt+Click | Select (hidden) object below
+| Alt+Drag | Drag without reselecting
+| Ctrl+Shift+C | Convert shape to path
+| F4 | Rectangle; Shift: draw around center; Ctrl: integer ratio
+| Ctrl+Alt+V | Paste in place (where object was before)
+| Shift+Ctrl+V | Paste style of clipboard object (fill, stroke, font; not shape, size)
+| F2 | Node tool
+| Shift+Ctrl+C | Convert to path
+| Ctrl+( / ) | Inset or Offset path
+| Ctrl+J | Dynamic offset (draggable)
+| Ctrl+L | Simplify path (e.g. freehand); reduce nodes
+| F8 | Add text
+| Shift+Ctrl+T | Font dialog
+| Alt+< / > | Change letter spacing
+| Ctrl+Alt+< / > | 
+| Alt+ arrow | Move letters
+|===
+
+Use original tool command to modify special properaties (e.g. rectangle round corner).
+
+Ctrl:
+
+* move only vertical/horizontal
+* preserve scaling ratio
+* rotate 15°, skew 15°
+
+Selector keys:
+* arrows to move, <> to scale, [] to rotate
+* shift to do 10x more
+* Ctrl+<> for 200%/50%
+* alt to do pixel size
+
+Selection:
+* multiple with: Shift+Click
+* Shift+Drag
+
+Grouping has hierarchy.
+Ctrl+Click to edit object within a group.
+
+Swatches: Shift+Ctrl+W (or View menu)
+Fill & Stroke: Shift+Ctrl+F (or Object menu)
+
+Gradient: Tool handles with Ctrl+F1
+
+Shapes:
+* 4 shapes (rectangle, ellipse, star, spiral)
+
+Rectangle:
+* rounded corners: Shift+Click remove rounding, Ctrl+Click equalize rounding, Ctrl+Drag same rounding (may affect many rectangles at once)
+
+Ellipse:
+* Shift+Click angle handle to make it whole
+* Ctrl+Click size handle to make it circle
+
+Star:
+* Shift+Drag for rounded, Shift+Click to remove
+* Alt+Drag to randomize, Alt+Click to remove
+
+Paste:
+* paste size
+
+Pen tool:
+* Click -> sharp node
+* Drag -> Bezier with 2 handles
+* Shift+Drag -> Modify only last handle
+* Ctrl: 15° directions
+* Enter: Finalize line
+* Esc: Cancel line
+* Backspace: Cancel last segment
+* F2: Node modification tool
+* !: Invert node selection
+* Alt+!: Invert entire path
+* Double click: Add nodes
+* Del: Delete nodes
++ Ctrl+Del: 
+* Ctrl+Alt+Click: Toggle nodes
+* Shift+D: Duplicate nodes
+* Shift+B: Break path
+* Shift+C: make node cusp (handles move independently)
+* Shift+S: make node smooth (handles in line); hover over handle to keep
+* Shift+Y: symmetric; handles in line and same length
+* Ctrl+Click: Retract handle
+* Shift+Drag: Pull out retracted node
+
+Subpath
+* Shift+J: Join two endnodes
+
+Subpath
+* not all points connected
+* Ctrl+K: combine to compound path
+* Shift+Ctrl+K: break apart path into subpaths
+
+Offset:
+* linked offset stays linked to original path
+
+Calligraphy: Stroke tools
+Interpolation: Morph shapes to others
+Tracing: Bitmap to Path
+
+== Transform handwriting to path and color
+* scan image
+* transform to path (will create "one" huge path)
+* to color parts:
+** break apart path (empty letters like "o" will be filled)
+** combine element and color
+** combine rest (to fill letter)
+** to easier select everything but the colored object
+*** hide (obj.props, but object disappears)
+*** lock (obj.probs, but not selectable)
+*** obj to new layer

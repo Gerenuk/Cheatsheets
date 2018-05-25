@@ -1,0 +1,50 @@
+Document:
+@startuml
+<elem>
+<elem>
+<...>
+@enduml
+
+<elem>=<class1> ["<label>"] <arrow> ["<label>"] <class2> [: <label>]|
+       <class> : [<member>]|
+       class <class> {<member>*}
+       note "<text>" as <notename>
+       <notename> .. <class>
+       <class> .. <notename>
+       note <left|right|top|bottom> of <class> : <text>
+       (abstract|interface|enum) <class>
+       class "<text>" as <class>
+       hide empty members
+       hide circle
+       ... more hide/show
+       class <class> \<\<(<circlechar>,<color>)\>\>
+       packages <pkg> #<col>
+       end package
+       title <title>
+       \(<class1>, <class2>\) .. <assocclass>
+       skinparam <item> <color>
+       pages <x>x<y>
+       header
+       endheader
+       [center|left|right] footer <text>
+       rotate
+       scale (<float>|<n>/<m>|<x> width|<x> height|<x>*<y>)
+       !include <file>
+       !define <name> <value>
+       !if[n]def <constname>
+       [!else]
+       !endif
+       
+<member>=[-|#|~|+](<var>|<method>())  #priv, prot, pkg priv, pub
+
+<arrow>=(<|*|+|<\|)(--|..)|
+        (--|..)(<|*|+|\|>)|
+        (--|..)
+        \(\)-
+        -\(\)
+        
+<link> = -[left|right|up|down]-
+         -    # horizontal alignment
+        
+<text>=can have html tags and \n
+

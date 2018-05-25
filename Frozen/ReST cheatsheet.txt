@@ -1,0 +1,232 @@
+*emphasis*
+**strong emphasis**
+`interpreted`          (depends on application)
+``monospace literal``  (no linebreaks)
+
+References
+reference_
+`multiwork references`_
+anonymous__
+_`internal target`
+|substitution reference|    subst from definition (image, ...)
+[1]_                        footnote or citation
+
+To use special chars espace with "\"
+
+Section:
+Underlined (optionally overlined too) with non-numeric characters
+Length at least as long as text
+E.g.
+=====
+Title
+=====
+
+Lists:
+-  item (also *, + possible)
+   continuation left aligned
+   blank line before first and after last item (optional between)
+2. numerated
+#. auto-numerated
+
+Fieldlist:
+:Item1 Text1
+:Item2 Text2
+
+Definition:
+Term line
+   Indented paragraph as explanation
+
+Literal text:
+
+Literal block:
+::
+   Next indented or quotes paragraph is literal
+Block ends where back to old indentation
+
+Per line quote::
+> Quote1
+> Quote2
+
+| Line blocks preserve spaces
+| and new lines
+| Continuation blocks are
+  indented
+
+Block quotes are
+
+   indented paragraphs
+   
+Simple tables http://docutils.sourceforge.net/docs/ref/rst/restructuredtext.html#simple-tables
+Can do multiline rows (in all but first column) and column spans
+"=" for top and bottom border and to separate header
+"-" to indicate column spans
+===== ===
+Table  A
+===== ===
+1      2
+===== ===
+
+use Grid table if you need row span and more
+
+----   transition marker is 4 or more punctuations
+
+.. explicit markup start with two periods and are used for floats (footnotes, etc.)
+
+.. [#] auto-numbered footnote
+.. [*] auto-symbol footnotes
+.. [Citation]
+.. _crossref
+
+External link LINK_
+.. _LINK: http://...
+
+`Python <http://www.python.org/>`_
+
+INDIRECT__
+.. _LINK:
+__LINK_     # indirect link and anonymous, but keep close to reference!
+
+Title
+=====
+`Title`_    # title automatically target
+
+.. image:: image/file.gif
+
+My |symbol|
+.. |symbol| image:: file.png
+
+.. Comment is anything that starts with markup but does follow convention
+
+Autodoc: http://sphinx-doc.org/ext/autodoc.html#module-sphinx.ext.autodoc
+
+
+
+=====================================================
+ The reStructuredText_ Cheat Sheet: Syntax Reminders
+=====================================================
+:Info: See <http://docutils.sf.net/rst.html> for introductory docs.
+:Author: David Goodger <goodger@python.org>
+:Date: $Date: 2011-06-17 10:50:48 +0000 (Fri, 17 Jun 2011) $
+:Revision: $Revision: 7056 $
+:Description: This is a "docinfo block", or bibliographic field list
+
+Section Structure
+=================
+Section titles are underlined or overlined & underlined.
+
+Body Elements
+=============
+Grid table:
+
++--------------------------------+-----------------------------------+
+| Paragraphs are flush-left,     | Literal block, preceded by "::":: |
+| separated by blank lines.      |                                   |
+|                                |     Indented                      |
+|     Block quotes are indented. |                                   |
++--------------------------------+ or::                              |
+| >>> print 'Doctest block'      |                                   |
+| Doctest block                  | > Quoted                          |
++--------------------------------+-----------------------------------+
+| | Line blocks preserve line breaks & indents. [new in 0.3.6]       |
+| |     Useful for addresses, verse, and adornment-free lists; long  |
+|       lines can be wrapped with continuation lines.                |
++--------------------------------------------------------------------+
+
+Simple tables:
+
+================  ============================================================
+List Type         Examples
+================  ============================================================
+Bullet list       * items begin with "-", "+", or "*"
+Enumerated list   1. items use any variation of "1.", "A)", and "(i)"
+                  #. also auto-enumerated
+Definition list   Term is flush-left : optional classifier
+                      Definition is indented, no blank line between
+Field list        :field name: field body
+Option list       -o  at least 2 spaces between option & description
+================  ============================================================
+
+================  ============================================================
+Explicit Markup   Examples (visible in the `text source <cheatsheet.txt>`_)
+================  ============================================================
+Footnote          .. [1] Manually numbered or [#] auto-numbered
+                     (even [#labelled]) or [*] auto-symbol
+Citation          .. [CIT2002] A citation.
+Hyperlink Target  .. _reStructuredText: http://docutils.sf.net/rst.html
+                  .. _indirect target: reStructuredText_
+                  .. _internal target:
+Anonymous Target  __ http://docutils.sf.net/docs/ref/rst/restructuredtext.html
+Directive ("::")  .. image:: images/biohazard.png
+Substitution Def  .. |substitution| replace:: like an inline directive
+Comment           .. is anything else
+Empty Comment     (".." on a line by itself, with blank lines before & after,
+                  used to separate indentation contexts)
+================  ============================================================
+
+Inline Markup
+=============
+*emphasis*; **strong emphasis**; `interpreted text`; `interpreted text
+with role`:emphasis:; ``inline literal text``; standalone hyperlink,
+http://docutils.sourceforge.net; named reference, reStructuredText_;
+`anonymous reference`__; footnote reference, [1]_; citation reference,
+[CIT2002]_; |substitution|; _`inline internal target`.
+
+Directive Quick Reference
+=========================
+See <http://docutils.sf.net/docs/ref/rst/directives.html> for full info.
+
+================  ============================================================
+Directive Name    Description (Docutils version added to, in [brackets])
+================  ============================================================
+attention         Specific admonition; also "caution", "danger",
+                  "error", "hint", "important", "note", "tip", "warning"
+admonition        Generic titled admonition: ``.. admonition:: By The Way``
+image             ``.. image:: picture.png``; many options possible
+figure            Like "image", but with optional caption and legend
+topic             ``.. topic:: Title``; like a mini section
+sidebar           ``.. sidebar:: Title``; like a mini parallel document
+parsed-literal    A literal block with parsed inline markup
+rubric            ``.. rubric:: Informal Heading``
+epigraph          Block quote with class="epigraph"
+highlights        Block quote with class="highlights"
+pull-quote        Block quote with class="pull-quote"
+compound          Compound paragraphs [0.3.6]
+container         Generic block-level container element [0.3.10]
+table             Create a titled table [0.3.1]
+list-table        Create a table from a uniform two-level bullet list [0.3.8]
+csv-table         Create a table from CSV data (requires Python 2.3+) [0.3.4]
+contents          Generate a table of contents
+sectnum           Automatically number sections, subsections, etc.
+header, footer    Create document decorations [0.3.8]
+target-notes      Create an explicit footnote for each external target
+math              Mathematical notation (input in LaTeX format)
+meta              HTML-specific metadata
+include           Read an external reST file as if it were inline
+raw               Non-reST data passed untouched to the Writer
+replace           Replacement text for substitution definitions
+unicode           Unicode character code conversion for substitution defs
+date              Generates today's date; for substitution defs
+class             Set a "class" attribute on the next element
+role              Create a custom interpreted text role [0.3.2]
+default-role      Set the default interpreted text role [0.3.10]
+title             Set the metadata document title [0.3.10]
+================  ============================================================
+
+Interpreted Text Role Quick Reference
+=====================================
+See <http://docutils.sf.net/docs/ref/rst/roles.html> for full info.
+
+================  ============================================================
+Role Name         Description
+================  ============================================================
+emphasis          Equivalent to *emphasis*
+literal           Equivalent to ``literal`` but processes backslash escapes
+math              Mathematical notation (input in LaTeX format)
+PEP               Reference to a numbered Python Enhancement Proposal
+RFC               Reference to a numbered Internet Request For Comments
+raw               For non-reST data; cannot be used directly (see docs) [0.3.6]
+strong            Equivalent to **strong**
+sub               Subscript
+sup               Superscript
+title             Title reference (book, etc.); standard default role
+================  ============================================================

@@ -1,0 +1,29 @@
+* pip+virtualenv
+* manage Pipfile (instead of requirements.txt); has special devel-pkg section
+* generate Pipfile.lock (deterministic builds); saves Hashes of downloaded packages
+* hashes for security
+* encourages latest versions of dependencies
+* loads *.env files
+* install required Pythons if pyenv available
+* find project home by Pipfile
+* generate Pipfile/env
+
+|===
+| pipenv shell								| Activate
+| pipenv install							| Install all from `[packages]`
+| pipenv graph								| dependency graph
+| pipenv run <cmd> <args>					| Run command in env
+| pipenv update								| Update all
+| pipenv update --outdated					| Find out what changed upstream
+|===
+
+|===
+| pipenv --three							| Init Python 3
+| pipenv install <pkg>						| Install package
+| pipenv shell								| Activate virtualenv
+|===
+
+Pipfile:
+* source (e.g. PyPI)
+* packages
+* keep Pipfile and Pipfile.lock in version control (but no Pipfile.lock if multiple Python versions)

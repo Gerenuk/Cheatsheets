@@ -1,0 +1,10 @@
+= Gimp
+
+== Clean background
+
+* Layer/Transparency/Add Alpha channel
+* Layer/Mask/Add layer mask/Grayscale copy + Invert
+* Tools/Color tools/Levels
+* mb. logscale
+* Add/Move white layer to see better
+* Set black/white threshold

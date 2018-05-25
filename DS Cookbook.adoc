@@ -459,6 +459,8 @@ But also includes self-pairs.
 
    catidxs, bins = pd.cut(df, bins=.., retbins=True, labels=False, include_lowest=True)
    df.groupby(bins[catidxs])...
+
+   pd.cut(s).apply(attrgetter("left"))
    
 http://stackoverflow.com/questions/17050202/plot-timeseries-of-histograms-in-python
     

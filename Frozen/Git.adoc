@@ -1,0 +1,270 @@
+= Git
+
+http://git-scm.com/book/en
+
+Start repo:
+* change to dir; `git init` -> will create `.git`
+* start version controlling with `git add <files>` (will also stage)
+
+Clone:
+* `git clone git://<URL>` (also https:// protocol possible)
+* pull full version history (full clone)
+
+Files:
+* only "staged" files are used for "commit"
+* tracked (files in last snapshot):
+** unmodified -> edit file ->
+** modified -> stage possible (`git add`)->
+** staged -> `git commit` (will set status "unmodified"); to automatically stage all modified `git commit -a`
+** to remove file from tracked `git rm` + commit; can use glob; also removes from working
+** to remove modified file use force `git rm -f <file>` (safety feature to prevent data loss)
+** to untrack only (not delete file) use `git rm --cached <file>`
+* untracked (not in last snapshot or staging):
+** to track `git add`
+* files can be staged and a new modified version can be unstaged the same time
+
+Undo:
+* some undos cannot be undone (can lose data if deleting/overwriting uncommited)
+* commit again: `git commit --amend` (use current staging area)
+* `git reset HEAD <file>` to unstage
+* to discard modifications and load last snapshot: `git checkout -- <file>` (will lose modifications!)
+
+Info:
+* `git status`
+* `git diff`:
+** more detailed -> shows exact lines
+** what changed but not staged?
+** what staged?
+** only shows unstaged changes!
+* `git log`:
+** look at history
+** many options (word-wise changes, stats, log output formatting, graph, ...); http://git-scm.com/book/en/Git-Basics-Viewing-the-Commit-History
+** `gitk` can visualize
+
+Other:
+* `.gitignore` to ignore files (don't show as untracked)
+** end with "/" for directory
+** negative pattern with starting "!" (to make exceptions to other rules)
+** use glob
+** comments "#"
+* git can detect file movement (mv f1 f2; git rm f1; git add f2); but also command `git mv` exists
+* tips:
+** copy contrib/completition/git-completion.bash to `.bashrc`
+** `git config --global alias.<abbrv> <command>` uses replacement
+
+Remotes:
+* `git remote -v`
+* `origin` if cloned
+* pull contributions from many users
+* push only to ssh urls (git@<user>...)
+* `git remote add <shortname> <url>`
+* `git fetch <shortname>` (no merge or modify of current work) -> merge manually when ready
+* if branch set up to track: `git pull` -> fetch and merge (clone will set up origin to track by default)
+* `git push <remote> <branch>` (rejected if someone else pushed -> pull work first)
+* `git remote show <remote>`
+* `git remote rename <oldshortname> <newshortname>`
+* `git remote rm <shortname>` to remove
+
+Tagging:
+* tag releases
+* `git tag` to list available tags in alphabetical order
+* `git tag -l '<glob>'` to search for tags
+* tag types:
+** lightweight: pointer to a commit (like branch that doesnt change); no info other than commit checksum (done if no -a -s -m option supplied)
+** annotated: stored as full object in git (checksum, tagger name/email/message/gpg); recommended
+* `git tag -a <tag> -m <message>` to add tag
+* `git show <tag>`
+* `git tag -v <tag>` to GPG verify tag
+* `git tag -a <tag> -m '<message>' <checksum>` to add tag later
+* `git push <remote> <tagname>` or for all `git push <remote> --tags`; otherwise tags not pushed
+
+Branching:
+* git stores data not as changesets, but snapshots
+* commit:
+** pointer to snapshot; snapshot file blobs
+** author, message
+** pointers to parents (multiple if merged)
+* branch = pointer to a commit (just a 40bytes SHA file)
+* branch pointer moves with every commit
+* new branch simply creates new pointer
+* HEAD points to current branch
+* `git checkout <branch>` to switch (may need to commit first; alternatively stashing or amending)
+* `git checkout -b <newbranch>`
+* to merge: `git checkout <destbranch>; git merge <srcbranch>`
+* -> fast forward if destbranch is simply upstream -> git moves pointer
+* `git branch -d <branch>` to delete
+* hotfix:
+
+    git checkout -b hotfix
+    vim file.txt
+    git checkout master
+    git merge hotfix      # hopefully fast forward
+    git branch -d hotfix
+  
+* if real merge (no fast forward):
+** often automatically: 3-way merge (2 branches + common ancestor) -> create new (merge) commit (multiple parents)
+** if conflicts:
+*** files marked as "unmerged" (see `git status`)
+*** look at files and resolve conflict markers; run `git add` on each file to resolve
+*** `git mergetool` for graphical merge tool
+* `git branch --merged` to see which branches already merged into current
+* `git branch --unmerged` to see which branches with unmerged work
+* usually you cannot delete unmerged branch (to force use `git branch -D <branch>` -> work lost)
+
+Remote branches:
+* references to state of remote branches (bookmarks)
+* cannot move; updated when network communication
+* '<remote>/<branch>' (exists locally as bookmark next to <branch> -> may be different)
+* `git fetch <server>` to synchronise
+* push the branches you want to push with `git push <remote> <branch>` -> updates the servers branches and data
+* need to merge `origin/master` into own `master` after pull!
+* checking put local branch from remote creates tracking branch (push/pull know what to do)
+* `git checkout --track <remote>/<branch>` or `git checkout -b <branch> <remote>/<branch>` to create own tracking branch
+* `git push <remote> :<branch>` to delete remote branch [remember similar `git push <remote> <localbranch>:<remotebranch>`; just here local is nothing]
+* fetch only gets data; use pull to fetch as merge tracking branches
+
+Merge:
+* integrate changes with:
+** merge
+** rebase: replay history of current branch onto another branch
+*** `git rebase <destbranch>`
+*** makes linear history with srcbranch and destbranch on same new snapshot
+*** rebase onto `origin/master` -> remote maintainer only needs fast-forward
+*** same snapshot as merge; only history different
+*** `git rebase <destbranch> <patchbranch>`; afterwards fastforward destbranch
+*** ! dont rebase commits that you have pushed to a public repo (like rebase and git push --force)
+**** since abondoning existing commits and creating simliar new ones
+**** when after rebase you push again; others will have to re-merge their work
+* to mark resolved `git add`
+
+    git config --global pull.default current
+
+== Misc
+
+    git mv filename new_filename
+
+++++++++++
+Create repository:
+
+mkdir example
+git init
+-> completely local (working tree)
+
+committing through index (snapshot)
+git status (compare current status)
+git add myfile (add file, working tree to index stage)
+
+git commit (completely local, stored in index)
+git log (commits not numbered, only hash of contents, need only some characters)
+git show
+git gui
+
+commits have parents
+
+configure user (if not global -> only current repository)
+
+git checkout (to restore from index)
+git revert (special commit, to go back to changes -> creates new commit, doesnt have to be most recent)
+git diff (to compare commits)
+
+git tag (put label to commits)
+
+master branch; always points to some commit
+git branch <name>
+switch branches: checkout
+
+git merge (merge into current branch)
+-> fix in lines, commit
+
+gitk (graphical log viewer)
+
+git knows if some stuff already merged -> you can continue on features
+
+push/poll through remote -> add remote to local repository
+
+git clone: clone remote repository
+
+merge automatically when pulling
+
+++ Pro Git
+Clone:
+- gets all data (all branches and all history)
+- specify directoy name if you dont want default
+
+Files:
+- states:
+  - tracked:
+    - unmodified (edit will make them modified)
+    - modified (will go to stage)
+    - staged (commit will make them unmodified)
+  - untracked (not in last snapshot or stageing area; add will make them tracked)
+- status can tell all this
+
+.gitignore:
+- glob "*", "?", "[chars]"
+- end with "/" for dirs
+- negate pattern by starting with "!"
+
+Differences can be shown between filesystem/stage or stage/commit
+For simplicity you can skip staging area
+For removing file you might need force option (safety to prevent accidents)
+Git can detect moved or renamed files
+
+Careful: some undos cannot be reverted
+
+If commit was incomplete, you can redo it with "amend"
+You can unstage a file with reset HEAD
+"Checkout" to discard changes you made to a file (file changes made will be lost)
+
+Tags:
+- lightweight (pointer to a commit)
+- annotated (full objects; checksum, tagger name, email, data, message)
+- one can sign tags
+- push doesnt automatically push tags (need option)
+
+Git stores snapshots (not deltas) http://git-scm.com/book/en/Git-Branching-What-a-Branch-Is
+branch is just a pointer to a commit; each commit points also to previous
+HEAD points to current branch
+
+Fast forward, when one branch is simply upstream; then just the behind pointer is moved
+
+merging: done from where you want to merge *into*
+
+merge done with 3-way merge:
+- snapshot to merge in
+- snapshot to merge into
+- common ancestor
+-> automatically creates new "merge commit" (has two ancestors)
+
+or possibly resolve conflicts and commit
+"git status" to check if everything merges
+
+Remote branches:
+different name: origin/master
+
+Rebase (result the same as merge but for cleaner history):
+create diff in one branch and apply to other
+maintainer can just fast-forward without integration work
+rebase, checkout lagging branch and merge to fastforward, then remove side branches
+Do not rebase commits that you have already pushed to a public repository.
+
+
+== Alternatives
+
+* http://gitless.com/: Claims to be simpler, superficially looks the same
+* http://www.git-legit.org/: Nice, just "git syns"
+
+== Gitignore
+
+dir/              # does not look into dir
+!dir/file.txt     # does not work (! means negate), since dir not inspected
+
+dir/*
+!dir/file.txt     # works; this file will be included
+
+== Commands
+
+|===
+| git help      		| Help
+| git help -g   		| Tutorials
+|===

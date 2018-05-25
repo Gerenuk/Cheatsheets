@@ -1,0 +1,13 @@
+Ctrl+PgUp/PgDn   for multipage image
+Ctrl+(Shift+)1..9  Move that many images forward/back
+Pos1/End    First/Last Image
+(Shift+)X    (Un)tag
+Shift+Q      Show tagged
++/-        Zoom
+Enter    Fullscreen
+i       Info
+Shift+u   Autocolor
+Shift+p   Copy image name
+t          Thumbnails
+Ctrl+Print   Capture screen
+F9   OCR

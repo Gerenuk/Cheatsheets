@@ -1,0 +1,77 @@
+URI:
+mongodb://[username:password@]host1[:port1][,host2[:port2],...[,hostN[:portN]]][/[database][?options]]
+
+system info: <db>.system.*
+.indexes (insertable)
+.users (modifiable)
+.profile (droppable)
+
+collection names: begin with letter or underscore and may include numbers; max 128 chars
+(but in sheel underscore start mean javascript value)
+
+<db>.<collection> or <db>["<collection>"]
+
+capped collections:
+- limited size; old entries might be pushed out
+- high performance
+- maintain insertion order (no index required)
+- e.g. for logs, caching, automatic age out
+
+Documents:
+BSON type (sometimes faster than JSON; additional data types)
+- max 16 MB (not technical limit but sanity check)
+
+MongoDB fast even on many single inserts
+
+Memcached only slows down MongoDB
+
+case sensitive
+
+DBRefs:
+- for references (when not done manually by storing ids)
+- usually only useful if different DB or collection
+
+update()
+- upsert means create new one of doesnt exist
+- update operators for changing value (e.g. $inc, set operations, bit operations)
+
+save()
+- shorthand for upsets
+
+Indexing:
+- always only one index used (selected empirically by comparing query plans)
+- one single field or multiple fields (multiple can be used for start of index)
+- _id index created by default
+- can create indexes on subdocs
+- can store (multi) index with reverse directions; important when sorting on multiindex or range queries
+- can have unique contraints (can combine with dropDups)
+- sparse indexes are created only for docs that have the given field
+- <db>.<coll>.ensureIndex(...)
+- .getIndexes(), db.system.indexes.find()
+- index can be created in the background (no locking)
+- support for geo indices and time indices (drop oldest)
+- limitations: max 64 indexes per collection, max 1024bytes key (value+namespace), max 128 char name
+- can be any type (array or even doc)
+
+Python:
+http://api.mongodb.org/python/current/api/pymongo/index.html
+
+Storing a tree:
+a) store inside
+b) store parent ids (single)
+c) store child ids (multiple)
+d) store all ancestors (and parent)
+e) store full path from top in string
+
+NoSQL used where performance critical
+
+Regex:
+{"_id":{"$regex":"..."}} or {"_id":re.compile("...")}  [last if you need options]
+
+Snapshot (http://www.mongodb.org/display/DOCS/How+to+do+Snapshotted+Queries+in+the+Mongo+Database)
+Dont return duplicate or missing objects if database is changed meanwhile
+
+the shell started with
+mongo.exe <server>/<db>
+gives an interactive display
+the server status can be seen with "db.serverStatus" (http://docs.mongodb.org/manual/reference/server-status/)
