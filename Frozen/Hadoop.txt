@@ -1,0 +1,94 @@
+= HDFS
+
+hdfs dfs -cat ... | head  | head
+hdfs dfs -tail ...        | last 1kb
+hdfs dfs -find ...
+..-rm ... -skiptrash
+
+http://<namenode>:50070/dfshealth.html   | WebUI
+read/write with WebHDFS through HTTP (e.g. curl)
+
+128MB -> <1% seek time on drive
+
+Secondary namenode: "Checkpoint namenode" better name (!= "Backup")
+
+= Distributed Filestorage
+
+== Avro
+* schema stored
+* header followed by blocks
+* can generate deserialization code from schema
+* sync marker marks blocks
+
+== Parquet
+* complex
+
+== Compression
+* compression/decomp/ratio in MiB/s:
+  * gzip: 16-90 / 250-320 / 3
+  * bzip2: 13 / 40 / 4.5
+  * LZO: 120 / 300 / 2.4
+  * Snappy: 200 / 475 / 2
+
+= Hive
+* at Facebook on HDFS
+* now also S3, HBase
+* execution with Spark, Tez
+* metadata: not in HDFS, since random access
+* "default" database if not given
+* create table ... location ...; from existing file
+* Hive uses ^A for separator by default
+* table "managed" (hive may delete) or "external" (hive would only remove metadata)
+* "temporary" table removed after session closed
+* -> use "create external table ..." for existing file
+* field delim ^A, collection items ^B, map keys ^C, line termination \n
+* can have complex types: containers, maps, arbitrary nesting, ... (uses ^B, ^C delim)
+* array: val1 ^B val2 ^B ...
+* map: key1 ^C val1 ^B key2 ^C val2 ^B ...
+* "stored as ..." better format than text file
+* = Hive DDL
+* Hive only schema on *read* (no validation on write)
+* "load data local ..." -> added to existing file or files overwritten (use "overwrite" to clear existing files)
+* "sort by": only within files (one worker), "order by": total ordering
+* regex through "serde"
+* "view": only metainfo; datatypes automatically detected; read-only
+* CAST: Create As Select from Table
+* "show functions;" ~200 fcts; "describe function ..."
+* UDF, UDAF aggregate
+* UDTF table generating (e.g. explode into rows; explode, json_tuple, parse_url_tuple, posexplode, stack)
+* PTF (many to many)
+* can write own in Java
+* Hive streaming: re-use Hadoop streaming scripts; use in Hive
+* Hive PTF Window functions: Partitioned Table Functions
+** many-to-many, rolling window
+** basically Window functions
+
+== Hive optimizations
+
+=== Partitioning in HDFS
+** `PARTIIONED BY`
+** less reading
+** can have nested folder structure
+** dynamic partition possible (last of all selected cols)
+** can overwrite some partition only (partitioned columns need to be at end of select, and need to be correct order)
+** param hive.exec.max.dynamic.partition, ~.pernode, hive.exec.max.created.files
+** hive.error.on.empty.partition=true
+** `CLUSTERTED BY ... INTO .. BUCKETS`, SORTED BY
+* can `TABLESAMPLE` to sample
+* schema on read
+* hive.enforce.bucketing=true
+
+=== Map-side joins
+* if small table
+* ...
+
+=== Data skew
+* `SKEWED BY`
+* see video
+
+== Row-column oriented files
+* RCFile
+* some rows together stored column wise -> compression
+* -> ORC better
+
+

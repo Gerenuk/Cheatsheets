@@ -1,0 +1,542 @@
+= Linux commands
+
+:toc: left
+== General commands
+[cols="m,d"]
+|===
+| cd                                        | Go to home
+| cd -                                      | Goto last dir
+| pushd <path>                              |
+| popd                                      |
+| nohup                                     | output to nohup.out when terminal closed (cur dir or home)
+| watch -n <sec> command                    |
+| grep -rl "text" path                      | only show filenames that match (hence finds only one match in files)
+| uname -a                                  | Get architecture
+| getconf LONG_BIT                          | Get architecture
+| arch                                      | Get architecture
+| file /sbin/init                           | Get architecture
+| sed 's/\(ab\)*/\1/;s/\(cd\)\{5,7\}/ef/'   |
+| gawk 'BEGIN{FS=","};{printf "%.0f\n",$14}' <<<$_INPUT_;;    |
+| setserial -bg /dev/ttyS[0-9]*             |
+| gawk '{print $8}'                         | Print 8th column
+|===
+
+
+[cols="m,d"]
+|===
+| C_INCLUDE_PATH                            |
+| CPLUS_INCLUDE_PATH                        |
+| yarn-site.xml                             | YARN custom config
+| yarn-default.xml                          | YARN just defaults
+|===
+== Information about the system
+=== Commands
+
+[cols="m,d"]
+|===
+| lspci                                     | list pci
+| lsdev                                     | list devices
+| lsof                                      | list all opened files
+| lsusb                                     | list usb
+| lsmod                                     | list modules
+| lshwd                                     | list hardware
+| hwdetect                                  | detect hardware
+| glxinfo                                   | opengl info
+| free -t -m                                | memory in MB (show also total)
+| free -s _SEC_                             | update regularly
+| w                                         | who is logged on
+| who -i                                    | idle time
+| who -T                                    | mesg status
+| hwinfo                                    | hardware info
+| dmidecode                                 | bios info
+| lm-sensors                                | CPU temperature
+| fuser                                     | which processes are using a file
+| fuser -v _FILE_                           | find processes using _FILE_
+| fuser -v _PORT_/tcp                       | find processes using _PORT_
+| fuser -ki _PORT_/tcp                      | kill processes (but confirmation) using _PORT_
+| kill -HUP 1                               | reread inittab (by killing init)
+| iwlist ra0 scan                           | scan WLAN environment
+| jobs                                      | show jobs
+| last                                      | info about last logins/logouts
+| uname -a                                  | print system information
+| uptime                                    | information about uptime
+| dmesg                                     | print kernel ring buffer (boot msg)
+| ps -f                                     | full listing of processes
+| ps -r                                     | running processes
+| ps -T                                     | this terminal only
+| ps -U _USER_                              | this user only
+| top c                                     | print command line
+| top i                                     | no idles
+| htop                                      | enhanced top; tree view
+| vmstat                                    | reports information about processes, memory, paging, block IO, traps, and cpu activity
+| iostat                                    | report CPU statistics and input/output statistics for devices, partitions and network filesystems (NFS)
+| sar                                       | collect, report, and save system activity information
+| pmap -d _PID_                             | memory map of process
+|===
+=== Files with system information
+
+
+[cols="m,d"]
+|===
+| /var/log/XFree86.0.log                    | X11 messages
+| /etc/mtab                                 | currently mounted
+| /etc/fstab                                | configured mounting
+| /etc/SuSE-release                         | suse version
+| /proc/meminfo                             | RAM info
+| ~/.face                                   | KDM Login Icon
+| /usr/share/X11/xkb/rules/xorg.lst         | possible keyboard X11 configurations
+| /usr/share/X11/XKeysymDB                  | possible keyboard special actions
+|===
+
+
+=== Time
+
+[cols="m,d"]
+|===
+| at _TIME_                                 | at _TIME_ start job (_TIME_ could be "12:34 Jul 12"); at will ask in separate shell for commands to be executed
+| at now+3minutes                           | in 3 minutes (see /usr/share/doc/packages/at/timespec)
+| atq                                       | list jobs
+| atrm _JOB_                                | remove jobs
+| batch _TIME_                              | execute commands when low load
+| date -s _MMDDHHmm_[[_YY_]_YY_]._ss_       | set date/time
+| date -s _HHmm_                            | set time
+|===
+== Bash
+
+[cols="m,d"]
+|===
+| complete -f -o default -X '!*.+(dat|fct)' _PROG_ | completition relevant files
+| complete -f -o default -X '!*.bz2' bzip2  | complete after bzip2 with *.bz2 only
+| complete -f -o default -X '!*.+(jpg|gif)' gimp    |
+| export LS_COLORS="$LS_COLORS*.dat=34:*.fct=32:*B.dat=34;04:"  | "man dircolors" or "dircolors -p"
+| pwd                                       | name of current directory
+| ${file%.ext}                              | Remove a known extension
+| filename=$(basename -- "$file") +
+  extension="${filename##*.}" +
+  filebase="${filename%.*}"                 | Useful to add text before an arbitrary extension
+|===
+== Scripting
+
+[cols="m,d"]
+|===
+| Xdialog -no-cancel -stdout --inputbox _MSG TEXT_ 8 80 _INIT TEXT_ | ask for input and return on stdout
+| kfilechooser                              | ask for file
+| _CMD_ &; cmdpid=$!; kill cmdpid           | kill commands that have been started earlier
+| cat - <<END > _FILE_ ...                  | write inline text to file
+| sleep _SECONDS_                           | sleep in seconds
+| ...  \| tee _FILE_ \| ...                 | show pipe but also write to file
+| screen                                    | continue programs after the terminal has been closed
+|===
+
+== Bigger programs
+[cols="m,d"]
+|===
+| kstart --skiptaskbar --onbottom Eterm --buttonbar 0 --scrollbar 0 --shade 0 -O --double-buffer --font-fx none -x --trans --no-cursor -g=82x28+0+350 -e htop & |
+| kstart --skiptaskbar --ontop --alldesktops konsole --nomenubar --notabbar |
+| xterm -bg black -fg yellow                |
+| xterm -geometry 100x10+0-0 -T "Title" -e tail -f /tmp/file.log & | dimension, position(bottom), command
+| konsole -T "title" -geometry 600x800 -e _COMMAND_ _COMMANDARGS_
+| texhash                                   | rebuild tex database (ls-R files)
+| fmtutil --all                             | rebuild recompiled formats (start as user)
+| mkfontdir                                 | ?
+| w3m -cookie '_URL_'                       | open console URL
+| curl _URL_                                | download file
+|===
+
+== System control
+[cols="m,d"]
+|===
+| shutdown -h now _MSG_                     | halt now
+| shutdown -h 20:00                         | shutdown at 20h00
+| shutdown -h +5                            | shutdown now+5min
+| shutdown -c                               | cancel shutdown
+| su _USER_                                 | change to _USER_
+| passwd                                    | change password and expiry date
+| ulimit                                    | limit ressources for processes
+| kill [-s signal] _PID_                    | send a signal to process
+| killall _NAME_                            | kill by name
+| ldconfig -V                               | update library cache (verbose)
+| echo "15" > /proc/PID/oom_adj             | favour PID for killing by out of memory handler
+| cat /proc/PID/oom_score                   | show dynamic OOM score
+|===
+=== File content
+[cols="m,d"]
+|===
+| diff -b _FILE1_ _FILE2_                   | ignore different white spaces
+| diff -B _FILE1_ _FILE2_                   | ignore different blank lines
+| diff --binary _FILE1_ _FILE2_             | binary mode
+| diff -C _NUM_LINES_ _FILE1_ _FILE2_       | show context
+| diff -y _FILE1_ _FILE2_                   | side by side view
+| diff -p _FILE1_.c _FILE2_.c               | show in which C-function the difference is
+| diff -r -q _DIR1_ _DIR2_                  | compare directoris recursively (-q dont output differences)
+| diff3 ...                                 | compare 3 files
+| patch -d _DIR_ <_PATCHFILE_               | patch in directory
+| patch -p0 <_PATCHFILE_                    | Strip leading slash
+| patch -V numbered                         | make numbered backups
+| sort -n -k _BEGCOL_:_ENDCOL_              | numerical comparison of columns
+| csplit                                    | split files by pattern
+| cut                                       | remove sections of a text file
+| expand                                    | convert spaces to tabs
+| join                                      | join sorted lines depending on a join field
+| split                                     | splits files
+| unexpand -t _TABSIZE_ _FILE_              | space to Tabs
+| paste                                     | merge lines of files
+| uniq                                      | deal with unique line or multiple lines
+| file -i <file>                            |
+| uchardet                                  |
+| chardet                                   | originally Python
+| iconv -c -f utf8 -t iso8859 _INPUT.TXT_ > _OUTPUT.TXT_ | convert enconding
+| recode latin1..utf8 <FILE>                | convert enconding
+| recode latin1..latex <FILE>               | convert enconding (i.e. ä -> \"a)
+| gpg --gen-key                             | generate key
+| gpg --armor --output pubkey.txt --export '_NAME_' | export public version
+| gpg --send-keys '_NAME_' --keyserver hkp:_subkeys.pgp.net | register on server
+| gpg -e -r Name _FILE_                     | encrypt file
+| gpg --output _FILE_ --decrypt _FILE_.gpg  | decrypt a file
+| gpg --import _FILE_.asc                   | import foreign key
+| gpg --search-keys '_EMAIL' --keyserver hkp:_subkeys.pgp.net | search for key
+| gpg --encrypt --recipient '_EMAIL_' _FILE_    | encrypt for someone
+| gpg --list-keys                           | list all keys
+|===
+=== File content (output only; read only)
+[cols="m,d"]
+|===
+| md5sum                                    | MD5 check sum
+| file                                      | determine filetype
+| cksum                                     | check sum
+| sum _FILES_                               | compute checksums
+| cmp _FILE1_ [_FILE2_]                     | tell whether files are different
+| wc                                        | count words/lines/chars
+| wc -l                                     | count lines
+| col                                       | remove colors
+| strings                                   | prints readable string from file
+| nl                                        | number lines
+|===
+
+=== Search for file of content
+[cols="m,d"]
+|===
+| agrep -MAXERRORS _PATTERN_ _FILE_         | Search with toleration
+| egrep                                     | grep with extended syntax
+| grep _PATTERN_ _FILES _                   | show matching lines in _FILES_
+| grep -v ...                               | invert match
+| grep -i ...                               | ignore case
+| grep -H ...                               | print filenames
+| grep -l ...                               | print filenames only
+| grep -r _PATTERN_ _FILES_                 | Search for pattern in files
+| grep --colour ...                         | mark matches
+| grep -E "(_PAT1_\|_PAT2_)"                | search one or the other pattern
+| grep -A _NUM_FOLLOWING_LINES_ ...         | how many following lines to show
+| locate _FILE_                             | search in updatedb database for path of file
+| which _EXEFILE_                           | search for path of file
+| whereis _EXEFILE_                         | search for path of file in help, bin, conf, ...
+| grep -a -B_LINES_BEFORE_ -A_LINES_AFTER_ _TEXT_ /dev/ _DEVICE_ | undelete ASCII files
+|===
+=== Access rights
+[cols="m,d"]
+|===
+| chmod [ugoa](+-=)(rwxXsugo) _FILES_       | set permissions (X : x for dir or if x before)
+| chmod -R ...                              | recursive
+| chgrp _GROUP_ _FILE_                      | Change group
+| chown _OWNER_[:_GROUP_] _FILE_            | Change owner
+| chown --from=_CURRENT_OWNER_:_CURRENT_GROUP_ ... | only if former owner is the one given
+| chown --reference=_REFERENCE_FILE_ ...    | Reference for IDs
+| chmod -a -G _GROUP_ _USER_                | add user to group?
+| lsattr                                    | list file attributes
+| gpasswd -a _USER_ _GROUP_                 | add user to group
+|===
+
+=== File system
+[cols="m,d"]
+|===
+| ln -s _TARGET_ _FILE_                     | make symbolic link
+| ln -f ...                                 | overwrite target
+| losetup -e _CIPHER_ /dev/loop0 _FILE_     | attach encrypted filesystem
+| losetup -d /dev/loop0                     | deattach filesystem
+| touch _FILE_                              | create file or change modification time
+| stat _FILE_                               | get all information about a file
+| badblocks -s /dev/hdb                     | check disk for badblocks with progress output
+| badblocks -w /dev/hdb                     | destructive write test
+| badblocks -n /dev/hdb                     | non-destructive write test
+| cfdisk                                    | NCurses fdisk
+| fdisk -l                                  | show partitions (run as root)
+| dd                                        | copies data with optional lowlevel conversions
+| mkdir                                     | make directory
+| mv -b ...                                 | backup instead of overwriting
+| mv -u ...                                 | update files
+| mmv _PAT1_ _PAT2_                         | multiple move with #1,#2... for matches
+| mount -t _FSTYPE_ _DEV_ _MOUNTPOINT_      | mount with special filesystem
+| mount -n -o remount,rw                    | remount without writing to /etc/mtab in read-write mode
+| mount -o loop _FILE_ _MOUNTPOINT_         | mount as loop device
+| mcp                                       | multiple copy
+| mln                                       | multiple link
+| map                                       | multiple append
+| wipe -z _FILES_                           | wipe file with zeros
+| rm -R _FILE_                              | recursive
+| rmdir -p a/b/c                            | remove "c" and parents "a" and "b"
+| swapoff -a; swapon -a                     | check if free+buf+cache>swap; use to bring back pages to RAM after mem-hog app
+| find . -ctime -_n_                        | find files that are at most _n_ days old
+| convmv                                    | convert file encoding
+|===
+
+== CUDA
+
+[cols="m,d"]
+|===
+| nvidia-modprobe                           |
+|===
+
+== File system (show info; read only)
+[cols="m,d"]
+|===
+| ls -a                                     | print even ".*"
+| ls -b                                     | print escape for chars
+| ls -c -lt                                 | sort by ctime
+| ls -h                                     | human readable
+| ls -l                                     | long listing
+| ls -s                                     | size
+| ls -R                                     | recursive
+| ls -1                                     | one column
+| du -d                                     | dereference links
+| du -h                                     | human readable
+| du -S                                     | no Subdir
+| du -x                                     | exclude different file sys
+| du --exclude=_PATTERN_ ...                | exclude certain files
+| du --max-depth=N ...                      | maximal depth
+| df -T                                     | print filesystem type and information
+| lsof +D /mnt/...                          | list who is using the directory
+| hdparm -Tt /dev/...                       | Test drive speed
+|===
+== Compound commands
+[cols="m,d"]
+|===
+| ls -t -1                                  | find last modified file
+| find . -name _NAME_ -print0 \| xargs -0 _COMMAND_ | will execute command on all item (separated by \000; due to option); option -p for interactive asking
+| find . -maxdepth 1 -name * -exec _COMMAND_ \; | execute for all files found
+| for file in *.txt; do .... ; done         | execute for each txt file
+| for file in $@; do .... ; done            | execute for each file on command line
+| perl -pi -e 's/.../.../g;' _FILE_         | loop over lines; edit <> in place
+| perl -p -e '_PROGRAM_'                    | assume loop like -n but print line also, like sed
+| perl -n -e '_PROGRAM_'                    | assumes while(<>){_PROGRAM_}
+| perl -i_EXTENSION_ -e '_FILEEDITING_'     | edit <> files in place (makes backup if extension supplied)
+| sed -i 's/.../.../g' _FILE_               | replace in file (g for global replace)
+| perl -i -pe 's/.../.../;' _FILE_          | replace
+| find . -name _FILES_ -print \| xargs perl -pi -e 's/.../.../ig' _FILES_ | replace
+| echo -n "abc"                             | no newline
+| for OFFSET in 0 1 2 3 4 5 6 7; do dd if=/dev/sdb1 bs=256M count=1 skip=$OFFSET \| grep -a 'text'; done    | read blockwise
+|===
+== User managment
+
+[cols="m,d"]
+|===
+| useradd ...                               | add user (expiry for password possible)
+| userdel ...                               | delete user
+| usermod ...                               | modify user
+| passwd                                    | change password
+| id                                        | info about user (e.g. current)
+| groups                                    | print users groups
+|===
+
+
+== X configuration
+
+[cols="m,d"]
+|===
+| xset -b off                               | turn off bell
+| xset -dpms                                | turn energystar off
+| xset dpms ...                             | set energystar timeouts
+| xkbbell                                   | keyboard bell
+| xrdb .Xdefault                            | reload Xdefaults definitions
+| xlsclients                                | list client applications running on a display
+| xlsfonts                                  | try out fonts
+| xfontsel                                  | find the right font string
+| xrefresh                                  | refresh all or part of an X screen
+| xmag                                      | magnify parts of the screen
+| xmessage ...                              | print message on X
+| xsetroot                                  | root window parameter setting utility for X
+| xev                                       | display x events such as  keyboard codes
+| xmodmap                                   | (re)set keyboard mapping
+| showrgb                                   | show names of defined colours
+| xcolorsel                                 | display all colours defined in rgb.txt
+| xcms                                      | shows CieLAB
+| xwd                                       | dump image of an X window
+|===
+
+
+== Network
+
+[cols="m,d"]
+|===
+| mail _TO@ADR_ -s "_SUBJECT_" -r "_FROM@ADRr_" | send email
+| lynx -dump                                | dump webpage in ASCII
+| watch -n _SECONDS_ lynx -dump             | watch in web page changes
+| lftp -u _USER_,_PASSWD_ _HOST_ -e "cd _DIR_;get _FILE_;exit" | download with lftp
+| echo 1 > /proc/sys/net/ipv4/ip_forward    | Enable forwarding
+| wget -c _URL_                             | continue
+| wget -rkp -l _DEPTH_ -A _SUFFIX_ -R _SUFFIX_ -np | recursive, convert linKs,Page requisites, No Parent
+| write _USER_[@_HOST_] [tty1]              | write message
+| nohup _COMMAND_                           | command does not quit at hungup (e.g. logout)
+|===
+
+== SSH
+
+[cols="m,d"]
+|===
+| ssh-keygen -t ed25519 -a 100              | Suggested in https://security.stackexchange.com/questions/143442/what-are-ssh-keygen-best-practices/143579 and https://wiki.archlinux.org/index.php/SSH_keys#Choosing_the_authentication_key_type
+| ssh -C _USER_@_HOST_                      | compress with gzip-like system
+|===
+
+* DSA deprecated in OpenSSH 7.0
+* RSA compatible, but weaker and needs longer keys
+* ECDSA is suspicious (NIST-produced)
+* Ed25519 key size is always 256
+* -> Ed25519 is best
+
+
+== Network (show info or configure)
+
+[cols="m,d"]
+|===
+| ifconfig                                  | how network info
+| ifconfig eth0 _IP_                        | set IP
+| iptables -t nat -A POSTROUTING -o ppp0 -j MASQUERADE  Masquerade output on ppp0 |
+| hostname _NEWHOSTNAME_                    | set hostname
+| lsof -i [tcp\|udp][@host][:port\|service] | list open connections
+| ngrep -d <DEV> host <IP>                  | scan traffic
+| route add -host IP netmask NM             | add route (Netmask can be determined from IP)
+| route del ...                             | delete route
+| route add -host IP gw GW                  | add gateway
+| route -n                                  | show routes (no DNS resolving)
+| netcat _HOST_ _PORT_                      | connect to host
+| netcat -l -p _PORT_                       | listen to connection
+| netstat                                   | network info
+| nmap -sP _HOSTS_                          | only pi
+| nmap -O _HOST_                            | determine OS
+| nmap -sS -sF -sX -sN                      | stealth scans
+| ping -R _ADDR_                            | show rout
+| ping -f _ADDR_                            | flood ping
+| tcpdump                                   | dump network traffic
+| mesg [y\|n]                               | switch writing on/off
+| iwlist scan                               | scan for wireless
+| iwconfig wlan0 essid "_SSID_"             | connect without encryption
+| wpa_supplicant -B -Dwext -i wlan0 -c /etc/wpa_supplicant.conf | connect with WPA
+| ifconfig wlan0 192.168.0.2; route add default gw 192.168.0.1  | manual IP
+| iptraf                                    | interactive colorful IP LAN monitor
+| sudo ss -lnptu                            | List listening processes
+|===
+
+== Programming issues
+
+[cols="m,d"]
+|===
+| enscript file.py -Epython --color -p _FILE_.ps | highlight syntax
+| python -w _MODULE.py_                     | write module documentation
+| python -m pdb _FILE.py_                   | start with debugger
+| pycallgraph _FILE_.py                     | create call graph after running the program
+| pychecker _FILE_.py                       | check for errors
+| pygenie.py complexity _FILE_.py           | determine code cyclomatic complexity
+| clonedigger                               | find code part copies with a source file
+|===
+
+
+== Document files
+
+[cols="m,d"]
+|===
+| dvips file.dvi -o - ""                    |"" ps2pdf - file.pdf | convert dvi to pdf
+| dvips file.dvi -o                         | output file instead of printer
+| dvips -f _FILE_.dvi \| psnup -4           |
+| ps2pdf - _FILE_.pdf                       | create PDF with 4 pages on one
+| mpage -2 _IN-FILE_.ps _OUT-FILE_.ps       |
+| pdfnup --nup 2x1 _IN-FILE_.pdf            |
+| pdfimages -j _IN-FILE_.pdf _PICS_         |
+| ldconfig -V                               | Update library cache (verbose)ract images
+| pdftops _IN-FILE_.pdf                     | convert to ps
+| gs -dBATCH -dNOPAUSE -q -sDEVICE=pdfwrite -sOutputFile=_OUT_.pdf _FILE1_.pdf _FILE2_.pdf  |  merge pdfs
+|===
+
+
+== Document files (non tex, dvi, ps, pdf)
+
+[cols="m,d"]
+|===
+| cat _FILE_                                | show file; can do number lines, squeeze blank, show special chars
+| tr -d '\r'                                | remove carriage return
+| unhtml file.html > file.txt               | remove html tags
+|===
+
+
+== Specials
+
+
+[cols="m,d"]
+|===
+| echo -e "\033[01;_COLOR_m_TEXT_\033[00m"  | print in colour (use 29-36 for _COLOR_)
+| less -r ...                               | interprets colour sequences
+|===
+
+
+== Image operations
+
+[cols="m,d"]
+|===
+| ls *.TIF \| while read file; do convert -level 30%,70% "$file" "${file%.TIF}.jpg"; done   | improve contrast
+| convert _FILE.jpg_ -gravity south -pointsize 100 -fill 'white' -annotate 0 "TEXT" _FILE.jpg_ | annotate image
+| convert -draw 'gravity Center scale 2,2 text 0,0 "_TEXT_"' _FILE1_ _FILE2_ | annotate image
+| convert -rotate -90 -level 40%,45% -despeckle _FILE_RAW.jpeg_ _FILE_NEW.jpg_ | post-process after scanning
+| mogrify -format _eps_ *._png_             | convert all png to eps files
+| convert -density 300 _FILE_.pdf ...       | use 300 dpi
+| mogrify _FILE_.gif -alpha off             | remove transparency
+| mogrify _FILE_.gif +matte                 | remove transparency
+|===
+
+
+== Video
+
+[cols="m,d"]
+|===
+| mencoder file.mpg -ovc divx4 -oac mp3lame -of mpeg -o output.avi | 3 pass encoding?
+| mencoder file -ovc lavc -lavcopts vcodec=mpeg4:vpass=1 -oac copy -o movie.avi | 1/2 pass (rm frame.avi before)
+| mencoder file -ovc lavc -lavcopts vcodec=mpeg4:vpass=2 -oac copy -o movie.avi | 2/2 pass
+| mplayer _URL_ -dumpstream -dumpfile _FILE_ | dump a stream
+|===
+
+
+== Misc
+
+[cols="m,d"]
+|===
+| factor _NUM_                              | factorize number
+| random 10                                 | random number 0-9
+| mysqlcheck -o _DB_                        | defrag database
+| journalctl -b                             | Systemd logs from this boot
+| journalctl -u                             | Systemd logs from that unit
+| less -SR                                  | use color codes (R); dont wrap lines (S) (you can also press "right arrow" to scroll)
+| tput rmam                                 | Line wrapping on
+| tput smam                                 | Line wrapping off
+| ${VAR:-USEIFZERO}                         | Bash variable expansion; Fallback when empty
+| perl -ne 'print $1 if /..(..)/'           | Filter lines
+| head -n 50 file.tab                       |
+| iconv -f latin1                           |
+| csvlook \| less -S                        |  press right to scroll sideways
+| python -c "exec(..)"                      | Run multiline Python
+| echo -e "\n"                              | Use newlines
+| perl -MTerm::ANSIColor -ne 'print $. % 4 ? $_ : color("bold red").$_.color("reset")'  | color every 4th line
+| tr '\0' '\n' < /proc/<pid>/cmdline        | Command used to launch that process
+| mpstat                                    | show instantaneous CPU utilization
+| yarn application -kill application_...    |
+| du -d 2 -h                                |
+| sort -h                                   | Sort by size
+| git reset --hard                          | reset entire repo to last committed state
+| git clean -d -i                           | -d for directories, -i for interactive, -n for dry run
+| grep -rohE '<regex>' --include "*.txt"    |
+| sort \| uniq -c \| sort -nr               | Count words in files
+| echo "$(readline -e file.txt)"            | expand absolute filename
+| file -i <file>                            | Detect encoding
+| iconv                                     | Convert encoding
+|===
+
+
+== Bash
+
+* http://www.gnu.org/software/bash/manual/bash.html#Shell-Parameter-Expansion[Shell Parameter Expansion]

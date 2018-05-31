@@ -1,0 +1,380 @@
+Inotify: notify user programs of filesystem changes
+/proc filesystem
+systemd?
+glibc?
+
+for file in *.adoc; do echo "${file%.adoc}.txt"; done
+
+gpg -c file     | Encrypt file
+ssh-keygen -t ed225519 -a 100   | Secure https://security.stackexchange.com/questions/143442/what-are-ssh-keygen-best-practices[Security StackExchange]
+
+MD5 and SHA-1 should be avoided if possible, and for bulk encryption it’s best to use Camellia, Twofish, or AES.
+VPN, HTTPS not secure for NSA
+Secure: PGP, Truecrypt, Zoho Email, OTR chat
+Need 8 words password for 128bit blocks
+
+perl -ne 'CODE'
+while(<>){CODE}
+
+perl -ane 'CODE'
+while(<>){
+  @F=split/\s+/,$_;
+  CODE}
+
+perl -F/PATTERN/ -ane 'CODE'
+while(<>){
+  @F=split/PATTERN/,$_;
+  CODE}
+
+
+OOM killer:
+* kill max memory for least important process
+* cat /proc/<pid>/oom_score
+* score = percent of mem used * 10 (also within boundaries)
+* -30 for root
+* + oom_score_adj
+* grep -i  kill /var/log/messages* -> "Out of Memory: Killed process"
+
+Linux memory display:
+* buffer: for net and disk buffer (shouldnt be too large)
+* cached: cache for disk access; will be flushed out when programs need mem themselves
+* -> memrealfree=memfree+swapcached
+* cpu %wa: waiting of disk I/O (e.g. swap)
+
+Manjaro:
+add locale:
+uncomment in /etc/locale.gen
+run locale-gen
+check list with local -a
+
+pacman-mirrors -g  # rank mirrors
+pacman-key --refresh-keys
+
+update archlinux-keyring; manjaro-keyring
+
+CDPATH  # where to search for folder in CD completion
+FCEDIT # suffixes to ignore when file completion
+
+LC_ALL=C sort --parallel=8   # locale to avoid utf8 parsing
+
+<(command...)    # evaluate and use as input(?)
+
+free # the "+/- buffer" value counts; this is what memory you get when buffers, that have no right to take memory, are removed
+
+mhwd-chroot-shell | chroot the easy way
+
+pacdiff # minimal
+yaourt -C # search *.pacnew files and offer merge
+
+
+= Distributions
+
+++ Linux Distributions
+
+http://en.wikipedia.org/wiki/Comparison_of_Linux_distributions
+http://distrowatch.com/dwres.php?resource=popularity
+http://www.slant.co/topics/871/~what-are-the-best-linux-distributions-for-desktops
+(elementary OS,
+
+Python 3: Antergos, Manjaro, Bridge (live)
+Mint old Python?
+Distrowatch: Antergos, Arch
+Based on Arch and 64bit: Manjaro, Anterjos, Chakro, Netrunner, Bridge Linux
+Awesome manager: Debian, Fedora, Ultimate, Gentoo, Nix OS
+
+My List Rec(?): Manjaro, Fedora(?, mb more enterprise)
+
+Test: KDE, Py3, hardware detect, release cycles, community
+
+Archlinux: as Manjaro, Chakra or Evo/Lution
+
+Archderivate:
+* Minimal: ~BridgeLinux, ~ArchBang
+* Close to Arch Repo: Antergos
+* More stable, but further from Arch Repo: Manjaro (own Repo)
+
+Maui?
+
+Want:
+* many packages
+* KDE
+* Python3
+* hardware detect
+* release cycles
+* community
+
+Fedora:
+* RPM
+* enterprise focused? instead of desktop usability
+
+Tails:
+* complete Internet anonymity
+* browsing security
+http://distrowatch.com/table.php?distribution=tails
+
+Nix OS:
+* state of the art in system configuration management
+* all packages in isolation
+* reliable upgrades, rollbacks, reproducible system configurations, source-based model with binaries, and multi-user package management
+* actually research project
+http://distrowatch.com/table.php?distribution=nixos
+
+Ka OS:
+* latest KDE
+* rolling release
+* derived from Arch, but incompatible with AUR
+http://distrowatch.com/table.php?distribution=kaos
+
+Pinguy OS:
+* for beginning Linux users
+* out-of-the-box support for multimedia codecs and browser plugins, a heavily tweaked GNOME user interface with enhanced menus
+http://distrowatch.com/table.php?distribution=pinguy
+
+Deepin:
+* own desktop environment called DDE or Deepin Desktop Environment which is based on HTML 5 technologies
+* focuses much of its attention on intuitive design
+* alpha 04/2014
+http://distrowatch.com/table.php?distribution=deepin
+
+Chakra:
+* 3k packages(?)
+* live CD
+* forked from Arch
+* graphical installer, automatic hardware detection and configuration, the latest KDE desktop
+http://distrowatch.com/table.php?distribution=chakra
+
+Antergos
+* modern, elegant and powerful operating system based on Arch Linux
+* own graphical installer
+* no(?) firefox, gimp, libreoffice, qt
+http://distrowatch.com/table.php?distribution=antergos
+
+Bohdi:
+* beautiful (?)
+* 35k packages(?)
+* elegant and lightweight Enlightenment
+* offers modularity, high level of customisation, and choice of themes
+* default Bodhi system is light
+http://distrowatch.com/table.php?distribution=bodhi
+
+Gobo Linux:
+* alpha now
+* packages in own folder
+http://distrowatch.com/table.php?distribution=gobo
+
+Manjaro:
+* standard Xfce
+* fast, user-friendly, desktop-oriented operating system based on Arch Linux
+* intuitive installation process, automatic hardware detection, stable rolling-release model, ability to install multiple kernels, special Bash scripts for managing graphics drivers and extensive desktop configurability
+http://distrowatch.com/table.php?distribution=manjaro
+
+= Other
+
+* Hyperthreading if /proc/cpuinfo has different number of cores and siblings (http://dag.wieers.com/blog/is-hyper-threading-enabled-on-a-linux-system, http://stackoverflow.com/questions/10593313/why-does-the-performance-become-bad-after-enabling-hyperthread)
+
+* Linux Kernel vs Windows Vista
+http://widefox.pbworks.com/w/page/8042297/Development
+
+Linux vs Windows
+* http://www.phoronix.com/scan.php?page=article&item=intel_windows81_ubuntu&num=1
+* upgrade to Mesa10 makes Linux better for Nexuiz, Unvanquished Alpha, (Openarena)
+* worse for Unigine Sanctuary, Unigine Tropics, (Xonotic), Gputest
+
+kdbus in Linux?
+
+Kernel features:
+* lazytime mount: timestamps only in memory -> less harddrive access
+* direkte virtualisierung
+* FL_INSERT_RANGE: to insert in one file without moving tail
+* UEFI BIOS Update capability
+* Kernel 4.4 long-term
+* Driver architecture for AMD Graphic cards?
+* Orange File System for High End Parallel Computing in large clusters
+* PID controller limited processes per cgroups (K4.3)
+* Linux Kernel
+* O_TMPFILE: temporary files not visible and automaticall deleted
+KVM?
+XFS reif
+XFS und EXT4 können schnell Dateiteile löschen
+LLVM?
+rocess scheduling
+TCP Autocorking: bündelt kleine Netzwerk daten
+Paktefilter: Nftables
+Heavy Hitter Filer: große Pakete drosseln
+Flashfriendly filesystem (füllt rotierend; kümmert sich nicht um Fragmentierung da schnell)
+User Namespace?
+util-linux Werkzeuge
+Btrfs?
+
+Sudo:
+* need to be sudoers
+* use own (user) password
+* can have control and give specific root right to people (otherwise had to give root password to everyone)
+
+Nice:
+* set priority for CPU share (how "nice" a process is)
+* default 0 (inherited from parent), -20 highest, 19 lowest
+* only root can decrease value
+* user can increase value with "nice -n19 <cmd>"
+* exact distribution depends in scheduler; can be roughly propto (20-p) for CPO share
+* ionice: for I/O scheduling
+
+
+Chroot:
+https://superuser.com/questions/165116/mount-dev-proc-sys-in-a-chroot-environment
+
+    lsblk
+    mount /dev/sd.. /mnt
+    chroot /mnt
+    mount -t proc proc /proc    # inside chroot
+    mount --bind /dev /mnt/dev  # outside chroot
+    mount -t sysfs sys /sys     # ? if needed
+
+
+`info coreutils`:
+* Output of entire files::       cat tac nl od base32 base64
+* Formatting file contents::     fmt pr fold
+* Output of parts of files::     head tail split csplit
+* Summarizing files::            wc sum cksum b2sum md5sum sha1sum sha2
+* Operating on sorted files::    sort shuf uniq comm ptx tsort
+* Operating on fields::          cut paste join
+* Operating on characters::      tr expand unexpand
+* Directory listing::            ls dir vdir dircolors
+* Basic operations::             cp dd install mv rm shred
+* Special file types::           mkdir rmdir unlink mkfifo mknod ln link readlink
+* Changing file attributes::     chgrp chmod chown touch
+* Disk usage::                   df du stat sync truncate
+* Printing text::                echo printf yes
+* Conditions::                   false true test expr
+* Redirection::                  tee
+* File name manipulation::       dirname basename pathchk mktemp realpath
+* Working context::              pwd stty printenv tty
+* User information::             id logname whoami groups users who
+* System context::               date arch nproc uname hostname hostid uptime
+* SELinux context::              chcon runcon
+* Modified command invocation::  chroot env nice nohup stdbuf timeout
+* Process control::              kill
+* Delaying::                     sleep
+* Numeric operations::           factor numfmt seq
+
+
+Cinnamon:
+* from GNOME2
+* from Linuxmint
+* edge tiling and snapping
+* lightweight
+
+Unity:
+* for GNOME optimize screen space for touchscreens
+* Dash search scope with Lenses
+
+Pantheon:
+* elementaryOS
+* no fork; GTK3
+* clean, modern
+* grid window tiling
+* light
+
+Other:
+* LXDE: super light-weight
+* XFCE: light, GTK2+, simple
+* Trinity: KDE3
+* MATE: GNOME2, light
+
+Tiling:
+http://www.slant.co/topics/390/~what-are-the-best-window-managers-for-linux
+
+i3:
+* poor floating, manual tiling, no window gap
+
+awesome:
+* http://www.slant.co/topics/390/viewpoints/2/~what-are-the-best-window-managers-for-linux~awesome
+
+dwm: too light
+xmonad:
+* needs Haskell knowledge
+
+git push origin master
+
+htop:
+"task"="process"
+Memory: Green used, Blue buffers, Orange cache
+VIRT: requested memory incl memory mapped files (not useful?)
+RES: currently in memory (hence without swapped; incl shared memory with others)
+SHR: potentially shared memory
+
+Uninterruptable processes are USUALLY waiting for I/O following a page fault. The process/task cannot be interrupted in this state, because it can't handle any signals; if it did, another page fault would happen and it would be back where it was.
+
+A niceness level increase by 1 should yield a 10% more CPU time to the process
+
+
+Execution:
+
+Interactive + Login:
+1. /etc/profile
+2. .bash_profile OR .bash_login OR .profile
+3. on exit: .bash_logout
+
+Interactive w/o Login:
+1. .bashrc
+
+Non-interactive
+1. $ENV
+
+while read $var; do echo "$var"; done
+gawk '{print $3}'
+
+
+Git:
+List file conflicts
+
+git diff --name-only --diff-filter=U
+git ls-files -u
+
+Merge:
+git mergetool
+git checkout --ours <file>
+git checkout --theirs <file>
+git add <file>
+git commit ...
+git pull
+
+
+
+
+for i in */; do zip -9 -r "${i%/}.zip" "$i"; done   # compress all dirs into separate file
+
+ssh-keygen -t ed25519 -a 100  # secure ssh https://security.stackexchange.com/questions/143442/what-are-ssh-keygen-best-practices
+
+run with Bumblebee/GPU: primusrun <cmd>
+install cuda
+
+
+Show largest pacman packages:
+pacman -Qi|gawk '/^Installationsgröße/{print $3$4, name} /^Name/{name=$3}'|sort -hr|less
+
+pacman -Qe: explictely installed
+pacman -Qt: not a dependency
+
+/sys/devices/system/cpu/vulnerabilities/ : check vulnerabilities and files content for mitigations
+
+Bash:
+${filename%.txt}_extra.txt    | Remove extension and add new
+
+https://wiki.archlinux.org/index.php/Wireless_network_configuration#Wireless_management
+Scan Wifi: iw dev wlp3s0 scan
+
+
+watch: run command periodically
+
+for i in *; do [ -f "$i" ] && echo "$i"; done   # glob files only (otherwise also dir)
+
+Special characters, e.g. for Prompt
+echo -e '\uE0B2 \uE0B0'  ->   
+(powerline provides even more characters)
+
+
+
+grubx64 vs shimx64:
+* shimx64 for secure boot -> launch grubx64 in same dir
+* for other that grub, still call the file grubx64.efi

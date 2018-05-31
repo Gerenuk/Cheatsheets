@@ -1,0 +1,4 @@
+* cross_validate gives more info than cross_val_score
+* GBT: depth 3-8
+* RandomizedSearchCV: use distributions from scipy.stats for parameters
+* 

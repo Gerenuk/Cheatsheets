@@ -1,0 +1,13 @@
+= Black coding style
+* specifys PEP8 more uniquely
+* line length 90ish better
+* always use trailing commas
+* use double quotes (can use ', C uses ")
+* pip install black
+* -> PEP8 is fine; but longer line length makes sense
+
+= Glom nested data operator
+* access nested data (e.g. with dot-notation)
+* better error messages (when intermediate fails)
+* can also define multi access, "declare final data structure"
+* built-in data exploration/debugging

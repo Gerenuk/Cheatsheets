@@ -1,0 +1,10 @@
+sympyfy("expr")
+simplify(..)
+.subs({x:..})
+solveset(..)
+x,y=symbols("x,y")
+Eq(left, right)  # repr equation
+Rational(a,b)
+lambdify : make Python function
+.series(x, 0, 10)
+fps(..).truncate(..) : formal power series; symbols sum for power series
