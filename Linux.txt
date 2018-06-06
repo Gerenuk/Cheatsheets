@@ -3,6 +3,8 @@ Inotify: notify user programs of filesystem changes
 systemd?
 glibc?
 
+for file in *.adoc; do echo "${file%.adoc}.txt"; done
+
 gpg -c file     | Encrypt file
 ssh-keygen -t ed225519 -a 100   | Secure https://security.stackexchange.com/questions/143442/what-are-ssh-keygen-best-practices[Security StackExchange]
 
