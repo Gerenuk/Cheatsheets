@@ -9,5 +9,4 @@
 
 == Cross-validation
 
-* Methods like ElasticNet, Lasso, LogReg, ... can fit multiple parameters incrementally, reducing computation
-* LassoLarsIC can choose parameters by AIC or BIC
+

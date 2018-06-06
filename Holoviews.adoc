@@ -126,6 +126,7 @@ Other dimension properties:
 | [color_index=_num_]                       | Use this column in data for color
 | [yticks=..]                               | Position
 | el << Spikes(..)                          | Add marginal distribution
+| Hextiles((x, y))                          | Hexbin
 | Histogram(np.histogram(_vals_, bins="auto"))  | Histogram
 | [projection="polar"]                      | Polar histogram
 | [norm={axiswise:True}]                    |

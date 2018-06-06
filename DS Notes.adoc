@@ -554,6 +554,21 @@ https://www.youtube.com/watch?v=XQfxndJH4UA
 
 * latest C4.5: J4.8 in Weka (or commercial C5.0 from Rulequest)
 
+== Large data techniques
+* dimension reduction:
+  * sklearn.random_projection
+  * sklearn.cluster.WardAgglomeration
+  * sklearn.feature_extraction.text.HashingVectorizer
+* online algorithms
+  * sklearn.MiniBatchKMeans
+* parallel processing
+* caching:
+  * joblib.Memory
+* fast IO:
+  * zlib.compress (avoid copies: zlib needs C-contiguous buffers; store raw buffer and meta info; use __reduce__; rebuild np.core.multiarry._reconstruct)
+  * pytables (even faster than joblib)
+* joblib for pipeline-ish patterns
+
 == Graph DBs and Python
 * http://de.slideshare.net/MaxKlymyshyn/odessapy2013-pdf
 * ArangoDB; Bulbflow, py4neo

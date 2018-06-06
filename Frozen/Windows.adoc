@@ -37,3 +37,5 @@ Windows Environment variables:
 rundll32 sysdm.cpl,~EditEnvironmentVariables
 
 Proxy from netstat -an
+
+Change password Remote Desktop: Ctrl-Alt-End (!)

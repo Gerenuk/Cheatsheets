@@ -1,0 +1,39 @@
+== GENERAL TIPS
+
+* Regression might be too noisy -> predicts mean only -> use classification (or multiclass)
+* Maybe use same class for extreme deviation (both sides)
+* signals, multiply sin^2 window
+* cluster on 32 sample long; sparse coding or kmeans
+* see where reconstruction doesnt match signal
+* glmnet from R uses and approximation which makes it faster but less accurate
+* You can try this: In one of the 5 folds, train the models, then use the results of the models as "variables" in logistic regression over the validation data of that fold. Weights obtained in this manner will be more accurate, and I bet the SVM, elastic net and LR will have negative weights or close to zero.
+* San Francisco housing prediction features: Num jobs, salary jobs, num places to live -> very good performance
+* thing to try:
+** common sense for features
+** look at logreg feature weights
+** visualize decision tree
+** cluster data and observe
+** train simple classifier and see where mistakes
+** monitor: accuracy on test data, input feature distribution, output score distribution, output classification distribution
+* Methods like ElasticNet, Lasso, LogReg, ... can fit multiple parameters incrementally, reducing computation
+* LassoLarsIC can choose parameters by AIC or BIC
+
+=== Eslami - Patterns for Research in Machine Learning [[http://arkitus.com/PRML/ Link]] =
+* Use version control (to collaborate, replicate, work from multiple computers)
+* Separate code from data (/data, /code; to share code, swap data; hide data from version control)
+* Separate input/working/output data (input: never change; working: always change, can safely be deleted; output: for sharing)
+* Always keep data raw (keep note where from and licensing; write script to convert data; never clean by hand, or document thoroughly)
+* Safe to disk frequently; store output of different days to different folders
+* Separate Options (how algorithm should run) and Parameters (fitted model, output of algorithm); unaffected parameters can be initialized by options
+* Don't use global variables; communicate through function arguments (easier to debug and parallize)
+* Record options used at each run (set random number seed; save copy of code for important runs)
+* Make it easy to sweep options (ranges returned by ``get_config``)
+* Make it easy to execute only portions of code (specify which parts; store intermediate results, ``run_experiment('dataset_1_options', '|preprocess_data|initialise_model|train_model|')``)
+* Use checkpoints; experiments fail occationally; store entire state (counters etc.) at suitable intervals; code should be able to continue from latest saved state (write message that it restarts)
+* Write demos and tests (/code, /data, /demos, /tests)
+* Estimate how long experiment will run
+* Keep journal that explains why you ran experiment and what finding are
+* Do coding and debugging on subset of data that runs in 10sec
+* Make it easy to swap in and out different models
+* Record Git revision number of code
+* Use GNU make for pipeline? (download, traning, evaluating)

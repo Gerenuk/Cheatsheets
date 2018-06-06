@@ -479,15 +479,8 @@ Box-Plot (by Tukey): plot Median, Q25, Q75, Min, Max; but consider values  x < Q
 ** if number of observations larger than 50000 use linear instead of RBF due to speed
 * SVM large margin = small VC dimension
 
-== GENERAL TIPS
-
-* Regression might be too noisy -> predicts mean only -> use classification (or multiclass)
-* Maybe use same class for extreme deviation (both sides)
-* signals, multiply sin^2 window
-* cluster on 32 sample long; sparse coding or kmeans
-* see where reconstruction doesnt match signal
-* glmnet from R uses and approximation which makes it faster but less accurate
-* You can try this: In one of the 5 folds, train the models, then use the results of the models as "variables" in logistic regression over the validation data of that fold. Weights obtained in this manner will be more accurate, and I bet the SVM, elastic net and LR will have negative weights or close to zero.
+== Time series
+* hard to beat SARIMAX (e.g. Python https://github.com/tgsmith61591/pyramid)
 
 === Learned from Kaggle
 * https://www.youtube.com/watch?v=9Zag7uhjdYo

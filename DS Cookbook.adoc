@@ -454,6 +454,13 @@ But also includes self-pairs.
 
    dp = df.apply(lambda x: Series(np.histogram(x, bins=bins)[0], index=bins[:-1]))
    plt.pcolor(dp)
+
+=== Heatmap
+
+    sns.jointplot("x", "y", data=df,
+                  kind="hex", size=10,
+                  gridsize=100, bins="log", mincnt=1, cmap="viridis",
+                  )
    
 === Groupby and index
 
@@ -505,7 +512,14 @@ https://pandas.pydata.org/pandas-docs/stable/cookbook.html[Pandas Cookbook] exam
     tot_cond = functools.reduce(operator.and_, [cond1, cond2, ..])
 
     # itertools.groupby-like
-    df.A.groupby( (df.A != df.A.shift()) .cumsum()).groups    
+    df.A.groupby( (df.A != df.A.shift()) .cumsum()).groups
+
+== kNN custom metric
+
+    def mydist(x, y):
+        return np.sum((x-y)**2)
+
+    nbrs = NearestNeighbors(n_neighbors=4, algorithm='ball_tree', metric='pyfunc', func=mydist)
     
 == Spark
 
