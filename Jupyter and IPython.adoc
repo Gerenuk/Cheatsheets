@@ -1,0 +1,328 @@
+= Jupyter and IPython
+
+:toc:
+
+== General commands
+
+[cols="m,d"]
+|===
+| %debug                                    | Debug exception (call this after it occured)
+| %xmode verbose                            | Show variables in traceback lines
+| %load script.py                           | Load code of script into cell
+| %store _var_                              | Store variable (to where?)
+| %run _script_                             | Run other script or notebook
+| %run -d _script.py_                       | Run in debug mode
+| %run -p _script.py_                       | Profile
+| %connect_info                             | Show info for kernel connection
+| _out_ = !_oscommand_ $_myvar_ {_pycode_}  | Execute command and capture in IPython SList
+| out.n                                     | Return result newline separated (also `.s` for spaces, `.p` for objects)
+| out.fields()                              | Split lines by whitespaces
+| out.grep(text)                            | Grep on outputs
+| %rehashx                                  | Load all PATH as aliases
+| %reset		                            | Remove user namescape
+| %config                                   | show configurable classes
+| exec In[2]+In[5:8]                        | Reexecute _2,_5,_6,_7
+| %macro _name_ 2 5:8                       | Save lines 2,5,6,7; `print <name>` to see
+| %%prun -s cumulative                      | Python profiler
+| %timeit -r 1 _command_                    |
+| %quickref                                 |
+| %env var=val                              | Set environment variable
+| %store var.stdout > out.txt +
+  !geany out.txt                            |
+| %dhist                                    | history of directories (stored in _dh)
+| %load_ext line_profile +
+  %lprun -f func_to_profile statment_to_run |
+| %writefile [-a] filename                  | Write contents of cell to file (`-a` for append)s
+| %who_ls                                   | Sorted list of files
+| %whos                                     | Show variables and some meta info
+| %ll                                       | Print (with color)
+| %capture _out_var_                        | Run cell and capture output in `CaptureIO` object
+| %tb                                       | Print last traceback
+|===
+
+
+== Hotkeys
+
+=== Edit mode
+
+[cols="m,d"]
+|===
+| Ctrl-Shift-Minus                          | Split cell
+|===
+
+=== Cell mode
+
+|===
+| F                                         | Find/Replace
+| Ctrl-Shift-P                              | Command search
+| 1                                         | To heading
+| (Shift) V                                 | Paste cell (above)
+| O                                         | Toggle output
+| Shift-M                                   | Merge cells
+|===
+
+
+== Convenience
+
+[cols="m,d"]
+|===
+| _func_ _arg1_, ..                         | Automatic parenthesis (maybe need %autocall)
+| /_func_ _arg1_, ..                        | Add () if couldn't guess
+| ,_func_ _str1_ _str2_                     | Auto-quotes
+| ;_func_ "long str with space"             |
+| np.*.*int*?                               | Search with wildcardss
+| var* _type_?                              | Search certain types onlys
+|===
+
+* can be controlled with `%autocall`
+
+== Referencing
+
+[cols="m,d"]
+|===
+| _  __  ___                                | last three commands
+| _i _ii _iii                               | last 3 inputs
+| In[..]                                    |
+| Out[..]                                   |
+| _i<num>                                   | input no. <num>
+| _<num>                                    | output no. <num>
+| exec _i                                   | reexecute
+|===
+
+
+== Install kernel
+
+    conda create -n python3 python=3.6 ipykernel
+    . activate python3
+    python -m ipykernel install --user --name myenv --display-name "Python (myenv)"
+
+== Calling IPython
+
+[cols="m,d"]
+|===
+| ipython --help-all                        | Shows all configurations
+| ipython profile create                    |
+| ipython locate                            |
+|===
+
+== Profiling
+
+* `pip install`: `line-profiler`, `psutil`, `memory_profiler`
+
+|===
+| %time ..                                  | Simple time
+| %timeit -r 1 ..                           |
+| %prun ..                                  | Time for each function
+| %lprun ..                                 | Time for each line
+| %mprun ..                                 | Memory usage
+| %memit ..                                 |
+|===
+
+* http://pynash.org/2013/03/06/timing-and-profiling/[Pynash article]
+
+== Tips
+
+=== Remote access
+
+    nohup juypter notebook --no-browser --port=8888 &         # on remote machine
+
+    ssh -i ~/.ssh/..pem -N -f -L localhost:8889:localhost:8888 anton@remote   # on local
+
+    # open browser on localhost:8889 and insert token
+
+=== Links in Notebook
+
+Internal links as Markdown:
+
+    <a id="section1"></a>
+    [Section 1](#section1)
+
+External links
+
+    [Other Notebook](./path#section1)
+
+=== Demo blocks
+
+    from IPython.lib.demo import Demo
+    next_block=Demo("demo.py")
+    next_block()
+    next_block()
+    ...
+
+With demo file
+
+    command1
+    #<demo>--stop-
+    #<demo>silent
+    #<demo>auto
+    command2
+
+== Slideshow
+
+Start with
+
+    from IPython.html.services.config import ConfigManager
+    from IPython.utils.path import locate_profile
+    cm = ConfigManager(profile_dir=locate_profile(get_ipython().profile))
+    cm.update('livereveal', {'transition': 'slide',
+                             'start_slideshow_at': 'selected',
+                             })
+		     
+Change "Cell Toolbar:" to "Slideshow"
+
+Maybe javascript in HTML output
+
+    <script type="text/javascript">
+    function hideElements(elements, start) {
+        for(var i = 0, length = elements.length; i < length;i++) {
+            if(i >= start) {
+                elements[i].style.display = "none";
+            }
+        }
+    }
+    var input_elements = document.getElementsByClassName('input');
+    hideElements(input_elements, 0);
+    var prompt_elements = document.getElementsByClassName('prompt');
+    hideElements(prompt_elements, 0);
+    </script>
+
+== Other
+
+[cols="m,d"]
+|===
+| from IPython.lib.deepreload import reload as dreload | recursively reload modules
+| %config InlineBackend.figure_format = "svg"   |
+| %config InlineBackend.figure_format="retina"  |
+| InteractiveShell.ast_node_interactivity = "all"   | Display all variables, even if not last
+| InlineBackend.figure_formats = set(["png", "svg"]) |
+| InlineBackend.rc = {..}                       | Extra param for inline backend
+| KernelManager.autorestart = True              | Restart when it dies
+| %%HTML +
+  <style> +
+  div.prompt {display:none} +
+  </style>                                      | Remove prompt
+| ~/.local/share/jupyter                        |
+|===
+
+* If pickling error in Jupyter while using autoreload, try re-import
+
+    ipython nbconvert ...ipynb --to slides --reveal-prefix="http://cdn.jsdelivr.net/reveal.js/2.6.2"
+
+(or have reveal [v2.6.2] directory in same place as presentation slides.html)
+
+    from IPython import embed
+    embed()
+
+    import IPython
+    IPython.start_ipython(argv=[])
+	
+	
+== Trusting notebooks
+
+* https://jupyter-notebook.readthedocs.io/en/latest/security.html
+* Notebook trust prevents Javascript in notebooks which have output which was not generated from the user himself
+* information is stored in `nbsignatures.db`
+* Only outputs generated by user are trusted
+* Untrusted HTML is sanitized
+
+
+
+++++++++++++
+IPython usage
+=============
+
+Startup
+-------
+Command line execution
+......................
+To start the IPython HTML Notebook run
+::
+   ipython3 notebook --matplotlib inline <PATH>
+   
+(don't use --pylab since it will pollute the namespace with numpy.all etc.)
+   
+Recommended imports
+...................
+::
+    import matplotlib.pyplot as plt
+    import numpy as np
+    import pandas as pd
+    import itertools as itoo
+    import collections as coll
+    from reprlib import repr
+
+Autoreload
+..........
+To enable `autoreload <http://ipython.org/ipython-doc/dev/config/extensions/autoreload.html>`_ use
+::
+    %load_ext autoreload
+    %autoreload 2
+    
+Note that it's possible to restrict to particular modules.
+
+The ``IPython.lib.deepreload`` module allows you to recursively reload a module: changes made to any of its dependencies will be reloaded without having to exit
+::
+    from IPython.lib.deepreload import reload as dreload
+    
+Profiles
+........
+To create a new profile in a custom directory use
+::
+    ipython3 profile create --profile-dir=./<...>
+    
+Interaction
+-----------
+To suppress text output (of e.g. a plot) use one of
+::
+    plt.plot(A);
+    x = plt.plot(A)
+    
+Text
+....
+Text can be inserted by setting the cell to `markdown <https://github.com/adam-p/markdown-here/wiki/Markdown-Here-Cheatsheet>`_. The basic markdown is
+::
+    # H1
+    ## H2
+    *italics*
+    **emphasis**
+    1. list
+      1. list
+    * item
+    [linkname](linkurl)
+    `code`
+    
+    H1  | H2
+    --- |
+    A   | B
+    
+    $LaTeX$
+    
+Tables
+......
+Formatted HTML tables can be done with `ipy_table <http://nbviewer.ipython.org/github/epmoyer/ipy_table/blob/master/ipy_table-Reference.ipynb>`:
+::
+    from ipy_table import *
+    make_table([[...],[...],...])
+    apply_theme('basic')
+
+Debugging
+---------
+http://ipython.org/ipython-doc/rel-0.13/interactive/reference.html#automatic-invocation-of-pdb-on-exceptions
+
+Saving the notebook
+-------------------
+To convert as notebook use `nbconvert <http://ipython.org/ipython-doc/rel-1.0.0/interactive/nbconvert.html>`_
+::
+    ipython3 nbconvert --to html notebook.ipynb
+    
+To suppress code cells use a template with content
+::
+    {%- extends 'html_full.tpl' -%}
+    {% block input %}
+    {%- endblock input %} 
+    {% block in_prompt %}
+    {%- endblock in_prompt %}
+
+and run
+::
+    ipython nbconvert --to html --template ./template.tpl notebook.ipynb

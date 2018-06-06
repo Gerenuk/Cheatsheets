@@ -1,195 +1,262 @@
-= Operations
+= General
+
+* http://pytorch.org/docs/master/[documentation] and http://pytorch.org/tutorials/[tutorials] stored separately
+* https://discuss.pytorch.org/[forums]
+
+== Already read
+
+* https://towardsdatascience.com/pytorch-tutorial-distilled-95ce8781a89c (good)
+* http://adventuresinmachinelearning.com/pytorch-tutorial-deep-learning/ (bad)
+
+= Commands
 
 |===
-| x + y +
-  torch.add(x, y) +
-  y.add_(x)                                 | Arithmetics
-| x.size()                                  | Get size
-| x.view(..)                                | Resize
-| x.numpy()                                 | To Numpy
-| torch.from_numpy(x)                       | From Numpy
-| x.cuda()                                  | Send to CUDA
-| torch.cuda.is_available()                 | Check CUDA
+| from torch import *                       |
+| t=Tensor(nparr)                           |
+| nparr=t.numpy()                           |
+| t.cuda()                                  | Use on GPU
+| t.cpu()                                   | Back on CPU
 |===
 
-= Autograd
-
-* `autograd` package
-* for automatic differentiation
-* define-by-run
-* Variable and Function make DAG with compute history
-
 |===
-| Variable                                  | Wraps Tensor
-| .backward()                               | For gradients; need arg if not scalar
-| v.data                                    | Raw Tensor
-| v.grad                                    | Gradient wrt to this var
-| autograd.Function                         |
-| v.grad_fn                                 | Function that has created this variable
+| t.type(cuda.FloatTensor)                  | Set type and on GPU
+| t.zero_()                                 | Make all zero
+| FloatTensor([..])                         |
 |===
 
-* without args `v.backward()` like `v.backward(Tensor([1.0]))`
+    model = model.cuda()
+    inputs = Variable(inputs.cuda())
+    outputs = model(inputs)
+    outputs = outputs.cpu()
 
-= Neural networks
+= Variables
 
-http://pytorch.org/docs/master/nn.html
-
-* with `torch.nn`
-* `nn.Module` contains layers
-* method `forward(input)` to return output
-* always minibatches (first dim nSamples); use `input.unsqueeze(0)` to add fake dimension
+* Variables: for computational graph to enable autodiff
 
 |===
-| nn.Modules                                | Neural network module. Convenient way of encapsulating parameters, with helpers for moving them to GPU, exporting, loading, etc.
-| nn.Parameter                              | A kind of Variable, that is automatically registered as a parameter when assigned as an attribute to a Module.
-| net.parameters()                          | Learnable parameters
-| import torch.nn.functional as F           |
-| net.zero_grad()                           | Zero gradients
+| v.data                                    | Initial tensor
+| v.grad                                    | Gradient
+| v.backward()                              | Update gradients
 |===
 
-    F.max_pool2d(F.relu(nn.Conv2D(..)(x)), ..)
+= Optimizer
 
-== Learning
+    loss_fn = nn.MSELoss()
+    optimizer = optim.SGD(model.parameters(), lr=learning_rate)
 
-|===
-| loss_func = nn.MSELoss() +
-  loss = loss_func(output, target)          |
-| loss.backward()                           | Will update gradients
-|===
+    for step in range(5):
+        ...
+        loss = loss_fn(pred, y)
 
-Simplest manual update weights:
+        optimizer.zero_grad()  # manually zero all previous gradients
+        loss.backward()
+        optimizer.step()       # apply new gradients
 
-    learning_rate = 0.01
-    for f in net.parameters():
-        f.data.sub_(f.grad.data * learning_rate)
+= Neural network module
 
-Packaged learning
+* input variables, output variables; may hold state variables
 
-    import torch.optim as optim
+    model = nn.Sequential([
+        nn.Conv2d(1, 20, 5),
+        nn.ReLU(),
+        ...
+        ])
 
-    optimizer = optim.SGD(net.parameters(), lr=0.01)
+    output = model(input_)
 
-    optimizer.zero_grad()   # zero the gradient buffers
-    output = net(input)
-    loss = criterion(output, target)
-    loss.backward()
-    optimizer.step()
+For more complex models subclass:
 
-== Data loading
-
-* for images `torchvision`
-* outputs are `PILImage` [0,1]
-
-=== Load data
-
-    import torch
-    import torchvision
-    import torchvision.transforms as transforms
-
-    transform = transforms.Compose(
-        [transforms.ToTensor(),
-         transforms.Normalize((0.5, 0.5, 0.5), (0.5, 0.5, 0.5))])  # norm to [-1, 1]
-
-    trainset = torchvision.datasets.CIFAR10(root='./data', train=True,
-                                            download=True, transform=transform)
-    trainloader = torch.utils.data.DataLoader(trainset, batch_size=4,
-                                              shuffle=True, num_workers=2)
-
-    testset = torchvision.datasets.CIFAR10(root='./data', train=False,
-                                           download=True, transform=transform)
-    testloader = torch.utils.data.DataLoader(testset, batch_size=4,
-                                             shuffle=False, num_workers=2)
-
-    classes = ('plane', 'car', 'bird', 'cat',
-               'deer', 'dog', 'frog', 'horse', 'ship', 'truck')
-
-=== Display some
-
-    import matplotlib.pyplot as plt
-    import numpy as np
-
-    def imshow(img):
-        img = img / 2 + 0.5     # unnormalize
-        npimg = img.numpy()
-        plt.imshow(np.transpose(npimg, (1, 2, 0)))
-
-    dataiter = iter(trainloader)
-    images, labels = dataiter.next()
-
-    imshow(torchvision.utils.make_grid(images))
-    print(' '.join('%5s' % classes[labels[j]] for j in range(4)))
-
-=== Simple neural network
-
-    from torch.autograd import Variable
-    import torch.nn as nn
-    import torch.nn.functional as F
-
-    class Net(nn.Module):
+    class Model(nn.Module):
         def __init__(self):
-            super(Net, self).__init__()
-            self.conv1 = nn.Conv2d(3, 6, 5)
-            self.pool = nn.MaxPool2d(2, 2)
-            self.conv2 = nn.Conv2d(6, 16, 5)
-            self.fc1 = nn.Linear(16 * 5 * 5, 120)
-            self.fc2 = nn.Linear(120, 84)
-            self.fc3 = nn.Linear(84, 10)
+            super().__init__()
+            ...
 
         def forward(self, x):
-            x = self.pool(F.relu(self.conv1(x)))
-            x = self.pool(F.relu(self.conv2(x)))
-            x = x.view(-1, 16 * 5 * 5)
-            x = F.relu(self.fc1(x))
-            x = F.relu(self.fc2(x))
-            x = self.fc3(x)
+            ...
             return x
 
-    net = Net()
+== Weight initialization
 
-=== Train
+|===
+| torch.nn.init.normal(w)                   |
+|===
 
-    for epoch in range(2):  # loop over the dataset multiple times
+== Exclude subgraphs from backprop
 
-        running_loss = 0.0
-        for i, data in enumerate(trainloader, 0):
-            # get the inputs
-            inputs, labels = data
+* http://pytorch.org/docs/master/notes/autograd.html
 
-            # wrap them in Variable
-            inputs, labels = Variable(inputs), Variable(labels)
+|===
+| Variable(.., requires_grad=False?)        | Disable for current, but keep for children
+| Variable(.., volatile=True?)              | Deprecated in 0.4? Disable for current and children
+|===
 
-            # zero the parameter gradients
-            optimizer.zero_grad()
+== Training process
 
-            # forward + backward + optimize
-            outputs = net(inputs)
-            loss = criterion(outputs, labels)
-            loss.backward()
-            optimizer.step()
+* Learning rate scheduler http://pytorch.org/docs/master/optim.html#how-to-adjust-learning-rate[Ref]
 
-            # print statistics
-            running_loss += loss.data[0]
-            if i % 2000 == 1999:    # print every 2000 mini-batches
-                print('[%d, %5d] loss: %.3f' %
-                      (epoch + 1, i + 1, running_loss / 2000))
-                running_loss = 0.0
+== Save model
 
-    print('Finished Training')
+|===
+| save(model.state_dict(), path)            | Recommended
+| model.load_state_dict(load(path))         |
+| save(model, path)                         | Save whole model
+| model = load(path)                        |
+|===
 
-== General
+== Logging add-ons
 
-    loss.grad_fn.next_functions[0][0].next_functions[0][0]  # follow backwards
+* https://github.com/oval-group/logger
+* https://github.com/torrvision/crayon
+* https://github.com/TeamHG-Memex/tensorboard_logger
+* https://github.com/lanpa/tensorboard-pytorch
+* https://github.com/facebookresearch/visdom
 
 = GPU
 
-* use `net.cuda()` and `inputs.cuda()` and `labels.cuda()`
-* PyTorch 0.3.1 does not support CUDA 5.0 anymore -> compile from source
-* multiple GPUs: http://pytorch.org/tutorials/beginner/blitz/data_parallel_tutorial.html
+== Pinned memory
+
+* http://pytorch.org/docs/master/notes/cuda.html#use-pinned-memory-buffers
+* `.cuda(async=True)`, data-loader `pin_memory=True`
 
 
-= Ready-made
+= Snippets
 
-    from torchvision.datasets import CIFAR10
-    dd = CIFAR10("~/Data", download=True)
-    plt.imshow(np.asarray(dd[0][0]))
+== Custom back-propagation
 
+    import torch
+
+    class MyFunction(torch.autograd.Function):
+
+        @staticmethod
+        def forward(ctx, input):
+            ctx.save_for_backward(input)
+            output = torch.sign(input)
+            return output
+
+        @staticmethod
+        def backward(ctx, grad_output):
+            # saved tensors - tuple of tensors, so we need get first
+            input, = ctx.saved_variables
+            grad_output[input.ge(1)] = 0
+            grad_output[input.le(-1)] = 0
+            return grad_output
+
+    # usage
+    x = torch.randn(10, 20)
+    y = MyFunction.apply(x)
+    # or
+    my_func = MyFunction.apply
+    y = my_func(x)
+
+    # and if we want to use inside nn.Module
+    class MyFunctionModule(torch.nn.Module):
+        def forward(self, x):
+            return MyFunction.apply(x)
+
+`ctx` to store variables.
+
+== Direct device allocation
+
+    import torch
+
+    # check is cuda enabled
+    torch.cuda.is_available()
+
+    # set required device
+    torch.cuda.set_device(0)
+
+    # work with some required cuda device
+    with torch.cuda.device(1):
+        # allocates a tensor on GPU 1
+        a = torch.cuda.FloatTensor(1)
+        assert a.get_device() == 1
+
+        # but you still can manually assign tensor to required device
+        d = torch.randn(2).cuda(2)
+        assert d.get_device() == 2
+
+== Custom data loader
+
+    import torch
+    import torchvision as tv
+
+    class ImagesDataset(torch.utils.data.Dataset):
+        def __init__(self, df, transform=None,
+                     loader=tv.datasets.folder.default_loader):
+            self.df = df
+            self.transform = transform
+            self.loader = loader
+
+        def __getitem__(self, index):
+            row = self.df.iloc[index]
+
+            target = row['class_']
+            path = row['path']
+            img = self.loader(path)
+            if self.transform is not None:
+                img = self.transform(img)
+
+            return img, target
+
+        def __len__(self):
+            n, _ = self.df.shape
+            return n
+
+    # what transformations should be done with our images
+    data_transforms = tv.transforms.Compose([
+        tv.transforms.RandomCrop((64, 64), padding=4),
+        tv.transforms.RandomHorizontalFlip(),
+        tv.transforms.ToTensor(),
+    ])
+
+    train_df = pd.read_csv('path/to/some.csv')
+    # initialize our dataset at first
+    train_dataset = ImagesDataset(
+        df=train_df,
+        transform=data_transforms
+    )
+
+    # initialize data loader with required number of workers and other params
+    train_loader = torch.utils.data.DataLoader(train_dataset,
+                                               batch_size=10,
+                                               shuffle=True,
+                                               num_workers=16)
+
+    # fetch the batch(call to `__getitem__` method)
+    for img, target in train_loader:
+        pass
+
+== Pseudo-code of all
+
+    class ImagesDataset(torch.utils.data.Dataset):
+        pass
+
+    class Net(nn.Module):
+        pass
+
+    model = Net()
+    optimizer = torch.optim.SGD(model.parameters(), lr=0.01)
+    scheduler = lr_scheduler.StepLR(optimizer, step_size=30, gamma=0.1)
+    criterion = torch.nn.MSELoss()
+
+    dataset = ImagesDataset(path_to_images)
+    data_loader = torch.utils.data.DataLoader(dataset, batch_size=10)
+
+    train = True
+    for epoch in range(epochs):
+        if train:
+            lr_scheduler.step()
+
+        for inputs, labels in data_loader:
+            inputs = Variable(to_gpu(inputs))
+            labels = Variable(to_gpu(labels))
+
+            outputs = model(inputs)
+            loss = criterion(outputs, labels)
+            if train:
+                optimizer.zero_grad()
+                loss.backward()
+                optimizer.step()
+
+        if not train:
+            save_best_model(epoch_validation_accuracy)
