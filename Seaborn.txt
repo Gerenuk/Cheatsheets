@@ -7,6 +7,13 @@ https://seaborn.pydata.org/whatsnew.html
 
 :toc:
 
+== General
+
+|===
+| size=...                                  | Plot size
+| aspect=...                                | Width=Aspect*Size
+|===
+
 == Distribution plots
 
 [cols="m,d"]
@@ -167,8 +174,12 @@ Palettes:
 | g.*set*(ylim=(..))                        |
 | _dia_kind_="kde"                          |
 | g=*JointGrid*(xvar, yvar, df)             | plot xy and also at x/y side
+| g._ax_joint_                              |
+| g._ax_marg_x_                             |
+| g._set_axis_labels_("..", "..")           |
+| fontsize=..                               |
 | g.*plot*(regplot, distplot, stats.pearsonr)   |
-| *jointplot*(xvar, xvar, df)               |
+| *jointplot*(xvar, xvar, df)               | Returns https://seaborn.pydata.org/generated/seaborn.JointGrid.html[JointGrid]
 | _kind_="hex"                              |
 | *tsplot*([ts1, ts2, ..])                  | noisy ts; plot mean of multiple timeseries; use 3D data for multiple timeseries types to plot (split by color) |
 |===
