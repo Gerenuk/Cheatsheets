@@ -1,0 +1,68 @@
+= Amazon Web Services
+
+* multiple Regions: everything always stays within this region (use select manually)
+* multiple Availability Zones per Region: for fault tolerance (e.g. different locations for risk minimization)
+* Points of Presence: Edge locations
+* 1 Data center about 25MW, not too big
+* no official uptime numbers given
+* official data protection: Privacy Shield, Safe Harbour
+* AWS will hand out data if law requires (e.g. US)
+* https://aws.amazon.com/compliance/data-privacy-faq/
+* Complicance certificates https://aws.amazon.com/compliance/programs/
+** SOC 1&2 probably most technical
+* AWS is "GDPR compliant"
+* by law location Ireland and Frankfurt are the same, but Ireland may be cheaper and has features earlier
+* AWS provides secure infrastructure, but customer has to manager software (https://aws.amazon.com/compliance/shared-responsibility-model/)
+** AWS: hardware, databsae, networking, regions
+** Customer: encryption, network, firewall, authentication, OS
+* technically US engineers could read data, but policies prevent that
+* roles:
+** Data Controller: operator
+** Data Subject: users affected(?)
+** Data Processor: AWS
+* "Snowball" could let you extract bulk data
+* you pay for: compute, storage, data out (not "in"), DDoS protection, ...
+* for the default encryption keys (not user managed) Amazon has root keys
+* "CloudTrail" tracks all accesses (even if US gov)
+* Key Management Service KMS: best to "bring-your-own-key"
+* has HSM anc CloudHSM for security
+* but AWS account user can always read everything (unless you do separate AWS account and share key?)
+* you can disable certain feature in AWS account by Amazon, so that even account user cannot change ("Organisation" restriction)
+* "Config": e.g. can set alert for misconfiguration
+* consulting support usually from partners and not Amazon
+
+== Usual application structure
+* VPC (e.g. from templates)
+* Internet Gateway: access to internet
+* Virtual Private Gateway: access to internals; extra cost however
+* layered structure, with firewalls allowing only interaction between layers ("Security groups")
+* Nginx, port 443, encryption in transit
+* NACL: Network Access Control List
+* Amazon Machine Image: still needs to be hardened according to own rules
+* Deployment mechanism needed
+* need URL; certificate manager
+* on new CVE security report -> update Linux
+* other Amazon Services (e.g. DB) could be provisioned as virtual endpoint in VPC
+
+== Fargate
+* just run simple Docker
+* not in Frankfurt yet
+
+== MxNet model server
+* expose pretrained model
+* preconfigure Docker+Flask
+
+== Cognitio
+* (external) user manager
+* easiest with REST API which works on resources
+
+== AWS Lambda
+* only charged by call
+
+== Sagemaker
+* machine learning notebooks and more?
+
+== Spot instances?
+
+== Cloud Customdian
+* ?

@@ -519,9 +519,6 @@ Box-Plot (by Tukey): plot Median, Q25, Q75, Min, Max; but consider values  x < Q
 * Merck: clusters in 2nd vs 3rd PCA but didnt help
 http://blog.kaggle.com/2016/07/21/approaching-almost-any-machine-learning-problem-abhishek-thakur/
 * for text do TFIDF and TruncatedSVD
-* greedy feature selection for AUC: https://github.com/abhishekkrthakur/greedyFeatureSelection
-* for feature selection with RF keep n_estimators low and not much tuning (to avoid overfitting)
-* feature selection possible with SelectKBest(chi2)
 * classification: RF, XGB, LR, NaiveBayes, SVM, kNN
 * regression: RF, XGB, LR, RIdge, Lasso, SVR
 
@@ -539,6 +536,16 @@ http://blog.kaggle.com/2016/07/21/approaching-almost-any-machine-learning-proble
 * multiply by map (e.g. linear or hat function) and aggregate (e.g. sum/min/max) -> like convolution
 * this way many features are done
 * map may need to shift with time
+
+== Feature selection
+
+* greedy feature selection for AUC: https://github.com/abhishekkrthakur/greedyFeatureSelection
+* for feature selection with RF keep n_estimators low and not much tuning (to avoid overfitting)
+* feature selection possible with SelectKBest(chi2)
+* wrapper method:
+* filter method: look at some kind of correlation with target
+* stability selection: which features most often selected by some base method which is run on different bootstrap input and different regularization parameter
+** some implementation in https://github.com/skggm/skggm
 
 == Causality
 

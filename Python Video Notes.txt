@@ -1617,3 +1617,21 @@ https://www.youtube.com/watch?v=Xu0SCd58kYQ
 * pytz faster than dateutil
 
 * Pandas Index does string parsing (also words)
+
+== HTTP dead
+https://www.youtube.com/watch?v=c-I0md_3fbQ
+* chatty, textbased, no connection reuse
+* HTTP/2 could solve, but requires cert
+* transport/message bus:
+** Distributed, all-to-all: HTTP, gRPC, ZeroMQ, VertX, WebSockets
+*** a lot of network overhead, need load balancer (nginx)
+** Centralized: RabbitMQ, Kafka, Nats, ActiveMQ
+*** single hub
+* connection bleeding problem in distributed
+* centralized: single point of failure
+* event sourcing: other concept
+
+== Models
+* try RepeatedKFold with DummyClassifier to see spread
+
+
