@@ -1377,11 +1377,71 @@ Return type https://docs.python.org/3/library/subprocess.html#subprocess.Complet
     exc_type, exc_value, exc_traceback = sys.exc_info()
     filename, line number, function name, text=traceback.extract_tb(exc_traceback)[0] # 0 to get first element
 
+== Encoding Textfiles
+
+|===
+| locale.getpreferredencoding()             | what `open()` will use by default; not utf8 on Windows!
+| sys.getfilesystemencoding()               | default for most operations that both require an encoding and involve textual metadata in the filesystem (e.g. determining the results of os.listdir())
+|===
+
+* use `open(..., encoding="utf")` explicitely or it may fail in Windows when using UTF8 files
+* `locale.getpreferredencoding()`:
+** is not the same as `sys.getfilesystemencoding()`
+** unaffected by PYTHONIOENCODING
+* https://python-notes.curiousefficiency.org/en/latest/python3/text_file_processing.html
+* new https://www.python.org/dev/peps/pep-0540/[UTF8 Mode] in Python 3.7: use UTF8 everywhere; also when in POSIX locale
+
+
+=== BOM bytes in files
+
+* only for unicode
+* FFFE or FEFF : UTF-16 LE or BE
+* or EFBBBF : utf8; special bytes that hopefully are not meaningful in other encodings
+* UCS-2=UTF-16 (except TFF16 some more codepoints)
+* UTF8 bytes: 0.. (<0x80); 110.. 10..; 1110.. 10.. 10..; 11110.. 10.. 10.. 10..
+* Use `utf-8-sig`, if there is a BOM byte
+* utf16 automatically does BOM (don't use utf-16LE unless BOM is missing)
+
+=== Encoding detection
+
+    file -i <file>
+    iconv  # to convert
+    uchardet
+    chardet # (python)
+
 == Terminal color
 
-    # https://github.com/dslackw/colored
-    from colored imoprt fg, attr
-    print("{}Hello{}".format(fg.light_coral, attr(0))
+* https://misc.flogisoft.com/bash/tip_colors_and_formatting
+* https://stackoverflow.com/questions/4842424/list-of-ansi-color-escape-sequences
+
+    # https://github.com/timofurrer/colorful (-> will use colorama library for Windows)
+    import colorful
+
+    # use one of the following in Jupyter to enforce color
+    #colorful.use_8_ansi_colors()
+    #colorful.use_256_ansi_colors()
+    #colorful.use_true_colors()
+
+    print(f"{colorful.coral(text)}")    # needs str conversion usually
+
+* `blessings` did not work with Windows (https://github.com/erikrose/blessings/issues/21[Jira]) due to curses
+* `colorama` seems to be basis for color on Windows
+* seems uncomfortable: `sty`, `colored`
+
+== XPath
+
+=== Select all nodes with exceptions
+
+    /root/*[not(self::script)]
+    /root/(* except a)                     # XPath 2.0
+
+=== Python
+
+    page = lxml.html.soupparser.fromstring(htmltext)
+    hits = page.xpath(".//*[not(self::script) and contains(text(),"searchword")]")
+    hit = hits[0]
+    elem = hit.getroottree().getpath(hit)
+    text = elem.text
 
 == Hierarchical modelling
 

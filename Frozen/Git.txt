@@ -267,4 +267,5 @@ dir/*
 |===
 | git help      		| Help
 | git help -g   		| Tutorials
+| git remote set-url origin ssh://...       | Change to SSH key based version
 |===
