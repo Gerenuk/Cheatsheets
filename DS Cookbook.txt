@@ -985,17 +985,52 @@ For on-the-fly legend order changes, resort self.lines+self.patches+self.collect
 
 == Logging
 
+    import logging
+    logging.basicConfig(level=logging.INFO,
+                        format="[%(levelname)s] %(funcName)s(%(lineno)s) %(message)s",
+                        stream=sys.stdout,
+                       )
+    #logging.getLogger().setLevel("DEBUG")
+
+    logger=logging.getLogger(__name__)
+
+=== Daiquiri
+
     import daiquiri
     daiquiri.setup(level=logging.INFO, outputs=[daiquiri.output.STDOUT])
 
-    import logging
-    logging.basicConfig()
-    
-    logg=logging.getLogger()
-    logg.setLevel(logging.INFO)
 
-    logging.basicConfig(stream=sys.stdout, level=logging.INFO)  # without stdout it would go to stderr
-    logger=logging.getLogger(__name__)
+=== Color logs
+
+==== coloredlogs
+
+* https://coloredlogs.readthedocs.io/en/latest/api.html
+* seems OK and featureful; default format not quite what I want
+* lots of env variables to set default behaviour
+* will color message by default (not the tag)
+
+    import coloredlogs
+    coloredlogs.install(isatty=True)            # isatty to enforce in Jupyter
+
+    import logging
+    logger = logging.getLogger(__name__)
+
+==== logzero
+
+* preconfigured logger seems pretty nice, but didn't find how to set output stream to stdout
+* seems to be quickest way
+
+    from logzero import logger
+    logger.info("TEXT")
+
+==== daiquiri
+
+* didn't manager to enforce TTY mode though and hence no color support
+
+    import daiquiri
+    daiquiri.setup(level="INFO", outputs=[daiquiri.output.STDOUT])
+
+    logger = daiquiri.getLogger(__name__)
 
 
 === File only logging
@@ -1287,6 +1322,20 @@ To install
 * Different schedulers possible
 
 
+== Doctests
+
+    def func(..):
+        """
+        >>> func(1,
+        ...      2)
+        'expected_result'
+        """
+
+    doctest.testmod()
+
+
+* however note that `testmod` will recursively inspect for attribute existence. this will break for `colorful` since it's attributes trigger special behaviour
+
     
 == SQL in Python
 
@@ -1413,6 +1462,7 @@ Return type https://docs.python.org/3/library/subprocess.html#subprocess.Complet
 
 * https://misc.flogisoft.com/bash/tip_colors_and_formatting
 * https://stackoverflow.com/questions/4842424/list-of-ansi-color-escape-sequences
+* you can display a color overview with `humanfriendly --demo`
 
     # https://github.com/timofurrer/colorful (-> will use colorama library for Windows)
     import colorful

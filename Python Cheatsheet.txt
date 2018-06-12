@@ -37,6 +37,9 @@
   t.substitute({"var":"pears"})             | Templates
 | s = popen('xsel').read()                  | Copy from clipboard
 | os.popen('xsel', 'wb').write(s)           | Paste to clipboard
+| obj.__set_name__(self, owner, name)       | Descriptor can now know the variable name
+| breakpoint()                              | General breakpoint (Py3.7)
+| if (match := ..)                          | Assignment expression (Py3.8)
 |===
 
 == Forgotten
@@ -154,6 +157,8 @@
 | os.stat().st_birthtime                    | Creation time on Mac
 | path = pathlib.Path(..)                   | Create `Path` object https://docs.python.org/3/library/pathlib.html[Ref]
 | path.name                                 | Just filename
+| path.parent                               | Directory
+| path.parents[1]                           | Directory one level higher
 | path.with_name(new_name)                  | New path with filename changed in same directory
 | path.with_suffix(suffix)                  | New path with suffix changed
 | path.exists()                             |
@@ -214,6 +219,11 @@ On Linux no creation time accessible, so use `os.path.getmtime()` or `os.stat().
 * trace: determines dynamically how often each line of code is executed
 * unicodedata: unicode info
 * weakref: reference that do not count for garbage collection block (e.g. for circular references)
+* secrets:
+
+== Type annotations
+
+    a : a_type = a_val
 
 
 == Regex

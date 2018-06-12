@@ -60,7 +60,7 @@ Ctrl:
 
 * move only vertical/horizontal
 * preserve scaling ratio
-* rotate 15°, skew 15°
+* rotate 15ï¿½, skew 15ï¿½
 
 Selector keys:
 * arrows to move, <> to scale, [] to rotate
@@ -101,7 +101,7 @@ Pen tool:
 * Click -> sharp node
 * Drag -> Bezier with 2 handles
 * Shift+Drag -> Modify only last handle
-* Ctrl: 15° directions
+* Ctrl: 15ï¿½ directions
 * Enter: Finalize line
 * Esc: Cancel line
 * Backspace: Cancel last segment

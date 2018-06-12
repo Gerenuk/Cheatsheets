@@ -12,7 +12,7 @@ Haskell less interactive
 
 Haskell no keywordsor variable length arguments
 
-http://p-cos.net/documents/dynatype.pdf "Pascal Costanza, Dynamic vs. Static Typing — A Pattern-Based Analysis"
+http://p-cos.net/documents/dynatype.pdf "Pascal Costanza, Dynamic vs. Static Typing ï¿½ A Pattern-Based Analysis"
 
 "The Swine Before Perl" for a talk demonstrating a macro that cannot be done with laziness. Also, if you do want some bit to be strict, then you can't do that as a function -- mirroring the fact that Scheme's delay cannot be a function
 

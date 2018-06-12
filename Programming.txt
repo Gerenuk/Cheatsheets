@@ -14,6 +14,11 @@ Composing:
 * respect interface
 
 * Log all branch decisions (if-statements)
+* log messages:
+** errors: if most likely the results are (even partitially!) incorrect
+** warnings: if can be correct, but better watch out for it
+** info: if interesting under "normal operation"
+** debug: additional info to understand what went wrong in the algorithm
 
 = Best practices
 

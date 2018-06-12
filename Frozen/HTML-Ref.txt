@@ -10,11 +10,11 @@
 </body>
 </html>
 
-&#160;		geschütztes Leerzeichen (ansonsten zusammengefasst)
+&#160;		geschï¿½tztes Leerzeichen (ansonsten zusammengefasst)
 
 Ersetzen:
-ä	&auml
-ß	&szlig
+ï¿½	&auml
+ï¿½	&szlig
 (euro)	&euro
 &	&amp
 <	&lt
@@ -32,12 +32,12 @@ file3				# http://www.host.org/pfad/file3
 <meta http-equiv="refresh" content="5; URL=">	# weiterleiten
 
 <base href="http://...">	# eigene internet adresse im quelltext speichern
-<base target="FrameName">	# öffnet verweise in frame
-<base target="_blank">		# öffnet verweise in neuen browsern
-<base target="_top">		# öffnet verweise im gesamten browser fenster
-<base target="_parent">		# öffnet verweise in übergeordneten fenster
+<base target="FrameName">	# ï¿½ffnet verweise in frame
+<base target="_blank">		# ï¿½ffnet verweise in neuen browsern
+<base target="_top">		# ï¿½ffnet verweise im gesamten browser fenster
+<base target="_parent">		# ï¿½ffnet verweise in ï¿½bergeordneten fenster
 
-<link rel="next" title="..." href="...html">	# logische links für spezial buttons im browser
+<link rel="next" title="..." href="...html">	# logische links fï¿½r spezial buttons im browser
 <linf rev="next" title="..." href="...html">	# reverse logischer link
 
 <body style="background-color:#CCFFFF">		# besser depreciated bgcolor
@@ -50,7 +50,7 @@ a:active { color:#FFFFFF; }
 </style>
 <body style="background-image:url(background.jpg)">
 
-<h1>...</h1>			# überschriften
+<h1>...</h1>			# ï¿½berschriften
 <h6>...</h6>			# ebene 6
 <h1 style="text-align:center">...</h1>
 
@@ -65,16 +65,16 @@ bla<wbr>bla			# allow breaking there (no StandardHTML)
 <li>...
 </ul>
 
-<ol>				# ordered list für nummerierungen
+<ol>				# ordered list fï¿½r nummerierungen
 
 <dl>				# definition list
 <dt>...</dt>			# definition term
 <dd>...</dd>			# definition definition
 </dl>
 
-# jeweile spezielle Argumente möglich
+# jeweile spezielle Argumente mï¿½glich
 
-<blockquote cite="...">		# eingerücktes Zitat
+<blockquote cite="...">		# eingerï¿½cktes Zitat
 ...
 </blockquote>
 
@@ -102,12 +102,12 @@ bla<wbr>bla			# allow breaking there (no StandardHTML)
 <marquee>	# scroll text (depreciated)
 
 <table>
-<caption>...	# überschrift, align="bottom" für unterschrift
-		# align="left" für fließtext um tabellen
+<caption>...	# ï¿½berschrift, align="bottom" fï¿½r unterschrift
+		# align="left" fï¿½r flieï¿½text um tabellen
 </caption>	
 <tr>		# table row
 <th>...		# table header entry
-<td>...		# table data entry (neue tabellen drin möglich)
+<td>...		# table data entry (neue tabellen drin mï¿½glich)
 </tr>
 ...
 </table>
@@ -118,24 +118,24 @@ bla<wbr>bla			# allow breaking there (no StandardHTML)
 <tbody>		# defines normal body
 
 Tabellen Gestaltung (http://de.selfhtml.org/html/tabellen/gestaltung.htm)
-Rahmen, Größe, bgcolor
+Rahmen, Grï¿½ï¿½e, bgcolor
 
 <td colspan="2">...	# zellen verbinden (andere einfach weglassen)
 <td rowspan="2">...	# zellen verbinden (andere einfach weglassen)
 
-<a href="...">...</a>		# anchor, use target="..."; auch für normale (z.B. tgz) files
+<a href="...">...</a>		# anchor, use target="..."; auch fï¿½r normale (z.B. tgz) files
 	# "sonderzeichen": http://de.selfhtml.org/html/verweise/email.htm, z.B. space=%20
 <h1><a name="...">...</a></h1>	# named anchor
 <a href="mailto:...">		# email (siehe auch http://de.selfhtml.org/html/verweise/email.htm)
 <a href="..." ref="...">	# relationship information
 <a href="..." accesskey="x">	# hotkey for "jump to link" (use with Alt)
 
-Tabulator Reihenfolge für Tastaturbedienung
+Tabulator Reihenfolge fï¿½r Tastaturbedienung
 http://de.selfhtml.org/html/verweise/tastatur.htm
 
 <img src="Grafik.png" alt="Ersatztext" width="200" height="300">
-# breite/höhe in pixel oder prozent ("100%")
-Grafiken ausrichten und Umfließen lassen:
+# breite/hï¿½he in pixel oder prozent ("100%")
+Grafiken ausrichten und Umflieï¿½en lassen:
 http://de.selfhtml.org/html/grafiken/ausrichten.htm
 
 # Grafik alignen

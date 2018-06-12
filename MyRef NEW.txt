@@ -28,10 +28,10 @@
 
 == Excel
 Remove table: Entwurf/Tools/In Bereich konvertieren
-Zellen in gefilterte Tabelle einfügen:
-* Kopieren, Zielbereich markieren, Formel =A2 eingeben; Ctrl-Enter (überall einfügen); evtl als Werte erneut einfügen
+Zellen in gefilterte Tabelle einfï¿½gen:
+* Kopieren, Zielbereich markieren, Formel =A2 eingeben; Ctrl-Enter (ï¿½berall einfï¿½gen); evtl als Werte erneut einfï¿½gen
 Nur sichtbare Zellen kopieren:
-* Vorsicht: Nur in sichtbare einfügen geht nicht
+* Vorsicht: Nur in sichtbare einfï¿½gen geht nicht
 * F5, Inhalte, Sichtbare Zellen
 
 ranks = numpy.empty(len(array), int)
@@ -138,9 +138,9 @@ pd.to_datetime(fulldata_test.timestamp, unit="s")
 sys.last_value # last exception
 
 
-NCCT-Ländern laut Finanical Action Task Force (non-cooperative countries and territories): nicht genug gegen Geldwäsche
-Offshore Länder: günstige Steuersätze (Bahamas, British Virgin Islands, Cayman Islands, Panama, ..)
-Ultra High Risk laut ING: Kuba, myanmar, Nordkorea, Sudan, Süd-Sudna, Syrien, Iran
+NCCT-Lï¿½ndern laut Finanical Action Task Force (non-cooperative countries and territories): nicht genug gegen Geldwï¿½sche
+Offshore Lï¿½nder: gï¿½nstige Steuersï¿½tze (Bahamas, British Virgin Islands, Cayman Islands, Panama, ..)
+Ultra High Risk laut ING: Kuba, myanmar, Nordkorea, Sudan, Sï¿½d-Sudna, Syrien, Iran
 
 explorer .  # open current folder in explorer
 
