@@ -8,6 +8,7 @@
 * glmnet from R uses and approximation which makes it faster but less accurate
 * You can try this: In one of the 5 folds, train the models, then use the results of the models as "variables" in logistic regression over the validation data of that fold. Weights obtained in this manner will be more accurate, and I bet the SVM, elastic net and LR will have negative weights or close to zero.
 * San Francisco housing prediction features: Num jobs, salary jobs, num places to live -> very good performance
+* try log(x+1) scaling
 * thing to try:
 ** common sense for features
 ** look at logreg feature weights
@@ -17,6 +18,7 @@
 ** monitor: accuracy on test data, input feature distribution, output score distribution, output classification distribution
 * Methods like ElasticNet, Lasso, LogReg, ... can fit multiple parameters incrementally, reducing computation
 * LassoLarsIC can choose parameters by AIC or BIC
+* just clip predictions (esp. when averaging from multiple models)
 
 === Eslami - Patterns for Research in Machine Learning [[http://arkitus.com/PRML/ Link]] =
 * Use version control (to collaborate, replicate, work from multiple computers)

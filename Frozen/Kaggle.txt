@@ -254,3 +254,15 @@ http://blog.kaggle.com/2016/08/18/facebook-v-predicting-check-ins-winners-interv
 == Dato - 1st place
 
 http://blog.kaggle.com/2015/12/03/dato-winners-interview-1st-place-mad-professors/
+
+== Kazanova solutions
+
+* https://www.kaggle.com/c/malware-classification/discussion/13863
+* http://blog.kaggle.com/2015/05/11/microsoft-malware-winners-interview-2nd-place-gert-marios-aka-kazanova/
+* https://github.com/kaz-Anova/ensemble_amazon
+* http://blog.kaggle.com/2015/12/03/dato-winners-interview-1st-place-mad-professors/
+* http://blog.kaggle.com/2016/04/08/homesite-quote-conversion-winners-write-up-1st-place-kazanova-faron-clobber/
+* https://mlwave.com/how-we-won-3rd-prize-in-crowdanalytix-copd-competition/
+* http://blog.kaggle.com/2016/08/31/avito-duplicate-ads-detection-winners-interview-2nd-place-team-the-quants-mikel-peter-marios-sonny/
+* http://blog.kaggle.com/2016/12/15/bosch-production-line-performance-competition-winners-interview-3rd-place-team-data-property-avengers-darragh-marios-mathias-stanislav/
+*

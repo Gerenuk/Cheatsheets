@@ -5,6 +5,86 @@
 * web.mta.info/developers: passengers from subway
 * ARMA: need to remove trend and saisonality first
 
+== Time Series
+
+* https://otexts.org/fpp2/[Forecasting: Principles and Practice (Hyndman)]
+* http://www.statsmodels.org/dev/tsa.html
+* sm.tsa.stattools.arma_order_select_ic
+* from statsmodels.graphics.tsaplots import plot_acf, plot_pacf
+* https://github.com/tgsmith61591/pyramid (auto-arima)
+* https://github.com/facebook/prophet (facebook)
+* statsmodels.tsa.statespace.sarimax.SARIMA
+* consider ACF and PACF plots
+* check residual for Gauss or autocorrelation
+* maybe some datasets: http://www.statsmodels.org/dev/datasets/index.html
+
+=== Stationary
+
+* could be due to global trend, seasonality
+* could have variation in: mean, variance, autocorrelation (i.e. frequency)
+* could test by plot of moving average
+* Dickey-Fuller test: null hyp. is the TS is non-stationary
+** `statsmodels.tsa.stattools.adfuller(ts, autolag="AIC")`
+* for details wee "Brockwell and Davis"
+* make stationary:
+** differencing
+** or decomposition (subtract trend)
+** scaling (e.g. log) to equalize variance
+* http://people.duke.edu/~rnau/whatuse.htm
+
+=== ARIMA
+
+* ARIMA parameter choice with out-of-time or AIC; maybe choose simpler models (smaller order)
+* check for ARIMA assumptions (normality, stationarity)
+* ARIMAX: with exogenous regressors (i.e. with additional features); basically adds a linear regression term
+
+=== Tips
+
+* GARCH, ARCH, regression, ARIMA
+* Theta method: Theta method was equivalent to an average of a linear regression and simple exponential smoothing with drift
+* outlier removal (e.g. once-off events)
+** local smoother; use residuals to determine seasonality; compare double smoothed to original data and drop outside 3 sigma
+* MASE can be very sensitive to a few series; worth concentrating on these if you really have to optimize for MASE
+** maybe then use only linear growth (not exponential); additive seasonality (not multiplicative) - otherwise small weights
+* include a global trend (e.g. from across all series; if data from one industry)
+
+=== Individual solutions
+
+* http://mabrek.github.io/blog/kaggle-forecasting/
+
+=== Kaggle Competitions about Time Series
+
+* https://www.kaggle.com/c/tourism2
+* https://www.kaggle.com/c/web-traffic-time-series-forecasting[Web traffic time series forecasting]
+** http://blog.kaggle.com/2010/11/24/how-we-did-it-jeremy-howard-on-winning-the-tourism-forecasting-competitoin/[Winner solution]; LSTM
+** similar with CNN: https://github.com/sjvasquez/web-traffic-forecasting
+** median of last week a benchmark that was hard to beat
+** used https://en.wikipedia.org/wiki/Symmetric_mean_absolute_percentage_error[SMAPE] metric which is https://www.kaggle.com/cpmpml/smape-weirdness[weird] (discontinuous at 0 and non-convex)
+* https://www.kaggle.com/c/how-much-did-it-rain[How much did it rain?], https://www.kaggle.com/c/how-much-did-it-rain-ii[How much did it rain? (II)]
+** http://blog.kaggle.com/tag/how-much-did-it-rain/[Winners]; winner had large RNN
+* https://www.kaggle.com/c/online-sales[Online Product Sales]
+* https://www.kaggle.com/c/rossmann-store-sales[Rossmann store sales]
+** http://blog.kaggle.com/tag/rossmann-store-sales/[Winners]
+* https://www.kaggle.com/c/walmart-recruiting-store-sales-forecasting[Walmart Recruiting - Store Sales Forecasting]
+** https://www.kaggle.com/c/walmart-recruiting-store-sales-forecasting/discussion/8125[1st place]; https://www.kaggle.com/c/walmart-recruiting-store-sales-forecasting/discussion/8023[2nd place]
+* (list from https://machinelearningmastery.com/challenging-machine-learning-time-series-forecasting-problems/)
+* https://www.kaggle.com/c/ams-2014-solar-energy-prediction-contest[AMS 2013-2014 Solar Energy Prediction Contest]
+** https://www.kaggle.com/c/ams-2014-solar-energy-prediction-contest/discussion/6321#33783[1st place]; ensemble of GBM
+* https://www.kaggle.com/c/GEF2012-wind-forecasting[Global Energy Forecasting Competition 2012 - Wind Forecasting]
+* https://www.kaggle.com/c/dsg-hackathon[EMC Data Science Global Hackathon (Air Quality Prediction)]
+** http://blog.kaggle.com/2012/05/01/chucking-everything-into-a-random-forest-ben-hamner-on-winning-the-air-quality-prediction-hackathon/[1st place]; ensemble of RFs on lagged data
+
+=== Example solutions
+
+==== Kaggle Tourism Forecasting
+
+I then fitted a weighted regression (weighted the most recent observations the most heavily) combined with weighted additive seasonality (again weighting the most recent observations the most heavily) on all but the last 2 years of each series. A simple optimiser found the optimal weighting of each in order to predict the final 2 years. This weighted model was then applied to the full data set to create predictions. The intercept of the weighted regression was adjusted such that the residual on the final observation was always zero - this was important for ensuring that the series with a low denominator in the MASE metric were forecast as accurately as possible.
+
+==== Kaggle Air Quality predition
+
+I took the lagging N components from the full time series (N=8 for the winning submission, which was selected arbitrarily) as features, then each of the 10 prediction times and 39 pollutant measures as targets. I then trained 390 Random Forests over the entire training data, one for each predicted offset time-pollutant combination. The Random Forest parameters were selected so that the models would be quick to train. https://github.com/benhamner/Air-Quality-Prediction-Hackathon-Winning-Model[code]
+
+
 == Whats wrong with convolutional nets
 http://techtv.mit.edu/collections/bcs/videos/30698-what-s-wrong-with-convolutional-nets
 -> REWATCH!
@@ -25,6 +105,18 @@ http://techtv.mit.edu/collections/bcs/videos/30698-what-s-wrong-with-convolution
 ** ...
 * neural nets arent good at high order parity problem (is it left hand or right hand)
 * ...
+
+== High cardinality
+
+* linear models, FTRL, Vowpal wabbit, LbFFM, libFM, SVD
+
+== Text mining
+
+* tfidf, countvectorizers, word2vec, svd (dimensionality reduction). Stemming, spell checking, sparse matrices, likelihood encoding, one hot encoding (or dummies), hashing.
+
+== Sound processing
+
+* Fourier transform, MFCC (Mel frequency cepstral coefficients), Low pass filters
 
 == AA
 https://www.youtube.com/watch?v=ek9jwRA2Jio&spfreload=10
