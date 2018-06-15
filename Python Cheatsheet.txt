@@ -678,6 +678,12 @@ send() function restarts generator and also returns new value like next()
 * get BLAS info: `numpy.distutils.system_info.get_info('blas')` could also be atlas
 * to restore built-ins: `del myoverwritten` or `import builtins; real=builtins.real`
 
+== Anaconda
+
+    while read requirement;
+        do conda install --yes $requirement || pip install $requirement;
+    done < requirements.txt
+
 == Unsorted
 class my_nt(NamedTyple)   # Python 3.6
 
