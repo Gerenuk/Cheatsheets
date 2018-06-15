@@ -1208,5 +1208,15 @@ https://www.youtube.com/watch?v=_0Wpwj_gvzg
   * coalesce changes number of compressed files produced
   * make Parquet block size = HDFS block size
   * sc.hadoopConfiguration.set("spark.sql.parquet.output.committer.class", "org.apace.spark.sql.parquet.DirectParquetOutputCommitter")
-  
-* 
+
+
+== OpenFaaS
+https://www.youtube.com/watch?v=PILhp3bX9gk
+* Open Source substitute for Lambda: OpenFaaS+Docker
+* golang
+* REST
+* Kubernetes
+
+== Google Production Environment
+* https://www.youtube.com/watch?v=dhTVVWzpc4Q
+*
