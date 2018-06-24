@@ -137,6 +137,26 @@ asciimath:[sum_(k=0)^oo abs(sf"Pr"(S_n=k)-(lambda_n^k e^(-lambda_n))/(k!))<2 sum
 
 Maybe, improved version of Hollander with extra factor asciimath:[sf"min"(1,1/lambda_n)]?
 
+== Exponential family
+
+* https://www.quora.com/Why-are-exponential-families-so-awesome
+* unify: normal, binomial, poisson, gamma, ...
+* only for them: there is always a sufficient statistic of fixed dimensionality independent of data size
+* minimal sufficient statistic is also complete sufficient statistic
+* maximized entropy (under some conditions)
+* conjugate distributions are also exponential family
+* MLE estimates are simple: set the observed value of the natural sufficient statistic equal to its expected value
+
+== Quadratic variance function
+
+* only these distributions have a variance that is a quadratic function of the mean:
+** normal
+** poisson
+** gamma
+** binomial
+** negative binomial
+** hyperbolic secant function (https://www.tandfonline.com/doi/abs/10.1080/00031305.2013.867902[Ding'13])
+
 ++++++++++++
 Durbin-Watson:
 

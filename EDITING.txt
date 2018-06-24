@@ -9,10 +9,11 @@
     |===
 
 * Start with `:toc:`
+* maybe `:stem:` for ``asciimath:[]`
 
 == Replace
 
 * `^([ |] )([A-Za-z0-9_]+\.)+([A-Za-z_]+)([ (])` -> `\1\2*\3*\4`
 * `(\|.{43})\|` --> `\1|` (modify as needed)
 * `^\n\|===` -> `\n[col="m,d"]\n|===`
-   
+* `\n\n([^\n]+)\n={4,}\n` -> `\n\n== \1\n`

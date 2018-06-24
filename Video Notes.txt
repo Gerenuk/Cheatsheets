@@ -14,11 +14,11 @@ neural net solution:
 * learn layers sequentially; new hidden layers alway improve (lowr bound on log prob)
 * for a lot of labeled data, just try all possible scales of weights
 * object recognition:
-  * many hidden layers
-  * moving window
-  * rect LU faster and better
-  * dropout
-  * transformation for extra training
+** many hidden layers
+** moving window
+** rect LU faster and better
+** dropout
+** transformation for extra training
 * speech: convolution in frequeny
 * sum of sigmoids -> rectLU
 * ensemble of neural nets? -> dropout; at test time just half weights
@@ -32,31 +32,31 @@ Plugin API:
 * ideas from blogofile, sphinx, mercurial, nose, trac, django, pyramid, sqlalchemy, diamond, nova
 * -> ceilometer created
 * plugins:
-  * find plugin (file or import reference; scan or explicit)
-  * enabling explicit or implicit
-  * importing by importing or pkg_resources
-  * integration: fin/coarse; prompt/inspect; ask plugin to integrate itself
-  * API enforcement at runtime: runtime/base class/interface
-  * invocation: driver (invoked directly); dispatcher (call depending on event); iterator (pass events to all)
-  * automatic self-disabling
-  * -> package stevedore
+** find plugin (file or import reference; scan or explicit)
+** enabling explicit or implicit
+** importing by importing or pkg_resources
+** integration: fin/coarse; prompt/inspect; ask plugin to integrate itself
+** API enforcement at runtime: runtime/base class/interface
+** invocation: driver (invoked directly); dispatcher (call depending on event); iterator (pass events to all)
+** automatic self-disabling
+** -> package stevedore
 
 algorithms
 * https://www.youtube.com/watch?v=jKBwGlYb13w
 * skiplists:
-  * alternative to balanced trees
+** alternative to balanced trees
 * hyperloglog:
-  * count how many different objects
-  * "use longest run of 0s in hash"
-  * use multiple hash functions and harmonic mean
+** count how many different objects
+** "use longest run of 0s in hash"
+** use multiple hash functions and harmonic mean
 * bloom filters
 
 Sphinx:
 * extensible by plugins
 * use
-  * roles (inlines) -> :abc:`...`
-  * directives -> .. abc:: args    :option:    body
-  * write python and return node structure
+** roles (inlines) -> :abc:`...`
+** directives -> .. abc:: args    :option:    body
+** write python and return node structure
 * e.g. sqlite querier
 
 Chaco:
@@ -413,9 +413,9 @@ Gradient Boosted Regression Trees:
 * boosting: very shallow trees and only little randomizer
 * deviance plot to check overfitting; test error vs n_estimators
 * tune:
-  * tree structure: number, depth (better <6; has most influence), min_samples_leaf (e.g. 3)
-  * shrinkage: shrink predictions by learning rate; will run longer (training error closer)
-  * stochastic gradient boosting: subsample samples and features (latter often better when many features); better accuracy and runtime
+** tree structure: number, depth (better <6; has most influence), min_samples_leaf (e.g. 3)
+** shrinkage: shrink predictions by learning rate; will run longer (training error closer)
+** stochastic gradient boosting: subsample samples and features (latter often better when many features); better accuracy and runtime
 * gridsearch uses fork and therefore copies data
 * make final model on all data and slightly more complex
 * logreg can train on subsets and merge result
@@ -429,10 +429,10 @@ Gradient Boosted Regression Trees:
 Most winning A/B test results are illusory
 ------------------------------------------
 * statistical power:
-  * prob to detect true effect
-  * statsmodel.stats.power
-  * usually need 80%
-  * 5% uplift hard -> need 6000 conversion; 1600 for 10%
+** prob to detect true effect
+** statsmodel.stats.power
+** usually need 80%
+** 5% uplift hard -> need 6000 conversion; 1600 for 10%
 * count how many tests you run
 * dont stop early (dont always look at results)
 * estimates of uplift generally too high
@@ -447,27 +447,27 @@ you could accept null if full interval (or normalized parameter) is still within
 Skymind and Deeplearning4j
 --------------------------
 * models:
-  * RBM (bipartite graph until equilibrium; hidden and visible states; OCR; restricted since no connection between visible or hidden)
-  * Deep Belief Net (best for sound; can do bag of word and also real tagging; is stacked RBM; LogReg at end)
-  * Convolutional Net (slice up image; best for object recognition)
-  * Stacked Denoising Autoencoder (similar to RBM; introduce and then learn)
-  * Deep Autoencoder (for information retrieval; to identify similar images)
-  * Recursive Neural Tensor Network (tree of feature vectors -> great for sentiment analysis; meant for sequential data; learn context [e.g. of words]; parse natural scene; how to compose; trains up and down; identify boundaries)
-  * Recurrent nets (for sequential data; very good to detect next character)
+** RBM (bipartite graph until equilibrium; hidden and visible states; OCR; restricted since no connection between visible or hidden)
+** Deep Belief Net (best for sound; can do bag of word and also real tagging; is stacked RBM; LogReg at end)
+** Convolutional Net (slice up image; best for object recognition)
+** Stacked Denoising Autoencoder (similar to RBM; introduce and then learn)
+** Deep Autoencoder (for information retrieval; to identify similar images)
+** Recursive Neural Tensor Network (tree of feature vectors -> great for sentiment analysis; meant for sequential data; learn context [e.g. of words]; parse natural scene; how to compose; trains up and down; identify boundaries)
+** Recurrent nets (for sequential data; very good to detect next character)
 * Netflix: RBM+collaborative filter
 * debug neural nets only visually
 * Gaussian rectified for continous
 
 Clustering:
 * Spectral clustering:
-  * works with any similarity; e.g. gaussian kernel on euclidean
-  * uses connectedness; close to some but not all
-  * estimates num of clusters
-  * use k-means on space of graph laplacian
-  * optional normalization
-  * unnormalized tries to balance size of clusters
-  * normalized tries to balance degree (approx to maxcut)
-  * can be slow due to NxN SVD
+** works with any similarity; e.g. gaussian kernel on euclidean
+** uses connectedness; close to some but not all
+** estimates num of clusters
+** use k-means on space of graph laplacian
+** optional normalization
+** unnormalized tries to balance size of clusters
+** normalized tries to balance degree (approx to maxcut)
+** can be slow due to NxN SVD
 
 Visual:
 * position, length, slope, angle, volume, color
@@ -492,8 +492,8 @@ Coding:
 * sparse coding: skd.dict_learning; whitening data first!
 * Hessian-free training useful
 * autoencoder:
-  * can add noise
-  * can make intermed layer sparse
+** can add noise
+** can make intermed layer sparse
 
 Unreasonable effectiveness of ConvNets, LeCun:
 * previously object detection: feature preprocessor MFCC, SIFT, HoG, Cuboids -> unsuperv: Gaussian, k-mean, sparse coding -> Pooling -> superv: linear classifier -> graphical model
@@ -558,10 +558,10 @@ LSH (locality sensitive hashing)
 * complexity well studied
 * hash likely to be equal if points near
 * (multiple hashes) e.g.: random projections and make bits by sign (aligned or not)
-  * vector: zero-mean, unit variance, Gaussian random vector
-  * number of hashes and bit determines recall and precision
-  * -> a will hash points whose angle is low
-  * equal if all of bits for one hash matches
+** vector: zero-mean, unit variance, Gaussian random vector
+** number of hashes and bit determines recall and precision
+** -> a will hash points whose angle is low
+** equal if all of bits for one hash matches
 
 https://www.youtube.com/watch?v=omSTAwSjYc8
 Storm+Trident instead of Hadoop
@@ -573,27 +573,23 @@ needs better visualization and linear algebra
 
 Lyft uses Amazon Redshift with Pandas/Python
 
-Whats wrong with deep learning
-==============================
+== Whats wrong with deep learning
 http://techtalks.tv/talks/whats-wrong-with-deep-learning/61639/
 * need unsupervised, memory
 * unsupervised: how make energy of unseen high?
 * deconvolutional net?
 
-Airbnb
-======
+== Airbnb
 * Aerosolve: interpretable for humans
-  * control forest interaction, quantization, ..
-  * non-linearity from additive splines
+** control forest interaction, quantization, ..
+** non-linearity from additive splines
 
-Buy car
-=======
+== Buy car
 * select 3 cars for test driving
 * go home to think
 * must have options?
 
-ML with Clojure at Yieldbot
-===========================
+== ML with Clojure at Yieldbot
 * JVM
 * easy to deploy Jar to production
 * Cascalog on Hadoop first; now Marceline on Trident on Storm
@@ -601,15 +597,13 @@ ML with Clojure at Yieldbot
 * Cubert: Web REPL for data exploration; like ipython notebook etc
 * visualization and linear algebra not good enough
 
-Luigi
-=====
+== Luigi
 * not really for scheduling (use CRON)
 * supports Pig, Spark, ...
 * complete, output, requires functions
 * seems not so in depth
 
-Airbnb Frontend Evolution
-=========================
+== Airbnb Frontend Evolution
 https://www.youtube.com/watch?v=gMvvb6F8dgk
 * O2 CSS framework based on Bootstrap
 * Rails 3, Node.js
@@ -619,14 +613,12 @@ https://www.youtube.com/watch?v=gMvvb6F8dgk
 * trying Flux
 * Narval: Javascript to JVM
 
-Spark Dataframes
-================
+== Spark Dataframes
 https://www.youtube.com/watch?v=xWkJCUcD55w
 * DataFrames uses same optimization engine as Spark SQL
 * DF faster than Python/Scala RDD
 
-Docker
-======
+== Docker
 https://www.youtube.com/watch?v=GVVtR_hrdKI
 * Puppet great, but need to learn languages
 * VM: big disk image, long time to boot
@@ -642,15 +634,14 @@ https://www.youtube.com/watch?v=GVVtR_hrdKI
 * docker-compose useful; more than 1 docker container
 * docker-machine, docker-swarm
 
-How to speak
-============
+== How to speak
 * Start with promise: how they will empowered
 * Outline: Talk begins; people know where they are
 * Big 4:
-  * Cycle in on material: say again and again; since some people don't listen
-  * Verbal punctuation: verbal boundaries (e.g. "first..., second...")
-  * Near miss: explain something that isn't the concept but almost
-  * Ask a rhetorical question to the audience: should be frequent and answerable; wait a while to get answer
+** Cycle in on material: say again and again; since some people don't listen
+** Verbal punctuation: verbal boundaries (e.g. "first..., second...")
+** Near miss: explain something that isn't the concept but almost
+** Ask a rhetorical question to the audience: should be frequent and answerable; wait a while to get answer
 * time and place: best time 10:30
 * well lit hall; ideally outside light; don't turn off light even for slides
 * hall should be full; choose size accordingly
@@ -662,26 +653,24 @@ How to speak
 * props?
 * story; story only from you (not books)
 * stopping talk:
-  * don't thank [like you not sure the material is for audience]
-  * maybe joke
-  * deliver; remind promise and tell how fullfilled
-  * salute audience: it's been great to be here
+** don't thank [like you not sure the material is for audience]
+** maybe joke
+** deliver; remind promise and tell how fullfilled
+** salute audience: it's been great to be here
 
-Google effective teams
-======================
+== Google effective teams
 * Most important:
-  * Psychological safety: able take risk without being embarrassed -> team can learn
-  * Dependability: members get things done, high quality results on time
-  * Structure and clarity: clear goals, individual role responsibility, clear execution plan
-  * Meaning: find work personally important
-  * Impact: believe that work matters?
+** Psychological safety: able take risk without being embarrassed -> team can learn
+** Dependability: members get things done, high quality results on time
+** Structure and clarity: clear goals, individual role responsibility, clear execution plan
+** Meaning: find work personally important
+** Impact: believe that work matters?
 * Imagine this was a big failure -> write down why -> discuss path around that
 * Leader: determine team philosophy
 * Manager: should display these attributes
 * Team: measure and reflect
 
-Trends in big data
-==================
+== Trends in big data
 https://www.youtube.com/watch?v=sup9wgUxW94
 
 * stream analytics (Beam unifies batch and stream API)
@@ -689,8 +678,7 @@ https://www.youtube.com/watch?v=sup9wgUxW94
 * rapid devel (microservices connected by Kafka)
 * hybrid clouds
 
-Food as medicine
-================
+== Food as medicine
 https://www.youtube.com/watch?v=d0IhZ-R1O8g
 
 * fish/chicken worse than beef?!; but both bad
@@ -699,8 +687,7 @@ https://www.youtube.com/watch?v=d0IhZ-R1O8g
 * cow milk too many hormones
 * less dairy -> less twins
 
-Spark mistakes
-==============
+== Spark mistakes
 https://www.youtube.com/watch?v=vfiJQ7wg81Y
 
 * dont make executors most granular -> doesnt use multiple tasks
@@ -733,8 +720,7 @@ https://www.youtube.com/watch?v=vfiJQ7wg81Y
 
 * java.alng.NoSuchMethodError (e.g. from protobuf) -> needed shadedPattern dependency in config; for using diff. library version
 
-Scheduling with Airflow
-=======================
+== Scheduling with Airflow
 https://www.youtube.com/watch?v=60FUHEkcPyY
 * file based, lightweight: Drake
 * medium: Luigi (still file dependency)
@@ -748,15 +734,13 @@ https://www.youtube.com/watch?v=60FUHEkcPyY
 * authentication
 * customers can trigger
 
-Rust
-====
+== Rust
 * memory freed automatically when scope left -> no GC cost
 * no cheating with pointers possible
 * compile time checks
 * markers for mutability; also checked
 
-Pony for Fintech
-================
+== Pony for Fintech
 https://www.infoq.com/presentations/pony
 * data-race free type system
 * Rust also data-race free but different
@@ -772,21 +756,18 @@ https://www.infoq.com/presentations/pony
 * if I can write, nobody can read
 * topology aware scheduling with work stealing; any number of cores (linear performance)
 
-Leadership
-==========
+== Leadership
 * ethics, safety: everything dealt with fairly
 * provide goals
 * encourage organisational learning and new ideas
 * commitment to employees growth, feel supported
 * communicate often, success and fail together
 
-Alluxio
-=======
+== Alluxio
 * caching for any data source
 * useful when dataframe >=40GB
 
-Dynamic resource allocation
-===========================
+== Dynamic resource allocation
 https://www.youtube.com/watch?v=oqWDeC1zmQw
 * driver: contains scheduler
 * cluster manager
@@ -795,26 +776,25 @@ https://www.youtube.com/watch?v=oqWDeC1zmQw
 * ask cluster manager to give back executor, when idle too long
 * but data on executor might be killed
 * external shuffle service:
-  * shuffle write by separate daemon
-  * tracks where data is stored
+** shuffle write by separate daemon
+** tracks where data is stored
 * config:
-  * enabled, initialExecutors, max/minExecutors
-  * schedulerBacklogTimeout: when ask for new executor
-  * exeutorIdleTimeout: when return executor
-  * sustainedSchedulerBacklogTimeout: when to ask again for executor, if not delivered
-  * spark.shuffle.service.enabled, .port -> use it!
+** enabled, initialExecutors, max/minExecutors
+** schedulerBacklogTimeout: when ask for new executor
+** exeutorIdleTimeout: when return executor
+** sustainedSchedulerBacklogTimeout: when to ask again for executor, if not delivered
+** spark.shuffle.service.enabled, .port -> use it!
 * it may time to start executor
 
-Neural Turing Machines
-======================
+== Neural Turing Machines
 https://www.youtube.com/watch?v=XwqWTX1pW4s
 * challenges:
-  * many parameters even after architecture (how many vectors read/write) -> very sensitive
-  * many parameters -> RAM
-  * sequential -> GPU not helpful
-  * numerically instable (big mistakes)
-  * often stuck
-  * need smart optimization
+** many parameters even after architecture (how many vectors read/write) -> very sensitive
+** many parameters -> RAM
+** sequential -> GPU not helpful
+** numerically instable (big mistakes)
+** often stuck
+** need smart optimization
 * need gradient clipping -> so dont wipe parameters
 * loss clipping
 * Graves RMSprop: smooth out gradients
@@ -822,12 +802,11 @@ https://www.youtube.com/watch?v=XwqWTX1pW4s
 * initialization important
 * curriculum learning
 * extension: Dynamic Neural Computer
-  * no index shift based addressing -> search direction
-  * allocate/deallocate memory -> easier to flag regions as off-limited to protect
-  * native sequence writing, temporal memory
+** no index shift based addressing -> search direction
+** allocate/deallocate memory -> easier to flag regions as off-limited to protect
+** native sequence writing, temporal memory
 
-Smola lectures
-==============
+== Smola lectures
 https://www.youtube.com/watch?v=QJzHp74UO00
 * P(min x_i>c*mu)<=c^-k
 * F of min/max is just power
@@ -836,13 +815,12 @@ https://www.youtube.com/watch?v=QJzHp74UO00
 * median(avg(x_ij)) -> better tail bound
 * find k missing from all numbers [1...N] -> track sum x^p -> set of equations
 * stream: find moments sum n_i^p
-  * p=0: num distinct
-  * p=1: sum
-  * p=2: like variance
+** p=0: num distinct
+** p=1: sum
+** p=2: like variance
 * Flajolet-Martin counter
 
-Causality
-=========
+== Causality
 https://www.youtube.com/watch?v=X2j6QT4UDSs
 * Granger, Rubin, Pearl, Additive
 * uncorr=indep only if Gaussian
@@ -857,11 +835,10 @@ https://www.youtube.com/watch?v=X2j6QT4UDSs
 * do interventions to learn remaining directions
 * if cannot intervene: make more assumptions
 * alternatives:
-  * numerical variables -> additive error
-  * entropy caisality for categorical variables
+** numerical variables -> additive error
+** entropy caisality for categorical variables
 
-H2o.ai
-======
+== H2o.ai
 * Java
 * no high availability (one failure kills all) -> in development
 * + Spark: Sparkling water
@@ -871,16 +848,13 @@ H2o.ai
 * Zeppelin support
 * GPUs with DeepWater
 
-Sklearn
-=======
+== Sklearn
 * FeatureUnion: np.hstack; n_jobs?
 
-Optimal learning
-================
+== Optimal learning
 * very few queries
 
-k-means new tricks
-==================
+== k-means new tricks
 https://www.youtube.com/watch?v=rtXeauFFCE4
 -> initialization, large data/parallel, many clusters
 * random init bad
@@ -892,15 +866,13 @@ https://www.youtube.com/watch?v=rtXeauFFCE4
 * need about 5-10 diff initializations
 * indices for high k
 
-Spark monitoring
-================
+== Spark monitoring
 https://www.youtube.com/watch?v=mVP9sZ6K__Y
 * Spark uses Netty-based RPC
 * Event buses and Listeners
 * Spark UI only while context running -> or activate Spark history server
 
-Manage creative creativity
-==========================
+== Manage creative creativity
 https://www.ted.com/talks/linda_hill_how_to_manage_for_collective_creativity
 Creative abrasion: constructive discussion, diversity/conflict
 Creative agility: act instead of plan, experiments instead of pilots
@@ -908,8 +880,7 @@ Creative resolution: combine solutions
 Leader: set the stage, dont perform on it
 Everybodies slices of genius
 
-Apex (vs Spark)
-===============
+== Apex (vs Spark)
 https://www.youtube.com/watch?v=sNqOX1Y4tcU
 * streaming needs windows and stateful even with failure
 * Apex can maintain state
@@ -919,28 +890,25 @@ https://www.youtube.com/watch?v=sNqOX1Y4tcU
 * parallel pipelines (without shuffles)
 * back-pressure automatic
 
-Security with X11 and Qt
-========================
+== Security with X11 and Qt
 https://www.youtube.com/watch?v=-T1LoHTZDvs
 * X11:
-  * keylogger always possible
-  * command ingestion (e.g. into root windows)
-  * easy phishing by replacing windows
+** keylogger always possible
+** command ingestion (e.g. into root windows)
+** easy phishing by replacing windows
 * -> never run graphical applications as root
 * Wayland:
-  * fixes keylogger
-  * no injection
-  * currently still in KWin/Wayland
-  * but not all fixed
+** fixes keylogger
+** no injection
+** currently still in KWin/Wayland
+** but not all fixed
 
-What makes teams smarter
-========================
+== What makes teams smarter
 * more than 50% women better
 * worse if few members dominate (bad apple)
 * better if high EQ (team driven by lowest EQ member; bad apple)
 
-Samza
-=====
+== Samza
 https://www.youtube.com/watch?v=fU9hR3kiOK0
 * things would be much easier if everything stream and subscribe+notify (instead of request/response)
 * subscribe to particular changes
@@ -962,8 +930,7 @@ https://www.youtube.com/watch?v=yjqmVHA2cFM
 * performance on https://github.com/szilard/benchm-ml
 * may have good distributed ML
 
-Faster Adhoc queries in Spark - OAP
-===================================
+== Faster Adhoc queries in Spark - OAP
 https://github.com/Intel-bigdata/OAP
 https://www.youtube.com/watch?v=inG4jAyFmPE
 * user defined index
@@ -976,8 +943,7 @@ https://www.youtube.com/watch?v=inG4jAyFmPE
 * data locality
 * Baidu + Intel
 
-Arrow
-=====
+== Arrow
 https://www.youtube.com/watch?v=44Bu0o1nsD4
 * Apache standard for all columnar formats as *in-memory* data format
 * for inter-operability with Spark, Hive, Drill, Kudu, ..
@@ -994,8 +960,7 @@ https://www.youtube.com/watch?v=44Bu0o1nsD4
 * soon RPC, IPC transfer
 * Spark 20396
 
-Rayleigh measures
-=================
+== Rayleigh measures
 https://www.youtube.com/watch?v=oBH3vtyvRC8
 * log-concave can efficiently sample with MCMC
 * also find mode
@@ -1007,8 +972,7 @@ https://www.youtube.com/watch?v=oBH3vtyvRC8
 * 1D: Strongly Rayleigh <-> Sum of indep Bernoulli
 * Sum of Bernoulli is ultra log-concave
 
-Kubernetes
-==========
+== Kubernetes
 https://www.youtube.com/watch?v=R-3dfURb2hA
 * Deployment
 * Scale
@@ -1128,19 +1092,17 @@ https://www.youtube.com/watch?v=i40d8-Hu4vM
 * ipyleaflet (maps)
 * bqplot: also widgets and connected, e.g. fitting lines
 *! bqplot: interactivity
-*
 
-Making sense of JVM stack traces
-================================
+== Making sense of JVM stack traces
 https://www.youtube.com/watch?v=LQHMMCf2ZWY
 * Python integration:
-  * Py4J + pickling
-  * pipes between Python and JVM
+** Py4J + pickling
+** pipes between Python and JVM
 * many logs returned -> rather guess what is going on first -> then check logs
 * logs:
-  * console (mixed with spark info)
-  * web ui: better since only logs
-  * jupyter: important parts missing -> check console instead (Spark-19094 can make cloud messages available in Jupyter)
+** console (mixed with spark info)
+** web ui: better since only logs
+** jupyter: important parts missing -> check console instead (Spark-19094 can make cloud messages available in Jupyter)
 * -> use spark history server to get info after it has failed; 5 knobs
 * yarn.nodemanager.delete.debug-delay-sec -> higher number to ssh to container
 * use sc.setLogLevel interactively, otherwise too much or too little
@@ -1155,27 +1117,26 @@ https://www.youtube.com/watch?v=LQHMMCf2ZWY
 * accumulators may double-count, but good enough for debugging (counting errors)
 * "-mtrace" does not work (assumes PYSPARK_PYTHON points to a file and arg[0] has meaning)
 * OOM:
-  * JVM exception (OOM on joins, GC timelimit)
-  * Application Overhead exceeded (from YARN)
-  * Exceptions on Driver program
-  * Reasons:
-    * unbalanced shuffles (-> use more partitions)
-    * buffering of rows with Pyspark+UDF (-> use data subset selection more upstream)
-    * big records after pickling (esp. when forgot about references)
-    * too little memory for Python worker (YARN default 10% for Python -> increase)
-    * eager entire partition eval (e.g. sort + mapPartitions)
-    * too large partitions (unbalanced or too few)
-    * some low-level libs memory-leak
+** JVM exception (OOM on joins, GC timelimit)
+** Application Overhead exceeded (from YARN)
+** Exceptions on Driver program
+** Reasons:
+*** unbalanced shuffles (-> use more partitions)
+*** buffering of rows with Pyspark+UDF (-> use data subset selection more upstream)
+*** big records after pickling (esp. when forgot about references)
+*** too little memory for Python worker (YARN default 10% for Python -> increase)
+*** eager entire partition eval (e.g. sort + mapPartitions)
+*** too large partitions (unbalanced or too few)
+*** some low-level libs memory-leak
 * Debug:
-  * DAG in WebUI (less useful in Python)
-  * toDebugString (less useful in Python)
-  * Sample and run locally!
-  * try Python or JVM debugger (Python debugger: use broadcast +  singleton hack to start remote debugger on all interpreters!)
+** DAG in WebUI (less useful in Python)
+** toDebugString (less useful in Python)
+** Sample and run locally!
+** try Python or JVM debugger (Python debugger: use broadcast +  singleton hack to start remote debugger on all interpreters!)
 * "Fast data processing with Spark" outdated!
 * "High performance Spark" good
 
-Spark and Parquet in Depth
-==========================
+== Spark and Parquet in Depth
 https://www.youtube.com/watch?v=_0Wpwj_gvzg
 * Parquet Snappy fast with column selection (Snappy default)
 * Parquet Gzip fast with table scan
@@ -1185,29 +1146,29 @@ https://www.youtube.com/watch?v=_0Wpwj_gvzg
 * parquet-tools.jar can do parquet "cat"; "meta" for meta-data (some extra info)
 * files _SUCCESS, etc. off by default (in newer versions of Spark)
 * encodings:
-  * incremental encoding (e.g. only string changes)
-  * dictionary encoding (if only few distinct values)
-  * run length encoding, delta encoding, ..
+** incremental encoding (e.g. only string changes)
+** dictionary encoding (if only few distinct values)
+** run length encoding, delta encoding, ..
 * parts of file:
-  * metadata
-  * group of rows (e.g. on nodes)
-  * each column as chunk; dont store null values
-  * shared "page" header in each column chunk
+** metadata
+** group of rows (e.g. on nodes)
+** each column as chunk; dont store null values
+** shared "page" header in each column chunk
   -> github.com/apache/parquet-format
 * pull only columns you need
 * .write.partitionBy(...).parquet(..)
 * spark.sql.parquet.filterPushdown = true (default) [PushedFilters]
 * -> only get what you get
 * PushedFilters limitations:
-  * doesnt work on nested column (SPARK-17636)
-  * doesnt work on strings (SPARK-17213) (only numeric)
-  * doesnt work on object stores (AWS S3) since no random access
+** doesnt work on nested column (SPARK-17636)
+** doesnt work on strings (SPARK-17213) (only numeric)
+** doesnt work on object stores (AWS S3) since no random access
 * cannot mutate Parquet on disk -> maybe partition folders instead, or combine with Cassandra, or write mode append
 * Tuning:
-  * S3A: df.read.option("mergeSchema", "false").parquet("s2a://..")
-  * coalesce changes number of compressed files produced
-  * make Parquet block size = HDFS block size
-  * sc.hadoopConfiguration.set("spark.sql.parquet.output.committer.class", "org.apace.spark.sql.parquet.DirectParquetOutputCommitter")
+** S3A: df.read.option("mergeSchema", "false").parquet("s2a://..")
+** coalesce changes number of compressed files produced
+** make Parquet block size = HDFS block size
+** sc.hadoopConfiguration.set("spark.sql.parquet.output.committer.class", "org.apace.spark.sql.parquet.DirectParquetOutputCommitter")
 
 
 == OpenFaaS
@@ -1219,4 +1180,3 @@ https://www.youtube.com/watch?v=PILhp3bX9gk
 
 == Google Production Environment
 * https://www.youtube.com/watch?v=dhTVVWzpc4Q
-*
