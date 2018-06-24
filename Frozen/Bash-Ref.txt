@@ -41,6 +41,9 @@ if [ -n "`sed -n '/PATTERN/p' <<<STRING`" ];then echo "Pattern contained";fi
 
 if [ "${file%.dat}" -ne "$file" ]; then echo "Its a *.dat file";fi
 
+
+command || echo "Command failed"
+
 # $OPTIND=1 automatically at shell startup
 while getopts ":ab:cde" options; do	# with no trailing ":" -> error msg for illegal params
   case $options in

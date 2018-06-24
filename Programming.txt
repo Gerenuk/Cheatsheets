@@ -13,6 +13,13 @@ Composing:
 * + at runtime
 * respect interface
 
+* Log all branch decisions (if-statements)
+* log messages:
+** errors: if most likely the results are (even partitially!) incorrect
+** warnings: if can be correct, but better watch out for it
+** info: if interesting under "normal operation"
+** debug: additional info to understand what went wrong in the algorithm
+
 = Best practices
 
 Delegation:
@@ -177,24 +184,6 @@ Statically typed with type inference:
 
 Mixed:
 - Scala, Boo?
-
-
-Encoding:
-BOM:
-* only for unicode
-* FFFE or FEFF : UTF-16 LE or BE
-* or EFBBBF : utf8; special bytes that hopefully are not meaningful in other encodings
-* UCS-2=UTF-16 (except TFF16 some more codepoints)
-* UTF8 bytes: 0.. (<0x80); 110.. 10..; 1110.. 10.. 10..; 11110.. 10.. 10.. 10..
-
-Use utf-8-sig, if there is a BOM byte
-utf16 automatically does BOM (don't use utf-16LE unless BOM is missing)
-
-Chardetect:
-file -i <file>
-iconv  # to convert
-uchardet
-chardet # (python)
 
 Don't Repeat Yourself (DRY) or Duplication is Evil (DIE)
 Every piece of knowledge must have a single, unambiguous, authoritative representation within a system.

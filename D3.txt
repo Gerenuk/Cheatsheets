@@ -1,0 +1,16 @@
+= D3 - Data Driven Documents
+
+* map data to HTML elements
+* e.g. map table content to list elements, color, font, ...
+* data: JSON or CSV (with parser)
+
+    <script src="https://d3js.org/d3.v5.min.js"></script>      # in header
+    <script>
+    var svg = d3.select(..).append("svg").attr(..).attr(..)
+    svg.selectAll("text")    # need to select to change
+       .data(myjsondata)
+       .enter()              #  D3 concept; enter, update, delete
+       .append("text")
+       .attr("x", function(d){return d.x;})
+       ...
+    </script>

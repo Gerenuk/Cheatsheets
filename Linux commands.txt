@@ -1,7 +1,9 @@
 = Linux commands
 
-:toc: left
-== General commands
+:toc: left
+
+== General commands
+
 [cols="m,d"]
 |===
 | cd                                        | Go to home
@@ -28,9 +30,13 @@
 | CPLUS_INCLUDE_PATH                        |
 | yarn-site.xml                             | YARN custom config
 | yarn-default.xml                          | YARN just defaults
-|===
-== Information about the system
-=== Commands
+|===
+
+
+== Information about the system
+
+=== Commands
+
 
 [cols="m,d"]
 |===
@@ -72,7 +78,9 @@
 | iostat                                    | report CPU statistics and input/output statistics for devices, partitions and network filesystems (NFS)
 | sar                                       | collect, report, and save system activity information
 | pmap -d _PID_                             | memory map of process
-|===
+|===
+
+
 === Files with system information
 
 
@@ -100,7 +108,9 @@
 | batch _TIME_                              | execute commands when low load
 | date -s _MMDDHHmm_[[_YY_]_YY_]._ss_       | set date/time
 | date -s _HHmm_                            | set time
-|===
+|===
+
+
 == Bash
 
 [cols="m,d"]
@@ -114,7 +124,8 @@
 | filename=$(basename -- "$file") +
   extension="${filename##*.}" +
   filebase="${filename%.*}"                 | Useful to add text before an arbitrary extension
-|===
+|===
+
 == Scripting
 
 [cols="m,d"]
@@ -128,7 +139,8 @@
 | screen                                    | continue programs after the terminal has been closed
 |===
 
-== Bigger programs
+== Bigger programs
+
 [cols="m,d"]
 |===
 | kstart --skiptaskbar --onbottom Eterm --buttonbar 0 --scrollbar 0 --shade 0 -O --double-buffer --font-fx none -x --trans --no-cursor -g=82x28+0+350 -e htop & |
@@ -141,9 +153,11 @@
 | mkfontdir                                 | ?
 | w3m -cookie '_URL_'                       | open console URL
 | curl _URL_                                | download file
-|===
+|===
 
-== System control
+
+== System control
+
 [cols="m,d"]
 |===
 | shutdown -h now _MSG_                     | halt now
@@ -158,8 +172,11 @@
 | ldconfig -V                               | update library cache (verbose)
 | echo "15" > /proc/PID/oom_adj             | favour PID for killing by out of memory handler
 | cat /proc/PID/oom_score                   | show dynamic OOM score
-|===
-=== File content
+|===
+
+
+=== File content
+
 [cols="m,d"]
 |===
 | diff -b _FILE1_ _FILE2_                   | ignore different white spaces
@@ -187,7 +204,7 @@
 | chardet                                   | originally Python
 | iconv -c -f utf8 -t iso8859 _INPUT.TXT_ > _OUTPUT.TXT_ | convert enconding
 | recode latin1..utf8 <FILE>                | convert enconding
-| recode latin1..latex <FILE>               | convert enconding (i.e. ä -> \"a)
+| recode latin1..latex <FILE>               | convert enconding (i.e. ï¿½ -> \"a)
 | gpg --gen-key                             | generate key
 | gpg --armor --output pubkey.txt --export '_NAME_' | export public version
 | gpg --send-keys '_NAME_' --keyserver hkp:_subkeys.pgp.net | register on server
@@ -197,8 +214,11 @@
 | gpg --search-keys '_EMAIL' --keyserver hkp:_subkeys.pgp.net | search for key
 | gpg --encrypt --recipient '_EMAIL_' _FILE_    | encrypt for someone
 | gpg --list-keys                           | list all keys
-|===
-=== File content (output only; read only)
+|===
+
+
+=== File content (output only; read only)
+
 [cols="m,d"]
 |===
 | md5sum                                    | MD5 check sum
@@ -211,9 +231,11 @@
 | col                                       | remove colors
 | strings                                   | prints readable string from file
 | nl                                        | number lines
-|===
+|===
 
-=== Search for file of content
+
+=== Search for file of content
+
 [cols="m,d"]
 |===
 | agrep -MAXERRORS _PATTERN_ _FILE_         | Search with toleration
@@ -231,8 +253,11 @@
 | which _EXEFILE_                           | search for path of file
 | whereis _EXEFILE_                         | search for path of file in help, bin, conf, ...
 | grep -a -B_LINES_BEFORE_ -A_LINES_AFTER_ _TEXT_ /dev/ _DEVICE_ | undelete ASCII files
-|===
-=== Access rights
+|===
+
+
+=== Access rights
+
 [cols="m,d"]
 |===
 | chmod [ugoa](+-=)(rwxXsugo) _FILES_       | set permissions (X : x for dir or if x before)
@@ -244,9 +269,12 @@
 | chmod -a -G _GROUP_ _USER_                | add user to group?
 | lsattr                                    | list file attributes
 | gpasswd -a _USER_ _GROUP_                 | add user to group
-|===
-
-=== File system
+|===
+
+
+
+=== File system
+
 [cols="m,d"]
 |===
 | ln -s _TARGET_ _FILE_                     | make symbolic link
@@ -284,9 +312,11 @@
 [cols="m,d"]
 |===
 | nvidia-modprobe                           |
-|===
+|===
 
-== File system (show info; read only)
+
+== File system (show info; read only)
+
 [cols="m,d"]
 |===
 | ls -a                                     | print even ".*"
@@ -306,8 +336,11 @@
 | df -T                                     | print filesystem type and information
 | lsof +D /mnt/...                          | list who is using the directory
 | hdparm -Tt /dev/...                       | Test drive speed
-|===
-== Compound commands
+|===
+
+
+== Compound commands
+
 [cols="m,d"]
 |===
 | ls -t -1                                  | find last modified file
@@ -324,7 +357,9 @@
 | find . -name _FILES_ -print \| xargs perl -pi -e 's/.../.../ig' _FILES_ | replace
 | echo -n "abc"                             | no newline
 | for OFFSET in 0 1 2 3 4 5 6 7; do dd if=/dev/sdb1 bs=256M count=1 skip=$OFFSET \| grep -a 'text'; done    | read blockwise
-|===
+|===
+
+
 == User managment
 
 [cols="m,d"]

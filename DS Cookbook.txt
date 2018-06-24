@@ -989,17 +989,52 @@ For on-the-fly legend order changes, resort self.lines+self.patches+self.collect
 
 == Logging
 
+    import logging
+    logging.basicConfig(level=logging.INFO,
+                        format="[%(levelname)s] %(funcName)s(%(lineno)s) %(message)s",
+                        stream=sys.stdout,
+                       )
+    #logging.getLogger().setLevel("DEBUG")
+
+    logger=logging.getLogger(__name__)
+
+=== Daiquiri
+
     import daiquiri
     daiquiri.setup(level=logging.INFO, outputs=[daiquiri.output.STDOUT])
 
-    import logging
-    logging.basicConfig()
-    
-    logg=logging.getLogger()
-    logg.setLevel(logging.INFO)
 
-    logging.basicConfig(stream=sys.stdout, level=logging.INFO)  # without stdout it would go to stderr
-    logger=logging.getLogger(__name__)
+=== Color logs
+
+==== coloredlogs
+
+* https://coloredlogs.readthedocs.io/en/latest/api.html
+* seems OK and featureful; default format not quite what I want
+* lots of env variables to set default behaviour
+* will color message by default (not the tag)
+
+    import coloredlogs
+    coloredlogs.install(isatty=True)            # isatty to enforce in Jupyter
+
+    import logging
+    logger = logging.getLogger(__name__)
+
+==== logzero
+
+* preconfigured logger seems pretty nice, but didn't find how to set output stream to stdout
+* seems to be quickest way
+
+    from logzero import logger
+    logger.info("TEXT")
+
+==== daiquiri
+
+* didn't manager to enforce TTY mode though and hence no color support
+
+    import daiquiri
+    daiquiri.setup(level="INFO", outputs=[daiquiri.output.STDOUT])
+
+    logger = daiquiri.getLogger(__name__)
 
 
 === File only logging
@@ -1291,6 +1326,20 @@ To install
 * Different schedulers possible
 
 
+== Doctests
+
+    def func(..):
+        """
+        >>> func(1,
+        ...      2)
+        'expected_result'
+        """
+
+    doctest.testmod()
+
+
+* however note that `testmod` will recursively inspect for attribute existence. this will break for `colorful` since it's attributes trigger special behaviour
+
     
 == SQL in Python
 
@@ -1381,11 +1430,72 @@ Return type https://docs.python.org/3/library/subprocess.html#subprocess.Complet
     exc_type, exc_value, exc_traceback = sys.exc_info()
     filename, line number, function name, text=traceback.extract_tb(exc_traceback)[0] # 0 to get first element
 
+== Encoding Textfiles
+
+|===
+| locale.getpreferredencoding()             | what `open()` will use by default; not utf8 on Windows!
+| sys.getfilesystemencoding()               | default for most operations that both require an encoding and involve textual metadata in the filesystem (e.g. determining the results of os.listdir())
+|===
+
+* use `open(..., encoding="utf")` explicitely or it may fail in Windows when using UTF8 files
+* `locale.getpreferredencoding()`:
+** is not the same as `sys.getfilesystemencoding()`
+** unaffected by PYTHONIOENCODING
+* https://python-notes.curiousefficiency.org/en/latest/python3/text_file_processing.html
+* new https://www.python.org/dev/peps/pep-0540/[UTF8 Mode] in Python 3.7: use UTF8 everywhere; also when in POSIX locale
+
+
+=== BOM bytes in files
+
+* only for unicode
+* FFFE or FEFF : UTF-16 LE or BE
+* or EFBBBF : utf8; special bytes that hopefully are not meaningful in other encodings
+* UCS-2=UTF-16 (except TFF16 some more codepoints)
+* UTF8 bytes: 0.. (<0x80); 110.. 10..; 1110.. 10.. 10..; 11110.. 10.. 10.. 10..
+* Use `utf-8-sig`, if there is a BOM byte
+* utf16 automatically does BOM (don't use utf-16LE unless BOM is missing)
+
+=== Encoding detection
+
+    file -i <file>
+    iconv  # to convert
+    uchardet
+    chardet # (python)
+
 == Terminal color
 
-    # https://github.com/dslackw/colored
-    from colored imoprt fg, attr
-    print("{}Hello{}".format(fg.light_coral, attr(0))
+* https://misc.flogisoft.com/bash/tip_colors_and_formatting
+* https://stackoverflow.com/questions/4842424/list-of-ansi-color-escape-sequences
+* you can display a color overview with `humanfriendly --demo`
+
+    # https://github.com/timofurrer/colorful (-> will use colorama library for Windows)
+    import colorful
+
+    # use one of the following in Jupyter to enforce color
+    #colorful.use_8_ansi_colors()
+    #colorful.use_256_ansi_colors()
+    #colorful.use_true_colors()
+
+    print(f"{colorful.coral(text)}")    # needs str conversion usually
+
+* `blessings` did not work with Windows (https://github.com/erikrose/blessings/issues/21[Jira]) due to curses
+* `colorama` seems to be basis for color on Windows
+* seems uncomfortable: `sty`, `colored`
+
+== XPath
+
+=== Select all nodes with exceptions
+
+    /root/*[not(self::script)]
+    /root/(* except a)                     # XPath 2.0
+
+=== Python
+
+    page = lxml.html.soupparser.fromstring(htmltext)
+    hits = page.xpath(".//*[not(self::script) and contains(text(),"searchword")]")
+    hit = hits[0]
+    elem = hit.getroottree().getpath(hit)
+    text = elem.text
 
 == Hierarchical modelling
 

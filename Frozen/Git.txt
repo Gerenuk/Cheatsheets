@@ -170,7 +170,7 @@ Branching:
     git checkout master
     git merge hotfix      # hopefully fast forward
     git branch -d hotfix
-
+  
 * if real merge (no fast forward):
 ** often automatically: 3-way merge (2 branches + common ancestor) -> create new (merge) commit (multiple parents)
 ** if conflicts:
@@ -335,6 +335,7 @@ dir/*
 == Commands
 
 |===
-| git help              | Help
-| git help -g           | Tutorials
+| git help      		| Help
+| git help -g   		| Tutorials
+| git remote set-url origin ssh://...       | Change to SSH key based version
 |===

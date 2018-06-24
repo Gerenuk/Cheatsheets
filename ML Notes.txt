@@ -542,6 +542,47 @@ http://blog.kaggle.com/2016/07/21/approaching-almost-any-machine-learning-proble
 
 == Causality
 
+
+* can do mean effects _after correcting for confounders_
+* confounder: variables which affect both treatment and outcome
+* treatment must be made a non-factor
+* -> probability for being treated must be corrected for
+* covariates `X` , outcome `Y`, treatment `A`
+
+=== Correcting for confounders
+
+Itemization means _OR_ option.
+
+. Pick some variables (confounders) to condition on
+* guess DAG and pick variables to condition on to close backdoor paths
+* condition on all variables which affect treatment or outcome (arrow _into_ those; will also block backdoor paths)
+* in doubt use all variables
+. Make probability of treatment a non-factor
+* Match instances by X (nearest neighbour, greedy or optimal, compare effect with permutation test on these pairs)
+* Calculate propensity scores
+.. stem:[pi(x_i)=P(A=1|X=x_i)]
+..
+
+
+=== Assess balance
+
+* always check whether distribution of all individual Xs are the same for all treatment outcomes
+* e.g. with means and t-test (called TableOne in lecture)
+
+=== Instrumental variables
+
+* https://en.wikipedia.org/wiki/Instrumental_variables_estimation
+* when controlled experiment not possible
+* when regression error term correlated with features (then OLS biased); when either of
+** target influences features (reverse causation)
+** omitted variables which influences features and target
+** features subject to non-random measurement error
+** -> features which suffer from this are called "endogenous"
+* requirements for instrument for a feature:
+** must influence this feature (correlated conditional on other features)
+** cannot be correlated with error term conditional on other features (exclusion restriction)
+* https://en.wikipedia.org/wiki/Instrumental_variables_estimation#Selecting_suitable_instruments
+
 === Summary
 
 * to get general effect of treatment A on outcome Y

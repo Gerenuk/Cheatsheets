@@ -577,7 +577,7 @@ IPython parallel
 Blueyonder:
 Application Server App in C++
 * data handles; algorithms get numpy array
-* future, promise, delay pattern; für jobs; prios, parallelisierung
+* future, promise, delay pattern; fï¿½r jobs; prios, parallelisierung
 * Zugriff von intern
 
 Luigi - Batch Data Processing in Python
@@ -599,11 +599,11 @@ Luigi - Batch Data Processing in Python
 Continuum Data Analytics Stack
 ------------------------------
 * analytics oft durch IO begrenzt
-* Terabytes übertragen schneller per UPS?
+* Terabytes ï¿½bertragen schneller per UPS?
 * all data in one place; store first/structure later; keep raw data forever; modular infrastructure; let everyone party on data; data first/question later
-* Blaze: arrays for modern hardware (streaming, distributed, ...); numpy "weiterentwicklung"; flexibler datatypen; Blaze server (zwischen database/GPU/Files und Python/C++/JVM/Vizdata/...; einheitliches Array/Table view); für sehr große Daten
-* Numba: wie JIT, LLVM, optimiert für hardware; multicore, GPU; compatible with Blaze; auch mathematische funktionen hardware spezifisch optimiert; 7x schneller als pure numpy(?)
-* Bokeh: BokehJS demos, IPython integration; "matplotlib für web"; Pixels are bins, different layers
+* Blaze: arrays for modern hardware (streaming, distributed, ...); numpy "weiterentwicklung"; flexibler datatypen; Blaze server (zwischen database/GPU/Files und Python/C++/JVM/Vizdata/...; einheitliches Array/Table view); fï¿½r sehr groï¿½e Daten
+* Numba: wie JIT, LLVM, optimiert fï¿½r hardware; multicore, GPU; compatible with Blaze; auch mathematische funktionen hardware spezifisch optimiert; 7x schneller als pure numpy(?)
+* Bokeh: BokehJS demos, IPython integration; "matplotlib fï¿½r web"; Pixels are bins, different layers
 * Wakari: cloud hosted Python analytics; full linux sandbox for everyone; IPython; interactive JS plitting; free plan 512 memory, 10GB dist; Premium: better machines, SSH access, cluster, more memory,...
 
 Data Agnosticism: Feature Engineering Without Domain Expert

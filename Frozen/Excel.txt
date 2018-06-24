@@ -2,7 +2,7 @@ In CSV: first line
 sep=;
 for auto detect
 
-"1" kopieren; Inhalte einfügen/Multiplizieren -> entfernt komische Formatierung (z.B. Hyperlink)
+"1" kopieren; Inhalte einfï¿½gen/Multiplizieren -> entfernt komische Formatierung (z.B. Hyperlink)
 Datei/Optionen/Erweitert: Dezimalkomma
 
 Substring: =TEIL(...)
@@ -13,6 +13,6 @@ KALENDERWOCHE(A1;21)  # ab Montag und korrektes ISO
 
 Excel: multiple format copy: double-click
 
-VERGEICH(wert;bereich;0)   -> gibt Zeilennummer zurück (engl. MATCH)
+VERGEICH(wert;bereich;0)   -> gibt Zeilennummer zurï¿½ck (engl. MATCH)
 
 IF(ISNUMBER(SEARCH("word", field));"yes";"no")

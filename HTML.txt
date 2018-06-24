@@ -1,0 +1,54 @@
+= HTML
+
+== General structure
+
+    <!DOCTYPE html>         #html5
+    <html>
+    <head>
+    <meta charset="utf-8">
+    </head>
+
+    <body>
+    </body>
+    </html>
+
+== SVG
+
+    <svg width=".." height="..">
+    <circle cx=".." cy=".." r="..">
+    </svg>
+
+== CSS
+
+    body {
+        background-color: lightblue;
+    }
+
+Could use CSS directly with `<.. style="...">`
+
+== Where to put CSS
+
+    HTML:
+    <head>
+    <style>
+    ...
+    </style>
+    </head>
+
+    HTML: <link rel="stylesheet" type="text/css" href="mystyle.css">     # recommended
+
+== CSS application by selectors
+
+    CSS:  .myclassname {...}
+    HTML: <.. class="classname">
+
+    CSS:  #myid {..}
+    HTML: <.. id="myid">      # unique
+
+== Javascript
+
+    <script>          # put in right position (also in head or body)
+    ...
+    </script>
+
+    <script src=".."></script>
