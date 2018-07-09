@@ -1,0 +1,3 @@
+= Docker
+
+* database in Docker can become corrupted? -> run outside

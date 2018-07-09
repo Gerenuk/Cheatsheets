@@ -1,3 +1,7 @@
+= Data Science Notes
+
+:stem:
+
 == TS analysis Blue Yonder
 * https://www.youtube.comwatch?v=U4p46XdXy6A
 * use conda install requirements file
@@ -280,6 +284,31 @@ https://www.youtube.com/watch?v=KhAUfqhLakw
 
 Taking Humans out of the Deep Learning Loop
 * https://www.youtube.com/watch?v=VG2uCpKJkSg
+
+== Price elasticity
+
+Usually price elasticity is defined as
+
+asciimath:[epsilon=(d ln N)/(d ln P)]
+
+If there are no fixed costs per item solf the the profit is
+
+asciimath:[S=N P]
+
+and the elasticity
+
+asciimath:[dS/dP=N(epsilon+1)]
+
+If there are fixed costs and the profit is
+
+asciimath:[S=N(P-Delta)]
+
+then one could write
+
+asciimath:[dS/dP=N(epsilon (1-Delta/P)+1)]
+
+or alternatively use a shifted price asciimath:[P*=P-Delta] and do the same analysis. Note that the plots with asciimath:[ln(P-Delta)] are different.
+
 
 == Introduction to information theory
 http://videolectures.net/mlss09uk_mackay_it/

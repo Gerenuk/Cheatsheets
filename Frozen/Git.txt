@@ -1,5 +1,75 @@
 = Git
 
+== Simple Guide
+
+http://git.huit.harvard.edu/guide/
+
+    git config --global user.name 'Anton'
+    git config --global user.email 'Anton@gmail.com'
+    git config --global color.ui 'auto'
+
+|===
+| git clone ...                             | Clone from server
+| git add <filename>                        | Add to index
+| git commit -m ".."                        | Commit to HEAD
+| git commit -am ".."                       | Add all changes (otherwise need `git add -u`); but careful not to add unwanted!
+| git push origin master                    | Send to server (`master` is remote branch)
+| git pull                                  | Update local to newest commit (fetch and merge)
+| git add <filename>                        | Mark as merged after conflicts
+| git status                                |
+|===
+
+|===
+| git init                                  | Init new repo
+| git remote add origin <server>            | Connect (if not cloned)
+| git tag <tag> <hex>                       | Tag (e.g. with version); <hex> needs to be unique
+| git log                                   | View commit id
+| gitk                                      | GUI
+| git add -i                                | Interactive editing
+| git add -u                                | Add modified and deleted files to staging (needed if not `commit -a` option used)
+| git add -A                                | Add modified, deleted and new files to staging
+| git rm <filename>                         | Also removes from filesystem!
+| git rm --cached <filename>                | Only stop tracking
+|===
+
+|===
+| git checkout -- <filename>                | Replace local changes (from HEAD); but index and new files are kept
+| git fetch origin +
+  git reset --hard origin/master            | Drop all local changes and commit and fetch from server
+|===
+
+|===
+| git config format.pretty oneline          | To show log in one line per commit
+|===
+
+* 3 trees:
+** Working directory with files
+** Index for staging
+** HEAD points to last commit
+* pull = fetch + merge
+
+=== Branches
+
+|===
+| git checkout -b <branch>                  | Create new branch (`git branch <branch>`  only creates branch but does not put you on)
+| git checkout master                       | Switch back to master
+| git branch -d <branch>                    | Delete branch
+| git push origin <branch>                  | Push branch to remote
+| git merge <branch>                        | Merge other branch into active
+| git diff <source_branch> <target_branch>  | Preview merging changes
+|===
+
+== Info
+
+* https://book.git-scm.com/
+* https://git-scm.com/book/en/v2
+* http://think-like-a-git.net/
+* http://marklodato.github.io/visual-git-guide/index-en.html
+
+== Other
+
+* Undoing Git stuff: https://raw.githubusercontent.com/emmajane/gitforteams/master/resources/workflow-undoing-changes.png
+
 http://git-scm.com/book/en
 
 Start repo:
@@ -252,7 +322,7 @@ Do not rebase commits that you have already pushed to a public repository.
 == Alternatives
 
 * http://gitless.com/: Claims to be simpler, superficially looks the same
-* http://www.git-legit.org/: Nice, just "git syns"
+* http://www.git-legit.org/: Nice, just "git sync"
 
 == Gitignore
 

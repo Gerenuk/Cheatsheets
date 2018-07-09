@@ -50,6 +50,10 @@
 | scipy.stats.probplot(x, plot=plt)          | Probability quantile plot https://docs.scipy.org/doc/scipy/reference/generated/scipy.stats.probplot.html[Ref]
 |===
 
+== Plot correlation
+
+    sns.heatmap(df.corr())
+
 == Regression and Fitting
 
 === Linear Regression
