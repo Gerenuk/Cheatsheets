@@ -1650,6 +1650,31 @@ Can make predictions for old or a completely new group.
     print "Deleting b:"
     del b
 
+== Whoosh text indexing
+
+    from whoosh.fields import Schema, TEXT, ID
+    from whoosh.index import create_in
+
+    schema = Schema(filename=ID(stored=True), content=TEXT)
+    ix = create_in("~/webpage_whoosh_index/", schema)
+
+    webpage_dir=Path("~/documents")
+    writer=ix.writer()
+    for file in tqdm(list(webpage_dir.glob("*"))):
+        if not file.is_file():
+            continue
+        text=file.open().read()
+        writer.add_document(filename=str(file),
+                            content=text,
+                           )
+    writer.commit()
+
+    from whoosh.query import *
+
+    with ix.searcher() as searcher:
+        results=searcher.search(Term("content", "WORD"))
+        display(results)
+
 == System information
 
     print os.environ.get( "USERNAME" )

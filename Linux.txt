@@ -27,6 +27,14 @@ while(<>){
   CODE}
 
 
+du --max-depth=1 /home/ | sort -n -r
+
+Route stdout and stderr to different files
+https://stackoverflow.com/questions/692000/how-do-i-write-stderr-to-a-file-while-using-tee-with-a-pipe
+command > >(tee -a stdout.log) 2> >(tee -a stderr.log >&2)
+
+
+
 OOM killer:
 * kill max memory for least important process
 * cat /proc/<pid>/oom_score
