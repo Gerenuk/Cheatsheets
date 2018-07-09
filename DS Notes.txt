@@ -951,6 +951,35 @@ https://www.youtube.com/watch?v=XBQzhjiaqhA
 ** different frontend (TF, MXNet, ..) and backends (CPU, GPU, ARM, Torch) possible
 ** challenges: new optimizations, new operators, ...
 
+== Statistical tests
+=== Chi-Square test
+* compare measured values against a known distribution
+* for discrete data (unlike Kolmogorov-Smirnov and Anderson-Darling)
+* for binned data (need cumulative)
+* may depend on bin size (optimal bin width depends on distribution)
+* needs sufficient size for chi^2 to be valid (expected >5 counts)
+* https://www.itl.nist.gov/div898/handbook/eda/section3/eda35f.htm
+
+=== Kolmogorov-Smirnov test
+* compare measured values against continuous, known distribution
+* use (empirical) cumulative distribution
+* exact test
+* critical values indep of distribution
+* only for continuous (but there are adjustments for discrete case)
+* more sensitive in center than tails
+* more powerful alternatives: Anderson-Darling, Cramer Von-Mises
+
+
+=== Anderson-Darling test
+* test if sample comes from specific distribution
+* distribution specific; need to calculate critical values per distribution
+* but more sensitive
+* more weight to tails than K-S
+
+=== Shapiro-Wilk test for normality
+* good
+* thresholds from MC
+
 == Fast template periodogram
 https://www.youtube.com/watch?v=7STeeVnfYFM
 * Fourier-like fitting to signals
