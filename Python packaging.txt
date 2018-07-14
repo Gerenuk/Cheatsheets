@@ -1,0 +1,101 @@
+
+https://packaging.python.org/tutorials/distributing-packages/
+
+Minimum:
+Put package files into a directory called something like the project
+
+Create setup.py
+from setuptools import setup
+
+setup(
+name="tableprofiler",
+version="0.1.0",
+description="TableProfiler to detect all occuring cell content text patterns and exceptions to those",
+author="Anton Suchaneck",
+author_email="anton.suchaneck@volkswagen.de",
+classifiers=[
+"Development Status :: 3 - Alpha",
+"Programming Language :: Python :: 3",
+"Programming Language :: Python :: 3.6",
+],
+packages=["tableprofiler"],
+include_package_data=True,
+install_requires=["jinja2", "ipython", "pandas"],
+python_requires=">=3.6",
+)
+
+Install global command line commands with option
+entry_points={ "console_scripts": [ "tableprofiler=tableprofiler:command_line" ] }
+
+Add MANIFEST.in file if you have non-py files to be shipped:
+include tableprofiler/templates/*
+(also need `include_package_data=True` option in setup.py)
+
+Create (pure) wheel with `python setup.py bdist_wheel` into directory /dist
+(first install `conda install wheel`)
+
+-----
+setup.py file:
+
+    global setup() function
+
+setup.cfg file:
+
+    ini file with defaults for setup.py
+
+README.rst:
+
+    goal of project (rst or CommonMark format; see https://packaging.python.org/tutorials/distributing-packages/#description long_description_content_type)
+
+MANIFEST.in:
+
+    when files that are not automatically included (by default https://docs.python.org/3/distutils/sourcedist.html#specifying-the-files-to-distribute)
+
+LICENSE.txt:
+
+    often without license, cannot be distributed legally
+
+<packagename>:
+
+    use package name as one directory
+
+setup() kwargs:
+
+    name=".." (letters, digits, _, -, .), start&end with alphanum; comparison case insense; runs of special chars as equal (treated as "special char block")
+    version="1.2.0" (see https://packaging.python.org/guides/single-sourcing-package-version/#single-sourcing-the-version if you want to use version in code, but not duplicate)
+        semantic versioning prefered (https://packaging.python.org/tutorials/distributing-packages/#choosing-a-versioning-scheme)
+    description="short"
+    long_description="long"
+    long_description_content_type="text/x-rst" or "text/markdown" (CommonMark)
+    url=".."
+    author=".."
+    author_email=".."
+    license=".."
+    classifiers=[..] https://packaging.python.org/tutorials/distributing-packages/#classifiers
+    keywords=".."
+    project_urls={..:..}
+    packages=find_packages(..)   https://packaging.python.org/tutorials/distributing-packages/#packages
+    install_requires=[..]
+    python_requires=".."  (if only certain Python versions)
+    package_data={...}   (additional files)
+    data_files=[...]   (when data files outside of packages; e.g. rel to sys.prefix)
+    scripts ->rather use console_scripts
+    py_modules=[..]  (list single file modules that are to be included)
+    entry_points={...}   (named entry points for dynamic discovery services and plugins?)
+    entry_points={"console_scripts": [..]}   (register to script interfaces
+    test_suite=...; for testing
+
+For more on testing see: https://blog.ionelmc.ro/2014/05/25/python-packaging/
+
+Editable/Development mode: pip install -e .
+
+
+= Packaging
+Need to create a source distribution with python setup.py sdist
+Can also create a wheel ("pure" wheel when pure Python; "universal" if also Py2 supported; "platform" wheel if extensions)
+Install pip install wheel
+Run python setup.py bdist_wheel
+
+= PyPI
+* create account in PyPI
+* use `twine upload dist/*`

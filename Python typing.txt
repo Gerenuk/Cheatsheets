@@ -1,0 +1,48 @@
+Type: set of values and set of functions that can be applied
+Subtype: less values possible, more functions possible
+<var> = <subtypevar> possible (type(var) has more values; type(subtypevar) has more function)
+
+Note that List[int] cannot be subtype of List[float] since appending float only works for latter
+
+Gradual Subtyping:
+* by introducing "is-consistent-with" relation (not transitive)
+* var_a = val_a allowed iff val_a consistent with var_a
+* t1 subtype if t2 => t1 consistent with t2
+* adding type "Any"; Any consistent with *; * consistent with Any
+
+Building block:
+Union[t1, t2, ...]: subtype of at least one ti
+Optional[t1]=Union[t1, None]
+Tuple[t1, t2,..]: same length and all subtypes
+Tuple[t1, ...]: variadic, variable length
+Callable[[t1, t2,...], tr]: optional or kwargs not possible
+Callable[..., tr]: only return specified
+(maybe later Intersection[t1, t2,...])
+
+Dict[key_t, val_t]
+List[t]
+re.Pattern[AnyStr], re.Match[AnyStr]
+io:IO[AnyStr], io.TextIO ~ io.IO[str], io.BinaryIO ~ io.IO[bytes]
+collections.abc (but Set is AbstractSet)
+
+Generic type: take argument and returns concrete type; e.g. Iterable
+
+T=TypeVar("T")   # needs same variable name
+class MyClass(Generic[T])
+MyClass[int]
+
+Covariant: Union, FrozenSet[T]
+Invariant: List[T]
+Callable covariant in return type, but contravariant in arguments
+-> choose most general value for parameters and most specific type for return value
+
+TypeVar("T", covariant=True)
+TypeVar("T", contravariant=True)
+Variance is property of generic types though
+
+class MyClass
+    def func(self, other: "MyClass")   # forward references
+
+If default None -> Optional implicit
+
+obj2 = cast(Any, obj1)
