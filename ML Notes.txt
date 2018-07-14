@@ -467,7 +467,7 @@ Box-Plot (by Tukey): plot Median, Q25, Q75, Min, Max; but consider values  x < Q
 
 == Single Linkage Clustering
 
-* canbe done in N^2 with SLINK
+* can be done in N^2 with SLINK
 
 == Support Vector Machines
 * Kernels:
@@ -481,6 +481,17 @@ Box-Plot (by Tukey): plot Median, Q25, Q75, Min, Max; but consider values  x < Q
 
 == Time series
 * hard to beat SARIMAX (e.g. Python https://github.com/tgsmith61591/pyramid)
+
+https://vimeo.com/274421819
+* multi-variate time series
+* to model effects from y on x: use vector for y -> components affect each other
+* Vector Autoregressive Models
+** only for stationary; but sometimes differencing makes stationary
+** if non-stat. but linear combination is stat (co-integration): can do "Vector error correction model")
+** sm.tsa.VARMAX
+* explore: time series itself, histogram of y, ACF, PACF(!)
+* weak stat: first two moments constant (mean, [co]var)
+* LSTM: does not need stationarity
 
 === Learned from Kaggle
 * https://www.youtube.com/watch?v=9Zag7uhjdYo

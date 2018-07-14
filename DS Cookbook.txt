@@ -1014,7 +1014,7 @@ For on-the-fly legend order changes, resort self.lines+self.patches+self.collect
 * will color message by default (not the tag)
 
     import coloredlogs
-    coloredlogs.install(isatty=True)            # isatty to enforce in Jupyter
+    coloredlogs.install(isatty=True, stream=sys.stdout)            # isatty to enforce in Jupyter
 
     import logging
     logger = logging.getLogger(__name__)
@@ -1089,6 +1089,21 @@ For on-the-fly legend order changes, resort self.lines+self.patches+self.collect
     
     datetime = pd.Timestamp(numpydatetime)   # subclass of dt.datetime
 
+== Neural network
+
+=== CoordConv
+* tasks of translating pixel to coordinates (or vice versa): ANN overfit (https://eng.uber.com/coordconv/)
+* -> need CoordConv (also provide coordinates for each conv.)
+* CoordConv only helps a bit for image classification though
+* also less artifacts with GANs
+
+== Time series
+
+=== Rolling linear regression
+
+    N = 5    # order
+    window = np.linspace(-2,4,N)/N
+    y_pred = y.rolling(N).apply(window.dot).shift()
 
 == Sympy
 

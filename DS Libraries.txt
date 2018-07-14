@@ -110,9 +110,15 @@
 
 * https://pypi.python.org/pypi/xfork[xfork]: Using a Lazy Proxy object, submit CPU-bound tasks to processes and IO-bound tasks to threads
 
+=== Weld
+
+* express operations (Numpy, Pandas, Spark) in intermediate repr which is first optimized
+* Grizzly (Pandas), WeldNumpy
+
 == Data libraries
 
 * https://python-lenses.readthedocs.io/en/latest/tutorial/intro.html[Lenses]: Query/modify nested Python data structures
+* glom: access nested data; error/exception treatment
 
 
 == REP (Yandex)

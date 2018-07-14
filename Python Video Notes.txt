@@ -1631,6 +1631,14 @@ https://www.youtube.com/watch?v=c-I0md_3fbQ
 * centralized: single point of failure
 * event sourcing: other concept
 
+== Snakemake
+* config is actually Python file
+* job submission to many backends
+* does scheduling to optimize resources
+* good wildcard system
+* multiple outputs
+
+
 == Models
 * try RepeatedKFold with DummyClassifier to see spread
 
