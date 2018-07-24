@@ -13,6 +13,8 @@ VPN, HTTPS not secure for NSA
 Secure: PGP, Truecrypt, Zoho Email, OTR chat
 Need 8 words password for 128bit blocks
 
+Check Wifi Channels: sudo linssid
+
 perl -ne 'CODE'
 while(<>){CODE}
 

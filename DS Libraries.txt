@@ -110,6 +110,14 @@
 
 * https://pypi.python.org/pypi/xfork[xfork]: Using a Lazy Proxy object, submit CPU-bound tasks to processes and IO-bound tasks to threads
 
+==== Vaex
+* https://vaex.io/[Vaex]: Lazy Out-of-Core DataFrames for Python
+* large data, memory-mapped for speed
+* lazy expressions instead of eager
+* with plotting
+* bin_by instead of group_by
+* can also work on remote data
+
 === Weld
 
 * express operations (Numpy, Pandas, Spark) in intermediate repr which is first optimized

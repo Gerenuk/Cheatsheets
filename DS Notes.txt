@@ -1007,6 +1007,19 @@ https://www.youtube.com/watch?v=XBQzhjiaqhA
 * only for continuous (but there are adjustments for discrete case)
 * more sensitive in center than tails
 * more powerful alternatives: Anderson-Darling, Cramer Von-Mises
+* the statistics (max diff between cumulative distr) is a distance metric!
+* -> but "saturates" at 1 -> better Earth moves distance
+
+=== Earth movers distance
+* distance between distributions (better than KS for anomalous distances)
+* in 1D: area between CDFs; also on quantiles
+* same as Wasserstein 1-distance
+* -> can also do p-th Wasserstein distances (power p)
+* Cramér-von Mises distance: p-th power of CDF distance
+
+=== Distances
+* divergence: only non-negative and 0 for equal
+* MLE = min. KL-divergence
 
 
 === Anderson-Darling test

@@ -222,7 +222,7 @@ Other dimension properties:
 
 [cols="m,d"]
 |===
-| [tools=["hover"]]                         |
+| [tools=["hover", "box_zoom"]]             |
 | [width=.. height=..]                      | In pixels
 | [show_legend=False]                       |
 | [legend_position="right"]                 |
@@ -349,6 +349,7 @@ http://holoviews.org/user_guide/Dimensioned_Containers.html[Dimensioned containe
 * are ordered
 * keys can be more complex examples with name, type, unit
 * can transform, sample, reduce, collapse into elements
+* somehow passing a Pandas Series as value to hv.Curve caused problems with .overlay
 
 === Selecting elements by key
 

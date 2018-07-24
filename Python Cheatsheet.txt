@@ -11,6 +11,8 @@
 | locale.setlocale(locale.LC_ALL, "German") |
 | a != b                                    | XOR for bool
 | @contextlib.contextmanager                | Use on function; "yield" for body
+| contextlib.suppress(*excs)                |
+| contextlib.redirect_stdout(target)        |
 | cls.__bases__                             | Base classes
 | PYTHONUNBUFFERED=x                        | "python -h"
 | PYTHONIOENCODING=utf8:surrogateescape     |

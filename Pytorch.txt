@@ -32,6 +32,7 @@
 = Variables
 
 * Variables: for computational graph to enable autodiff
+* in newer Pytorch just use tensor?
 
 |===
 | v.data                                    | Initial tensor
@@ -89,6 +90,13 @@ For more complex models subclass:
 | Variable(.., requires_grad=False?)        | Disable for current, but keep for children
 | Variable(.., volatile=True?)              | Deprecated in 0.4? Disable for current and children
 |===
+
+== Freeze layers
+
+    model.conv.weight.requires_grad=False
+    model.conv.bias.requires_grad=False
+
+    optimizer = SGD(filter(attrgetter("requires_grad"), model.parameters()))    # without this there will be an error
 
 == Training process
 
