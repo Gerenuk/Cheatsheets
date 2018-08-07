@@ -40,6 +40,7 @@
 | obj.__set_name__(self, owner, name)       | Descriptor can now know the variable name
 | breakpoint()                              | General breakpoint (Py3.7)
 | if (match := ..)                          | Assignment expression (Py3.8)
+| open(os.devnull, "w")                     |
 |===
 
 == Forgotten
@@ -297,6 +298,8 @@ https://docs.python.org/3/library/re.html#regular-expression-syntax[Python Regex
 [cols="m,d"]
 |===
 | [^\W\d_]                                  | for alpha only
+| (?<!                                      | Negative look-behind
+| (?!                                       | Negative look-ahead
 | (?:                                       | non capturing
 | (?i)                                      | ignore case (see also options for more)
 | (?<name>                                  | named group
@@ -313,6 +316,7 @@ https://docs.python.org/3/library/re.html#regular-expression-syntax[Python Regex
 | re.X                                      | ignore whitespace and comments after (for readability)
 |===
 
+* could not find clear performance benefit of `(?:`
 * difference between matching and searching
 * can provide index to offset match but matching itself will be anchored
 * -> useful for lexers (can still use ^ for beginning of line)
@@ -604,6 +608,11 @@ send() function restarts generator and also returns new value like next()
 * Division not so fast, but Newtons algorithm can help
 * int infinite precision
 * repr(float_num) is shortest string which when converted to float returns original value -> str version and exact numeric value is bijection; before it was longer (http://stackoverflow.com/questions/28493114/precision-of-reprf-strf-printf-when-f-is-float/28493269[since Python 3.1])
+
+== Programming quality
+
+`radon mi *.py` to measure maintainability class http://radon.readthedocs.io/en/latest/intro.html
+But does not measure function length etc. Didn't find any better https://github.com/mre/awesome-static-analysis.
 
 == Extended features
 

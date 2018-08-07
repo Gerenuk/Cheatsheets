@@ -25,11 +25,146 @@
 * for the default encryption keys (not user managed) Amazon has root keys
 * "CloudTrail" tracks all accesses (even if US gov)
 * Key Management Service KMS: best to "bring-your-own-key"
-* has HSM anc CloudHSM for security
+* has HSM and CloudHSM for security
 * but AWS account user can always read everything (unless you do separate AWS account and share key?)
 * you can disable certain feature in AWS account by Amazon, so that even account user cannot change ("Organisation" restriction)
 * "Config": e.g. can set alert for misconfiguration
 * consulting support usually from partners and not Amazon
+
+* Region:
+** regulatory scope
+** has multiple availability zones
+* Marketplace: third parties can also offer services
+
+== Terminology
+
+* AMI: Amazon Machine Images
+** can spawn multiple instances from on AMI
+** placed into Virtual Private Cloud (in multipe AZ)
+* EBS: Elastic Block Storage
+* S3: Object storage
+* VPC:
+** can reserve elastic public IPs
+** default VPC: automatically assigned network and subnets
+** but usually build own VPC
+* Servers:
+** M3 ... M5: General purpose
+** C3 ... C5: Compute optimized
+** P2, P3, G2: GPU enabled
+** X1, R3, R4: Memory optimized; X1 TBs of RAM (e.g. HANA)
+** even FPGA instance
+** I3, D2: Storage and IO optimized
+** Elastic Compute Units as performance(?)
+** "large": whole physical machine
+** https://www.ec2instances.info/
+** newest generation has better cost/performance ratio
+** default: On-Demand; Linux: per seconds
+** Reserved Instances: upfront price, lower hourly rate
+** Spot Instances: bid for capacity in EC2; for unused capacity; runs while your price > spot price (can save a lot); can also update spot price; can also manage "Spot fleets": define what you want, e.g. cost-optimized;
+ mostly the customers terminate spot
+* everything on Hypervisor:
+** custom XEN; also new Nitro (only 1% overhead to bare-metal)
+** EBS: attached or not; but only to one instance; can also store data
+** EFS: can attach to multiple instances
+** when loading: booted from EBS volume
+** terminate: by default any root volume (EBS) deleted; unless special setting done
+* EC2 security groups: by default everything denied; define in-/out-bound
+* interact with EC2:
+** on Linux SSH key pairs
+** on Windows: random admin password,...
+** public key automatically available on launch
+** http:/.../latest/meta-data
+** private IP; public IP; when reboot public IP often changes (can set it to be static; or DNS with Route53)
+* Web Identity Federation, SSO: connect to existing company user directory
+
+== Login
+
+* Ireland cheaper
+
+== Networking
+
+* EIP: Elastic IP
+* VPC: over multiple AZ
+*! Subnet: always in only one AZ (hence not resilience)
+* IP consideration:
+** consider connectivity to on-premise
+** consider future AWS region expansions
+** CIDR: cannot be modified after created (IP structure?)
+** VPC can be between /16 and /18
+* Security Groups:
+** IP, Protocol (HTTP), L4 (TCP), Port (443), Action (Allow)
+** think about in/out
+** stateful; response allowed(?)
+** fine grained
+* NACL:
+** default all allowed
+** stateless
+** subnet level
+** coarse grained, at least fallback
+** IP, TCP/UDP based
+* Routing rules
+** "Public subnet": what will be shown to Internet through gateway
+** "Private subnet": only internally visible; but talk to internet via NAT gateway (need on in each subnet, i.e. AZ)
+* Virtual Private Gateway: connect to customer gateway; IPSEC tunnels
+* Direct Connect: another method to connect to customer; direct leased line; direct connect provider; physical connection (so best to add VPN on top)
+* Elastic Load Balancer (ELB)
+** for internal or external requests
+** mainly for stateless
+* VPC endpoints:
+** service like S3 are through internet by default
+** create VPC endpoints on VPC to privately talk to Amazon services
+** even third party services possible (e.g. AppDynamics)
+**! need VPC for S3 or otherwise will go through NAT and create cost
+** Gateway: target for a specified route; for S3 and DynamoDB
+** Interface: elastic network interface with private IP
+** VPC Peering: connection between different VPCs (even diff AWS accounts); [alternative "Private Link" since dont need to update route tables and works for overlapping CIDR ranges; less management overhead]
+* Recap: VPC, Subnets, Route Tables, Gateways, Security, VPC endpoints, NAT Gateway, Peering, Create instances
+
+== Route53
+* managed DNS, health-check options
+* could have multiple versions of application
+* or depending on health check
+* decide by latency, geo location, weighted round robin; but not much else from user
+* also private DNS in VPC
+
+== Storage
+* Block Storage: array of unrelated blocks; e.g. NTFS, Unix ZFS
+* File Storage: file serving system
+* Object Storage: key-value; metadata; policy-based
+* EBS (per instance), EFS (share across instances), EC2 Instance Store (usually for data which is only useful with that running instance; lost when instance lost; can be faster than EBS), S3 - Simple Storage Service (key, path), Glacier (archival, cold data), Storage/File Gateway, Snowball (transfer data, send hardware with data, for large transfers), Snowmobile (truck with data, very large data, 100PB)
+* hot: S3, warm: S3 IA (backup, file sharing), cold: Glacier (0.4c/GB/mo)
+* Glacier: multiple retrieval options
+
+=== EBS
+* Elastic Block Storage
+* Network attached block device
+* EBS only at one instance; multiple EBS at one instance
+* can be attached to different instance
+* usually unformatted block devices (need to format with filesystem)
+* unlimited capacity; can extend on the fly
+* easy to scale
+* designed to be 5 nines availability
+* redundant storage across multiple AZs
+* low-latency SSD possible
+* Stripe multiple volume for higher I/O
+* backups: snapshots (stored on S3; only stores difference), copy snapshots across AZ
+* IOPS: slower when limit reached
+* SSD: storage 10c/GB/month; IO free
+* SSD provisioned: (better GP2 striping?); IO also costs; more predictable performance
+* 500MB/s throughput
+
+=== S3
+* pay or exactly what you use
+* standard: 2.3c/GB/mo
+* infrequent access: 1.25c/GB/mo + data retrieval costs
+* resource level IAM permissions, bucket policies, ACLs
+* static website hosting
+* Athena (Presto) can directly query on it
+* object tagging, lifecycle policies
+* S3 analytics: find what is frequently accessed
+* S3 inventory: list of what is stored
+* S3 CloudWatch metrics
+* simple to create a website
 
 == Usual application structure
 * VPC (e.g. from templates)
@@ -59,10 +194,31 @@
 == AWS Lambda
 * only charged by call
 
+== EMR
+
+* Elastic Map-Reduce
+* on-demand Hadoop Cluster with Spark, JupterHub, etc
+
 == Sagemaker
 * machine learning notebooks and more?
 
-== Spot instances?
-
 == Cloud Customdian
 * ?
+
+== AWS Security
+* AWS Artifacts: get security certificates and reports
+* status.aws.amazon.com
+* images get updated, but still better update yourself
+* envelope encrypting: master key encrypts the lower keys and stores them next to data
+* after deleting keys: still kept for 30days
+* own keys not put on disk
+* no matter who accesses key (government): always documented in CloudTrail
+
+=== Identity and Access Management (IAM)
+* not for user management
+* for AWS resource access
+* root only for billing; create service with specific users only
+* temporary security credentials with lifetime possible
+
+== Trusted Advisor
+* security etc suggestions

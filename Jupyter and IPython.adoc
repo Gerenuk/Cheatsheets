@@ -7,6 +7,9 @@
 [cols="m,d"]
 |===
 | %debug                                    | Debug exception (call this after it occured)
+| %debug --breakpoint FILE:LINE             |
+| %%black                                   | Format code (from `pip install blackcellmagic`)
+| from IPython.core.debugger import set_trace | Set trace for debugging
 | %xmode verbose                            | Show variables in traceback lines
 | %load script.py                           | Load code of script into cell
 | %store _var_                              | Store variable (to where?)
@@ -202,6 +205,7 @@ Maybe javascript in HTML output
   div.prompt {display:none} +
   </style>                                      | Remove prompt
 | ~/.local/share/jupyter                        |
+| nbstripout ...                                | Strip output cells (e.g. if large notebook; from pip install)
 |===
 
 * If pickling error in Jupyter while using autoreload, try re-import
@@ -328,3 +332,9 @@ To suppress code cells use a template with content
 and run
 ::
     ipython nbconvert --to html --template ./template.tpl notebook.ipynb
+
+First write out kernel spec to location:
+ipython kernel install --prefix /tmp
+
+Next install spec:
+jupyter kernelspec install /tmp/share/jupyter/kernels/python3

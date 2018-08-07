@@ -13,6 +13,8 @@ VPN, HTTPS not secure for NSA
 Secure: PGP, Truecrypt, Zoho Email, OTR chat
 Need 8 words password for 128bit blocks
 
+If arrow keys, pos1 etc do not work on login -> shell was /bin/sh -> change shell with `sudo chsh -s /bin/bash anton`
+
 perl -ne 'CODE'
 while(<>){CODE}
 
