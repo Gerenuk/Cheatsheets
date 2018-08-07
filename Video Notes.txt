@@ -1180,3 +1180,13 @@ https://www.youtube.com/watch?v=PILhp3bX9gk
 
 == Google Production Environment
 * https://www.youtube.com/watch?v=dhTVVWzpc4Q
+
+== GDPR
+* https://www.youtube.com/watch?v=PwlNjmC5J70
+* if you write notes, but do not file them, it's not critical
+* automated decision making cannot use special category data (beliefs, sex, race, ...)
+* to anonymized data all this does not apply (also need no purpose)
+* assume attacker has also accees to other data
+* only Germany has specific right of explanation(?)
+* only about natural people
+

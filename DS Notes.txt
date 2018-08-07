@@ -88,6 +88,16 @@ I then fitted a weighted regression (weighted the most recent observations the m
 
 I took the lagging N components from the full time series (N=8 for the winning submission, which was selected arbitrarily) as features, then each of the 10 prediction times and 39 pollutant measures as targets. I then trained 390 Random Forests over the entire training data, one for each predicted offset time-pollutant combination. The Random Forest parameters were selected so that the models would be quick to train. https://github.com/benhamner/Air-Quality-Prediction-Hackathon-Winning-Model[code]
 
+== Geographical
+
+=== Uber H3 grid
+https://eng.uber.com/h3/
+* better buckets (not coordinates)
+* smooth gradients?
+* hexagons: since cannot jump across corner and have sqrt(2) distance (if time is discrete); for hexagons all neighbors same distance away (there are no corner neighbors)
+* just harder to sub-divide hexagons into hexagons (some corner of lower level will be outside higher level)
+* whole earth tiled: use projection to icosahedron; tile with hexagons; just need pentagons at icosahedron corners
+
 
 == Whats wrong with convolutional nets
 http://techtv.mit.edu/collections/bcs/videos/30698-what-s-wrong-with-convolutional-nets
@@ -997,6 +1007,19 @@ https://www.youtube.com/watch?v=XBQzhjiaqhA
 * only for continuous (but there are adjustments for discrete case)
 * more sensitive in center than tails
 * more powerful alternatives: Anderson-Darling, Cramer Von-Mises
+* the statistics (max diff between cumulative distr) is a distance metric!
+* -> but "saturates" at 1 -> better Earth moves distance
+
+=== Earth movers distance
+* distance between distributions (better than KS for anomalous distances)
+* in 1D: area between CDFs; also on quantiles
+* same as Wasserstein 1-distance
+* -> can also do p-th Wasserstein distances (power p)
+* Cramér-von Mises distance: p-th power of CDF distance
+
+=== Distances
+* divergence: only non-negative and 0 for equal
+* MLE = min. KL-divergence
 
 
 === Anderson-Darling test
@@ -1168,6 +1191,8 @@ http://www.ipam.ucla.edu/abstract/?tid=14548&pcode=DLT2018
 * Bengio: gradual disentangling manifolds
 * limitation of backprop: relies on infinitesimal representations; but very deep nets yield too sharp non-linearities; also not biologically plausible
 * idea: neurons try to predict future value and also match past; observation also clamped
+<<<<<<< HEAD
+=======
 
 == Reinforcement learning
 

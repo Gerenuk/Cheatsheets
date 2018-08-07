@@ -50,9 +50,21 @@
 | scipy.stats.probplot(x, plot=plt)          | Probability quantile plot https://docs.scipy.org/doc/scipy/reference/generated/scipy.stats.probplot.html[Ref]
 |===
 
+== Faceted plotting
+
+    %output size=150
+    %opts Curve {+framewise +axiswise } [tools=["hover", "box_zoom"]]
+    hm=hv.HoloMap({kdims:hv.Curve()})
+    (hm                              # Holomap
+       .overlay(dims1)               # in same plot
+       .layout(dims2).cols(..)       # different plots
+    )                                # remaining variables will be slider
+
 == Plot correlation
 
     sns.heatmap(df.corr())
+
+    df.corr().style.background_gradient("bwr")   # Table format
 
 == Regression and Fitting
 
@@ -61,22 +73,22 @@
 ==== Scikit-learn Linear Regression
 
     from sklearn import linear_model
-    
+
     model=linear_model.LinearRegression()
-    
+
     model.fit(np.reshape(x, (len(x),1)),y)
     print(model.intercept_, model.coef_)
 
 ==== Statsmodels Linear Regression
 
     import statsmodels.api as sm
-    
+
     X = sm.add_constant(x)
-    
+
     model = sm.OLS(y,X).fit()
     coef=model.params                       # intercept last
     model.summary()                          # print exhaustive summary of statistics
-    
+
     y_pred = model.predict(X)
 
     coef_confs = res.conf_int()
@@ -88,7 +100,7 @@ The specific OLSResults adds `get_influence`, `outlier_test`, `el_test` (emp.lik
 ==== Numpy Linear Regression
 
     X = np.vstack([x, np.ones(len(x))]).T
-    
+
     coef, residuals, rank, singular_values = np.linalg.lstsq(X, y)
 
 ==== Numpy Linear Regression
@@ -114,7 +126,7 @@ lingress(x) if Nx2 array
 === Robust regression
 
     X=sm.add_constant(X)
-    
+
     model=sm.RLM(y, X, M=sm.robust.norms.HuberT())
     res=model.fit()
     coef=res.params
@@ -259,7 +271,7 @@ F-test to compare models that are _nested_. Generally cross-validation also migh
 
     from pathlib import Path
     import os, sys
-    
+
     project_dir=Path.home().joinpath("Projects/Name")               # Python 3.5
     sys.path.append(str(project_dir.joinpath("scripts/lib")))       # add to PYTHONPATH
 
@@ -304,6 +316,12 @@ F-test to compare models that are _nested_. Generally cross-validation also migh
 ** https://matplotlib.org/examples/color/colormaps_reference.html[Set1]
 ** https://bokeh.pydata.org/en/latest/docs/reference/palettes.html[Category10]
 ** https://jiffyclub.github.io/palettable/cartocolors/qualitative/#bold_10[Palettable Cartocolors Bold10]
+* Matplotlib Color:
+** RGB, RGBA tuple, hex string
+** float as string for grayscales
+** "rgb cymk w", X11 colorname, "xkcd:sky blue" (xkcd names), "tab:blue" (Tableau)
+** "C1", "C2", ... `axes.prop_cycle` colors
+** all case-insensitive apart from "C1"
 
 [col="m,d"]
 |===
@@ -323,6 +341,16 @@ F-test to compare models that are _nested_. Generally cross-validation also migh
             print(f"Failed {name} due to {e}")
 
 
+=== Choose colormaps
+
+|===
+| sns.diverging_palette(..)                 | Choose diverging palette with custom end colors
+| sns.choose_colorbrewer_palette("diverging")   | Choose one of color brewer palettes
+| sns.choose_diverging_palette()            | Interactive choice from custom end colors
+|===
+
+* use with `%matplotlib inline`
+
 == Data Sources
 
 [col="m,d"]
@@ -335,7 +363,7 @@ F-test to compare models that are _nested_. Generally cross-validation also migh
 | patsy.demo_data(*"pqr")                   | Generated data. "a-m" categorical, "p-z" numerical http://patsy.readthedocs.io/en/latest/API-reference.html#patsy.demo_data[Ref]
 | imblearn.datasets.fetch_datasets()[".."]  | http://contrib.scikit-learn.org/imbalanced-learn/stable/datasets/index.html[Ref]
 | imblearn.datasets.make_imbalance(X, y, ratio) | Make data imbalanced
-| sklearn.datasets.load_*() +               
+| sklearn.datasets.load_*() +
 | sklearn.datasets.fetch_*()                | Small sample of standard datasets http://scikit-learn.org/stable/modules/classes.html#module-sklearn.datasets[Ref]
 | sklearn.datasets.load_sample_image(name)  | Load "china.jpg" or "flower.jpg" http://scikit-learn.org/stable/modules/generated/sklearn.datasets.load_sample_image.html#sklearn.datasets.load_sample_image[Ref]
 | sklearn.datasets.mldata_filename(name)    | Convert data name to mldata.org filename http://scikit-learn.org/stable/modules/generated/sklearn.datasets.mldata_filename.html#sklearn.datasets.mldata_filename[Ref]
@@ -358,18 +386,18 @@ F-test to compare models that are _nested_. Generally cross-validation also migh
 === Reduce multiple conditions
 
     functools.reduce(lambda x,y:x & y, [..])
-    
+
 === Binning
 
    [..] = np.digitize(x, bins=[..])            # bins[i-1] <= x < bins[i]; 0 or len(x) if beyond bounds
-   
+
    hist, bin_edges = np.histogram(x, bins)
    # bins = "auto"    -> good allround for plotting
    # weights = [..]
    # density = True   -> integral over range is 1
-   
+
    np.histogramdd(..)   # Multidimensional
-   
+
 === Search in list
 
    np.searchsorted(..)
@@ -424,7 +452,7 @@ http://pandas.pydata.org/pandas-docs/stable/cookbook.html
 |===
 
 === Selecting columns
-   
+
     df.filter(like="_min", axis=1)    # also regex possible
 
 === Pipelines
@@ -440,21 +468,21 @@ http://pandas.pydata.org/pandas-docs/stable/cookbook.html
      .mask(cond, other=nan)                      # replace by other where cond is true; return same shape
      .query(expr)
     )
-    
+
 === Sort within part of group
 
     dfgr_sort = dfgr["var"].groupby(level=0, group_keys=False).apply(lambda x: x.order())
-    
+
 === Find all correlates
 
-	df.corr().unstack().sort_values(ascending=False)
-	
+    df.corr().unstack().sort_values(ascending=False)
+
 But also includes self-pairs.
 
 === Sort then take first for groups
 
     df.sort_values(..).groupby(.., as_index=False).first()
-    
+
 === Groupby like itertools
 
     df.A.groupby((df.A != df.A.shift())
@@ -470,32 +498,32 @@ But also includes self-pairs.
                   kind="hex", size=10,
                   gridsize=100, bins="log", mincnt=1, cmap="viridis",
                   )
-   
+
 === Groupby and index
 
    catidxs, bins = pd.cut(df, bins=.., retbins=True, labels=False, include_lowest=True)
    df.groupby(bins[catidxs])...
 
    pd.cut(s).apply(attrgetter("left"))
-   
+
 http://stackoverflow.com/questions/17050202/plot-timeseries-of-histograms-in-python
-    
+
 === Mask values
 
     df["newcol"] = np.where(cond, then_val, else_val)
     df.where(df_mask, new_val)
-       
+
 === Window functions
 
     s.resample("D").max().rolling(window=5).max()
     s.rolling("5D").max()
-    
+
     s.rolling(..).apply(func)
-                       
+
     def flatindex(df):
         df.columns=df.columns.map("_".join)
         return df
-                       
+
     df1=(df
         .set_index("time")
         .groupby("cat")
@@ -529,7 +557,7 @@ https://pandas.pydata.org/pandas-docs/stable/cookbook.html[Pandas Cookbook] exam
         return np.sum((x-y)**2)
 
     nbrs = NearestNeighbors(n_neighbors=4, algorithm='ball_tree', metric='pyfunc', func=mydist)
-    
+
 == Spark
 
 === Window operations
@@ -538,15 +566,15 @@ http://spark.apache.org/docs/latest/api/python/pyspark.sql.html#pyspark.sql.Wind
 
     from pyspark.sql.window import Window
 
-	window=(Window
-	        .orderBy(*cols)
-	        .partitionBy(*cols)
-	        .rowsBetween(start, end)
-	        .rangeBetween(start, end)  # by value?
-	       )
-	
+    window=(Window
+            .orderBy(*cols)
+            .partitionBy(*cols)
+            .rowsBetween(start, end)
+            .rangeBetween(start, end)  # by value?
+           )
+
     df.withColumn("newcol", F.sum("col").over(window))
-    
+
 Special values for range: `Window.unboundedPreceding`, `Window.unboundedFollowing`, `Window.currentRow`.
 
 Previous customer value
@@ -558,16 +586,16 @@ Previous customer value
 
     from pyspark.sql.functions import udf, col
     from pyspark.sql.types import StringType
-    
+
     udf_func=udf(my_func, StringType())
     df1=df.withColumn(udf_func(col("col")))
-    
+
 === Cumulative sum
 
     from pyspark.sql.window import Window
-    
+
     df.withColumn("cumul", F.sum("vals").over(Window.orderBy(F.desc("col_sort))))
-    
+
 === Top examples in groups
 
     from pyspark.sql.window import Window
@@ -578,12 +606,12 @@ Previous customer value
      .withColumn("rank", F.rank().over(Window.partitionBy("part_col")
                                              .orderBy("order_col")))
     )
-    
-  
+
+
 === Multiple values into UDF
 
     udf(..)(F.struct(df[..], df[..]))
-    
+
 
 == Scikit-learn
 
@@ -592,37 +620,37 @@ Previous customer value
     from sklearn.ensemble import RandomForestClassifier
     from sklearn.model_selection import train_test_split
     from sklearn.metrics import auc, roc_curve
-    
+
     X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.3)
-    
+
     clf=RandomForestClassifier(n_estimators=300)
-    
+
     clf.fit(X_train, y_train)
-    
+
     y_pred=clf.predict(X_test)
-    
+
     fpr, tpr, thresh = roc_curve(y_test, y_pred)
     auc(fpr, tpr)
-	
+
 === Pipeline
 
     p=sklearn.pipeline.Pipeline([("trans1", t1), ("trans2", t2), ("pred", pred)])
     p.get_params("pred__C")
-    
+
     sklearn.pipeline.FeatureUnion([("pred1", p1), ("pred2", p2)], transformer_weights=[w1, w2], n_jobs=1)
-    
+
     make_pipeline([t1, t2, pred])  # make pipeline, names automatic
     make_union([p1, p2]) # make union, names automatic
-	
+
 === Write tree to PDF
 
-    from sklearn.externals.six import StringIO  
-    import pydot 
-    dot_data = StringIO.StringIO() 
-    tree.export_graphviz(clf, out_file=dot_data) 
-    graph = pydot.graph_from_dot_data(dot_data.getvalue()) 
-    graph.write_pdf("iris.pdf") 
-    
+    from sklearn.externals.six import StringIO
+    import pydot
+    dot_data = StringIO.StringIO()
+    tree.export_graphviz(clf, out_file=dot_data)
+    graph = pydot.graph_from_dot_data(dot_data.getvalue())
+    graph.write_pdf("iris.pdf")
+
 == Seaborn
 
 === Heatmap
@@ -649,9 +677,9 @@ For example with `dtidx.astype(int)` to map time.
             x_axis_label="..",
             x_range=(a,b),
             )
-   
+
    p.line(x=.., y=.., legend="..")
-   
+
    output_notebook()
    show(p)
    # save(p)
@@ -660,7 +688,7 @@ For example with `dtidx.astype(int)` to map time.
 
     def ticker():   # no argument, since `tick` will be available
             return "{}".format(tick)
-            
+
     p.xaxis.formatter = FuncTickFormatter.from_py_func(ticker)
 
 
@@ -683,7 +711,7 @@ For example with `dtidx.astype(int)` to map time.
                     )
     p = figure(tools=[hover])
     p.circle("x", "y", source=source)
-    
+
 Tooltips can also be a HTML string. Special variables like "$color[hex]:fill_color"
 
 * Shift for multi-select
@@ -691,24 +719,24 @@ Tooltips can also be a HTML string. Special variables like "$color[hex]:fill_col
 
 
     tooltips=[('Col1:', '@col1'), ('Col2:', '@col2')]
-	p = Scatter(.., tooltips=tooltips) 
+    p = Scatter(.., tooltips=tooltips)
 
 
 === Twin axis
 
-	p.extra_y_ranges={"abc":Range1d(..,..)}
-	p.circle(.., y_range_name="abc")
-	p.add_layout(LinearAxis(y_range_name="abc"), "left")
-	
+    p.extra_y_ranges={"abc":Range1d(..,..)}
+    p.circle(.., y_range_name="abc")
+    p.add_layout(LinearAxis(y_range_name="abc"), "left")
+
 === Matplotlib compatibility
-	
-	from bokeh import mpl
-	sns.violinplot(...)
-	show(mpl.to_bokeh())
-	
+
+    from bokeh import mpl
+    sns.violinplot(...)
+    show(mpl.to_bokeh())
+
 Relies on `mplexporter`. Will be better when Matplotlib adopts native JSON.
-	
-   
+
+
 == Matplotlib
 
 === Annotate Bar plot
@@ -725,137 +753,54 @@ Relies on `mplexporter`. Will be better when Matplotlib adopts native JSON.
 
 === Set color of bar in bar-plot
 
-	barlist=plt.bar([1,2,3,4], [1,2,3,4])
-	barlist[0].set_color('r')
-	
-=== Set data position and format    
-    
-	ax.xaxis_date()
-	ax.xaxis.set_major_locator(mpl.dates.MonthLocator())
-	ax.xaxis.set_major_formatter(mpl.dates.DateFormatter('%Y-%m-%d'))
-	
+    barlist=plt.bar([1,2,3,4], [1,2,3,4])
+    barlist[0].set_color('r')
+
+=== Set data position and format
+
+    ax.xaxis_date()
+    ax.xaxis.set_major_locator(mpl.dates.MonthLocator())
+    ax.xaxis.set_major_formatter(mpl.dates.DateFormatter('%Y-%m-%d'))
+
 === Clip color in colorbar
 
-                
-	cmap.set_bad(color="..")
-	
-	cmap.set_under(color="..")
-	plot(..., cmap=cmap, vmin=1e-10)
-	
+
+    cmap.set_bad(color="..")
+
+    cmap.set_under(color="..")
+    plot(..., cmap=cmap, vmin=1e-10)
+
 === Hexbin with dates
 
-	ax.set_aspect("equal")
-	ax.hexbin(mpl.dates.date2num(df.a), mpl.dates.date2num(df.b), gridsize=20)
-	ax.xaxis_date()
-	ax.yaxis_date()
-	ax.xaxis.major.formatter.scaled[1.0] = "%Y-%m-%d"
-	ax.yaxis.major.formatter.scaled[1.0] = "%Y-%m-%d"
-	
+    ax.set_aspect("equal")
+    ax.hexbin(mpl.dates.date2num(df.a), mpl.dates.date2num(df.b), gridsize=20)
+    ax.xaxis_date()
+    ax.yaxis_date()
+    ax.xaxis.major.formatter.scaled[1.0] = "%Y-%m-%d"
+    ax.yaxis.major.formatter.scaled[1.0] = "%Y-%m-%d"
+
 === Increase Figure size
 
-	zoom = 2
-	w, h = fig.get_size_inches()
-	fig.set_size_inches(w * zoom, h * zoom)
-	
-	dpi = fig.get_dpi()   # This will get dpi that is set matplotlibrc
-	fig.savefig("test.jpg", dpi=dpi*2)
-	
+    zoom = 2
+    w, h = fig.get_size_inches()
+    fig.set_size_inches(w * zoom, h * zoom)
+
+    dpi = fig.get_dpi()   # This will get dpi that is set matplotlibrc
+    fig.savefig("test.jpg", dpi=dpi*2)
+
 === Print all color names
 
-	for name, hex in matplotlib.colors.cnames.iteritems(): # print all color names
-	    print(name, hex)
+    for name, hex in matplotlib.colors.cnames.iteritems(): # print all color names
+        print(name, hex)
 
 === Fix midpoint of colormap
 
 Midpoint of colormap (unless use vmin, vmax)
 
-	from numpy import ma
-	from  matplotlib import cbook
-	
-	class MidPointNorm(Normalize):    
-	    def __init__(self, midpoint=0, vmin=None, vmax=None, clip=False):
-	        Normalize.__init__(self,vmin, vmax, clip)
-	        self.midpoint = midpoint
-	
-	    def __call__(self, value, clip=None):
-	        if clip is None:
-	            clip = self.clip
-	
-	        result, is_scalar = self.process_value(value)
-	
-	        self.autoscale_None(result)
-	        vmin, vmax, midpoint = self.vmin, self.vmax, self.midpoint
-	
-	        if not (vmin < midpoint < vmax):
-	            raise ValueError("midpoint must be between maxvalue and minvalue.")       
-	        elif vmin = vmax:
-	            result.fill(0) # Or should it be all masked? Or 0.5?
-	        elif vmin > vmax:
-	            raise ValueError("maxvalue must be bigger than minvalue")
-	        else:
-	            vmin = float(vmin)
-	            vmax = float(vmax)
-	            if clip:
-	                mask = ma.getmask(result)
-	                result = ma.array(np.clip(result.filled(vmax), vmin, vmax),
-	                                  mask=mask)
-	
-	            # ma division is very slow; we can take a shortcut
-	            resdat = result.data
-	
-	            #First scale to -1 to 1 range, than to from 0 to 1.
-	            resdat -= midpoint            
-	            resdat[resdat>0] /= abs(vmax - midpoint)            
-	            resdat[resdat<0] /= abs(vmin - midpoint)
-	
-	            resdat /= 2.
-	            resdat += 0.5
-	            result = ma.array(resdat, mask=result.mask, copy=False)                
-	
-	        if is_scalar:
-	            result = result[0]            
-	        return result
-	
-	    def inverse(self, value):
-	        if not self.scaled():
-	            raise ValueError("Not invertible until scaled")
-	        vmin, vmax, midpoint = self.vmin, self.vmax, self.midpoint
-	
-	        if mpl.cbook.iterable(value):
-	            val = ma.asarray(value)
-	            val = 2 * (val-0.5)  
-	            val[val>0]  *= abs(vmax - midpoint)
-	            val[val<0] *= abs(vmin - midpoint)
-	            val += midpoint
-	            return val
-	        else:
-	            val = 2 * (val - 0.5)
-	            if val < 0: 
-	                return  val*abs(vmin-midpoint) + midpoint
-	            else:
-	                return  val*abs(vmax-midpoint) + midpoint
-
-=== Plot histogram
-
-    width=2
-    hist=np.histogram(data, bins=np.arange(min(data),max(data)+3,width))
-    plt.bar(hist[1][:-1], hist[0]/sum(hist[0]), width=width*0.9)
-
-=== Plot KDE density    
-
-    density=scipy.stats.gaussian_kde(data)
-    x=np.linspace(min(data),max(data),100)
-    plt.plot(x,density(x)*width)
-
-=== Midpoint colormap
-
-Midpoint of colormap
-(unless use vmin, vmax)
-
     from numpy import ma
     from  matplotlib import cbook
 
-    class MidPointNorm(Normalize):    
+    class MidPointNorm(Normalize):
         def __init__(self, midpoint=0, vmin=None, vmax=None, clip=False):
             Normalize.__init__(self,vmin, vmax, clip)
             self.midpoint = midpoint
@@ -870,7 +815,90 @@ Midpoint of colormap
             vmin, vmax, midpoint = self.vmin, self.vmax, self.midpoint
 
             if not (vmin < midpoint < vmax):
-                raise ValueError("midpoint must be between maxvalue and minvalue.")       
+                raise ValueError("midpoint must be between maxvalue and minvalue.")
+            elif vmin = vmax:
+                result.fill(0) # Or should it be all masked? Or 0.5?
+            elif vmin > vmax:
+                raise ValueError("maxvalue must be bigger than minvalue")
+            else:
+                vmin = float(vmin)
+                vmax = float(vmax)
+                if clip:
+                    mask = ma.getmask(result)
+                    result = ma.array(np.clip(result.filled(vmax), vmin, vmax),
+                                      mask=mask)
+
+                # ma division is very slow; we can take a shortcut
+                resdat = result.data
+
+                #First scale to -1 to 1 range, than to from 0 to 1.
+                resdat -= midpoint
+                resdat[resdat>0] /= abs(vmax - midpoint)
+                resdat[resdat<0] /= abs(vmin - midpoint)
+
+                resdat /= 2.
+                resdat += 0.5
+                result = ma.array(resdat, mask=result.mask, copy=False)
+
+            if is_scalar:
+                result = result[0]
+            return result
+
+        def inverse(self, value):
+            if not self.scaled():
+                raise ValueError("Not invertible until scaled")
+            vmin, vmax, midpoint = self.vmin, self.vmax, self.midpoint
+
+            if mpl.cbook.iterable(value):
+                val = ma.asarray(value)
+                val = 2 * (val-0.5)
+                val[val>0]  *= abs(vmax - midpoint)
+                val[val<0] *= abs(vmin - midpoint)
+                val += midpoint
+                return val
+            else:
+                val = 2 * (val - 0.5)
+                if val < 0:
+                    return  val*abs(vmin-midpoint) + midpoint
+                else:
+                    return  val*abs(vmax-midpoint) + midpoint
+
+=== Plot histogram
+
+    width=2
+    hist=np.histogram(data, bins=np.arange(min(data),max(data)+3,width))
+    plt.bar(hist[1][:-1], hist[0]/sum(hist[0]), width=width*0.9)
+
+=== Plot KDE density
+
+    density=scipy.stats.gaussian_kde(data)
+    x=np.linspace(min(data),max(data),100)
+    plt.plot(x,density(x)*width)
+
+=== Midpoint colormap
+
+Midpoint of colormap
+(unless use vmin, vmax)
+
+    from numpy import ma
+    from  matplotlib import cbook
+
+    class MidPointNorm(Normalize):
+        def __init__(self, midpoint=0, vmin=None, vmax=None, clip=False):
+            Normalize.__init__(self,vmin, vmax, clip)
+            self.midpoint = midpoint
+
+        def __call__(self, value, clip=None):
+            if clip is None:
+                clip = self.clip
+
+            result, is_scalar = self.process_value(value)
+
+            self.autoscale_None(result)
+            vmin, vmax, midpoint = self.vmin, self.vmax, self.midpoint
+
+            if not (vmin < midpoint < vmax):
+                raise ValueError("midpoint must be between maxvalue and minvalue.")
             elif vmin == vmax:
                 result.fill(0) # Or should it be all masked? Or 0.5?
             elif vmin > vmax:
@@ -887,16 +915,16 @@ Midpoint of colormap
                 resdat = result.data
 
                 #First scale to -1 to 1 range, than to from 0 to 1.
-                resdat -= midpoint            
-                resdat[resdat>0] /= abs(vmax - midpoint)            
+                resdat -= midpoint
+                resdat[resdat>0] /= abs(vmax - midpoint)
                 resdat[resdat<0] /= abs(vmin - midpoint)
 
                 resdat /= 2.
                 resdat += 0.5
-                result = ma.array(resdat, mask=result.mask, copy=False)                
+                result = ma.array(resdat, mask=result.mask, copy=False)
 
             if is_scalar:
-                result = result[0]            
+                result = result[0]
             return result
 
         def inverse(self, value):
@@ -906,14 +934,14 @@ Midpoint of colormap
 
             if mpl.cbook.iterable(value):
                 val = ma.asarray(value)
-                val = 2 * (val-0.5)  
+                val = 2 * (val-0.5)
                 val[val>0]  *= abs(vmax - midpoint)
                 val[val<0] *= abs(vmin - midpoint)
                 val += midpoint
                 return val
             else:
                 val = 2 * (val - 0.5)
-                if val < 0: 
+                if val < 0:
                     return  val*abs(vmin-midpoint) + midpoint
                 else:
                     return  val*abs(vmax-midpoint) + midpoint
@@ -945,10 +973,10 @@ Midpoint of colormap
 
     from mpl_toolkits.basemap import Basemap
     import matplotlib.cm as cm
-    
+
     m = Basemap(projection='robin',lon_0=0,resolution='c')
     x, y = m(reg['longitude'],reg['latitude'])
-    
+
     figure(figsize=(15,15))
     m.drawcoastlines(linewidth=0.25)
     m.drawcountries(linewidth=0.25)
@@ -1024,7 +1052,7 @@ Use my
 * will color message by default (not the tag)
 
     import coloredlogs
-    coloredlogs.install(isatty=True)            # isatty to enforce in Jupyter
+    coloredlogs.install(isatty=True, stream=sys.stdout)            # isatty to enforce in Jupyter
 
     import logging
     logger = logging.getLogger(__name__)
@@ -1081,30 +1109,45 @@ Use my
     from pandas.tseries.offsets import CDay
     cdays=CDay(holidays=["2016-01-01"])
     cdays.rollforward(dt).to_pydatetime()
-    
+
 === Month days
 
-    weekday, days_in_month = calendar.monthrange(year, month) 
-    
+    weekday, days_in_month = calendar.monthrange(year, month)
+
 === Business days
 
     busdaycal = np.busdaycalendar(holidays=[..])
-    
+
     busday_diff = np.busday_cnt(start_date, end_date, busdaycal=busdaycal)
-    
+
     end_date = np.busday_offset(start_date, busday_diff, "forward", busdaycal=busdaycal)
-    
+
     from pandas.tseries.offsets import BMonthEnd
     offset=BMonthEnd()
     offset.rollforward(date).to_pydatetime()
-    
-    
+
+
 === Numpy datetime
 
     datetime = dt.datetime.utcfromtimestamp((numpydatetime - np.datetime64("1970-01-01T00:00:00Z"))/np.timedelta(1, "s"))
-    
+
     datetime = pd.Timestamp(numpydatetime)   # subclass of dt.datetime
 
+== Neural network
+
+=== CoordConv
+* tasks of translating pixel to coordinates (or vice versa): ANN overfit (https://eng.uber.com/coordconv/)
+* -> need CoordConv (also provide coordinates for each conv.)
+* CoordConv only helps a bit for image classification though
+* also less artifacts with GANs
+
+== Time series
+
+=== Rolling linear regression
+
+    N = 5    # order
+    window = np.linspace(-2,4,N)/N
+    y_pred = y.rolling(N).apply(window.dot).shift()
 
 == Sympy
 
@@ -1238,7 +1281,7 @@ To install
 
     ##### Map version
     @view.parallel()
-    def square(x):                  
+    def square(x):
         return x**2
 
     res = square.map(data)      # Split into num_engines and started only *once*
@@ -1356,28 +1399,28 @@ To install
 
 * however note that `testmod` will recursively inspect for attribute existence. this will break for `colorful` since it's attributes trigger special behaviour
 
-    
+
 == SQL in Python
 
     from sqlalchemy import *
     eng=create_engine("mysql+pymysql://root:password@localhost")
-	eng=create_engine("sqlite:///:memory:")
-	conn=eng.connect()
-	
-	from sqlalchemy import create_engine
-	engine = create_engine('sqlite:///:memory:', echo=True)
-	conn = engine.connect()
-	conn.execute(...)
-		
-	import pymysql
-	conn=pymysql.connect(host="localhost", user="root", passwd="passwd")
-	cur=conn.cursor()
-	cur.execute("select * from db.tbl")
-	fields=list(map(itemgetter(0),cur.description))
-	for row in cur.fetchall():
-	    ...
-	conn.commit() # after writing
-	conn.close()
+    eng=create_engine("sqlite:///:memory:")
+    conn=eng.connect()
+
+    from sqlalchemy import create_engine
+    engine = create_engine('sqlite:///:memory:', echo=True)
+    conn = engine.connect()
+    conn.execute(...)
+
+    import pymysql
+    conn=pymysql.connect(host="localhost", user="root", passwd="passwd")
+    cur=conn.cursor()
+    cur.execute("select * from db.tbl")
+    fields=list(map(itemgetter(0),cur.description))
+    for row in cur.fetchall():
+        ...
+    conn.commit() # after writing
+    conn.close()
 
     conn = sqlite3.connect('example.db')
     result=conn.execute("...")
@@ -1396,7 +1439,7 @@ To install
 SQLAlchemy: removes column names parts before a dot due to bugs in the SQLite driver as a workaround use
 
     res = conn.execution_options(sqlite_raw_colnames=True).execute("select * from test")
-    
+
 or
 
     eng = create_engine("sqlite://", execution_options={"sqlite_raw_colnames": True})
@@ -1572,19 +1615,19 @@ http://nbviewer.jupyter.org/github/fonnesbeck/multilevel_modeling/blob/master/mu
         mu_a = Normal('mu_a', mu=0., tau=0.0001)
         sigma_a = Uniform('sigma_a', lower=0, upper=100)
         tau_a = sigma_a**-2
-        
+
         # Random intercepts
         a = Normal('a', mu=mu_a, tau=tau_a, shape=len(set(county)))
         # Common slope
         b = Normal('b', mu=0., tau=0.0001)
-        
+
         # Model error
         sigma_y = Uniform('sigma_y', lower=0, upper=100)
         tau_y = sigma_y**-2
-        
+
         # Expected value
         y_hat = a[county] + b * floor_measure
-        
+
         # Data likelihood
         y_like = Normal('y_like', mu=y_hat, tau=tau_y, observed=log_radon)
 
@@ -1608,7 +1651,7 @@ Or varying different:
         mu_b = Normal('mu_b', mu=0., tau=0.0001)
         sigma_b = Uniform('sigma_b', lower=0, upper=100)
         tau_b = sigma_b**-2
-        
+
         # Model intercept
         a = Normal('a', mu=0., tau=0.0001)
         # Random slopes
@@ -1620,15 +1663,15 @@ Or varying different:
 
 
     with Model() as varying_intercept_slope:
-        # Priors    
+        # Priors
         mu_a = Normal('mu_a', mu=0., tau=0.0001)
         sigma_a = Uniform('sigma_a', lower=0, upper=100)
         tau_a = sigma_a**-2
-        
+
         mu_b = Normal('mu_b', mu=0., tau=0.0001)
         sigma_b = Uniform('sigma_b', lower=0, upper=100)
         tau_b = sigma_b**-2
-        
+
         # Random intercepts
         a = Normal('a', mu=mu_a, tau=tau_a, shape=len(set(county)))
         # Random slopes
@@ -1645,7 +1688,7 @@ Or making coefficients be a model of a new variable:
         # County uranium model for slope
         gamma_0 = Normal('gamma_0', mu=0., tau=0.0001)
         gamma_1 = Normal('gamma_1', mu=0., tau=0.0001)
-        
+
         # Uranium model for intercept
         mu_a = gamma_0 + gamma_1*u
         # County variation not explained by uranium
@@ -1661,16 +1704,16 @@ Or making coefficients be a model of a new variable:
 
 For contextual effects/correlations among levels (correlation between individual-level variables and group residuals) include group average (here: for intercept)
 
-    with Model() as contextual_effect:        
+    with Model() as contextual_effect:
         ...
         # County uranium model for slope
         gamma_0 = Normal('gamma_0', mu=0., tau=0.0001)
         gamma_1 = Normal('gamma_1', mu=0., tau=0.0001)
         gamma_2 = Normal('gamma_2', mu=0., tau=0.0001)
-        
+
         # Uranium model for intercept
         mu_a = gamma_0 + gamma_1*u + gamma_2*xbar[county]
-        
+
         # County variation not explained by uranium
         eps_a = Normal('eps_a', mu=0, tau=tau_a, shape=len(set(county)))
         a = Deterministic('a', mu_a + eps_a[county])

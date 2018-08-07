@@ -15,6 +15,9 @@ Need 8 words password for 128bit blocks
 
 If arrow keys, pos1 etc do not work on login -> shell was /bin/sh -> change shell with `sudo chsh -s /bin/bash anton`
 
+Check Wifi Channels: sudo linssid
+
+
 perl -ne 'CODE'
 while(<>){CODE}
 
