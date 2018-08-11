@@ -1,3 +1,7 @@
+Disable formatting for parts of the code:
+Settings/Editor/Code Style/Formatter control
+-> use `# @formatter:off` comments around block
+
 Searching:
 * classes/files/symbols: see Navigate menu
 * Class names

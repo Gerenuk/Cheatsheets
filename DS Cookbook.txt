@@ -323,6 +323,11 @@ F-test to compare models that are _nested_. Generally cross-validation also migh
 ** "C1", "C2", ... `axes.prop_cycle` colors
 ** all case-insensitive apart from "C1"
 
+[col="m,d"]
+|===
+| plt.cm.get_cmap("viridis", N)             | Get discrete colormap (e.g. to see contours in hexbin plots
+|===
+
 === Print Matplotlib colormap names
 
     for name, pal in sns.cm.mpl_cm.cmap_d.items():
@@ -1041,10 +1046,15 @@ For on-the-fly legend order changes, resort self.lines+self.patches+self.collect
 
 === Color logs
 
+Use my
+
+    logger = create_color_logger()
+
 ==== coloredlogs
 
 * https://coloredlogs.readthedocs.io/en/latest/api.html
 * seems OK and featureful; default format not quite what I want
+* does too much?
 * lots of env variables to set default behaviour
 * will color message by default (not the tag)
 
@@ -1070,6 +1080,12 @@ For on-the-fly legend order changes, resort self.lines+self.patches+self.collect
     daiquiri.setup(level="INFO", outputs=[daiquiri.output.STDOUT])
 
     logger = daiquiri.getLogger(__name__)
+
+==== colorlog
+
+* https://github.com/borntyping/python-colorlog
+* just provides formatter and seems sensible
+* also has secondary log colors
 
 
 === File only logging
@@ -1512,11 +1528,27 @@ Return type https://docs.python.org/3/library/subprocess.html#subprocess.Complet
     uchardet
     chardet # (python)
 
+== General Python
+
+    out = io.StringIO()
+    print("TEXT", file=out)
+    val = out.getvalue()            # .read() will be empty
+
 == Terminal color
 
 * https://misc.flogisoft.com/bash/tip_colors_and_formatting
 * https://stackoverflow.com/questions/4842424/list-of-ansi-color-escape-sequences
 * you can display a color overview with `humanfriendly --demo`
+* color names from https://en.wikipedia.org/wiki/X11_color_names[X11] (e.g. use `colorful.darkOrange`)
+
+== Time series
+
+* autocorrelation plots:
+** https://www.statsmodels.org/dev/generated/statsmodels.graphics.tsaplots.plot_acf.html[statsmodels plot_acf]
+** https://www.statsmodels.org/dev/generated/statsmodels.graphics.tsaplots.plot_pacf.html[statsmodels plot_pacf]
+** better than `plt.acorr` and `pandas autocorrelation_plot`
+
+=== Libraries
 
     # https://github.com/timofurrer/colorful (-> will use colorama library for Windows)
     import colorful
@@ -1527,6 +1559,40 @@ Return type https://docs.python.org/3/library/subprocess.html#subprocess.Complet
     #colorful.use_true_colors()
 
     print(f"{colorful.coral(text)}")    # needs str conversion usually
+
+Suggested colors are:
+
+    blue
+    purple
+    lightSlateBlue
+    cornflowerBlue
+    dodgerBlue
+    deepSkyBlue
+    skyBlue
+
+    aquamarine3
+    cyan3
+    lightSeaGreen
+    seaGreen
+    yellowGreen
+    limeGreen
+
+    magenta
+    red
+    hotPink
+    violet
+    plum
+    lightPink
+
+    tomato
+    coral
+    orange
+    gold
+
+image::RGB-txt hand-picked colors.png[/etc/X11/rgb.txt]
+image::RGB-txt best hand-picked colors.png[/etc/X11/rgb.txt]
+
+These color were found in Jupyter light theme. Jupyter dark theme could have some other colors becoming interesting.
 
 * `blessings` did not work with Windows (https://github.com/erikrose/blessings/issues/21[Jira]) due to curses
 * `colorama` seems to be basis for color on Windows
@@ -1674,6 +1740,35 @@ Errors from cross-validation:
 
 Can make predictions for old or a completely new group.
 
+== Regex
+
+=== Character classes
+
+* https://www.regular-expressions.info/refcharclass.html
+* need escaping with backslash: `^-]\`
+* some support subtract classes: `[a-z-[aeiuo]]`
+* some support intersections: `[a-z&&[^aeiuo]]`
+
+|===
+| [:alpha:]                                 |
+| [:^alpha:]                                |
+| [:d:], [:s:], [:w:]                       | digit, space, word
+| [:u:], [:l:]                              | Upper-/lower-case letters
+| \p{...}                                   | POSIX class
+| [[=e=]]                                   | Equivalence class (here all `e` accents)
+|===
+
+=== Special regex
+
+* `\W+ | (?<!\w) \w{1,2} (?!\w)` (ignore whitespace): Matches inverse of long words (use `(...)+` to make it single matches)
+** alternatively `(\b \w{1,2})? (\W+ | $)`
+
+== Pandas cookbook
+
+|===
+| s.str.contains(text, case=False)              | Search for substring (regex) https://pandas.pydata.org/pandas-docs/stable/generated/pandas.Series.str.contains.html[Ref]
+|===
+
 == Write Zipped Files
 
     with gzip.open("test.gz", "wt", newline="") as file:
@@ -1736,7 +1831,9 @@ Can make predictions for old or a completely new group.
     win32api.GetUserNameEx (win32con.NameSamCompatible)
     getpass.getuser()
 
-== Selenium screengrabber
+== Web scraping
+
+=== Selenium screengrabber
 
     from selenium import webdriver
     browser=webdriver.Firefox()
@@ -1746,6 +1843,12 @@ Can make predictions for old or a completely new group.
     links=[e.get_attribute("href") for e in elems]
     browser.quit()
     e.get_attribute("innerHTML")  # if hidden HTML (not visible on page; greyed out in Firebug)
+
+=== Headless browsers
+
+* -> use all with Scrapy
+* Chrome
+* Splash
 
 == Misc
 

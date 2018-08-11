@@ -29,6 +29,11 @@
 * *Supersmoother*
 ** curve smooths with automatic neighbourhood size
 
+== Programming support
+
+* Code Formatter https://github.com/ambv/black[black]: seems to do a good job formatting highly nested structures; black was made to specify PEP8 formatting more clearly and more sensibly
+** seems better than Yapf (some weird indents after function calls and dict keys)
+
 == Scipy
 
 * http://scipy-cookbook.readthedocs.io/index.html[Scipy Cookbook]
@@ -326,6 +331,10 @@
 
 * https://github.com/rsteca/sklearn-deap[Sklearn Deap]
 * evolutionary parameter search for Sklearn
+
+== Jupyter
+
+* https://github.com/pixiedust/pixiedust[PixieDust]: Improve user-experience of Jupyter notebooks with Spark, Python/Scala, Graphical, embedded Apps
 
 == EXCLUDED
 

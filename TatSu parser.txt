@@ -1,0 +1,106 @@
+== General
+
+* pos/neg lookahead, cut element; for hand-crafter optimizations
+* `regex` library used if installed; `colorama` for trace output; `pygraphviz` for diagrams
+* PEG grammar; LL or LR grammar need too many lookahead statements
+
+    model = compile(grammar)
+    ast = model.parse(text)
+
+== Generated parser
+
+* http://tatsu.readthedocs.io/en/stable/use.html#using-the-generated-parser[Doc]
+* can be called as a script
+* `MyLanguageBuffer` handles definitions for whitespace, comments, case-significance
+* `MyLanguageParser`: one method for each grammar rule
+* `MyLanguageSemantics`: one semantic method per grammar rule; receive `ast`, return `ast`
+** `_default()` called if no method matched the rule
+** `_postproc()`: called after each rule
+** pass `MyLanguageBuffer` if special lexical treatment needed (e.g. 80 col)
+
+    from myparser import MyParser
+    parser = MyParser()
+    model = parser.parse(text, rule_name="start", semantics=MySemantics())
+
+== Grammar Syntax
+
+* http://tatsu.readthedocs.io/en/stable/syntax.html[Doc]
+* rule that start with capital letter, do not advance over whitespace
+* http://tatsu.readthedocs.io/en/stable/syntax.html#expressions[Expressions]
+
+    grammar="""
+    @@grammar::CALC
+
+    start
+        =
+        expression $
+        ;
+
+    expression
+        =
+        | addition
+        | subtraction
+        | term
+        ;
+
+    addition
+        =
+        left:expression '+' ~ right:term
+        ;
+
+    subtraction
+        =
+        left:expression '-' ~ right:term
+        ;
+
+    term
+        =
+        | multiplication
+        | division
+        | factor
+        ;
+
+    multiplication
+        =
+        left:term'*' ~ right:factor
+        ;
+
+    division
+        =
+        left:term '/' ~ right:factor
+        ;
+
+    factor
+        =
+        | '(' ~ @:expression ')'
+        | number
+        ;
+
+    number
+        =
+        /\d+/
+        ;
+    """
+
+    model = tatsu.compile(grammar)
+
+    class MySemantics:
+        def number(self, ast):
+            return int(ast)
+
+        def addition(self, ast):
+            return ast.left + ast.right
+
+        def subtraction(self, ast):
+            return ast.left - ast.right
+
+        def multiplication(self, ast):
+            return ast.left * ast.right
+
+        def division(self, ast):
+            return ast.left / ast.right
+
+    result = model.parse("1+2+3", semantics=MySemantics())
+    print("Result", result)
+
+* but better to give individual rules to each operation

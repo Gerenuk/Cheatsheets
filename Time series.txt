@@ -1,0 +1,367 @@
+== Summary
+
+* mostly from https://otexts.org/fpp2/[Forecasting: Principles and Practice (Hyndman, Athanasopoulos)]
+* "stationary": properties do not depend on absolute time (e.g. fixed time seasons; but may have cycles due to dependence on past values)
+* centered moving average will smooth out seasons (e.g. 1/8,1/4,1/4,1/4,1/8)
+* maybe transform data if want to restrict to range (e.g. log for positive values) or variances are changing (e.g. Box-Cox transform)
+** -> remember to do correct back transformation, since with the naive way the mean is biased
+* you may consider modelling effects as additive or multiplicative
+* forecasting with co-integrated features may require special treatment
+* include spike dummy variables for special events
+* you need stationary time series for ARIMA-like models -> use KPSS test -> use difference if small p-value (otherwise variance/interval estimates are incorrect)
+* you can include features (rather than target alone); need stationary, and if differencing ideally difference all the same tiem
+* could include lagged features, if lagged effects reasonable
+* use AICc or CV to choose models (but differencing cannot be found with this since changes data)
+* for ARIMA(p,d,q), if p=0 or q=0: can detect model from behaviour of ACF/PACF plots
+* test residuals:
+** use Ljung-Box test to see if residuals are white noise
+** use AR(1) or Cochrane-Orcutt test to check for autocorrelation in residuals
+** -> if not, you are missing information and may need a better model (more features, transformations, ...)
+* usually prediction intervals are too narrow since many choices not accounted for
+* bagging: do many predictions and average
+
+=== Successful models
+
+* SARIMAX: but does not work if period large (e.g. yearly seasons on weekly data)
+* damped Holt-Winters
+* auto.arima (R): may need to force to search more exhaustively
+* ETS (Error-Trend-Season): non-linear ETS is not ARIMA
+* Seasons could be handled with Fourier terms asciimath:[cos/sin (2*pi*k*t/T)] "harmonic regression"
+* TBATS
+* LSTM, RNN
+* XGB, ANN
+* GARCH
+* Prophet (Facebook)
+* CausalImpact (Google)
+
+=== M4 Forecasting competition summary
+
+* Winner: Smyl from Uber https://www.reddit.com/r/MachineLearning/comments/8tajvh/d_hybrid_rnn_model_wins_m4_forecasting_competition/
+** combination of ETS and RNN
+** excellent prediction interval calibration
+* pure ML was bad; hard to beat baseline
+* other best models mostly classical techniques (after winner 2-6 places only small differences); they often underestimate prediction interval (apart from top 2 winners)
+* helpful to include information from individual series and *whole dataset* (like hierarchical; mb like global trend)
+* damped forecast better than naive linear extrapolation
+* seasonal time series less noisy
+* traditional techniques not so sensitive to amount of data
+
+
+=== Special models
+
+* Hierarchical/grouped models: when want to model parts and whole
+* Vector Autoregression (VAR): when interactions between multiple targets
+* Low integer count prediction: there are special methods for this; e.g. predict non-zero values and time between them
+
+== Plots
+
+* x-axis: month; within month show year development (an total mean for this month, but over years)
+* scatter plot (matrix) of y's
+* autocorrelation with diff lags
+* ACF of residuals
+
+== Tests
+
+* Portmanteau test: test residuals whether they could be white noise
+** Box-Pierce test: sum of h residuals squared; use h=10 for non-seasonal, h=2*season for seasonal, but h<=T/5
+** Ljung-Box test: more accurate than Box-Pierce; chi^2 test
+* Breusch-Godfrey test (Lagrange Multiplier) test for serial correlation: joint hypothesis that there is no autocorrelation in the residuals up to a certain specified order; small p-value -> significant autocorrelation remaining in the residuals.
+
+=== Unit root test for stationarity
+
+* determine whether differencing needed for stationarity
+* KPSS Kwiatkowski-Phillips-Schmid-Shin test: differencing if small p-value
+* also check if seasonal differencing needed
+* with autocorrelation:
+** while coef estimate is still unbiased, it may be off because a feature with predictive power is not in the model
+** (hidden) variance of estimates increased
+** estimated std errors to narrow; all statistics too optimistic
+
+== Autocorrelation
+
+* trend -> ACF drops slowly
+* white noise -> 95% within -+ 2/sqrt(T) [T is length of time series]; if large deviations or too many -> not white noise
+* model still unbiased if autocorrelated residuals, but prediction intervals may be wrong
+* (Durbin-Watson tests for first order autocorrelation only; also does not work if target is reused as future feature; 0: pos 1st autocorr, 2: no 1st autocorr, 4: neg 1st autocorr)
+* AR(1) more powerful test; Cochrane-Orcutt almost same result
+* to fix:
+** add feature
+** change functional form
+
+== Box-Cox transform
+
+* asciimath:[(y^lambda-1)/lambda] (or asciimath:[ln(y)] if asciimath:[lambda=0])
+* best if seasonal variation about equal sizes
+* does not work if asciimath:[y<0]
+* forecasts not sensitive on asciimath:[lambda]; but may have large effects on prediction intervals
+*! not the the back transform gets the mean biased -> needs correction if want to add up results (e.g. aggregate); need forecast variance
+
+== Metrics
+
+* MAE for median
+* RMSE for mean
+* MAPE: mean of percentage error (only makes sense if meaningful zero); heavier weight on negative error
+* (sMAPE: asciimath:[mean(|r_i|*2/(y+hat y)]; not recommended!)
+* MASE mean absolute scaled error: scale errors based on training MAE from a simple forecast (e.g. naive forecasts)
+* Hyndman, R. J., & Koehler, A. B. (2006). Another look at measures of forecast accuracy. International Journal of Forecasting, 22, 679–688.
+
+== Prediction intervals
+
+* https://otexts.org/fpp2/prediction-intervals.html
+* 1 step ahead: stddev about same as that of residuals
+* for basic methods, there are equations (e.g. asciimath:[sigma*sqrt(h)] for naive method)
+* bootstrap method: iteratively cumulate errors
+
+== Selecting features
+
+* https://otexts.org/fpp2/selecting-predictors.html
+* try multiple model versions; e.g. all feature subsets
+* or do backward feature selection; not necessarily best model, but always good model
+* (forward selection if all features are too many)
+* (Adjusted R^2: equivalent to minimizing stderr; selects too many)
+* LOO-CV (fast methods)
+* AIC (for large T same as CV method)
+* AICc: corrected, since for small T selects too many features
+* (BIC: for large T similar to leave-v-out where asciimath:[v=T(1-1/(ln(T)-1)])
+*-> use AIC/CV, in FPP AICc is used
+
+== Exponential smoothing
+
+* average between last observation and previous forecast
+* capture trend and seasonality
+* asciimath:[y_(T+1)=alpha*y_T+alpha(1-alpha)*y_(T-1)+alpha(1-alpha)^2*y_(T-2)+...]
+* need to choose smoothing and initial parameters
+* Holt extended method to allow for trend: forecast/level/trend equation
+* Gardner & McKenzie: added dampening to a flat line (parameter 0.8...0.98)
+* can include seasons
+* forecast by iterating model (and setting unknown errors to zero)
+
+== ARIMA
+
+* capture autocorrelation
+* needs to be stationary
+* cyclic maybe be stationary if depends on on past values and not absolute time
+* ACF:
+** non-stationary: drop slowly, r1 often large and positive
+** stationary: drops quickly
+* stationary -> do difference and Ljung-Box test (want large p value)
+* https://otexts.org/fpp2/MA.html
+* AR: autoregression of target
+* MA: regression on past forecast errors
+* AR theoretically same as MA with large order
+* with some constraints MA model is invertible and also same as AR model with large order; invertible when recent observations more predictive than past(?)
+* for stationary data we coefs are restricted:
+** AR(1): asciimath:[-1<phi_1<1]
+** AR(2): asciimath:[-1<phi_2<1], asciimath:[phi_1+phi_2<1]
+** AR(3): complex restrictions
+* -> linear model on (differenced) target and past prediction errors
+* also includes a constant term
+* ARIMA(p,d,q):
+** order of autoregr.
+** degree of differencing
+** order of moving average
+* with c=0: differencing 0/1/2 will model zero/constant/line
+* with c!=0: differencing 0/1/2 will model mean/line/quadratic
+* for cycles need p>=2; then asciimath:[cos omega = -phi_1(1-phi_2)/(4*phi_2)]
+* sometime possible to tell p and q from ACF/PACF plots
+* PACF is like last coef in AR(k) model
+* finding p/q from ACF/PACF plot:
+**! ACF/PACF plot only help if only one of p>0 or q>0
+** ARIMA(p,d,0): ACF exp decay or sine; PACF spike p, but none beyond (sharp drop)
+** ARIMA(0,d,q): PACF exp decay or sine; ACF spike q, but none beyond (sharp drop)
+* auto.arima in R may need to be force to search more parameters
+* estimation methods complex and different software can give different results
+* AIC can be used to find parameters (has term asciimath:[p+q+bool(c!=0)])
+*! d parameter cannot be found from AIC since it changes data and AIC not comparable
+* auto.arima:
+** https://otexts.org/fpp2/arima-r.html
+** unit root test, minimize AIC, fit MLE
+** d<=2 determined from KPSS test
+** initial (0,0) (2,2) (1,0) (0,1); if d<2: use constant, but also fit (0,0) without constant
+** start from best of initial and vary parameters to find better models
+** `approximation=FALSE` and `stepwise=FALSE` for more search
+* prediction intervals complicating; for stationary models (d=0) they will converge
+*! prediction errors too narrow since variation in parameters, model order, etc not accounted
+* seasonal ARIMA:
+** (0,1): single spike in ACF, decay in PACF
+** (1,0): decay in ACF, single spike in PACF
+* Books:
+** Box, G. E. P., Jenkins, G. M., Reinsel, G. C., & Ljung, G. M. (2015). Time series analysis: Forecasting and control (5th ed). Hoboken, New Jersey: John Wiley & Sons.
+** math background: Brockwell, P. J., & Davis, R. A. (2016). Introduction to time series and forecasting (3rd ed). New York, USA: Springer.
+** alternatie autoarima: Peña, D., Tiao, G. C., & Tsay, R. S. (Eds.). (2001). A course in time series analysis. New York, USA: John Wiley & Sons.
+
+=== ARIMA vs ETS
+
+* linear ETS is special case of ARIMA
+* non-linear ETS no equivalent ARIMA
+* some ARIMA not a ETS
+* all ETS non-stationary, some ARIMA stationary
+* AIC cannot be used to compare ARIMA and ETS because diff model class and diff MLE
+* but could use time series CV to compare
+
+
+== Dynamic regression
+
+* https://otexts.org/fpp2/estimation.html
+* normal linear regression, but let (auto-correlated) error asciimath:[nu] follow an ARIMA model (with white noise error asciimath:[epsilon])
+* cannot just minimize (auto-correlated) asciimath:[nu] since would be biased, statistical tests would be incorrect, AIC would be incorrect, p-values would be too small -> minimize asciimath:[epsilon] from ARIMA model
+*! require that target and all of features are stationary (otherwise coefs will not be consistent)
+* exception for stationarity requirement: co-integrated (linear combination of non-stationary is actually stationary)
+* to keep variable nature, apply same differencing to all of them at once ("model in differences")
+* now only need ARMA model (not ARIMA)
+* to forecast, you also need to predict features (e.g. by assuming past averages)
+* Pankratz, A. E. (1991): "Forecasting with dynamic regression models."
+* Generalization of dynamic regression models, "transfer function models": Box, G. E. P., Jenkins, G. M., Reinsel, G. C., & Ljung, G. M. (2015). "Time series analysis: Forecasting and control" (5th ed)
+
+=== Trend modeling
+
+* options:
+** deterministic trend: constant term in target prediction
+** stochastic trend: using differencing (asciimath:[d=1]) in error model (will have wider prediction intervals; but that may be good because it considers changing trends)
+
+== Seasons with Harmonic regression
+* https://otexts.org/fpp2/dhr.html
+* for long seasonal trends: dynamic regression with Fourier terms often better; especially since ARIMA does not like large periods (24 for hourly just about fine)
+* also differencing daily data on a year ago is just noisy
+* -> use harmonic regression for seasons and ARMA for short-term
+* only drawback is that seasons are assumed to be constant
+
+== Lagged features
+
+* include lagged features if it makes sense (due to delayed effects)
+* choose number of lags by AIC
+
+== Hierarchical/grouped time series
+
+* when target can be split into (hierarchical) categories (e.g. type or region)
+* want "coherent" add up of series
+* there is always: [all-intermediate-level-targets] = [Summing matrix] * [Bottom-level-targets]
+* Wickramasuriya, S. L., Athanasopoulos, G., & Hyndman, R. J. (2018). Optimal forecast reconciliation for hierarchical and grouped time series through trace minimization
+* "Grouped time series": Also independent (crossed) categorisation and not just a single tree
+* bottom-up approach: just predict bottom level and sum
+* top-down approach: predict top level and then predict proportions of categories; may perform well
+* check https://otexts.org/fpp2/top-down.html for more
+* middle-out approach: predict from middle and expand by summing or using proportions
+* generally incoherent forecasts can be made coherent with a "reconciliation matrix"
+* optimal reconciliation matrix: https://otexts.org/fpp2/reconciliation.html; "MinT" approach
+** no top-down approach can be unbiased
+** need to estimate forecast error variance -> use approximations
+* further reading:
+** Gross & Sohl (1990) provide a good introduction to the top-down approaches.
+** The reconciliation methods were developed in a series of papers, which are best read in the following order: Hyndman et al. (2011), Athanasopoulos et al. (2009), Hyndman, Lee, & Wang (2016), Wickramasuriya et al. (2018).
+** Athanasopoulos, Hyndman, Kourentzes, & Petropoulos (2017) extends the reconciliation approach to deal with temporal hierarchies.
+
+== Complex, multiple seasonality
+
+* https://otexts.org/fpp2/complexseasonality.html
+* `msts`, `mstl` classes in R: specify all frequencies
+* or use harmonic regression (include Fourier terms for each frequency asciimath:[T]): asciimath:[sin/cos ((2*pi*k*t/T))]; optimize number of terms by AICc
+* or TBATS model by Livera, Hyndman, Synder: combination of Fourier, exp. smoothing, Box-Cox, automated
+** however prediction intervals often too wide
+** do not allow for features
+* more sophisticated:
+*+ Hyndman, R. J., & Fan, S. (2010). Density forecasting for long-term peak electricity demand. IEEE Transactions on Power Systems, 25(2), 1142–1153.
+** Fan, S., & Hyndman, R. J. (2012). Short-term load forecasting based on a semi-parametric additive model. IEEE Transactions on Power Systems, 27(1), 134–141.
+
+== Vector autoregression (VAR) where bi-directional influence
+
+* target influences features
+* influence cross-terms
+* choose how many variables (choose only few by information criterion) and how many lags to use
+* for co-integrated features use "vector error correction model"
+* predict recursively with 1-step predictions
+* `VARselect()` from R `vars` package select number of lags; Hyndmann suggests BIC (SC) criterions since AIC chooses too many features
+* making cross-influence possible seems raw, but VAR useful when:
+** forecasting a collection of related variables where no explicit interpretation is required
+** testing whether one variable is useful in forecasting another (the basi-s of Granger causality tests);
+** impulse response analysis, where the response of one variable to a sudden but temporary change in another variable is analysed;
+** forecast error variance decomposition, where the proportion of the forecast variance of each variable is attributed to the effects of the other variables
+* Vector ARMA generalization but also more complicating
+
+== Neural networks
+
+* use asciimath:[p] lags and asciimath:[k] nodes in a simple (autoregressive) neural network NNAR(p,k)
+* `nnetar()`
+* since not a stochastic model, no clear prediction intervals -> pick random errors from a distribution while predicting and simulate possible future paths
+
+== Bootstrapping and bagging
+
+* "blocked bootstrap" random sections of remainder time series (i.e. without trend ans season) select and joined together
+* -> measure of forecast uncertainty
+
+== General
+
+* all can be additive or multiplicative
+* remove calendar effects (e.g. number of days in month)
+* forecast variable y: dependent, explained variables
+* predictor variable x: independent, explanatory variable
+* forecast inefficient if residuals autocorrelated or correlated with target
+* could use spike or step function for interventions or changes
+* lagged values can be useful
+* for seasons of period asciimath:[m] could use first Fourier features asciimath:[sin/cos (2*pi*t*k/m)]
+* regression with Fourier terms: "harmonic regression"
+* https://otexts.org/fpp2/regression-matrices.html
+* CV statistics can be calculated directory from hat matrix asciimath:[H=X(X'X)^(-1)X'] with asciimath:[CV=1/T sum (e_t/(1-h_t))^2] where asciimath:[h_t] are diagonal elements of hat matrix [hence not needed to fit many models]
+* when multi-collinearity: coefficient estimates unreliable, relation between features unreliable; for good software not a problem [unless perfect collinearity?]
+* forecast unreliable of new features outside previous range
+* "seasonally adjusted": remove seasonal
+* if season order 4: 2x4 MA (moving average, first 2 then 4) will give weights (1/8,1/4,1/4,1/4,1/8) and hence remove quarterly season; MA is centered here
+* classical decomposition: detrend with MA (m for odd, 2xm for even order season) -> remove averaged curve from original; average out months
+* for monthly/quarterly seasons, some institutions have developed simple averagine methods: https://otexts.org/fpp2/x11.html
+* https://otexts.org/fpp2/stl.html[STL Seasonal and Trend decomposition using Loess]
+* "stationary": when properties do not depend on time (every set of measurements if time invariant distribution)
+* FPP prefers to use AICc for minimization
+* one could plot complex root with unit circle (https://otexts.org/fpp2/arima-r.html) to see how stationary and invertible the model is -> roots close to unit circle may make the model unstable (but many implementations only return well-behaved models)
+* for forecasting: use predicted values as features; use zero for future errors; https://otexts.org/fpp2/arima-forecasting.html
+* forecasting with co-integrated: "Applied time series modelling and forecasting" (Richard Harris and Robert Sollis)
+* almost all model give too narrow(!) prediction intervals since some uncertainty not considered (e.g. ETS 95% may cover only 70%)
+* Bagging: predict many bootstrapped versions and average
+* one could need 13 Fourier terms with asciimath:[2*pi*j*t/52.18] if you have weekly data and yearly seasons
+* for holiday effects use dummy variable (but STL, ETC, TBATS do not allow features) -> rather use dynamic regression models
+* for predicting low integer counts: https://otexts.org/fpp2/counts.html
+** Croston's method: often used, even though not great; predict non-zero values and also length of zero count runs
+** better methods for low count data: Christou, V., & Fokianos, K. (2015). On count time series prediction. Journal of Statistical Computation and Simulation, 85(2), 357–373.
+* to limit forecasts to a range, one could transform them https://otexts.org/fpp2/limits.html (e.g. log for positive counts)
+* if you want to predict aggregates (e.g. 3 month sum when having monthly data), you can just sum, but may need to correct prediction intervals (possible correlations)
+* ETS and ARIMA with differencing allow for condition changes, but dynamic regression models have no evolution
+* think of if you want 1 or multi step forecasts in train/test data
+* missing values can be estimated
+* you could replace outliers with missing values
+* ideally do not use the future information to decide on missing or outlier values
+* more possible time series issues: last chapter of "Principles of business forecasting" (Ord, J. K., Fildes, R., & Kourentzes, N. (2017))
+
+== Models to try
+
+* ETS
+* (S)ARIMA(X)
+* GARCH
+* TBATS
+* Prophet (Facebook)
+* CausalImpact
+* Shallow ANN
+
+== Cookbook
+
+* check ACF of residuals
+** see tests above
+** helpful if normal, for easier prediction intervals
+* residuals correlate with feature -> may need non-linear feature transformation
+* any feature which is not in model correlates with residuals? -> include
+* residuals vs fitted values -> if pattern, then heteroscedacticity and maybe transform target
+* outliers which are "influential observations"?
+* for ARIMA:
+** https://otexts.org/fpp2/arima-r.html
+** plot
+** stabilize variance if needed
+** check stationary with ACF (needs to drop quickly)
+** make stationary by differencing if needed
+** check ACF/PACF if (p,0) or (0,q) model appropriate -> use AICc to find better models
+** check residuals by ACF and Portmanteau test to verify that they are white noise
+* for CV test set you can use business metric again and also different differencing parameters
+
+    from statsmodels.tsa.stattools import kpss
+    p_values = kpss(s)[1]
+    if p_values > 0.05:
+        print("Stationary. Good!")
+
+* alternatively `adfuller(s)[1] < 0.05` wanted (but this test is weaker)
