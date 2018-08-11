@@ -1642,4 +1642,36 @@ https://www.youtube.com/watch?v=c-I0md_3fbQ
 == Models
 * try RepeatedKFold with DummyClassifier to see spread
 
+== pyGAM - powerful, but interpretable
+* https://www.youtube.com/watch?v=XQ1vk7wEI7c
+* pure Python
+* R GAM package really good
+* but Python had no penalized GAMs
+* certainty important (interval)
+* what are individual influences
+* linear models too simples, ML blackbox, ARIMAX just coefs
+* how to choose smoothness and feature selection?
+* GAM > GLM > LM
+* can have interactions
+* GAM = GLM + Splines + Smoothing penalty
+* Spline: Box, Convolve, Convolve,...
+* Splines convolved -> gets more derivatives
+* Splines degree 3 good enough
+* Infinite conv -> would be Gaussian
+* regularization: int 2nd deriv squared
+* fast LOO-CV since linear model
 
+== Pixi.js
+* https://www.youtube.com/watch?v=TcuJILbTPZg
+* makes Canvas and WebGL easier
+* high performance 2D drawing in Jupyter
+
+== Faster Pandas
+* https://www.youtube.com/watch?v=tvmX8YAFK80
+* Pandas only supports Numpy data types (usually same length); or performance bad
+* could use fixed-length strings
+* no null-able ints
+* Pandas 0.23: ExtensionDtype, ExtensionArray; just need basic information to implement a new array type
+* use Arrow (string, date, nullable int, list of, memory chunked,...)
+* fast for loops with Numba
+*

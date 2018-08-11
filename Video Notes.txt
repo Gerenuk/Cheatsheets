@@ -1168,7 +1168,7 @@ https://www.youtube.com/watch?v=_0Wpwj_gvzg
 ** S3A: df.read.option("mergeSchema", "false").parquet("s2a://..")
 ** coalesce changes number of compressed files produced
 ** make Parquet block size = HDFS block size
-** sc.hadoopConfiguration.set("spark.sql.parquet.output.committer.class", "org.apace.spark.sql.parquet.DirectParquetOutputCommitter")
+** sc.hadoopConfiguration.set("spark.sql.parquet.output.committer.class", "org.apache.spark.sql.parquet.DirectParquetOutputCommitter")
 
 
 == OpenFaaS
@@ -1190,3 +1190,8 @@ https://www.youtube.com/watch?v=PILhp3bX9gk
 * only Germany has specific right of explanation(?)
 * only about natural people
 
+== CatBoost
+https://www.youtube.com/watch?v=tG22jrVFKpM
+* builds symmatric trees; helps hyperparam since stable to changes(?)
+* multiple categorical encoding
+* ...

@@ -50,7 +50,7 @@ Use `output_file(.., mode="inline")` to generate file with BokehJS embedded.
 | output_notebook()                         | Activate notebook inline plotting (for convenience in multiple modules)
 | .visible = False                          | All renderers, axes and grids have `.visible = False` to turn off.
 |===
-   
+
 == Creating a figure
 
 [cols="m,d"]
@@ -89,6 +89,7 @@ Use `output_file(.., mode="inline")` to generate file with BokehJS embedded.
 [cols="m,d"]
 |===
 | p.legend.location = "top_left"            |
+| [show_legend=False]                       | to disable
 |===
 
 == Plotting glyphs on figure
@@ -175,7 +176,7 @@ Can use `p.select(..)` to find correct objects.
     renderer = p.circle(..)
     glyph = renderer.glyph
     glyph.size = ..
-    
+
 Selected und unselected glyphs
 
     renderer.selection_glyph = Circle(..)
@@ -184,7 +185,7 @@ Selected und unselected glyphs
 Models interface:
 
     p.add_glyph(data_source, initial_glyph, selection_glyph, nonselection_glyph)
-    
+
 Overlay tools also may have parameters
 
 
@@ -350,14 +351,14 @@ http://bokeh.pydata.org/en/latest/docs/user_guide/tools.html[Userguide Tools]
 
     p = figure(tools="box_select,box_zoom,lasso_select,pan,xpan,ypan,resize,poly_select")
     p = figure(tools=[BoxZoomTool(), ResetTool()])
-    
+
 [cols="m,d"]
 |===
 | box_select                                | Use `dimensions` to select only one dimension
 | lasso_select                              |
 | tap                                       | Tap select single points
 | box_zoom                                  |
-| wheel_zoom, xwheel_zoom, ywheel_zoom      | 
+| wheel_zoom, xwheel_zoom, ywheel_zoom      |
 | zoom_in, xzoom_in, yzoom_in               |
 | zoom_out, xzoom_out, yzoom_out            |
 | reset                                     |
@@ -442,7 +443,7 @@ Support for `bokeh.models.GeoJSONDataSource`.
 |===
 
 == Other snippets
-   
+
 === Adaptive plot size
 
 Plot size can be adaptive with the `responsive` flag. `plot_width` and `plot_height` will still be used for initial aspect ratio. But will not resize smaller than 100px.
@@ -456,7 +457,7 @@ http://bokeh.pydata.org/en/latest/docs/user_guide/notebook.html
     handle=show(p, notebook_handle=True)
     ...
     push_notebook(handle=handle)
-    
+
 See also http://bokeh.pydata.org/en/latest/docs/user_guide/notebook.html#jupyter-interactors for Jupyter interactors.
 
 

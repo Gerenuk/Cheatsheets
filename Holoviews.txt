@@ -153,7 +153,7 @@ Other dimension properties:
   HLine(..)                                 | Line annotation
 | Splice(..)                                |
 | Text(..)                                  |
-| Path(..)                                  |
+| Path([[xy_pairs], ..])                    |
 | Contours(.., level=..)                    |
 | Polygons(..)                              |
 | Bounds((left, bottom, right, top))        | Rectangular box
@@ -326,6 +326,43 @@ Other dimension properties:
 * `Overlay` uses color cycles
 * `Layout` can contain any container except `NdLayout` (see http://holoviews.org/user_guide/Building_Composite_Objects.html[Ref])
 * `Overlay` can only contain `NdLayout`
+
+=== Styling categorical Overlays
+
+You can use `hv.Cycle` to specify properties for options.
+
+    color_cycle = hv.Cycle(['red', 'green', 'blue'])
+    points.options({"Points": {"color" :color_cycle}})
+
+Palettes are continuous. They will normalize and cover whole range, whereas Cycle uses colors one by one.
+
+[cols="m,d"]
+|===
+| hv.Cycle([..])                            | Create cycle
+| hv.Cycle("...")                           | Cycle by name
+| hv.Cycle.default_cycles.keys()            | Names of default cycles
+| hv.Palette("...")                         | Palette by name
+| hv.Palette.colormaps.keys()               | Palette names
+|===
+
+== Colormapping
+
+[cols="m,d"]
+|===
+| cmap=..                                   | Set colormap to use (by name or list of hex/HTML names)
+| cmap={"val":"col",...}                    | Explicit mapping for categoricals
+| color_index=..                            | Declare color_index variable to use (by name or numeric)
+| color_levels=..                           | Discretize colormaps to limited number of levels
+| clipping_colors={"min":.., "max":.., "NaN":..}    | Set color for outside range (default: min=first, max=last, NaN=transparent)
+| hv.plotting.list_cmaps()                  | List colormaps
+| logz=True                                 | Log colorscale
+| symmetric=True                            | Make colors centered at zero
+| colorbar=True                             | Enable colorbar
+|===
+
+* Images and Heatmaps use first vdim as `color_index`
+* Colormaps are hardcoded and taken from matplotlib, bokeh and colorcet
+* Categorical values automatically get legend unless `show_legend=False`
 
 == Dimensioned (dict) containers
 
