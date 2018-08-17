@@ -21,6 +21,7 @@
 * consider ACF and PACF plots
 * check residual for Gauss or autocorrelation
 * maybe some datasets: http://www.statsmodels.org/dev/datasets/index.html
+* negative autocorrelation on monthly data might mean the number or specific weekdays or number of workdays plays a role (monthly aggregate not normalized)
 
 === Stationary
 
@@ -954,6 +955,11 @@ f_order(x1,x2,...)=n!f(x1)f(x2)... if x1<x2<...
 fXj(xj)=(n over j-1,1,n-j) f(xj)F(xj)^ (j-1)*(1-F(xj))^(n-j)
 
 min(exp(l))=exp(n*l)
+
+== QQ Plot
+
+* Interpretation: https://stats.stackexchange.com/questions/101274/how-to-interpret-a-qq-plot
+* Visual test: https://stats.stackexchange.com/questions/111010/interpreting-qqplot-is-there-any-rule-of-thumb-to-decide-for-non-normality/111013#111013
 
 == Polynomial fitting
 * Savitzky-Golay filter

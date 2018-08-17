@@ -1,5 +1,5 @@
 ////
-Status: 0.21
+Status: 0.23.4
 Skipped: Time series, Time deltas
 ////
 
@@ -52,6 +52,7 @@ http://pandas.pydata.org/pandas-docs/stable/io.html
 | pd.*read_fwf*(..)                         | Fixed-width columns
 | pd.*to_csv*(file_or_path)                 |
 | df.*to_string*(..)                        |
+| df.*to_json*(.., orient="table")          | Round-tripable
 | pd.*read_html*(file_or_path)              | Return list of tables
 | df.*to_html*(..)                          |
 | pd.*read_excel*(pd.ExcelFile(..), "Sheet1") | To work with multiple sheets; Also as context manager
@@ -59,6 +60,7 @@ http://pandas.pydata.org/pandas-docs/stable/io.html
 | pd.*to_excel*(_excel_writer_)             |
 | index=False                               | Do not output columns for index
 | merge_cells=False                         | Do not merge cell for hierarchical index
+| _freeze_panes_=...                        |
 | pd.*read_sql_table*(..)                   |
 | pd.*read_sql_query*(..)                   |
 | df.*to_sql*(..)                           |
@@ -587,6 +589,8 @@ http://pandas.pydata.org/pandas-docs/stable/api.html#multiindex[MultiIndex]
 | df.*assign*(newcol=expr,...)              | create a new column and return copy of dataframe; `expr` is series operation or a function on a dataframe (e.g. when no reference to df in chain)
 |===
 
+* `assign` can refer to column names generated earlier in same `assign` (from Python 3.6)
+
 == Merge data sets
 
 [cols="m,d"]
@@ -695,6 +699,7 @@ http://pandas.pydata.org/pandas-docs/stable/api.html#multiindex[MultiIndex]
 | _prefix_set_=".."                         | Separator between prefix and value
 | _drop_first_=True                         | To avoid multi-collinearity
 | _columns_=[..]                            | Specify columns to encode
+| _dtype_=bool                              | dtype for new columns
 | s.*get_dummies*(sep="|")                  | Split each string on sep and return 0/1 encoding; e.g. "a|c" -> 1, 0, 1
 | labels, uniques = pd.*factorize*(s, na_sentinel=-1) | Return labels and the used order
 | _sort_=True                               | do sorting
@@ -811,6 +816,7 @@ http://pandas.pydata.org/pandas-docs/stable/api.html#multiindex[MultiIndex]
 | _keep_=False                              | Drop all duplicates
 | df.*any*()                                | summarize bool result
 | df.*all*()                                |
+| axis=None                                 | Over all axis
 | df.*bool*()                               | get bool value if only this one element is DataFrame or Series
 | df.*any*().*any*() to collapse both axis  |
 | df.*sum*(axis=.., skipna=True, level=..)  | others: mean, quantil; http://pandas.pydata.org/pandas-docs/version/0.15.2/basics.html#descriptive-statistics
@@ -831,6 +837,7 @@ http://pandas.pydata.org/pandas-docs/stable/api.html#groupby
 | _as_index_=False                          | Keep group as normal columns, not index (like SQL)
 | _sort_=False                              | Don't sort (faster than default)
 | _squeeze_=True                            | Reduce dim of return type if possible(?)
+| _observed_=True                           | Use only existing categories for categorical
 | df.groupby(col, _group_keys_=False).apply(lambda x:x[col2])   | Do not generate index for `col` during apply
 | gr.*size*()                               | Size of groups
 | gr.*describe*()                           | Information about groups
@@ -859,6 +866,7 @@ http://pandas.pydata.org/pandas-docs/stable/api.html#groupby
 | pd.*Grouper*(key, level, timefreq)        | to provide more information on how to group http://pandas.pydata.org/pandas-docs/stable/generated/pandas.Grouper.html#pandas.Grouper[Ref]
 | gr.*boxplot*()                            | Get OrderedDict of plots
 | gr.*ngroup*()                             | Number each group http://pandas.pydata.org/pandas-docs/stable/generated/pandas.core.groupby.GroupBy.ngroup.html#pandas.core.groupby.GroupBy.ngroup[Ref]
+| GroupBy.pipe                              |
 |===
 
 * Groupby also accepts Grouper https://pandas.pydata.org/pandas-docs/stable/groupby.html#groupby-specify[Ref]
@@ -894,6 +902,7 @@ http://pandas.pydata.org/pandas-docs/stable/api.html#string-handling
 [cols="m,d"]
 |===
 | str.*cat*(others, sep, na_rep)            | Concat strings
+| _join_=..                                 |
 | str.*contain*(pat)                        | Substring or regex
 | str.*extract*(pat)                        | Extract groups from first regex match
 | str.extract("(?P<colname>...)")           | Use named column (instead of group index)
@@ -1131,6 +1140,7 @@ http://pandas.pydata.org/pandas-docs/version/0.15.2/options.html#list-of-options
 | _method_="time"                           | For time index aware
 | _method_="values"                         | For float index aware
 | _limit_=..                                | Keep NaN that are too far from known values
+| _limit_area_=..                           |
 | s.*reindex*(new_idx).interpolate(method=..)   | Create new values
 | s.*isna*() +
   s.*notna*()                               | Test for NaN, None
@@ -1154,6 +1164,10 @@ http://pandas.pydata.org/pandas-docs/version/0.15.2/options.html#list-of-options
 [cols="m,d"]
 |===
 | pd.Series(.., index=pd.date_range(start, periods=.., freq=..) |
+| index=pd.DatetimeIndex(to.datetime(..), freq="MS")    | Explicit frequency may be important
+| dd.index = pd.DatetimeIndex( +
+    dd.index.values, +
+    freq=dd.index.inferred_freq)            |
 | ts.asfreq("..", method="pad")             | Change frequency; uses date_range and reindex
 | ts.resample("..").mean()                  | Like groupby
 | closed = "right"                          | Which end of interval is closed (when downsampling)
@@ -1179,6 +1193,7 @@ http://pandas.pydata.org/pandas-docs/version/0.15.2/options.html#list-of-options
 | ts.tshift(1)                              | Modifies index
 | pd.to_pydatetime(tsidx)                   | Convert to Python native
 | dtidx.astype(int)                         | Convert to timestamp
+|
 |===
 
 * careful, that `dayfirst=True` is not strict and will silently be inactive if the data format is not allowing it
@@ -1213,6 +1228,7 @@ http://pandas.pydata.org/pandas-docs/version/0.15.2/options.html#list-of-options
 [cols="m,d"]
 |===
 | pd.*date_range*(..)                       | Regular frequency (default daily) date index
+| pd.date_range(.., freq="QS")              | Quarter start range
 | pd.*bdate_range*(..)                      | Business day date index (also custom holiday masks possible)
 | pd.*to_timedelta*(..)                     |
 | pd.*period_range*(..)                     |
@@ -1252,6 +1268,7 @@ http://pandas.pydata.org/pandas-docs/version/0.15.2/options.html#list-of-options
 ** Fast shifting
 ** year/month/.. access
 ** Regularization `snap` and fast `asof` function
+* Timedelta supports `%` and `divmod`
 
 == Visualization
 
