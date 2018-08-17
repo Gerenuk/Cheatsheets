@@ -347,9 +347,16 @@ F-test to compare models that are _nested_. Generally cross-validation also migh
 | sns.diverging_palette(..)                 | Choose diverging palette with custom end colors
 | sns.choose_colorbrewer_palette("diverging")   | Choose one of color brewer palettes
 | sns.choose_diverging_palette()            | Interactive choice from custom end colors
+| hv.plotting.list_cmaps()                  | List all colormaps
 |===
 
 * use with `%matplotlib inline`
+* http://colorcet.pyviz.org/
+* http://holoviews.org/user_guide/Colormaps.html
+
+==== Selected colormaps
+
+* Time plots: "gnuplot"
 
 == Data Sources
 

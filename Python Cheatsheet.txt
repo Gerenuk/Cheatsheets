@@ -16,6 +16,7 @@
 | cls.__bases__                             | Base classes
 | PYTHONUNBUFFERED=x                        | "python -h"
 | PYTHONIOENCODING=utf8:surrogateescape     |
+| PYTHONUTF8=1                              | UTF8 be default everywhere; surrogateescape too
 | @functools.lru_cache                      | last recently used cache
 | str.find()                                | -1 if not found
 | str.index()                               | raises ValueError if not founds
@@ -103,7 +104,7 @@
 | stdev()                                   |
 | s.translate(str.maketrans({"a":"A","b":"B","c":None}))    |
 | s.translate(str.maketrans("ab","AB","c")) | last argument is optional chars to delete
-| str.endswith((s1,s2))			            | true if one of them
+| str.endswith((s1,s2))                     | true if one of them
 | string.ascii_letters                      | "abc...ABC..."
 | str.isdecimal()                           |
 | str.isnumeric()                           |
@@ -112,7 +113,7 @@
 | str.rpartition                            |
 | str.splitlines                            |
 | str.split(sep=None, maxsplit=-1)          |
-| while: ... else: ...		                | one final statement; skipped by "break"
+| while: ... else: ...                      | one final statement; skipped by "break"
 | ContextDecorator                          | to use CM as decorator
 | ExitStack                                 | handle multiple CMs
 | with contextlib.redirect_stdout(f)        |
@@ -138,7 +139,7 @@
 | pprint.pformat(...)                       |
 | print("\u0336"+"\u0336b".join(word))      | Strike-through
 | pprint(..., compact=True)                 | wrap item lists after width only
-| "\x1b[01;29m...\x1b[00m"	                | numbers 29-37 (8 colours)
+| "\x1b[01;29m...\x1b[00m"                  | numbers 29-37 (8 colours)
 |===
 
 == File system
@@ -200,7 +201,7 @@ On Linux no creation time accessible, so use `os.path.getmtime()` or `os.stat().
 
 * array: arrays for numeric values
 * atexit: hook at exit of the interpreter
-* calendar  
+* calendar
 * cmd: command line prompt
 * code: interpreter (e.g. code.interact())
 * cProfile: profiling info
@@ -571,9 +572,9 @@ send() function restarts generator and also returns new value like next()
     g=generator()
     a=g.next()
     b=g.next()
-    g.send(new_next_val)					# talk back to generator
-    g.throw(<exceptiontype>,...)				# raise exception in generator
-    g.close()						# closes generator
+    g.send(new_next_val)                    # talk back to generator
+    g.throw(<exceptiontype>,...)                # raise exception in generator
+    g.close()                       # closes generator
 
 == Enums
 

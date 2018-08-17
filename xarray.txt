@@ -1,0 +1,4 @@
+= General
+
+* DataArray: multi-dim array
+* Dataset: dict-like container of DataArray (database)

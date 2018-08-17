@@ -129,6 +129,8 @@ http://techtv.mit.edu/collections/bcs/videos/30698-what-s-wrong-with-convolution
 
 * tfidf, countvectorizers, word2vec, svd (dimensionality reduction). Stemming, spell checking, sparse matrices, likelihood encoding, one hot encoding (or dummies), hashing.
 
+* for 5MB text, 6 letters context provide enough context for optimal compression
+
 == Sound processing
 
 * Fourier transform, MFCC (Mel frequency cepstral coefficients), Low pass filters
@@ -1132,6 +1134,23 @@ https://www.youtube.com/watch?v=o6HBIGzQfJs
 ** too many products/customers -> utilize similarity
 ** similar features mean similar preferences
 ** parametric models, learn parameters (e.g. Linear Contextual Bandits)
+
+== Ranking
+* XGBoost: YetiRank, PairLogit, QueryCrossEntropy, QuerySoftMax
+
+== CatBoost
+* classif, regr, ranking
+* feat imp, feat interactions
+* SHAP values for per obj feat imp
+* influential documents
+* fast
+* different plots
+* is feat influence significant
+* overfitting detector
+* training monitoring
+* missing features
+* tune: lr, iters, depth, l2_reg, bagging_temp, random_strength
+
 
 == Quantile regression
 * predict v such that P(Y<v|X)=q
