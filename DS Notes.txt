@@ -130,6 +130,14 @@ http://techtv.mit.edu/collections/bcs/videos/30698-what-s-wrong-with-convolution
 
 * for 5MB text, 6 letters context provide enough context for optimal compression
 
+== Hyperparameter tuning
+
+* Gaussian Processes: Interacting parameters
+* Random Forest: Interacting param, Discrete param, Maybe easy config; smac lib
+* Tree-structured Parzen estimator: Discrete param, Easy config; hyperopt lib
+* GP may fail
+* -> use Random Forest
+
 == Sound processing
 
 * Fourier transform, MFCC (Mel frequency cepstral coefficients), Low pass filters

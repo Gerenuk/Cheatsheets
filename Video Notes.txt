@@ -1195,3 +1195,17 @@ https://www.youtube.com/watch?v=tG22jrVFKpM
 * builds symmatric trees; helps hyperparam since stable to changes(?)
 * multiple categorical encoding
 * ...
+
+== UMAP dimensionality reduction
+* https://www.youtube.com/watch?v=nq6iPZVUxZU
+* Matrix factorization: PCA, LFA, GLRM, GloVe, Lin. Autoencoder,...
+* Neighbor Graphs: Laplacian Eigenmap, t-SNE, Isomap, LLE, UMAP,...
+* math theory for graph based approaches
+
+== Few shot learning
+* https://www.youtube.com/watch?v=YDJ9sNCO4u4
+* gradient methods not made for this
+* random initialization bad
+* data set: Omniglot, Mini Imagenet
+* could do: metric based
+*

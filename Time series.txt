@@ -330,6 +330,11 @@
 * ideally do not use the future information to decide on missing or outlier values
 * more possible time series issues: last chapter of "Principles of business forecasting" (Ord, J. K., Fildes, R., & Kourentzes, N. (2017))
 
+== Anomaly detection
+
+* "Time Series Discord" proved to be best; for performance use http://www.cs.ucr.edu/~eamonn/MatrixProfile.html[Matrix Profile]
+* https://www.elen.ucl.ac.be/Proceedings/esann/esannpdf/es2015-56.pdf[LSTM], https://arxiv.org/pdf/1607.00148.pdf[LSTM]
+
 == Models to try
 
 * ETS
