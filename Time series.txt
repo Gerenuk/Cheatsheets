@@ -1,16 +1,18 @@
 == Summary
 
 * mostly from https://otexts.org/fpp2/[Forecasting: Principles and Practice (Hyndman, Athanasopoulos)]
-* "stationary": properties do not depend on absolute time (e.g. fixed time seasons; but may have cycles due to dependence on past values)
 * centered moving average will smooth out seasons (e.g. 1/8,1/4,1/4,1/4,1/8)
 * maybe transform data if want to restrict to range (e.g. log for positive values) or variances are changing (e.g. Box-Cox transform)
 ** -> remember to do correct back transformation, since with the naive way the mean is biased
 * you may consider modelling effects as additive or multiplicative
-* forecasting with co-integrated features may require special treatment
+* forecasting with co-integrated features may require special treatment(?)
 * include spike dummy variables for special events
 * you need stationary time series for ARIMA-like models -> use KPSS test -> use difference if small p-value (otherwise variance/interval estimates are incorrect)
-* you can include features (rather than target alone); need stationary, and if differencing ideally difference all the same tiem
+* you can include features (rather than target alone); in FPP "Dynamic regression models"; basically error term in normal linear regression modelled as ARIMA
+** need stationary, and if differencing ideally difference all the same time
+** do linear regression first and see if residuals really follow an ARIMA process
 * could include lagged features, if lagged effects reasonable
+** check lagged cross-correlation (but see whitening below)
 * use AICc or CV to choose models (but differencing cannot be found with this since changes data)
 * for ARIMA(p,d,q), if p=0 or q=0: can detect model from behaviour of ACF/PACF plots
 * test residuals:
@@ -19,20 +21,75 @@
 ** -> if not, you are missing information and may need a better model (more features, transformations, ...)
 * usually prediction intervals are too narrow since many choices not accounted for
 * bagging: do many predictions and average
+* permanent shocks cannot be estimated from time-series model
+
+=== Whitening
+
+* https://onlinecourses.science.psu.edu/stat510/node/75/
+* determine a model for asciimath:[hat x(t)]
+* apply filter with coef from above model on asciimath:[y] now (filter is operator on left of asciimath:[f(bb"L")(x_t-mu)=epsilon_t])
+* check cross-correlation between asciimath:[x-hat x] and filtered asciimath:[y] to determine good lags
+
+=== Weak stationarity
+
+* properties do not depend on absolute time (e.g. fixed time seasons; but may still have cycles due to dependence on past values)
+* mean, variance and covariances time-independent
+
+=== Feature preparation summary
+
+* include lagged values
+* transform (e.g. Box-Cox) to make variance stable
+* transform (e.g. Log) if want to enforce certain range for target
+* for back-transforms need special correction to make means unbiased!
+* feature selection with AICc or CV possible
+
+=== ARIMA summary
+
+* find out needed order of differencing asciimath:[d]
+** with KPSS test (difference more as long small p-value; AIC not suitable here since data different)
+** KPSS doesn't seem enough -> test with autocorrelation test
+* use AIC or CV to find ARIMAA asciimath:[p] and asciimath:[q] orders; find if including constant
+* test residuals for remaining information (Ljung-Box test)
+
+==== Seasonal ARIMA summary
+
+* usually multiplicative version (lag operators multiplied)
+* use asciimath:[d_s=1] and asciimath:[d<=1] (?) (for asciimath:[d_s=0] seasonal would face away(?))
+* suggested asciimath:[sAR + sMA <= 2] (?)
+
+=== Holt-Winters summary
+
+* make sure to use version with trend and dampening (0.8-0.98)
+* parameter estimation may be tricky/unstable
+
+=== ARIMA with features
+
+* difference target and features equally
 
 === Successful models
 
-* SARIMAX: but does not work if period large (e.g. yearly seasons on weekly data)
+* SARIMAX: but does not work if period large (e.g. yearly seasons on weekly data); weaker of irregular/sparse data
 * damped Holt-Winters
 * auto.arima (R): may need to force to search more exhaustively
+* Pyramid (Python auto-arima)
 * ETS (Error-Trend-Season): non-linear ETS is not ARIMA
-* Seasons could be handled with Fourier terms asciimath:[cos/sin (2*pi*k*t/T)] "harmonic regression"
+* Seasons could be handled with Fourier terms asciimath:[([[cos],[sin]] (2*pi*k*t/T)] "harmonic regression"
 * TBATS
 * LSTM, RNN
 * XGB, ANN
-* GARCH
+* GARCH (when variance follows ARMA process)
 * Prophet (Facebook)
 * CausalImpact (Google)
+* Shallow ANN
+
+==== Model choice
+
+* linear ETS is special case of ARIMA
+* non-linear ETS no equivalent ARIMA
+* some ARIMA not a ETS
+* all ETS non-stationary, some ARIMA stationary
+* harmonic regression or other packages if multiple periods
+* special methods for low-integer counts (e.g. Croston's method; https://otexts.org/fpp2/counts.html[FPP Counts])
 
 === M4 Forecasting competition summary
 
@@ -53,6 +110,43 @@
 * Vector Autoregression (VAR): when interactions between multiple targets
 * Low integer count prediction: there are special methods for this; e.g. predict non-zero values and time between them
 
+== State space models
+
+* http://www.statsmodels.org/dev/statespace.html#module-statsmodels.tsa.statespace
+
+asciimath:[y_t=Z_t alpha_t+d_t+epsilon_t]
+
+asciimath:[alpha_t=T_t alpha_(t-1) +c_t +R_t eta_t]
+
+* Z: endog x states x n_obs (if time-invariant, then no n_obs)
+
+=== AR model as state space models
+
+asciimath:[y_t=[1, 0] alpha_t]
+
+asciimath:[alpha_t=[[phi_1, phi_2],[1 0]] alpha_(t-1) +[[1],[0]] eta_t]
+
+asciimath:[alpha_t=[[y_t],[y_(t-1)]]]
+
+=== Multiplicative seasonal
+
+asciimath:[phi_p(bb"L")bar phi_bar p(bb"L"^s) Delta^d Delta_s^(bar d) * y_t=A(t)+theta_q(bb"L")bar theta_(bar q)(bb"L"^s)*epsilon_t]
+
+where
+
+* asciimath:[phi] are polynomials on the lag operator
+* asciimath:[Delta=1-bb"L"] is differencing operator
+* variables with "bar" are for seasonal component
+* asciimath:[s] is length of season
+* e.g. lag polynomial is asciimath:[phi_(p=2)(bb"L")=1-phi_1 bb"L"-phi_2 bb"L"^2]
+* a asciimath:[p=2] and asciimath:[bar p=1] would after expansion mean asciimath:[y_t=c+phi_1 y_(t-1)+phi_2 y_(t-2)+bar phi_1 y_(t-12)-phi_1 bar phi_1 y_(t-13) - phi_2 bar phi_1 y_(t-14)+epsilon_t]
+
+=== Other
+
+* http://www.statsmodels.org/dev/statespace.html#unobserved-components[Unobserved components]
+* http://www.statsmodels.org/dev/statespace.html#vector-autoregressive-moving-average-with-exogenous-regressors-varmax[VARMAX]
+* http://www.statsmodels.org/dev/statespace.html#dynamic-factor-models[Dynamic factor models]
+
 == Plots
 
 * x-axis: month; within month show year development (an total mean for this month, but over years)
@@ -69,6 +163,7 @@
 
 === Unit root test for stationarity
 
+* unit root: problem in model estimation (?)
 * determine whether differencing needed for stationarity
 * KPSS Kwiatkowski-Phillips-Schmid-Shin test: differencing if small p-value
 * also check if seasonal differencing needed
@@ -87,6 +182,33 @@
 * to fix:
 ** add feature
 ** change functional form
+* if after 1st difference no significant correlations -> random walk
+* PACF: last coef of AR model
+* AR: ACF damped exp + sines; PACF zero after p lags
+* MA: ACF zero after q lags, PACF damped exp + sines
+* ARMA: ACF eventually dominated by AR and then dies out; PACF eventually dominated by MA and the dies out
+
+=== AR autocorrelation
+
+asciimath:[x_t=delta+phi_1 x_(t-1) +w_t]
+
+asciimath:[rho_h=phi_1^h]
+
+* mean and variance finite only when asciimath:[phi_1<1]
+
+=== MA autocorrelation
+
+* ACF has non-zero only at order of MA
+* MA model best seen in ACF
+* invertible if algebraically equivalent to converging (decaying coef) of infinite order AR model
+** from multiple models matching a ACF, choose invertible (http://iacs-courses.seas.harvard.edu/courses/am207/blog/lecture-17.html)
+* invertibility is programmed into time-series software to enable solution
+
+
+==== Partial autocorrelation
+
+* conditional correlation
+* 1st order PACF same as 1st order ACF
 
 == Box-Cox transform
 
@@ -95,6 +217,7 @@
 * does not work if asciimath:[y<0]
 * forecasts not sensitive on asciimath:[lambda]; but may have large effects on prediction intervals
 *! not the the back transform gets the mean biased -> needs correction if want to add up results (e.g. aggregate); need forecast variance
+* you could pick 3 points from the QQ curve and optimize asciimath:[((x+alpha)^lambda-1)/lambda] to make it linear
 
 == Metrics
 
@@ -125,9 +248,22 @@
 * (BIC: for large T similar to leave-v-out where asciimath:[v=T(1-1/(ln(T)-1)])
 *-> use AIC/CV, in FPP AICc is used
 
+== Trend
+
+* estimate trend by smoothing or regression
+* additive (substract trend) or multiplicative (divide trend)
+
 == Exponential smoothing
 
+asciimath:[hat x:(t+1)=alpha x_t + (1-alpha) hat x_t]
+
+asciimath:[hat x_(t+1)=alpha x_t+alpha (1-alpha) x_(t-1)+ alpha (1-alpha)^2 x_(t-2)+...]
+
 * average between last observation and previous forecast
+* same as ARIMA(0,1,1) without a constant -> could fit this and then determine asciimath:[alpha=1+theta_1]
+* double exponential smoothing when trend
+** combine predictions of trend (differences) and level (values)
+** same as ARIMA(0,2,2) without a constant
 * capture trend and seasonality
 * asciimath:[y_(T+1)=alpha*y_T+alpha(1-alpha)*y_(T-1)+alpha(1-alpha)^2*y_(T-2)+...]
 * need to choose smoothing and initial parameters
@@ -140,6 +276,9 @@
 
 * capture autocorrelation
 * needs to be stationary
+* AR: model dependence on past values; momentum, mean reversion
+* AM: model shocks in error; unexpected temporary events
+* ARMA: ignore volatility clustering effects
 * cyclic maybe be stationary if depends on on past values and not absolute time
 * ACF:
 ** non-stationary: drop slowly, r1 often large and positive
@@ -156,10 +295,7 @@
 ** AR(3): complex restrictions
 * -> linear model on (differenced) target and past prediction errors
 * also includes a constant term
-* ARIMA(p,d,q):
-** order of autoregr.
-** degree of differencing
-** order of moving average
+* ARIMA(p,d,q): order of autoregr.,  degree of differencing,  order of moving average
 * with c=0: differencing 0/1/2 will model zero/constant/line
 * with c!=0: differencing 0/1/2 will model mean/line/quadratic
 * for cycles need p>=2; then asciimath:[cos omega = -phi_1(1-phi_2)/(4*phi_2)]
@@ -169,26 +305,68 @@
 **! ACF/PACF plot only help if only one of p>0 or q>0
 ** ARIMA(p,d,0): ACF exp decay or sine; PACF spike p, but none beyond (sharp drop)
 ** ARIMA(0,d,q): PACF exp decay or sine; ACF spike q, but none beyond (sharp drop)
-* auto.arima in R may need to be force to search more parameters
 * estimation methods complex and different software can give different results
 * AIC can be used to find parameters (has term asciimath:[p+q+bool(c!=0)])
 *! d parameter cannot be found from AIC since it changes data and AIC not comparable
-* auto.arima:
-** https://otexts.org/fpp2/arima-r.html
-** unit root test, minimize AIC, fit MLE
-** d<=2 determined from KPSS test
-** initial (0,0) (2,2) (1,0) (0,1); if d<2: use constant, but also fit (0,0) without constant
-** start from best of initial and vary parameters to find better models
-** `approximation=FALSE` and `stepwise=FALSE` for more search
 * prediction intervals complicating; for stationary models (d=0) they will converge
 *! prediction errors too narrow since variation in parameters, model order, etc not accounted
 * seasonal ARIMA:
 ** (0,1): single spike in ACF, decay in PACF
 ** (1,0): decay in ACF, single spike in PACF
-* Books:
-** Box, G. E. P., Jenkins, G. M., Reinsel, G. C., & Ljung, G. M. (2015). Time series analysis: Forecasting and control (5th ed). Hoboken, New Jersey: John Wiley & Sons.
-** math background: Brockwell, P. J., & Davis, R. A. (2016). Introduction to time series and forecasting (3rd ed). New York, USA: Springer.
-** alternatie autoarima: Peña, D., Tiao, G. C., & Tsay, R. S. (Eds.). (2001). A course in time series analysis. New York, USA: John Wiley & Sons.
+
+=== Books
+
+* Box, G. E. P., Jenkins, G. M., Reinsel, G. C., & Ljung, G. M. (2015). Time series analysis: Forecasting and control (5th ed). Hoboken, New Jersey: John Wiley & Sons.
+* math background: Brockwell, P. J., & Davis, R. A. (2016). Introduction to time series and forecasting (3rd ed). New York, USA: Springer.
+* alternatie autoarima: Peña, D., Tiao, G. C., & Tsay, R. S. (Eds.). (2001). A course in time series analysis. New York, USA: John Wiley & Sons.
+* long memory ARMA models: Section 5.1 of Shumway and Stoffer
+
+=== auto.arima from R
+
+* https://otexts.org/fpp2/arima-r.html
+* unit root test, minimize AIC, fit MLE
+* d<=2 determined from KPSS test
+* initial (0,0) (2,2) (1,0) (0,1); if d<2: use constant, but also fit (0,0) without constant
+* start from best of initial and vary parameters to find better models
+* `approximation=FALSE` and `stepwise=FALSE` for more search
+* need to be force to search more parameters, if want more brute force
+
+=== Identifying ARIMA models
+
+* http://people.duke.edu/~rnau/arimrule.htm
+
+==== Differencing
+* positive autocorr. to high order -> difference more
+* lag-1 small -> no more differencing
+* lag-1 < -0.5 -> overdifferenced
+* best differencing order often when stddev smallest
+* no-order differencing usually includes constant term to allow for non-zero mean
+* one-order differencing usually with constant term of series has trend
+* two-order differencing usally no constant term
+
+==== Identifying AR and MA terms
+* PACF sharp cutoff or lag-1 positive (looks underdiff) -> one more AR term (lag beyond which PACF cuts off is indicated number of terms)
+* ACF sharp cutoff or lag-1 negative (looks overdiff) -> add MA term
+* sometimes AR and MA terms cancel -> try one fewer AR and MA term (esp. if converged after only more than 10 steps)
+* beware of multiple AR _and_ multiple MA terms in same model
+* unit root in AR (sum of AR coef ~ 1) -> reduce num. AR terms by one and increase differencing
+* unit root in MA (sum of MA coef ~ 1) -> reduce num. MA terms by one and reduce order of differening
+* if long term forecasts erratic or unstable -> probably unit root in AR or MA
+* term too high -> model may explode on short outlier patterns
+
+==== Identify seasonal part
+* if seasons -> always use seasonal differencing (otherwise seasonal pattern fades out over time)
+* but seasonal diff <= 1
+* seasonal diff + nonseasonal diff <= 2
+* autocorr positive at lag S -> add sAR term
+* autocorr negative at lag S -> add sMA term
+* sAR + sMA <= 2 (or overfitting and estimation problems)
+
+== VAR/VARMA models
+
+* "Although the model allows estimating VARMA(p,q) specifications, these models are not identified without additional restrictions on the representation matrices, which are not built-in" (?)
+* VARMA: includes MA
+* special cases of ARMAX
 
 === ARIMA vs ETS
 
@@ -199,10 +377,26 @@
 * AIC cannot be used to compare ARIMA and ETS because diff model class and diff MLE
 * but could use time series CV to compare
 
+== ARFIMA Fractional differences model
+
+asciimath:[(1-bb"L")^d x_t=epsilon_t]
+
+asciimath:[|d|<0.5]
+
+* when ACF slowly goes to 0
+* hard to interpret
+
+== Threshold models
+
+* https://onlinecourses.science.psu.edu/stat510/node/82/
+* different behavior when value of a variable beyond some threshold
+* special case of RSM (regime switching models)
+* TAR threshold autoregressive models
 
 == Dynamic regression
 
 * https://otexts.org/fpp2/estimation.html
+* fit linear model and see if residuals follow AR process
 * normal linear regression, but let (auto-correlated) error asciimath:[nu] follow an ARIMA model (with white noise error asciimath:[epsilon])
 * cannot just minimize (auto-correlated) asciimath:[nu] since would be biased, statistical tests would be incorrect, AIC would be incorrect, p-values would be too small -> minimize asciimath:[epsilon] from ARIMA model
 *! require that target and all of features are stationary (otherwise coefs will not be consistent)
@@ -218,6 +412,10 @@
 * options:
 ** deterministic trend: constant term in target prediction
 ** stochastic trend: using differencing (asciimath:[d=1]) in error model (will have wider prediction intervals; but that may be good because it considers changing trends)
+
+== Spectral density
+
+* https://onlinecourses.science.psu.edu/stat510/node/80/
 
 == Seasons with Harmonic regression
 * https://otexts.org/fpp2/dhr.html
@@ -273,7 +471,7 @@
 * `VARselect()` from R `vars` package select number of lags; Hyndmann suggests BIC (SC) criterions since AIC chooses too many features
 * making cross-influence possible seems raw, but VAR useful when:
 ** forecasting a collection of related variables where no explicit interpretation is required
-** testing whether one variable is useful in forecasting another (the basi-s of Granger causality tests);
+** testing whether one variable is useful in forecasting another (the basis of Granger causality tests);
 ** impulse response analysis, where the response of one variable to a sudden but temporary change in another variable is analysed;
 ** forecast error variance decomposition, where the proportion of the forecast variance of each variable is attributed to the effects of the other variables
 * Vector ARMA generalization but also more complicating
@@ -292,16 +490,16 @@
 == General
 
 * all can be additive or multiplicative
-* remove calendar effects (e.g. number of days in month)
+* remove calendar effects (e.g. number of days in month); could be seen as negative autocorrelation before correction(!)
 * forecast variable y: dependent, explained variables
 * predictor variable x: independent, explanatory variable
 * forecast inefficient if residuals autocorrelated or correlated with target
 * could use spike or step function for interventions or changes
 * lagged values can be useful
-* for seasons of period asciimath:[m] could use first Fourier features asciimath:[sin/cos (2*pi*t*k/m)]
+* for seasons of period asciimath:[m] could use first Fourier features asciimath:[[[sin],[cos]] (2*pi*t*k/m)]
 * regression with Fourier terms: "harmonic regression"
 * https://otexts.org/fpp2/regression-matrices.html
-* CV statistics can be calculated directory from hat matrix asciimath:[H=X(X'X)^(-1)X'] with asciimath:[CV=1/T sum (e_t/(1-h_t))^2] where asciimath:[h_t] are diagonal elements of hat matrix [hence not needed to fit many models]
+* CV statistics can be calculated directly from hat matrix asciimath:[H=X(X'X)^(-1)X'] with asciimath:[CV=1/T sum (e_t/(1-h_t))^2] where asciimath:[h_t] are diagonal elements of hat matrix [hence not needed to fit many models]
 * when multi-collinearity: coefficient estimates unreliable, relation between features unreliable; for good software not a problem [unless perfect collinearity?]
 * forecast unreliable of new features outside previous range
 * "seasonally adjusted": remove seasonal
@@ -309,7 +507,6 @@
 * classical decomposition: detrend with MA (m for odd, 2xm for even order season) -> remove averaged curve from original; average out months
 * for monthly/quarterly seasons, some institutions have developed simple averagine methods: https://otexts.org/fpp2/x11.html
 * https://otexts.org/fpp2/stl.html[STL Seasonal and Trend decomposition using Loess]
-* "stationary": when properties do not depend on time (every set of measurements if time invariant distribution)
 * FPP prefers to use AICc for minimization
 * one could plot complex root with unit circle (https://otexts.org/fpp2/arima-r.html) to see how stationary and invertible the model is -> roots close to unit circle may make the model unstable (but many implementations only return well-behaved models)
 * for forecasting: use predicted values as features; use zero for future errors; https://otexts.org/fpp2/arima-forecasting.html
@@ -330,15 +527,33 @@
 * ideally do not use the future information to decide on missing or outlier values
 * more possible time series issues: last chapter of "Principles of business forecasting" (Ord, J. K., Fildes, R., & Kourentzes, N. (2017))
 
-== Models to try
+== GARCH model (Autoregressive Conditionally Heteroskedastic Model)
 
-* ETS
-* (S)ARIMA(X)
-* GARCH
-* TBATS
-* Prophet (Facebook)
-* CausalImpact
-* Shallow ANN
+* http://www.blackarbs.com/blog/time-series-analysis-in-python-linear-models-to-garch/11/1/2016
+* most often rather variance bursts instead of trends
+* ARCH: AR(p) model for Variance
+* GARCH(n,m): ARMA for variance
+* check PACF of squared values
+* https://onlinecourses.science.psu.edu/stat510/node/85/
+
+asciimath:[Var(y_t|y_(t-1))=sigma_t^2=alpha_0+alpha_1 y_(t-1)^2]
+
+After centering (remove mean or trend) to zero mean:
+
+asciimath:[y_t=sigma_t epsilon_t]
+asciimath:[sigma_t^2=alpha_0+alpha_1 y_(t-1)^2]
+
+* this model is causal (can be converted to MA model) only when asciimath:[alpha_1^2<1/3]
+* asciimath:[y_t] white noise when asciimath:[0 <= alpha_1 <= 1]
+
+== Transfer function
+
+* model y in terms of lags of y and x
+
+== Intervention quantification
+
+* https://onlinecourses.science.psu.edu/stat510/node/76/
+* determine how much mean jumped after a known intervention
 
 == Cookbook
 
@@ -361,7 +576,7 @@
 
     from statsmodels.tsa.stattools import kpss
     p_values = kpss(s)[1]
-    if p_values > 0.05:
+    if p_value > 0.05:
         print("Stationary. Good!")
 
 * alternatively `adfuller(s)[1] < 0.05` wanted (but this test is weaker)

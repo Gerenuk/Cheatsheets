@@ -1133,6 +1133,13 @@ Use my
 
     datetime = pd.Timestamp(numpydatetime)   # subclass of dt.datetime
 
+== Warnings
+
+    import logging
+    logging.captureWarnings(True)
+
+    logger=logging.basicConfig(stream=open("run.log", "w"))
+
 == Neural network
 
 === CoordConv
@@ -1148,6 +1155,73 @@ Use my
     N = 5    # order
     window = np.linspace(-2,4,N)/N
     y_pred = y.rolling(N).apply(window.dot).shift()
+
+=== Exploration
+
+    from statsmodels.graphics import tsaplots
+
+    y = dd["target_name"].dropna().sort_index()
+
+    tsaplots.plot_pacf(y, lags=20)                   # check for autocorrelation
+
+    tsaplots.plot_pacf(y.diff().dropna(), lags=20)   # check for autocorrelation of diff'ed series
+
+=== SARIMAX
+
+* http://www.statsmodels.org/dev/generated/statsmodels.tsa.statespace.sarimax.SARIMAX.html
+* http://www.statsmodels.org/dev/generated/statsmodels.tsa.statespace.sarimax.SARIMAXResults.html
+
+    model = sm.tsa.SARIMAX(target, order=(....))
+    result = model.fit()
+    result.summary()
+
+    statsmodels.graphics.gofplots.qqplot(result.resid, line="s")          # Plot errors vs Normal distr
+
+    preds = result.predict(start=.., end=.., dynamic=True)
+
+    result.get_forecast(steps=20)
+
+* `dynamic=True` continue deriving predictions of target from previous predictions instead of real values (which were given)
+** relative to `start` (`start=0` by default); can be date
+* to generate data use `smt.arma_generate_sample(ar=ar, ma=ma, nsample=n, burnin=burn)`
+
+=== Other tutorials
+
+    mdl = smt.AR(x).fit(maxlag=30, ic='aic', trend='nc')
+    est_order = smt.AR(x).select_order(maxlag=30, ic='aic', trend='nc')
+
+    # Using student T distribution usually provides better fit
+    am = arch_model(TS, p=p_, o=o_, q=q_, dist='StudentsT')
+    res = am.fit(update_freq=5, disp='off')
+
+=== Pyramid (Auto Arima)
+
+http://pyramid-arima.readthedocs.io/en/latest/_submodules/arima.html
+
+    from pyramid.arima import auto_arima
+    res = auto_arima(data, ...)
+    res.summary()
+
+Sample data `datasets.load_lynx` and `datasets.load_wineind`.
+
+=== Making stationary
+
+Test p-value with `test_stationarity()`. If p not small, so differencing
+
+    df["a"]=df.a-df.a.shift()
+    df["a"]=df.a-df.a.shift(12)
+
+Or maybe multiple times of this.
+
+=== VAR models
+
+* usually need more `maxiter` due to large number of parameters
+
+=== Tests on statsmodels state-space models
+
+* http://www.statsmodels.org/dev/generated/statsmodels.tsa.statespace.mlemodel.MLEResults.test_normality.html
+* http://www.statsmodels.org/dev/generated/statsmodels.tsa.statespace.mlemodel.MLEResults.test_heteroskedasticity.html
+* http://www.statsmodels.org/dev/generated/statsmodels.tsa.statespace.mlemodel.MLEResults.test_serial_correlation.html
 
 == Sympy
 
