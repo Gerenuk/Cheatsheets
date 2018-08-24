@@ -1,13 +1,11 @@
-Cointegration
--------------
+== Cointegration
+
 Two time series that have "dependence" as linear combination are. For tests see http://en.wikipedia.org/wiki/Cointegration (e.g. simple Engle-Granger test).
 
-Independence
-------------
+== Independence
 * Subindependence (weaker the independence) if characteristic function factorizes
 
-Central limit theorem
----------------------
+== Central limit theorem
 * http://en.wikipedia.org/wiki/Berry%E2%80%93Esseen_theorem quantifies deviation from normal distribution
 
 
@@ -15,110 +13,88 @@ Pickands-Balkema-deHaan theorem:
 * 2nd theorem of extreme values, which gives asymptotic tails (above threshold)
 * -> usually generalized Pareto distribution:
 
-Tests
------
-* Rayleigh:
-  * test for periodicity of irregularly sampled data
+== Tests
 
-Dvoretzky–Kiefer–Wolfowitz inequality
-=====================================
+=== Rayleigh:
+* test for periodicity of irregularly sampled data
+
+== Dvoretzky–Kiefer–Wolfowitz inequality
 * Probability that empirical distribution will deviate by eps
 * P(diff eps in F)<=2*exp(-2*n*eps^2)
 
-Variance of sum of binomials
-============================
+== Variance of sum of binomials
 * Var(Z)=n*p*(1-p)-n*s^2
 * p = avg p_i
 * s^2 = Var(p_i)
 * https://en.wikipedia.org/wiki/Binomial_sum_variance_inequality
 
-Sum of Bernoulli is approx Poisson
-==================================
+== Sum of Bernoulli is approx Poisson
 * La Cam's theorem
 * for multiple Bernoulli with prob p_i
 * sum(P(k)-Pois(k))<2*sum p_i^2
 
-Probability of overshooting of sum
-==================================
+== Probability of overshooting of sum
 * https://en.wikipedia.org/wiki/Lorden%27s_inequality
 
-Relation between moments of collection of indep variables
-=========================================================
+== Relation between moments of collection of indep variables
 * https://en.wikipedia.org/wiki/Marcinkiewicz–Zygmund_inequality
 
-Mean delay in a queue
-=====================
+== Mean delay in a queue
 * https://en.wikipedia.org/wiki/Ross%27s_conjecture
 
-Probability of observing atypcial sequence of samples
-=====================================================
+== Probability of observing atypcial sequence of samples
 * https://en.wikipedia.org/wiki/Sanov%27s_theorem
 
-Positive probability of being positive
-======================================
+== Positive probability of being positive
 * P(X>0)>=E(X)^2/E(X^2)
 
-Bound on deviation from mean on unimodal
-========================================
+== Bound on deviation from mean on unimodal
 * https://en.wikipedia.org/wiki/Vysochanskij–Petunin_inequality
 * P(|X-mu|>=lambda*o)<=4/(9*lambda^2)
 
-Bound that sum deviates from mean
-=================================
+== Bound that sum deviates from mean
 * https://en.wikipedia.org/wiki/Hoeffding%27s_inequality
 * more general than Bernstein
 * special cases of https://en.wikipedia.org/wiki/Doob_martingale#McDiarmid.27s_inequality
 
-Upper bound for deviation of sum from expected
-==============================================
+== Upper bound for deviation of sum from expected
 * https://en.wikipedia.org/wiki/Bennett%27s_inequality
 * max(X)=a (almost surely)
 * P(S>t)<=exp(...)
 
-Bound of deviation of sum from mean
-===================================
+== Bound of deviation of sum from mean
 * https://en.wikipedia.org/wiki/Bernstein_inequalities_(probability_theory)
 
-Some strengthening of law of large numbers
-==========================================
+== Some strengthening of law of large numbers
 * https://en.wikipedia.org/wiki/Hsu–Robbins–Erdős_theorem
 
-Prob of random walk in center
-=============================
+== Prob of random walk in center
 * https://en.wikipedia.org/wiki/Rademacher_distribution#Van_Zuijlen.27s_bound
 * P(|sum X/sqrt(n)|<=1)>=0.5
 
-Convergence to mean quantified
-==============================
+== Convergence to mean quantified
 * https://en.wikipedia.org/wiki/Berry–Esseen_theorem
 
-Exponential bound on tail distribution of sum
-=============================================
+== Exponential bound on tail distribution of sum
 * https://en.wikipedia.org/wiki/Chernoff_bound
 
-Probability that partial sum exceeds a bound
-============================================
+== Probability that partial sum exceeds a bound
 * https://en.wikipedia.org/wiki/Kolmogorov%27s_inequality
 
-Concentration inequalities for deviations
-=========================================
+== Concentration inequalities for deviations
 * https://en.wikipedia.org/wiki/Concentration_inequality
 
-Bound on probability that partial sum exceeds a bound
-=====================================================
+== Bound on probability that partial sum exceeds a bound
 * https://en.wikipedia.org/wiki/Etemadi%27s_inequality
 
-Correlation and independence
-============================
+== Correlation and independence
 * jointly normal and uncorrelated (cov=0) -> independent
 * only marginally normal and uncorrelated -> not necessarily indep (https://en.wikipedia.org/wiki/Normally_distributed_and_uncorrelated_does_not_imply_independent)
 
-Entropy power inequality
-========================
+== Entropy power inequality
 * https://en.wikipedia.org/wiki/Entropy_power_inequality
 
-Circular mean by complex numbers
-================================
+== Circular mean by complex numbers
 * https://en.wikipedia.org/wiki/Mean_of_circular_quantities
 * max likehood
 * minimizes distances 1-cos(a,b) [half the squared Euclidean distance of points]
@@ -147,18 +123,33 @@ Maybe, improved version of Hollander with extra factor asciimath:[sf"min"(1,1/la
 * conjugate distributions are also exponential family
 * MLE estimates are simple: set the observed value of the natural sufficient statistic equal to its expected value
 
-== Quadratic variance function
+== Variance proportional to power of mean
 
-* only these distributions have a variance that is a quadratic function of the mean:
-** normal
-** poisson
-** gamma
-** binomial
-** negative binomial
-** hyperbolic secant function (https://www.tandfonline.com/doi/abs/10.1080/00031305.2013.867902[Ding'13])
+=== Quadratic variance function
 
-++++++++++++
-Durbin-Watson:
+Only these distributions have a variance that is a quadratic function of the mean:
+
+* normal (p=0)
+* poisson (p=1)
+* gamma (p=2)
+* binomial
+* negative binomial
+* hyperbolic secant function (https://www.tandfonline.com/doi/abs/10.1080/00031305.2013.867902[Ding'13])
+
+=== Tweedie distribution
+
+The parameter asciimath:[p] is for the value in the Tweedie distribution
+
+asciimath:[Var(Y)=a (E\[Y\])^p]
+
+There are also
+
+* compound Poisson-gamma asciimath:[1<p<2]
+* positive stable distribution asciimath:[2<p<3], asciimath:[p>3]
+* inverse Gaussian asciimath:[p=3]
+* extreme stable distributions asciimath:[p=inf]
+
+== Durbin-Watson
 
 * Auto-correlation of residuals; 0..4
 * d=2 none; d<1 considerable positive corr; 
@@ -170,7 +161,7 @@ Durbin-Watson:
   * D-W stat not applicable if lagged dependent variables -> rather use Durbin's h-test if large samples
   * D-W stat biased for autoregressive moving avg. models -> for large samples use normally distrib. h-statistic (which derives from d and estimated variance)
 
-Jarque-Bera:
+== Jarque-Bera
 
 * test is skewness and kurtosis belong to normal
 * JB=(n-k)/6(S^2+(K-3)^2/4)

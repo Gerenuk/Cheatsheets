@@ -1147,6 +1147,10 @@ Use my
 
     logger=logging.basicConfig(stream=open("run.log", "w"))
 
+
+    with warnings.catch_warnings():         # ignore for some commands only
+        warnings.simplefilter("ignore")
+
 == Neural network
 
 === CoordConv
@@ -1191,6 +1195,35 @@ Use my
 * `dynamic=True` continue deriving predictions of target from previous predictions instead of real values (which were given)
 ** relative to `start` (`start=0` by default); can be date
 * to generate data use `smt.arma_generate_sample(ar=ar, ma=ma, nsample=n, burnin=burn)`
+* high MA (and AR?) orders can be much slower to estimate
+
+=== Prophet
+
+    from fbprophet import Prophet
+
+    dd=pd.DataFrame({"ds":dates, "y":target})
+
+    model=Prophet(changepoint_prior_scale=0.05)   # higher for more flexible model
+    model.fit(dd)
+
+    months=pd.DataFrame({"ds":pd.date_range(str(year), str(year+1), freq="M")})
+    dd_pred=model.predict(months)          # will contain predictions and intervals
+
+    model.plot(dd_pred)
+    model.plot_components(dd_pred)
+
+Other parameters:
+* growth: String 'linear' or 'logistic' to specify a linear or logistic trend.
+* changepoint_range: Proportion of history in which trend changepoints will be estimated. Defaults to 0.8 for the first 80%.
+* weekly_seasonality, daily_seasonality: Fit weekly/daily seasonality.
+* can include explicit holidays and explicite change point dates
+* seasonality_mode: 'additive' (default) or 'multiplicative'.
+* changepoint_prior_scale: Parameter modulating the flexibility of the automatic changepoint selection. Large values will allow many changepoints, small values will allow few changepoints.
+
+=== Exponential smoothing
+
+* http://www.statsmodels.org/stable/generated/statsmodels.tsa.holtwinters.ExponentialSmoothing.html
+* http://www.statsmodels.org/stable/generated/statsmodels.tsa.holtwinters.ExponentialSmoothing.fit.html
 
 === Other tutorials
 

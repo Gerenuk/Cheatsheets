@@ -1228,7 +1228,7 @@ http://pandas.pydata.org/pandas-docs/version/0.15.2/options.html#list-of-options
 [cols="m,d"]
 |===
 | pd.*date_range*(..)                       | Regular frequency (default daily) date index
-| pd.date_range(.., freq="QS")              | Quarter start range
+| pd.date_range(.., freq="MS")              | Month start range
 | pd.*bdate_range*(..)                      | Business day date index (also custom holiday masks possible)
 | pd.*to_timedelta*(..)                     |
 | pd.*period_range*(..)                     |
