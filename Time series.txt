@@ -587,6 +587,11 @@ https://vimeo.com/274421819
 * weak stat: first two moments constant (mean, [co]var)
 * LSTM: does not need stationarity
 
+== Anomaly detection
+
+* "Time Series Discord" proved to be best; for performance use http://www.cs.ucr.edu/~eamonn/MatrixProfile.html[Matrix Profile]
+* https://www.elen.ucl.ac.be/Proceedings/esann/esannpdf/es2015-56.pdf[LSTM], https://arxiv.org/pdf/1607.00148.pdf[LSTM]
+
 == GARCH model (Autoregressive Conditionally Heteroskedastic Model)
 
 * http://www.blackarbs.com/blog/time-series-analysis-in-python-linear-models-to-garch/11/1/2016
@@ -726,3 +731,4 @@ I then fitted a weighted regression (weighted the most recent observations the m
 === Kaggle Air Quality predition
 
 I took the lagging N components from the full time series (N=8 for the winning submission, which was selected arbitrarily) as features, then each of the 10 prediction times and 39 pollutant measures as targets. I then trained 390 Random Forests over the entire training data, one for each predicted offset time-pollutant combination. The Random Forest parameters were selected so that the models would be quick to train. https://github.com/benhamner/Air-Quality-Prediction-Hackathon-Winning-Model[code]
+
