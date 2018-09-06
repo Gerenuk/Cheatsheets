@@ -24,6 +24,11 @@
 * permanent shocks cannot be estimated from time-series model
 * monthly (ideally seasonal) points can improve forecast a lot, even if you actually want to optimize the yearly sum forecast
 
+*! regressing on past values is not consistent, need one of
+** conditional least squares
+** conditional MLE
+** exact MLE
+
 === Whitening
 
 * https://onlinecourses.science.psu.edu/stat510/node/75/
@@ -52,6 +57,21 @@
 * use AIC or CV to find ARIMAA asciimath:[p] and asciimath:[q] orders; find if including constant
 * test residuals for remaining information (Ljung-Box test)
 * ARIMA seems to work better than Prophet, but is more sensitive to "level shifts" (will think level shift jumps will repeat after one occurence)
+* auto-correlation left if Durbin-Watson statistics low(?)
+* interesting to distinguish deterministic trends from unit root or(?) stochastic trendsS
+** -> Augmented Dickey-Fuller is best to test for unit root (determined my MC experiments)
+
+* with unit roots, model just will be invalid without adjustment
+
+==== Details
+
+* https://www.quora.com/How-do-I-analyze-time-series-and-its-characteristics-that-means-stationarity-tendency-etc-to-determine-which-prediction-forecast-method-ARIMA-for-instance-is-most-suitable
+* first check (lagged) correlations between variables
++ ADF test, but, before check for trend(?)
+* if indep. variables -> Engel-Granger cointegration test for long-run relationship [but before check for unit root since I(1) variables cannot be cointegrated with I(0) variables]
+** if cointegration -> VECM model since long-term deviations will correct short-term dependencies (also add lagged variables and dummies for seasons)
+** if no cointegration -> difference all variables with unit root; add seasons and lags
+* add moving averages if it helps dynamics
 
 ==== Seasonal ARIMA summary
 
@@ -132,6 +152,9 @@
 
 * Hierarchical/grouped models: when want to model parts and whole
 * Vector Autoregression (VAR): when interactions between multiple targets
+** can plot impuls response `res.irf`
+** forecast error variance decomposition `res.fevd`
+** Granger causality `res.test_causality(var1, var2)`
 * Low integer count prediction: there are special methods for this; e.g. predict non-zero values and time between them
 
 == State space models
@@ -353,6 +376,7 @@ asciimath:[hat x_(t+1)=alpha x_t+alpha (1-alpha) x_(t-1)+ alpha (1-alpha)^2 x_(t
 * seasonal ARIMA:
 ** (0,1): single spike in ACF, decay in PACF
 ** (1,0): decay in ACF, single spike in PACF
+* trend can be deterministic or stochastic -> stochastic trend can be dealt with with differencing
 
 === Books
 
@@ -594,12 +618,17 @@ https://vimeo.com/274421819
 
 == GARCH model (Autoregressive Conditionally Heteroskedastic Model)
 
+* https://www.quora.com/What-is-an-intuitive-explanation-of-ARCH-GARCH-models
 * http://www.blackarbs.com/blog/time-series-analysis-in-python-linear-models-to-garch/11/1/2016
 * most often rather variance bursts instead of trends
-* ARCH: AR(p) model for Variance
-* GARCH(n,m): ARMA for variance
+* ARCH: AR(p) model for Variance; only MA in noise sequence (?)
+* GARCH(n,m): ARMA for variance; i.e. based on estimated noise amplitude and also instance specific noise
 * check PACF of squared values
 * https://onlinecourses.science.psu.edu/stat510/node/85/
+* Tsay book recommended for this
+* ARCH: moving average of hidden noise; noise has to be estimated from autoregression
+* ARCH finite impulse response in noise power -> large variance effects disappear quickly
+* GARCH infinite impulse response in noise power -> impact from high variance in past can be longer than order of equation
 
 asciimath:[Var(y_t|y_(t-1))=sigma_t^2=alpha_0+alpha_1 y_(t-1)^2]
 
@@ -660,6 +689,7 @@ asciimath:[sigma_t^2=alpha_0+alpha_1 y_(t-1)^2]
 ** or decomposition (subtract trend)
 ** scaling (e.g. log) to equalize variance
 * http://people.duke.edu/~rnau/whatuse.htm
+* colored noise is stationary; hitting a guitar is not
 
 
 == Trend estimation in time series signals
@@ -697,6 +727,34 @@ https://www.youtube.com/watch?v=likDxYXhNQY
 * MASE can be very sensitive to a few series; worth concentrating on these if you really have to optimize for MASE
 ** maybe then use only linear growth (not exponential); additive seasonality (not multiplicative) - otherwise small weights
 * include a global trend (e.g. from across all series; if data from one industry)
+
+== Filters
+
+* `tsa.filters.*`
+
+=== Hodrick-Prescott filter
+
+* separate into trend and cyclical component
+* minimize quadratic loss
+* penality term lambda of roughness (e.g. 1600 for quarterly data, 6.25 for annual data, 129600 for monthly data)
+
+=== Baxter-King filter
+
+* approximate band-pass filter that explicitely deals with periodicity of business cycle
+* frequencies only exactly at business cycle
+* US business cycle 1.5-8 years
+* P_L=6, P_H=32 for quarterly; P_L=1.5, P_H=8 for annual data
+* lead-lag length K=12
+
+=== Christiano-Fitzgerald filter
+
+* asymmetric about time
+* assumes random walk -> allows to approximate ideal filter even if exact model not known
+
+== Benchmarking
+
+* turning low frequency data into higher frequency (e.g. annual to monthly)
+* Denton's method: `tsa.interp.dentonm`
 
 == Individual solutions
 

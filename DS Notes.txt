@@ -888,6 +888,30 @@ https://www.youtube.com/watch?v=XBQzhjiaqhA
 ** challenges: new optimizations, new operators, ...
 
 == Statistical tests
+
+=== F-test
+
+* usually from decomposition of variability in terms of sums of squares
+* ratio of two scaled sums of squares (need to be independent; each scaled chi^2 distribution)
+
+==== Whether multiple quantitative variables different expected value
+* whether one of multiple quantitative variables has different expected value
+* "Omnibus" test since test for multiple
+* avoids specifying which treatments to comparison and no need to multiple comparison adjustment
+
+asciimath:[F=bb"explained variance"/bb"unexplained variance"=bb"between-group variability"/bb"within-group variability"]
+
+* F-statistic with degrees of freedom
+* large -> population means different
+* for only 2 groups same as t test (since asciimath:[F_2=t^2])
+
+==== Whether nested models useful
+
+* is a Wald-test
+* for structural break test: Chow test
+
+==== Fit quality
+
 === Chi-Square test
 * compare measured values against a known distribution
 * for discrete data (unlike Kolmogorov-Smirnov and Anderson-Darling)

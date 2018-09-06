@@ -38,6 +38,8 @@
 | %ll                                       | Print (with color)
 | %capture _out_var_                        | Run cell and capture output in `CaptureIO` object
 | %tb                                       | Print last traceback
+| path=%env PATH +
+  %env PATH=$path:ABC                       |
 |===
 
 
@@ -48,6 +50,7 @@
 [cols="m,d"]
 |===
 | Ctrl-Shift-Minus                          | Split cell
+| Shift-Insert                              | Paste in Juypterlab Console
 |===
 
 === Cell mode

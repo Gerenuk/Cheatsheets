@@ -48,9 +48,9 @@
 ** exec. per node (=num-executors/nodes) * executor-cores = 1.5 * node-cores
 * Python memory outside JVM: default 512GB/exec.
 * if Python OOM:
-  * reduce concurrency (less cores)
-  * spark.python.worker.memory=1024MB
-  * spark.executor.memory=10600MB
+** reduce concurrency (less cores)
+** spark.python.worker.memory=1024MB
+** spark.executor.memory=10600MB
 * spark.rdd.compress=true (save memory)
 * spark.speculation=true
 * spark.executorEnv.PYTHONHASHSEED=0
@@ -67,23 +67,23 @@ https://www.youtube.com/watch?v=N6pJhxCPe-Y
 * ApplicationMaster run in a container asks for new containers; can re-ask for dead containers
 * Driver ideally in AppMaster
 * data locality:
-  * Spark needs to ask for executors before running job (i.e. before knowing data needed)
-  * -> preferredNodeLocationData in SparkContext config
+** Spark needs to ask for executors before running job (i.e. before knowing data needed)
+** -> preferredNodeLocationData in SparkContext config
 * future:
-  * Spark give resources back when idle -> needs container resizing from YARN
-  * release memory when not needed
-  * Spark History Server, generic YARN history
-  * better log checking
-  * remove unnecessary sleeps (e.g. wait for executors)
-  * better data locality config
-  * long running jobs on secure clusters (YARN expires container after 2 weeks)
+** Spark give resources back when idle -> needs container resizing from YARN
+** release memory when not needed
+** Spark History Server, generic YARN history
+** better log checking
+** remove unnecessary sleeps (e.g. wait for executors)
+** better data locality config
+** long running jobs on secure clusters (YARN expires container after 2 weeks)
 
 == Tuning Spark
 https://www.youtube.com/watch?v=kkOG_aJ9KjQ
 * runJob:
-  * interface between RDDs and physical exec
-  * input: rdd[T], partitions Seq[Int], function It[T]=>U
-  * output: Array[U]
+** interface between RDDs and physical exec
+** input: rdd[T], partitions Seq[Int], function It[T]=>U
+** output: Array[U]
 * optimizations: pipelining; truncation of DAG when cached
 * narrow dependencies pipelined -> task can be from multiple RDDs
 * job: work for RDD in runJob
@@ -93,16 +93,16 @@ https://www.youtube.com/watch?v=kkOG_aJ9KjQ
 * some actions (like take()) can trigger multiple jobs when size larger than partition
 * stage name: last shuffle rdd or action
 * Performance:
-  * avoid shuffle amount
-  * reduce partition count of data becomes filtered down much (coalesce); otherwise task launch overhead; if ~10000 idle tasks
-  * if don't use all cores and too few partitions -> repartition (but will shuffle)
-  * use Kryo serializer (spark.serializer=org.apache.spark.serializer.KryoSerializer); also register Kryo classes (-> dont have to same class name in serialize)
-  * cache format: MEMORY_ONLY_SER can reduce GC; MEMORY_AND_DISK to not lose
-  * executor heap size <=64GB; JVM doesnt like big heaps
-  * ML heavy -> over-provision CPU; ETL -> optimize for many parallel disks
-  * spark.io.compression.codec=lzf (default snappy: good for 100000 partitions and massive shuffle)
-  * spark.speculation=true (use if some nodes may be used somewhere else)
-  * spark should have as many disks a possible (YARN local directories: ideally different disks)
+** avoid shuffle amount
+** reduce partition count of data becomes filtered down much (coalesce); otherwise task launch overhead; if ~10000 idle tasks
+** if don't use all cores and too few partitions -> repartition (but will shuffle)
+** use Kryo serializer (spark.serializer=org.apache.spark.serializer.KryoSerializer); also register Kryo classes (-> dont have to same class name in serialize)
+** cache format: MEMORY_ONLY_SER can reduce GC; MEMORY_AND_DISK to not lose
+** executor heap size <=64GB; JVM doesnt like big heaps
+** ML heavy -> over-provision CPU; ETL -> optimize for many parallel disks
+** spark.io.compression.codec=lzf (default snappy: good for 100000 partitions and massive shuffle)
+** spark.speculation=true (use if some nodes may be used somewhere else)
+** spark should have as many disks a possible (YARN local directories: ideally different disks)
 
 = AmpLab
 https://www.youtube.com/watch?v=7ooZ4S7Ay6Y
@@ -117,9 +117,9 @@ https://www.youtube.com/watch?v=7ooZ4S7Ay6Y
 * reads any Hadoop input format
 * 75% Scala, Java, Python, ..
 * price:
-  * HD: 100MB/s, 5¢/GB, 3-12ms random
-  * SSD: 600 MB/s, 45¢/GB, 0.1ms random
-  * RAM: 10 GB/2
+** HD: 100MB/s, 5¢/GB, 3-12ms random
+** SSD: 600 MB/s, 45¢/GB, 0.1ms random
+** RAM: 10 GB/2
 * papers on RDD, BlinkDB, GraphX, ...
 * RDDs can also be partially in memory
 * look Scala doc for more explanation of transformations
@@ -127,34 +127,34 @@ https://www.youtube.com/watch?v=7ooZ4S7Ay6Y
 * cassandraTable RDD: subsequent operations are done Cassandra server-side
 * set cassandra.input.split.size, when using with Spark (otherwise default 100000)
 * modes:
-  * local:
-    * one JVM only
-    * --master local[12] ([*]: same as cores) -> better 2-3x num. cores
-  * standalone:
-    * request cores and stays like that (dynamic in future)
-    * --master spark://host:port
-    * specify local dirs (ideally different drives) for spilling cache; SSDs best
-    * master/worker JVMs started up
+** local:
+*** one JVM only
+*** --master local[12] ([*]: same as cores) -> better 2-3x num. cores
+** standalone:
+*** request cores and stays like that (dynamic in future)
+*** --master spark://host:port
+*** specify local dirs (ideally different drives) for spilling cache; SSDs best
+*** master/worker JVMs started up
     -> resource manager; master=scheduler only; worker=start executor only (restart if needed)
-    * -> driver starting; drivers asks for executors
-    * set spark.worker.cores for each machine
-    * could make it Highly Available through Zookeeper; can also add new masters
-    * if new application started: same master/workers, but new driver/executor
-    * new to configure, worker cores etc. (see video 1h50m)
-    * Spark master UI port 7080
-  * YARN: dyn. partitioning (can change num. of executors)
-    * need HADOOP_CONF_DIR
-    * Resource manager: knows resources
-    * Node managers: heartbeat to resource manager
-    * start App Master in container
-    * App Master requests more containers from RM
-    * New Containers register with AM
-    * AM reports to Client (app can run without RM now)
-    * (RM has Apps Master to restart App Master if needed)
-    * Client mode:
+*** -> driver starting; drivers asks for executors
+*** set spark.worker.cores for each machine
+*** could make it Highly Available through Zookeeper; can also add new masters
+*** if new application started: same master/workers, but new driver/executor
+*** new to configure, worker cores etc. (see video 1h50m)
+*** Spark master UI port 7080
+** YARN: dyn. partitioning (can change num. of executors)
+*** need HADOOP_CONF_DIR
+*** Resource manager: knows resources
+*** Node managers: heartbeat to resource manager
+*** start App Master in container
+*** App Master requests more containers from RM
+*** New Containers register with AM
+*** AM reports to Client (app can run without RM now)
+*** (RM has Apps Master to restart App Master if needed)
+*** Client mode:
       * driver on client
       * scheduler inside driver schedules tasks; tries to launch tasks local to data
-    * Cluster mode:
+*** Cluster mode:
       * driver on AM
       * settings:
         * --num-executors
@@ -167,76 +167,77 @@ https://www.youtube.com/watch?v=7ooZ4S7Ay6Y
           * .schedulerBacklogTimeout: num. of executors *exponentially* increased; at most maxExecutors
           * .executorIdleTimeout: if no task has been scheduled for some time (after large work load used all exec, but now idle)
           * -> if you cannot decide about right number of executors
-    * future by Clouderajj: when starting YARN (Spark) application, tell where data will be
-  * Mesos: dyn. partitioning
+*** future by Clouderajj: when starting YARN (Spark) application, tell where data will be
+** Mesos: dyn. partitioning
 * more tasks than cores; since finer granularity better
 * application should take as cores and memory equally
 * Spark UI: driver
-  * every action is a "job"
-  * Storage tab: persisted RDDs; Java serialization can 2-3x size
+** every action is a "job"
+** Storage tab: persisted RDDs; Java serialization can 2-3x size
   -> check cached storage info detail to see if partitions are lopsided
-  * thread dump: see thread call stack; check at different times and see hotspots; or just use jstack
-  * logs: stdout/stderr from driver
+** thread dump: see thread call stack; check at different times and see hotspots; or just use jstack
+** logs: stdout/stderr from driver
 * settings: defaults in Scala source, config files, submit, source code context (highest level)
 * persistence:
-  * .cache() = .persist(MEMORY_ONLY)
-  * current cannot pin high-prio RDD; now LRU cache
-  * MEMORY_ONLY_SER more space efficient; but slower; however can reduce GC
-  * MEMORY_AND_DISK; on disk always serialized
-  * MEMORY_ONLY_2: store in 2 JVMs; if extremely costly RDD
-  * OFF_HEAP: serialized in Tachyon database; other apps might write RDD to Tachyon
-  * .unpersist(): forcefully remove
-  * shuffle results automatically persisted
-  * Pyspark: always serialized with Pickle
+** .cache() = .persist(MEMORY_ONLY)
+** current cannot pin high-prio RDD; now LRU cache
+** MEMORY_ONLY_SER more space efficient; but slower; however can reduce GC
+** MEMORY_AND_DISK; on disk always serialized
+** MEMORY_ONLY_2: store in 2 JVMs; if extremely costly RDD
+** OFF_HEAP: serialized in Tachyon database; other apps might write RDD to Tachyon
+** .unpersist(): forcefully remove
+** shuffle results automatically persisted
+** Pyspark: always serialized with Pickle
 * Executor JVM:
-  * memory defaults:
-    * 60% cached RDD (spark.storage.memoryFraction)
-    * 20% shuffle memory (spark.shuffle.memoryFraction): shuffle output data; shuffles shouldnt OOM
-    * 20% user program (rest)
-  * linux kernel log shows crash
-  * boths shuffle and user memory could crash
-  * can look spark context logs of driver program: "INFO BlockManagerMasterActor: Added rdd in memory... size: ..." to see partition size
+** memory defaults:
+*** 60% cached RDD (spark.storage.memoryFraction)
+*** 20% shuffle memory (spark.shuffle.memoryFraction): shuffle output data; shuffles shouldnt OOM
+*** 20% user program (rest)
+** linux kernel log shows crash
+** boths shuffle and user memory could crash
+** can look spark context logs of driver program: "INFO BlockManagerMasterActor: Added rdd in memory... size: ..." to see partition size
 * Serialization:
-  * RDD spilling; caching; network traffic; broadcast variables
-  * for Kryo: need to register custom class; maybe also adjust spark.kryoserializer.buffer.mb (needs to hold the largest object)
+** RDD spilling; caching; network traffic; broadcast variables
+** for Kryo: need to register custom class; maybe also adjust spark.kryoserializer.buffer.mb (needs to hold the largest object)
 * measure GC impact: start with "-verbose:gc -XX:+PrintGCDetails -XX:+PrintGCTimeStamps"
 * for spark streaming use CMS GC: video 3h18m
 * Job & Stages:
-  * action -> job
-  * sometimes stages parallel; some of those might be straggling (-> change logic)
-  * DAG Scheduler: DAG to Stages; submit stages when ready; doesnt know operators
-  * Task Scheduler: Stages to launched tasks (retry if faied); doesnt know stages
-  * narrow/wide dependency:
-    * narrow: each parent partition used by at most one child partition
-    * join can be narrow when hash partition; just move data (no cross-section)
-    * wide: need shuffle -> full connected network when sending
-  * toDebugString(): indentations are stages boundaries
+** action -> job
+** sometimes stages parallel; some of those might be straggling (-> change logic)
+** DAG Scheduler: DAG to Stages; submit stages when ready; doesnt know operators
+** Task Scheduler: Stages to launched tasks (retry if faied); doesnt know stages
+** narrow/wide dependency:
+*** narrow: each parent partition used by at most one child partition
+*** join can be narrow when hash partition; just move data (no cross-section)
+*** wide: need shuffle -> full connected network when sending
+** toDebugString(): indentations are stages boundaries
 * read from HDFS: HadoopRDD automatically converted to MappedRDD (with Java data types)
 * multiple operations call combineByKey
 * repartition just calls coallese with true
 * if paramater numPartitions: usually shuffle
 * map(..., preservePartitioning=True): Spark will know that keys are still in same partition -> Spark can inherit partitioning info
 * broadcast variables:
-  * otherwise all tasks get value over and over
-  * to avoid shuffle when one data small
-  * "Orchestra" algorithm used; bittorrent technique
-    * files split to ~4MB
-    * driver tells executors that broadcast is happening
-    * executors can ask each other for chunks, not just the driver
+** otherwise all tasks get value over and over
+** to avoid shuffle when one data small
+** "Orchestra" algorithm used; bittorrent technique
+*** files split to ~4MB
+*** driver tells executors that broadcast is happening
+*** executors can ask each other for chunks, not just the driver
 * accumulator:
-  * often for debugging; counting
+** often for debugging; counting
+
 == Pyspark
 * based on normal CPython
 * based on Java API; which is on top of Spark Scala Core Engine
 * Driver:
-  * Spark Context Controller: Py4j socket to actual Java Driver JVM; call Java methods from Python
-  * Java executor JVMs started; start daemon.py (per core); communication by custom pipe from Spark
-  * Pyspark very thin: data read from executor Java JVMs
-  * Py4j slow since uses base64 -> collect()/broadcast() data rather written to local disk and re-read
-  * Pycloud CloudPickle module used
+** Spark Context Controller: Py4j socket to actual Java Driver JVM; call Java methods from Python
+** Java executor JVMs started; start daemon.py (per core); communication by custom pipe from Spark
+** Pyspark very thin: data read from executor Java JVMs
+** Py4j slow since uses base64 -> collect()/broadcast() data rather written to local disk and re-read
+** Pycloud CloudPickle module used
 * PythonRDD: stores data pickled
 * choose Python implementation:
-  * e.g. PyPy: PYSPARK_DRIVER_PYTHON=pypy PYSPARK_PYTHON=pypy
+** e.g. PyPy: PYSPARK_DRIVER_PYTHON=pypy PYSPARK_PYTHON=pypy
 * spark.python.worker.memory: default 512m (-> check)
 
 == Terasort competition and new sort-based shuffle
@@ -246,16 +247,16 @@ https://www.youtube.com/watch?v=7ooZ4S7Ay6Y
 * mainly due to new shuffle implementation; Sort-based shuffle Jira SPARK-2045 etc
 * spark.shuffle.spill=false
 * external shuffle service: nodemanager serves data, not executor
-  * need this with dynamic allocation
+** need this with dynamic allocation
 * serve data to reducer:
-  * Netty native transport: send map data directly to network NIC buffer (not through kernel buffers)
+** Netty native transport: send map data directly to network NIC buffer (not through kernel buffers)
 * hash based shuffle ok for <10000 reducers
-  * needs to keep multiple destination map file handles open -> JVM buffer management costly
-  * files Timsorted (for competition only)
+** needs to keep multiple destination map file handles open -> JVM buffer management costly
+** files Timsorted (for competition only)
 * sort-based shuffle:
-  * only one file, all map data sorted and concatenated
-  * reducer still pulls needed data; use byte offset
-  * can have >50000 partitions
+** only one file, all map data sorted and concatenated
+** reducer still pulls needed data; use byte offset
+** can have >50000 partitions
 * 1GB/s/node during shuffle -> full EC2 saturation
 * Disk IO also full saturated
 * setting 48mbit/s on reducer?! ("data in flight")
@@ -287,30 +288,30 @@ https://www.youtube.com/watch?v=7ooZ4S7Ay6Y
 https://www.youtube.com/watch?v=ArnD01kTtew
 
 * feather format:
-  * very fast disk format; for Python, R,...
-  * not columnar data store, just disk format
+** very fast disk format; for Python, R,...
+** not columnar data store, just disk format
 * largest:
-  * cluser: Tencent 8000 nodes
-  * single job: Alibaba 1PB
-  * streaming: HHMI Janelia Farm 1TB/h
+** cluser: Tencent 8000 nodes
+** single job: Alibaba 1PB
+** streaming: HHMI Janelia Farm 1TB/h
 * file format:
-  * Avro: row-wise
-  * Parquet: column-wise
+** Avro: row-wise
+** Parquet: column-wise
 * saveAsTable: keeps metadata
 * spark.sql.parquet.compression.codecs=(gzip,snappy)
 * recommended: 100-200MB files for parquet
 * spark.sql.shuffle.partitions:
-  * need to know for large joins
-  * determines how join keys partitioned
-  * -> increase to avoid OOM
+** need to know for large joins
+** determines how join keys partitioned
+** -> increase to avoid OOM
 * df.write.partitionBy("col").save("data.parquet")
-  * when running SQL commands
+** when running SQL commands
 * repartition before writing file
 * partitionBy + repartition (on dir per col value and this number of partitions inside)
 * see spark executor errors; see in Spark UI
 * large table joins:
-  * larger table left
-  * increase spark shuffle partitions
-  * use SQL "cluster by" API (sort data)
+** larger table left
+** increase spark shuffle partitions
+** use SQL "cluster by" API (sort data)
 * #active tasks = #cores?
 

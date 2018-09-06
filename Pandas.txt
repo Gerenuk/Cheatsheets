@@ -53,6 +53,7 @@ http://pandas.pydata.org/pandas-docs/stable/io.html
 | pd.*to_csv*(file_or_path)                 |
 | df.*to_string*(..)                        |
 | df.*to_json*(.., orient="table")          | Round-tripable
+| _compression_="gzip"                      | Directly compress
 | pd.*read_html*(file_or_path)              | Return list of tables
 | df.*to_html*(..)                          |
 | pd.*read_excel*(pd.ExcelFile(..), "Sheet1") | To work with multiple sheets; Also as context manager
@@ -164,6 +165,8 @@ http://pandas.pydata.org/pandas-docs/stable/io.html
 == Categorical
 
 * many operations on categorical columns (e.g. counts, aggregation), will include as values specified by the type, even if they are not in the data
+* Pandas will use shortes int type
+* to insert new values, you would need to add it to `.categories` first
 
 [cols="m,d"]
 |===
@@ -256,7 +259,7 @@ http://pandas.pydata.org/pandas-docs/stable/io.html
 | df.*get_dtype_counts*()                   |
 | columns.*str*                             |
 | s.*nbytes*                                |
-| s.*memory_usage*(..)                      |
+| s.*memory_usage*(..)                      | Sums up memory; relies in Numpy `.nbytes`
 | *rename_axis*(mapper)                     | Rename axis names (to set labels instead use `rename()`)
 | *itemsize*                                | Return size of items (Series, Index)
 |===
@@ -830,6 +833,8 @@ http://pandas.pydata.org/pandas-docs/stable/api.html#multiindex[MultiIndex]
 == Grouping data
 http://pandas.pydata.org/pandas-docs/stable/api.html#groupby
 
+* GroupBy object is lazy
+
 [cols="m,d"]
 |===
 | gr = df.*groupby*(by=None, axis=0)        | Groupby
@@ -915,6 +920,13 @@ http://pandas.pydata.org/pandas-docs/stable/api.html#string-handling
 | str.*isdigit*()                           |
 |===
 
+== Accessors
+
+* `pd.Series._accessors` lists
+** `.str` https://github.com/pandas-dev/pandas/blob/3e4839301fc2927646889b194c9eb41c62b76bda/pandas/core/strings.py#L1766[StringMethods]
+** `.cat` https://github.com/pandas-dev/pandas/blob/3e4839301fc2927646889b194c9eb41c62b76bda/pandas/core/indexes/accessors.py#L306[CombinedDatetimelikeProperties]
+** `.dt` https://github.com/pandas-dev/pandas/blob/3e4839301fc2927646889b194c9eb41c62b76bda/pandas/core/arrays/categorical.py#L2356[CategoricalAccesor]
+
 == Resampling
 http://pandas.pydata.org/pandas-docs/stable/api.html#resampling
 
@@ -963,7 +975,7 @@ Can do fixed row number window or timedelta window (on index or column). `.expan
 |===
 | s.*rolling*(window=<num_rows>).*mean*()   | Rolling window; returns like-indexed object
 | s.rolling(*"<timedelta>"*).mean()         |
-| df.rolling(.., *on*=col)                  | Column to use for values instead of index
+| df.rolling(.., *on*=col)                  | Column to use for values instead of index; needs to be sorted(!?)
 | s.rolling(window=.., *center*=True)       | Output is from symmetric window
 | _min_periods_=..                          | Threshold on non-null data to require
 | _center_=False                            | whether to set labels at the center; otherwise right label used
@@ -992,6 +1004,7 @@ Can do fixed row number window or timedelta window (on index or column). `.expan
 | _span_=, com=, halflife=, alpha=          | Specifying factor by different methods
 | _ignore_na_=True                          | how intermediate NaN values affect result
 |===
+
 
 * replace `pd.rolling_*` etc.
 * obsolete options `freq=` and `how=` (use `.resample()` instead); use groupby like methods on rolling window instead

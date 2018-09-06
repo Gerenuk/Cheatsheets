@@ -348,7 +348,7 @@ Possible types are `NullType`, `StringType`, `BinaryType` (byte array), `Boolean
 | *sort_array*(_col_, asc=True)             | Sort input array
 | *spark_partition_id*()                    | Partition ID
 | *struct*(_*cols_)                         | Return struct column
-| *udf*(_func_, returnType=StrinType)       | Create `Column` expression representing a user defined function
+| *udf*(_func_, returnType=StringType)      | Create `Column` expression representing a user defined function
 | *when*(_condition_, _value_)              | Evaluate condition and return value; None is `otherwise()` not used; `condition` is boolean Column; `value` is literal or `Column`
 | *create_map*(_*cols_)                     | Create a new map column
 |===
@@ -706,3 +706,8 @@ df.orderBy(F.desc("col"))
 * register udf for  SQL: spark.udf.register
 * F.unix_timestamp(.., <format>)
 * .astype("timestamp")
+
+= Start
+
+    from pyspark.sql import SparkSession
+    spark = SparkSession.builder.getOrCreate()

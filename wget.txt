@@ -1,0 +1,12 @@
+|===
+| --no-clobber | Do not redownload existing
+| -E | Rename to .html if something else (eg. .php)
+|--relative | Follow only relative links
+| -N | timestamping
+|-w | wait in seconds
+| -U Mozilla | useragent Mozilla browser
+| --restrict-file-names=windows | Adjust filenames to Windows
+| -I commalist | include only these directories (related to base host)
+|===
+
+Suggested options: k, m, p, np, R

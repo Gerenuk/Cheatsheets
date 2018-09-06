@@ -9,3 +9,5 @@
 * maybe: first feature select (but with min_sample_leaf) -> retrain; tweak n_estimators, min_sample_leaf
 
 * limit depth (~5) if few samples
+
+* for feature importances definitely tune max_features

@@ -14,7 +14,7 @@ Press F8 at boot to chose from options
 To delete file or folder with trailing dot use
 rd /s "\\?\D:\<folder>"
 
-
+Remote at custom resolution: mstsc /w:<width> /h:<height>
 
 To show DOS shortened names:
 for %I in (.) do echo %~sI
@@ -39,3 +39,5 @@ rundll32 sysdm.cpl,~EditEnvironmentVariables
 Proxy from netstat -an
 
 Change password Remote Desktop: Ctrl-Alt-End (!)
+
+mklink to make symlinks in windows, but needs admin rights

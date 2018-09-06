@@ -339,3 +339,10 @@ dir/*
 | git help -g   		| Tutorials
 | git remote set-url origin ssh://...       | Change to SSH key based version
 |===
+
+
+When problem with self-signed certificate:
+
+git config --global http.sslVerify "false"
+
+-> creates ~/.gitconfig

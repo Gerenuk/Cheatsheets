@@ -14,3 +14,5 @@ If scrollbar missing in dashboard:
 
 Overlapping bars in plot (too broad):
 * change variable from continous to discrete
+
+INDEX()   to count obs?
