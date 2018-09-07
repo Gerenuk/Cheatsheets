@@ -681,7 +681,13 @@ asciimath:[sigma_t^2=alpha_0+alpha_1 y_(t-1)^2]
 * could be due to global trend, seasonality
 * could have variation in: mean, variance, autocorrelation (i.e. frequency)
 * could test by plot of moving average
-* Dickey-Fuller test: null hyp. is the TS is non-stationary
+* Dickey-Fuller test: null hyp. is the TS is non-stationary -> DF statistics need to be _low_ (for stationarity)
+* Augmented Dickey-Fuller test:
+** NULL: has unit root
+** alternative: stationary or trend-stationary (depends on version)
+** ADF version is DF version for larger and more complicating data
+** statistic is negative and more negative is better for not having a unit root
+** p-value should be low
 ** `statsmodels.tsa.stattools.adfuller(ts, autolag="AIC")`
 * for details wee "Brockwell and Davis"
 * make stationary:
