@@ -114,6 +114,13 @@ PATH										# path for executables
 RANDOM									# 0...32767
 SECONDS									# seconds since shell started
 
+while read p; do echo $pdone <peptides.txt
+
+shopt -s dotglob  # enable hidden files for mv etc.
+
+sudo /bin/bash -c '... > ...'      # if piping needed
+
+
 Startup:
 1. /etc/profile
 2. ~/.bash_profile
@@ -132,6 +139,27 @@ ${file%.suf}	strip (minimal) string from end of file
 
 Non-interactive shell:
 $BASH_ENV
+
+Bash interactive, login (e.g. SSH): /etc/profile, ~/.bash_profile, ~/.profile
+Bash interactive, not login: ~/.bashrc
+
+https://www.gnu.org/software/bash/manual/bashref.html#Bash-Startup-Files
+
+
+cat >>file.txt<<EOF
+...
+EOF
+
+
+if [ -z ${var+x} ]; then   # if variable is set, https://stackoverflow.com/questions/3601515/how-to-check-if-a-variable-is-set-in-bash
+
+exit 1   # exit
+
+if [ ! -d "$DIR"]; then     # check if dir exists
+
+
+set -e    # exit script on any command that fails in this bash script
+
 
 ls !(*.dat|*.ps)	# show all but *.dat and *.ps
 $CDPATH			# path for cd

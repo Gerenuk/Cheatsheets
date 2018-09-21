@@ -7,3 +7,6 @@ Browser.sessionhistory.max_entries 10
 about:support  -> export plugin list
 about:memory
 
+Mousewheel.default.delta_multiplier_y = 400
+
+

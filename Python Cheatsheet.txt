@@ -44,6 +44,7 @@
 | breakpoint()                              | General breakpoint (Py3.7)
 | if (match := ..)                          | Assignment expression (Py3.8)
 | open(os.devnull, "w")                     |
+| heapq.merge(*its)                         | merge multiple sorted
 |===
 
 == Forgotten
@@ -171,6 +172,7 @@
 | f = path.open(mode="r")                   | Open file https://docs.python.org/3/library/pathlib.html#pathlib.Path.open[Ref]
 | path.read_text(encoding=None)             | Read decoded text https://docs.python.org/3/library/pathlib.html#pathlib.Path.read_text[Ref]
 | path.write_text(data)                     | Open, write text and close https://docs.python.org/3/library/pathlib.html#pathlib.Path.write_text[Ref]
+| Path.cwd().joinpath("..").resolve()       | One level up
 |===
 
 On Linux no creation time accessible, so use `os.path.getmtime()` or `os.stat().st_mtime` which is modification time. Creation time should be `os.stat().st_crtime` but currently not supported.
@@ -689,12 +691,21 @@ But does not measure function length etc. Didn't find any better https://github.
 * `bottleneck.test()` -> 79 tests in 70.712s OK run=79 errors=0 failures=0
 * get BLAS info: `numpy.distutils.system_info.get_info('blas')` could also be atlas
 * to restore built-ins: `del myoverwritten` or `import builtins; real=builtins.real`
+* `1e16+1-1e16` cuts off (previously 1e22?) -> max exp better be 14 or less
+* `np.float32(1e8+1)-1e8` cuts off -> max exp better be 6 or less
+* note that `np.float32(1e39)` -> `inf`
+
 
 == Anaconda
 
     while read requirement;
         do conda install --yes $requirement || pip install $requirement;
     done < requirements.txt
+
+CONDA_ENVS_PATH
+
+also .condarc envs_dirs
+
 
 == Unsorted
 class my_nt(NamedTyple)   # Python 3.6
@@ -705,5 +716,12 @@ JSON worse than YAML since tuple and list become same encoding
 
 Performance:
 * creating lists has small overhead compared to tuples, so creating small tuples faster than small lists; but apart from that tuples are not faster
+
+
+Get pip:
+python -m ensurepip            # get pip (unless deactivated by distro)
+https://docs.python.org/3/library/ensurepip.html
+
+There is also get-pip.py script around
 
 ++++++++

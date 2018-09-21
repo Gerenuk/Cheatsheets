@@ -85,3 +85,10 @@ Node content: image, imagescale
 Node placement: ordering=out, outputorder, overlap, overlap_scaling (for prism), pack, packmode, pin, pos, rank, rankdir, ranksep, remincross, root, sep, smoothing, start (starting position)
 
 labelfloat=false
+
+
+Python Graphviz: use pip install graphviz; on windows my need to patch to include shell=True
+
+To cluster node: the subgraph name must start with "cluster" (https://www.graphviz.org/doc/info/lang.html)
+
+edge attr: dir="both" need to bidirectional

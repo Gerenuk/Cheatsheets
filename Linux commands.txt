@@ -263,6 +263,7 @@
 | grep -a -B_LINES_BEFORE_ -A_LINES_AFTER_ _TEXT_ /dev/ _DEVICE_ | undelete ASCII files
 |===
 
+* alternatives to grep: ack, ag, ripgrep
 
 === Access rights
 
@@ -298,6 +299,7 @@
 | fdisk -l                                  | show partitions (run as root)
 | dd                                        | copies data with optional lowlevel conversions
 | mkdir                                     | make directory
+| mkdir -p <dir>                            | create full dir path if not existent
 | mv -b ...                                 | backup instead of overwriting
 | mv -u ...                                 | update files
 | mmv _PAT1_ _PAT2_                         | multiple move with #1,#2... for matches
@@ -434,6 +436,10 @@
 * ECDSA is suspicious (NIST-produced)
 * Ed25519 key size is always 256
 * -> Ed25519 is best
+* `ssh-agent`: stores key in memory so that do not have to retype passphrase
+
+    ssh-agent -s
+    ssh-add ~/.ssh/<key>
 
 
 == Network (show info or configure)
@@ -583,3 +589,12 @@
 == Bash
 
 * http://www.gnu.org/software/bash/manual/bash.html#Shell-Parameter-Expansion[Shell Parameter Expansion]
+
+== Other
+
+apt instead of apt-get and apt-cache easier. can also manage apt.conf
+
+(apt-get has some more low-level options)
+
+https://github.com/athityakumar/colorls
+https://github.com/ogham/exa

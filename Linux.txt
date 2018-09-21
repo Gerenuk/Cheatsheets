@@ -320,6 +320,7 @@ Uninterruptable processes are USUALLY waiting for I/O following a page fault. Th
 
 A niceness level increase by 1 should yield a 10% more CPU time to the process
 
+!On SSH only bash_profile called -> bash_profile should call bashrc
 
 Execution:
 
@@ -328,7 +329,7 @@ Interactive + Login:
 2. .bash_profile OR .bash_login OR .profile
 3. on exit: .bash_logout
 
-Interactive w/o Login:
+Interactive w/o Login (when already on machine):
 1. .bashrc
 
 Non-interactive

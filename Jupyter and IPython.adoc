@@ -9,6 +9,7 @@
 | %debug                                    | Debug exception (call this after it occured)
 | %debug --breakpoint FILE:LINE             |
 | %%black                                   | Format code (from `pip install blackcellmagic`)
+| # fmt: off                                | Turn Black formatting off
 | from IPython.core.debugger import set_trace | Set trace for debugging
 | %xmode verbose                            | Show variables in traceback lines
 | %load script.py                           | Load code of script into cell

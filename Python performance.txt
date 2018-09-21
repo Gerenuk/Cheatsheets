@@ -156,3 +156,10 @@ https://www.youtube.com/watch?v=5js_-pLGqwA
 * !geometric average between tests -> so that ratios between test sets are clear
 * benchmarking hard (see video for ideas)
 
+== Libraries
+
+* pseudo-inverse: PyTorch slower
+* Eigh: best is JIT-compiled Eigh (SVD for PCA is slow)
+* solve lin equation:
+** Torch GELS unstable (do `theta_hat[np.isnan(theta_hat) | np.isinf(theta_hat)] = 0`) at end
+** regularized Cholesky fastest

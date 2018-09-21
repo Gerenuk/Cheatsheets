@@ -340,7 +340,6 @@ dir/*
 | git remote set-url origin ssh://...       | Change to SSH key based version
 |===
 
-
 == Complete remove a file
 
 https://itextpdf.com/blog/how-completely-remove-file-git-repository
@@ -353,3 +352,10 @@ https://itextpdf.com/blog/how-completely-remove-file-git-repository
     git push --force
 
 Also https://help.github.com/articles/removing-sensitive-data-from-a-repository/
+
+== Other
+When problem with self-signed certificate:
+
+git config --global http.sslVerify "false"
+
+-> creates ~/.gitconfig

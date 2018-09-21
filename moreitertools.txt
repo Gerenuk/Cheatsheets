@@ -1,0 +1,24 @@
+
+* https://more-itertools.readthedocs.io/en/latest/api.html
+
+|===
+| spy(it, n=1) | Lookahead n elements without advancing iterator
+| it2=peekable(it) | Lookahead (even by index) or prepend elements (cached)
+| collapse(it) | Flatten all nesting (but not base_types like str)
+| sort_together(its, key_list=(0,)) | Sort together
+| ilen(it) | Number of elements in iterator
+| one(it) | Return first element of 1-element iterator; exception otherwise
+| unique_to_each(*its) | Return elements which only in that one it
+| locate(it, pred=bool) | Return index where True
+| all_equal(it) | True if all equal
+| islice_extended(..) | Supports negative values
+| unique_everseen(it) | Unique elements preserve order
+| unique_justseen(it) | First element of each "run"
+| powerset(it) |
+| random_product(*args) | Random from product
+| always_iterable(obj) | Wrap as iterable if not one yet
+| @consumer | Automatically call next() after each .send()
+| make_decorator(wrapping_func) | Make a decorator used for a function
+| iterate(func, start) | start, func(start), func(func(start)), ...
+| SequenceView(target) | Read-only view
+|===

@@ -22,6 +22,12 @@
 * usually prediction intervals are too narrow since many choices not accounted for
 * bagging: do many predictions and average
 * permanent shocks cannot be estimated from time-series model
+* monthly (ideally seasonal) points can improve forecast a lot, even if you actually want to optimize the yearly sum forecast
+
+*! regressing on past values is not consistent, need one of
+** conditional least squares
+** conditional MLE
+** exact MLE
 
 === Whitening
 
@@ -50,6 +56,22 @@
 ** KPSS doesn't seem enough -> test with autocorrelation test
 * use AIC or CV to find ARIMAA asciimath:[p] and asciimath:[q] orders; find if including constant
 * test residuals for remaining information (Ljung-Box test)
+* ARIMA seems to work better than Prophet, but is more sensitive to "level shifts" (will think level shift jumps will repeat after one occurence)
+* auto-correlation left if Durbin-Watson statistics low(?)
+* interesting to distinguish deterministic trends from unit root or(?) stochastic trendsS
+** -> Augmented Dickey-Fuller is best to test for unit root (determined my MC experiments)
+
+* with unit roots, model just will be invalid without adjustment
+
+==== Details
+
+* https://www.quora.com/How-do-I-analyze-time-series-and-its-characteristics-that-means-stationarity-tendency-etc-to-determine-which-prediction-forecast-method-ARIMA-for-instance-is-most-suitable
+* first check (lagged) correlations between variables
++ ADF test, but, before check for trend(?)
+* if indep. variables -> Engel-Granger cointegration test for long-run relationship [but before check for unit root since I(1) variables cannot be cointegrated with I(0) variables]
+** if cointegration -> VECM model since long-term deviations will correct short-term dependencies (also add lagged variables and dummies for seasons)
+** if no cointegration -> difference all variables with unit root; add seasons and lags
+* add moving averages if it helps dynamics
 
 ==== Seasonal ARIMA summary
 
@@ -78,9 +100,31 @@
 * LSTM, RNN
 * XGB, ANN
 * GARCH (when variance follows ARMA process)
-* Prophet (Facebook)
 * CausalImpact (Google)
 * Shallow ANN
+
+==== Prophet (Facebook)
+
+* `pip install fbprophet`; needs `cython` and `pystan`
+* package is mainly for the masses who cannot tune more complex models
+* seems to model seasonality with yearly, monthly, weekly patterns
+* usually models addition of
+** piece-wise linear trend or saturating growth trend
+** seasonality (multiple scales; modelled with Fourier)
+** optionally explicit holidays
+* can include holidays as explicit input
+* modelled in Stan (few lines only)
+* resistant to outliers
+* no need for regular spacing; fast
+* for saturating growth model: can specify total scaling manually
+* can explictely define change points
+* Prophet has more interpretable parameters (you can include manual changepoints etc.)
+* there is a paper describing the approach
+* documentation: https://facebook.github.io/prophet/docs/quick_start.html
+* https://github.com/facebook/prophet/blob/master/python/fbprophet/forecaster.py[parameters Prophet]
+* robust; for normal seasonality ARIMA seems better
+* can fit changepoints well - after they occured - but may output too many changepoints (and unstable to tune to just 1 changepoint in a hockey stick curve)
+
 
 ==== Model choice
 
@@ -108,6 +152,9 @@
 
 * Hierarchical/grouped models: when want to model parts and whole
 * Vector Autoregression (VAR): when interactions between multiple targets
+** can plot impuls response `res.irf`
+** forecast error variance decomposition `res.fevd`
+** Granger causality `res.test_causality(var1, var2)`
 * Low integer count prediction: there are special methods for this; e.g. predict non-zero values and time between them
 
 == State space models
@@ -217,6 +264,11 @@ asciimath:[rho_h=phi_1^h]
 * does not work if asciimath:[y<0]
 * forecasts not sensitive on asciimath:[lambda]; but may have large effects on prediction intervals
 *! not the the back transform gets the mean biased -> needs correction if want to add up results (e.g. aggregate); need forecast variance
+
+asciimath:[exp(w_t) (1+sigma_h^2/2)]
+
+asciimath:[(lambda w_t+1)^(1/lambda) (1+(sigma_h^2 (1-lambda))/(2(lambda w_t +1)^2))]
+
 * you could pick 3 points from the QQ curve and optimize asciimath:[((x+alpha)^lambda-1)/lambda] to make it linear
 
 == Metrics
@@ -271,6 +323,17 @@ asciimath:[hat x_(t+1)=alpha x_t+alpha (1-alpha) x_(t-1)+ alpha (1-alpha)^2 x_(t
 * Gardner & McKenzie: added dampening to a flat line (parameter 0.8...0.98)
 * can include seasons
 * forecast by iterating model (and setting unknown errors to zero)
+* data can be non-stationary; actually Exponential smoothing sub-optimal if data is already stationary
+
+* to fit linear trends (but allow for outliers on turns), i.e. log(abs(error)), one could use smoothing_level=0.95, smoothing_slope=0.6, trend="mul", damped=False
+* for sqr(error): smoothing_level=0.95, smoothing_slope=0.95, trend="mul", damped=True
+* M4 concluded that damped=True is more successful
+* often multiplicative trend more stable; additive trend only slightly easier to understand
+* curve usually looks like shadowed one month later (due to unpredictability of changes)
+
+* Simple exponential smoothing: just one level equation and smoothing parameter asciimath:[alpha] (how strongly reacts to newest observation); all real future forecasts are the same ("flat forecast"); may look like shifted to right
+* Holt linear trend: additionally one trend equation with a new parameter asciimath:[beta]; optionally another damping parameter asciimath:[phi]
+* Holt-Winters method: additaionyll seasonality equation with parameter asciimath:[gamma]
 
 == ARIMA
 
@@ -313,6 +376,7 @@ asciimath:[hat x_(t+1)=alpha x_t+alpha (1-alpha) x_(t-1)+ alpha (1-alpha)^2 x_(t
 * seasonal ARIMA:
 ** (0,1): single spike in ACF, decay in PACF
 ** (1,0): decay in ACF, single spike in PACF
+* trend can be deterministic or stochastic -> stochastic trend can be dealt with with differencing
 
 === Books
 
@@ -358,6 +422,7 @@ asciimath:[hat x_(t+1)=alpha x_t+alpha (1-alpha) x_(t-1)+ alpha (1-alpha)^2 x_(t
 * if seasons -> always use seasonal differencing (otherwise seasonal pattern fades out over time)
 * but seasonal diff <= 1
 * seasonal diff + nonseasonal diff <= 2
+* if seasonal: use asciimath:[D=1] and asciimath:[d=1] (if trend)
 * autocorr positive at lag S -> add sAR term
 * autocorr negative at lag S -> add sMA term
 * sAR + sMA <= 2 (or overfitting and estimation problems)
@@ -423,6 +488,7 @@ asciimath:[|d|<0.5]
 * also differencing daily data on a year ago is just noisy
 * -> use harmonic regression for seasons and ARMA for short-term
 * only drawback is that seasons are assumed to be constant
+* 10/365 for yearly and 3/7 for weekly components works well (?)
 
 == Lagged features
 
@@ -492,6 +558,11 @@ asciimath:[|d|<0.5]
 * "blocked bootstrap" random sections of remainder time series (i.e. without trend ans season) select and joined together
 * -> measure of forecast uncertainty
 
+== Change detection
+
+* Chow test: test whether fitting two linear regression for each time period would give different slopes/offsets
+* Package Prophet (Facebook) can fit various seasonalities and underlying piece-wise linear trends with PyStan
+
 == General
 
 * all can be additive or multiplicative
@@ -532,6 +603,7 @@ asciimath:[|d|<0.5]
 * ideally do not use the future information to decide on missing or outlier values
 * more possible time series issues: last chapter of "Principles of business forecasting" (Ord, J. K., Fildes, R., & Kourentzes, N. (2017))
 
+<<<<<<< HEAD
 == Time Series Classification
 
 * Nearest neighbor with Dynamic Time Warping hard to beat; also http://www.cs.ucr.edu/~eamonn/DTW_myths.pdf[DTW myths]
@@ -559,6 +631,20 @@ asciimath:[|d|<0.5]
 == Change detection
 
 * https://stats.stackexchange.com/questions/139660/detecting-changes-in-time-series-r-example
+=======
+* hard to beat SARIMAX (e.g. Python https://github.com/tgsmith61591/pyramid)
+
+https://vimeo.com/274421819
+* multi-variate time series
+* to model effects from y on x: use vector for y -> components affect each other
+* Vector Autoregressive Models
+** only for stationary; but sometimes differencing makes stationary
+** if non-stat. but linear combination is stat (co-integration): can do "Vector error correction model")
+** sm.tsa.VARMAX
+* explore: time series itself, histogram of y, ACF, PACF(!)
+* weak stat: first two moments constant (mean, [co]var)
+* LSTM: does not need stationarity
+>>>>>>> 22a5c47b1094205e2fddbac4f0fc4af12eb7fcf9
 
 == Anomaly detection
 
@@ -574,12 +660,17 @@ asciimath:[|d|<0.5]
 
 == GARCH model (Autoregressive Conditionally Heteroskedastic Model)
 
+* https://www.quora.com/What-is-an-intuitive-explanation-of-ARCH-GARCH-models
 * http://www.blackarbs.com/blog/time-series-analysis-in-python-linear-models-to-garch/11/1/2016
 * most often rather variance bursts instead of trends
-* ARCH: AR(p) model for Variance
-* GARCH(n,m): ARMA for variance
+* ARCH: AR(p) model for Variance; only MA in noise sequence (?)
+* GARCH(n,m): ARMA for variance; i.e. based on estimated noise amplitude and also instance specific noise
 * check PACF of squared values
 * https://onlinecourses.science.psu.edu/stat510/node/85/
+* Tsay book recommended for this
+* ARCH: moving average of hidden noise; noise has to be estimated from autoregression
+* ARCH finite impulse response in noise power -> large variance effects disappear quickly
+* GARCH infinite impulse response in noise power -> impact from high variance in past can be longer than order of equation
 
 asciimath:[Var(y_t|y_(t-1))=sigma_t^2=alpha_0+alpha_1 y_(t-1)^2]
 
@@ -633,3 +724,125 @@ asciimath:[sigma_t^2=alpha_0+alpha_1 y_(t-1)^2]
         print("Stationary. Good!")
 
 * alternatively `adfuller(s)[1] < 0.05` wanted (but this test is weaker)
+
+== Stationarity
+
+* need for models which rely on a process of constant conditions
+* could be due to global trend, seasonality
+* could have variation in: mean, variance, autocorrelation (i.e. frequency)
+* could test by plot of moving average
+* Dickey-Fuller test: null hyp. is the TS is non-stationary -> DF statistics need to be _low_ (for stationarity)
+* Augmented Dickey-Fuller test:
+** NULL: has unit root
+** alternative: stationary or trend-stationary (depends on version)
+** ADF version is DF version for larger and more complicating data
+** statistic is negative and more negative is better for not having a unit root
+** p-value should be low
+** `statsmodels.tsa.stattools.adfuller(ts, autolag="AIC")`
+* for details wee "Brockwell and Davis"
+* make stationary:
+** differencing
+** or decomposition (subtract trend)
+** scaling (e.g. log) to equalize variance
+* http://people.duke.edu/~rnau/whatuse.htm
+* colored noise is stationary; hitting a guitar is not
+
+
+== Trend estimation in time series signals
+https://www.youtube.com/watch?v=likDxYXhNQY
+* median filtering: more robust to outliers, non-linear; could shadow mid-term if large window
+* exponential weighted moving average: not robust to outliers; pd.stats
+* bandpass filtering: extract mid-term (high=noise; low=bias); similar to Hodrick-Prescott filter; scipy.signal
+* hodrick-prescott filter:
+** one of best for trends
+** decompose into trend (mid-term growth) and cyclical component
+** minimize optimization function with smoothness constraint
+** good when noise Gaussian
+** bandpass at heart
+** cycle: short term; trend: medium term
+** linear
+** Python statsmodels
+* L1 trend filtering:
+** L1 error
+** more robust
+** piecewise linear!
+** nonlinear
+** good when noise exponentially distr.
+** computationally expensive
+** library from Bugra
+
+== Other packages
+* https://github.com/blue-yonder/pydse
+
+== Tips
+
+* GARCH, ARCH, regression, ARIMA
+* Theta method: Theta method was equivalent to an average of a linear regression and simple exponential smoothing with drift
+* outlier removal (e.g. once-off events)
+** local smoother; use residuals to determine seasonality; compare double smoothed to original data and drop outside 3 sigma
+* MASE can be very sensitive to a few series; worth concentrating on these if you really have to optimize for MASE
+** maybe then use only linear growth (not exponential); additive seasonality (not multiplicative) - otherwise small weights
+* include a global trend (e.g. from across all series; if data from one industry)
+
+== Filters
+
+* `tsa.filters.*`
+
+=== Hodrick-Prescott filter
+
+* separate into trend and cyclical component
+* minimize quadratic loss
+* penality term lambda of roughness (e.g. 1600 for quarterly data, 6.25 for annual data, 129600 for monthly data)
+
+=== Baxter-King filter
+
+* approximate band-pass filter that explicitely deals with periodicity of business cycle
+* frequencies only exactly at business cycle
+* US business cycle 1.5-8 years
+* P_L=6, P_H=32 for quarterly; P_L=1.5, P_H=8 for annual data
+* lead-lag length K=12
+
+=== Christiano-Fitzgerald filter
+
+* asymmetric about time
+* assumes random walk -> allows to approximate ideal filter even if exact model not known
+
+== Benchmarking
+
+* turning low frequency data into higher frequency (e.g. annual to monthly)
+* Denton's method: `tsa.interp.dentonm`
+
+== Individual solutions
+
+* http://mabrek.github.io/blog/kaggle-forecasting/
+
+=== Kaggle Competitions about Time Series
+
+* https://www.kaggle.com/c/tourism2
+* https://www.kaggle.com/c/web-traffic-time-series-forecasting[Web traffic time series forecasting]
+** http://blog.kaggle.com/2010/11/24/how-we-did-it-jeremy-howard-on-winning-the-tourism-forecasting-competitoin/[Winner solution]; LSTM
+** similar with CNN: https://github.com/sjvasquez/web-traffic-forecasting
+** median of last week a benchmark that was hard to beat
+** used https://en.wikipedia.org/wiki/Symmetric_mean_absolute_percentage_error[SMAPE] metric which is https://www.kaggle.com/cpmpml/smape-weirdness[weird] (discontinuous at 0 and non-convex)
+* https://www.kaggle.com/c/how-much-did-it-rain[How much did it rain?], https://www.kaggle.com/c/how-much-did-it-rain-ii[How much did it rain? (II)]
+** http://blog.kaggle.com/tag/how-much-did-it-rain/[Winners]; winner had large RNN
+* https://www.kaggle.com/c/online-sales[Online Product Sales]
+* https://www.kaggle.com/c/rossmann-store-sales[Rossmann store sales]
+** http://blog.kaggle.com/tag/rossmann-store-sales/[Winners]
+* https://www.kaggle.com/c/walmart-recruiting-store-sales-forecasting[Walmart Recruiting - Store Sales Forecasting]
+** https://www.kaggle.com/c/walmart-recruiting-store-sales-forecasting/discussion/8125[1st place]; https://www.kaggle.com/c/walmart-recruiting-store-sales-forecasting/discussion/8023[2nd place]
+* (list from https://machinelearningmastery.com/challenging-machine-learning-time-series-forecasting-problems/)
+* https://www.kaggle.com/c/ams-2014-solar-energy-prediction-contest[AMS 2013-2014 Solar Energy Prediction Contest]
+** https://www.kaggle.com/c/ams-2014-solar-energy-prediction-contest/discussion/6321#33783[1st place]; ensemble of GBM
+* https://www.kaggle.com/c/GEF2012-wind-forecasting[Global Energy Forecasting Competition 2012 - Wind Forecasting]
+* https://www.kaggle.com/c/dsg-hackathon[EMC Data Science Global Hackathon (Air Quality Prediction)]
+** http://blog.kaggle.com/2012/05/01/chucking-everything-into-a-random-forest-ben-hamner-on-winning-the-air-quality-prediction-hackathon/[1st place]; ensemble of RFs on lagged data
+
+=== Kaggle Tourism Forecasting
+
+I then fitted a weighted regression (weighted the most recent observations the most heavily) combined with weighted additive seasonality (again weighting the most recent observations the most heavily) on all but the last 2 years of each series. A simple optimiser found the optimal weighting of each in order to predict the final 2 years. This weighted model was then applied to the full data set to create predictions. The intercept of the weighted regression was adjusted such that the residual on the final observation was always zero - this was important for ensuring that the series with a low denominator in the MASE metric were forecast as accurately as possible.
+
+=== Kaggle Air Quality predition
+
+I took the lagging N components from the full time series (N=8 for the winning submission, which was selected arbitrarily) as features, then each of the 10 prediction times and 39 pollutant measures as targets. I then trained 390 Random Forests over the entire training data, one for each predicted offset time-pollutant combination. The Random Forest parameters were selected so that the models would be quick to train. https://github.com/benhamner/Air-Quality-Prediction-Hackathon-Winning-Model[code]
+

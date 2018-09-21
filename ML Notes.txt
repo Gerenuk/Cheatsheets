@@ -351,6 +351,7 @@ The stddev given by statsmodels.OLS corresponds roughly to what the deviation fr
 
 === AIC vs BIC vs ...
 
+* !AIC good for prediction as asymptotically like CV; BIC good for interpretation as consistent with data process (if correct process chosen)
 * https://en.wikipedia.org/wiki/Akaike_information_criterion#Comparison_with_BIC[Wikipedia AIC vs BIC]
 * BIC assumes constant prior prob over all models -> not sensible? (models should be unequal)
 * if true model in in candidates, BIC will (asymptically) always select it [but true model is never in candidates?] -> AIC won't for sure (even for infinite data)
@@ -479,21 +480,7 @@ Box-Plot (by Tukey): plot Median, Q25, Q75, Min, Max; but consider values  x < Q
 ** if number of observations larger than 50000 use linear instead of RBF due to speed
 * SVM large margin = small VC dimension
 
-== Time series
-* hard to beat SARIMAX (e.g. Python https://github.com/tgsmith61591/pyramid)
-
-https://vimeo.com/274421819
-* multi-variate time series
-* to model effects from y on x: use vector for y -> components affect each other
-* Vector Autoregressive Models
-** only for stationary; but sometimes differencing makes stationary
-** if non-stat. but linear combination is stat (co-integration): can do "Vector error correction model")
-** sm.tsa.VARMAX
-* explore: time series itself, histogram of y, ACF, PACF(!)
-* weak stat: first two moments constant (mean, [co]var)
-* LSTM: does not need stationarity
-
-=== Learned from Kaggle
+== Learned from Kaggle
 * https://www.youtube.com/watch?v=9Zag7uhjdYo
 * example competitions:
 ** automated graders; just as good as human grader (disagreement between humans the same as to machine) for large essays (worse for short answers to questions)
@@ -527,7 +514,7 @@ http://blog.kaggle.com/2016/07/21/approaching-almost-any-machine-learning-proble
 * regression: RF, XGB, LR, RIdge, Lasso, SVR
 
 
-=== Text mining
+== Text mining
 * need to find special sub-categories of data, before looking at top words (e.g. periodic, high/low, special attributes)
 * -> do an (0,1,0,..) feature and count top words for each of the bins
 * combine word into min(rank) list

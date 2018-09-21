@@ -32,3 +32,15 @@ TIP: special paragraph
 
 [glossary]
 term:: definition
+
+== Math
+
+    :stem:
+
+    asciimath:[x^2]
+
+    [asciimath]
+    ----
+    x^2
+    ----
+

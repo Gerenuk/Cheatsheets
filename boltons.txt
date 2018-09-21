@@ -1,0 +1,12 @@
+|===
+| wrap_trace(obj, hook=..) | Hook on any interaction with object
+| remap(root, visit=.., enter=.., exit=..) | Tree traverse https://boltons.readthedocs.io/en/latest/iterutils.html#boltons.iterutils.remap
+| get_path(root, path) | Get nested obj by path (and better error messages)
+| research(root, query=..) | Do remap and find object
+| BarrelList(..) | Backed by many dynamically scaled sublists
+| clamp(x, lower=.., upper=..) | Clip value
+| ceil(x, options) +
+  floor(x, options) | Ceil/floor to one of options
+| IndexedSet(..) | Ordered and indexable
+| URL(..) | Many methods for parsing
+|===

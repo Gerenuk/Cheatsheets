@@ -1,0 +1,11 @@
+Python attrs:
+
+* remove boilerplate from classes (variable declaration, dunder methods)
+* define class variables (and types and default values, ...) as class attributes
+* create repr, comparison, init
+* no runtime penalty
+* compare vs others:
+** vs namedtuple: not implicit iter/unpack, difficult to subclass
+** vs dataclasses: ok , but less powerful (no validator), faster development
+** vs dicts: keys not fixed
+-> using dataclasses OK if you do not need special features (validators, converters,...)
