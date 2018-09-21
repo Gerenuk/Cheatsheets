@@ -154,11 +154,12 @@ Other dimension properties:
 | Splice(..)                                |
 | Text(..)                                  |
 | Path([[xy_pairs], ..])                    |
-| Contours(.., level=..)                    |
+| Contours([data1,..], level=..)            |
 | Polygons(..)                              |
 | Bounds((left, bottom, right, top))        | Rectangular box
 | [aspect=..]                               | Set aspect for various elements
 |===
+
 
 * http://holoviews.org/Tutorials/Elements.html[Elements Tutorial]
 * e.g. `Curve` mean continuous mapping given by a sample
@@ -359,6 +360,11 @@ Palettes are continuous. They will normalize and cover whole range, whereas Cycl
 | symmetric=True                            | Make colors centered at zero
 | colorbar=True                             | Enable colorbar
 |===
+
+    hv.Contours([{"x":[..],
+                  "y":[..],
+                  "i":[..]},..], vdims=['i']) \
+      .options(color_index='i', cmap='viridis')
 
 * Images and Heatmaps use first vdim as `color_index`
 * Colormaps are hardcoded and taken from matplotlib, bokeh and colorcet
