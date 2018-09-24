@@ -547,6 +547,11 @@ asciimath:[|d|<0.5]
 * use asciimath:[p] lags and asciimath:[k] nodes in a simple (autoregressive) neural network NNAR(p,k)
 * `nnetar()`
 * since not a stochastic model, no clear prediction intervals -> pick random errors from a distribution while predicting and simulate possible future paths
+* http://www.ijcaonline.org/archives/volume143/number11/zaytar-2016-ijca-910497.pdf[On weather]
+* https://deepmind.com/blog/wavenet-generative-model-raw-audio/[Wavenet]
+* http://web.engr.oregonstate.edu/~tgd/publications/mlsd-ssspr.pdf[Overview]
+* https://stats.stackexchange.com/questions/8000/proper-way-of-using-recurrent-neural-network-for-time-series-analysis
+* http://www.obitko.com/tutorials/neural-network-prediction/introduction.html
 
 == Bootstrapping and bagging
 
@@ -598,6 +603,35 @@ asciimath:[|d|<0.5]
 * ideally do not use the future information to decide on missing or outlier values
 * more possible time series issues: last chapter of "Principles of business forecasting" (Ord, J. K., Fildes, R., & Kourentzes, N. (2017))
 
+<<<<<<< HEAD
+== Time Series Classification
+
+* Nearest neighbor with Dynamic Time Warping hard to beat; also http://www.cs.ucr.edu/~eamonn/DTW_myths.pdf[DTW myths]
+* http://link.springer.com/article/10.1007/s10618-014-0377-7[BOSS] https://arxiv.org/abs/1602.01711[successful]
+* https://www.quora.com/What-are-some-time-series-classification-methods
+* http://sites.google.com/site/waleedkadous/publications/phd.pdf pages 30-54
+* https://www.amazon.com/Neural-Networks-Speech-Sequence-Recognition/dp/1850321701
+
+== Trend estimation
+
+* simple moving average: not robust to outlier
+* median filtering: could shadow mid-term change if large window
+* EWMA: not robust to outliers
+* bandpass filtering: similar to Hodrick-Prescott filter
+* Hodrick-Prescott filter: decomposes into trend and cyclical component; multi-variable optimization of mean-square-error
+*! could also do same by L1 minimization: good when noise exponential, piece-wise linear, kinks in result show changes
+
+== Lomb-Scargle periodigrams
+
+* least-squares spectral analysis
+* data as least squares of sines (DFT special case with orthogonal basis)
+* can have missing values
+* gatspy has fast implementation (faster than scipy or astroml); fast when regular grid of frequencies
+
+== Change detection
+
+* https://stats.stackexchange.com/questions/139660/detecting-changes-in-time-series-r-example
+=======
 * hard to beat SARIMAX (e.g. Python https://github.com/tgsmith61591/pyramid)
 
 https://vimeo.com/274421819
@@ -610,11 +644,19 @@ https://vimeo.com/274421819
 * explore: time series itself, histogram of y, ACF, PACF(!)
 * weak stat: first two moments constant (mean, [co]var)
 * LSTM: does not need stationarity
+>>>>>>> 22a5c47b1094205e2fddbac4f0fc4af12eb7fcf9
 
 == Anomaly detection
 
 * "Time Series Discord" proved to be best; for performance use http://www.cs.ucr.edu/~eamonn/MatrixProfile.html[Matrix Profile]
 * https://www.elen.ucl.ac.be/Proceedings/esann/esannpdf/es2015-56.pdf[LSTM], https://arxiv.org/pdf/1607.00148.pdf[LSTM]
+* https://stats.stackexchange.com/questions/152644/what-algorithm-should-i-use-to-detect-anomalies-on-time-series
+
+== Causality
+
+* https://stats.stackexchange.com/questions/94200/causality-in-microeconometrics-versus-granger-causality-in-time-series-econometr
+* https://stats.stackexchange.com/questions/144328/what-are-the-main-differences-between-grangers-and-pearls-causality-frameworks
+* https://stats.stackexchange.com/questions/24753/interpreting-granger-causality-tests-results
 
 == GARCH model (Autoregressive Conditionally Heteroskedastic Model)
 
@@ -648,6 +690,14 @@ asciimath:[sigma_t^2=alpha_0+alpha_1 y_(t-1)^2]
 
 * https://onlinecourses.science.psu.edu/stat510/node/76/
 * determine how much mean jumped after a known intervention
+
+== Other methods
+
+* http://www.cs.ucr.edu/~eamonn/SAX.htm[SAX]: motif discovery(?)
+* http://www.scholarpedia.org/article/Slow_feature_analysis[Slow feature analysis]: extract parameters behind chaotic models
+* Filtering:
+** Savitzky-Golay: try to preserve shape and intensity
+** Loess: try to preserve area under curve
 
 == Cookbook
 

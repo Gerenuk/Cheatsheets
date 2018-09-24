@@ -53,6 +53,25 @@
         loss.backward()
         optimizer.step()       # apply new gradients
 
+= Autograd
+
+To define new functions
+
+    class F(torch.autograd.Function):
+    @staticmethod
+    def forward(ctx, args, gamma):
+        ctx.gamma = gamma          # to store variables for backward
+        ctx.save_for_backward(x)   # just for saving input or output (does some additional checks)
+        pass
+
+    @staticmethod
+    def backward(ctx, args):
+        pass
+
+    F.apply(x, gamma)
+
+* using __init__ and __call__ is old-style and will be deprecated
+
 = Neural network module
 
 * input variables, output variables; may hold state variables
@@ -75,6 +94,13 @@ For more complex models subclass:
         def forward(self, x):
             ...
             return x
+
+|===
+| nn.Module.train()                         | Set to training mode (default)
+| nn.Module.eval()                          | Set to evaluation mode
+|===
+
+* `model.train()` important for DropOut and BatchNorm, since they behave differently in training vs evaluation model; `self.training=True` is default
 
 == Weight initialization
 

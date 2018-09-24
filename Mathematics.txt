@@ -8,6 +8,7 @@
 * Brouwer's fixed point theorem, which has several non intuitive consequences in the real-world such as:
 * The fact that if you lay a piece of paper on your desk and trace around its outline, then crumble/wad the paper up and put it back inside the lines that there will always be a point on the paper exactly above where it started relative to the desk
 * And, no matter how you stir your coffee there will always be some point in the liquid that ends in the same place that it was before mixing.
+* x*y^(sgn(x)) is associative but not commutative
 
 = Curiosities
 
@@ -38,3 +39,4 @@ However, in 3 or more dimensions the dynamics can be chaotic, meaning that simil
 === Recursivity
 
 asciimath:[H(p_1,p_2,...)=H(p_1+p_2,p_3,...)+(p_1+p_2)H(p_1/(p_1+p_2), p_2/(p1+p2))]
+
