@@ -1,0 +1,75 @@
+= Anomaly detection
+
+== Libraries
+
+* https://github.com/nicolasmiller/pyculiarity[pyculiarity]: Twitter Anomaly Detection (port of R package); needs R
+** https://github.com/twitter/AnomalyDetection[Twitter Anomaly Detection]: original R version
+** https://github.com/Marcnuth/AnomalyDetection[Marcnuth]: alternative without R
+* https://hdbscan.readthedocs.io/en/latest/outlier_detection.html[HDBSCAN Outlier]
+* http://scikit-learn.org/stable/modules/outlier_detection.html[Scikit-learn]: One-Class-SVM, Isolation Forest, Local Outlier Factor, Elliptic envelope
+* https://github.com/yzhao062/Pyod[PyOD]
+* http://docs.h2o.ai/h2o/latest-stable/h2o-r/docs/reference/h2o.anomaly.html[H2O]
+* http://nupic.docs.numenta.org/1.0.0/api/algorithms/anomaly-detection.html[NuPIC]
+* https://elki-project.github.io/algorithms/[ELKI]
+* https://github.com/linkedin/luminol[Luminol (Linkedin)]
+* https://github.com/tsurubee/banpei[Banpei]
+* https://github.com/netflix/surus[Surus (Netflix)]: Robust PCA in Hive, Pig
+* https://github.com/khundman/telemanom[Telemanom (NASA)]: LSTM
+* https://github.com/smirmik/CAD[CAD]: Contextual Anomaly Detector; winner of a NAB competition
+* https://github.com/STREAM3/pyISC[PyISC]
+* https://github.com/seninp/saxpy[SaxPy]
+
+* https://github.com/MentatInnovations/datastream.io[datastream.io]
+* https://github.com/nlittlepoole/thermometr[Thermometr]: Twitter S-H-ESD algorithm
+* https://pypi.org/project/kenchi/[kenchi]
+* http://www.cit.mak.ac.ug/staff/jquinn/software/lsanomaly.html[LSAnomaly]
+* https://github.com/etsy/skyline[Skyline]
+** https://github.com/earthgecko/skyline[Skyline (Earthgecko)]: some improvements
+* https://github.com/yahoo/egads[EGADS (Yahoo)]: Java
+* https://github.com/GYXie/anomaly-detection[GYXie]
+* https://github.com/eleme/banshee[Banshee]
+* https://github.com/nathanielc/morgoth[Morgoth]
+* https://github.com/lytics/anomalyzer[Anomalyzer]
+* https://github.com/haowen-xu/donut[Dobut]: seasonal KPIs
+* https://github.com/keiraqz/anomaly-detection[Anomaly detection (Keiraqz)]: on Spark
+* https://github.com/adiyoss/DeepAnomaly[DeepAnomaly]: neural network, 2016
+* https://github.com/dmbee/seglearn[Seglearn]
+* https://github.com/christophmark/bayesloop[BayesLoop]
+
+* https://github.com/baidu/Curve[Curve (Baidu)]: Labeling helper
+* https://github.com/Microsoft/TagAnomaly[TagAnomaly (Microsoft)]: Labeling helper
+
+=== Prediction
+
+* https://github.com/facebook/prophet[Prophet (Facebook)]
+* https://github.com/RJT1990/pyflux[PyFlux]
+* https://github.com/tgsmith61591/pyramid[Pyramid]
+* https://github.com/rtavenar/tslearn[tslearn]
+* https://github.com/jakobrunge/tigramite[Tigramite]
+
+== Resources
+
+* https://github.com/yzhao062/anomaly-detection-resources[Y Zhao]
+* https://github.com/hoya012/awesome-anomaly-detection[Hoya]: mainly research papers
+* http://dsmi-lab-ntust.github.io/AnomalyDetectionToolbox/: See Comparison
+* https://github.com/rob-med/awesome-TS-anomaly-detection[Rob Med]
+* http://web.stanford.edu/class/cs259d/[Stanford Cybersecurity course]
+
+== Websites
+
+* http://www.early-warning-signals.org/
+
+== Papers
+
+* http://www.hamilton.ie/florian/infocom2008.pdf[Adaptive Kalman filter]
+
+== Mentions
+
+* AutoEncoders
+* RNN, LSTM
+* Subsequence clustering?
+
+== Other
+
+* https://github.com/albertcthomas/anomaly_tuning: Parameter tuning notebook
+* https://github.com/fastforwardlabs/anomaly_detection/blob/master/Anomaly%20Detection%20Post.ipynb[Fast forward labs]: Proabilistic programming notebook
