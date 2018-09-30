@@ -1,0 +1,5 @@
+* normalization: umlauts could be single code point or combination -> normalization makes them equal
+* BOM
+* grapheme
+* characters can be combined
+* unicode talk by Ned Batchelder

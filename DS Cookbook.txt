@@ -304,6 +304,13 @@ F-test to compare models that are _nested_. Generally cross-validation also migh
 | ensemble.partial_dependence.partial_dependence(gbrt, target)      | Partial dependence http://scikit-learn.org/stable/modules/generated/sklearn.ensemble.partial_dependence.partial_dependence.html[Ref]
 |===
 
+== Numpy
+
+|===
+| ranks=np.empty_like(a) +
+  ranks[a.argsort()]=np.arange(len(a))      | Rank array
+|===
+
 == Color
 
 * https://matplotlib.org/users/colormaps.html[Matplotlib color maps]
@@ -386,18 +393,7 @@ F-test to compare models that are _nested_. Generally cross-validation also migh
 | PySAL sample data                         | http://pysal.readthedocs.io/en/latest/users/tutorials/examples.html[Ref]
 | PyDataset                                 | Data https://github.com/iamaziz/PyDataset[Ref]
 | Yellowbrick sample data                   | Samples from UCI http://www.scikit-yb.org/en/latest/api/datasets.html[Ref]
-| pd.util.testing.makeTimeDataFrame()       | Test data frame
-| pd.util.testing.makeDataFrame()           | Test data frame
 |===
-
-    fake=faker.Faker()
-    dd=pd.DataFrame([(fake.date_this_year(),
-                      fake.random_element(),
-                      fake.random_int(),
-                     ) for _ in range(1000)], columns=["date", "catA", "num"])
-
-* can set size of Pandas test data frame with `tm.N, tm.K`
-
 
 == Data Operations
 
@@ -1114,8 +1110,6 @@ Use my
 
 == Date and Time
 
-* use `pytz.UTC.localize(datetime.utcnow())`
-
 === Alternative libraries
 
 * https://arrow.readthedocs.io/en/latest/[Arrow] (quite popular)
@@ -1123,7 +1117,6 @@ Use my
 * http://delorean.readthedocs.io/en/latest/quickstart.html[Delorean]
 * https://github.com/kennethreitz/maya[Maya](?)
 * some https://pendulum.eustace.io/faq/[Some comparison]
-* https://github.com/freach/udatetime[udatetime]: very fast parsing and formatting
 
 === Business days
 
@@ -1160,10 +1153,6 @@ Use my
     logging.captureWarnings(True)
 
     logger=logging.basicConfig(stream=open("run.log", "w"))
-
-
-    with warnings.catch_warnings():         # ignore for some commands only
-        warnings.simplefilter("ignore")
 
 == Neural network
 
@@ -1209,49 +1198,6 @@ Use my
 * `dynamic=True` continue deriving predictions of target from previous predictions instead of real values (which were given)
 ** relative to `start` (`start=0` by default); can be date
 * to generate data use `smt.arma_generate_sample(ar=ar, ma=ma, nsample=n, burnin=burn)`
-* high MA (and AR?) orders can be much slower to estimate
-
-Could use
-
-    arima = sm.tsa.ARIMAResults(X, order=(p, d, q))   # same as ARIMA, but also stores results
-    arima.fit()
-    arima.summary()
-
-    arima.predict(start=X.shape[0], end=X.shape[0])    # 1-step ahead prediction; to predict training data, set from `start=d`
-
-Results are:
-* section 1: model settings and data used
-* section 2: parameters, coefficients
-* section 3: unit root diagnostics
-
-=== Prophet
-
-    from fbprophet import Prophet
-
-    dd=pd.DataFrame({"ds":dates, "y":target})
-
-    model=Prophet(changepoint_prior_scale=0.05)   # higher for more flexible model
-    model.fit(dd)
-
-    months=pd.DataFrame({"ds":pd.date_range(str(year), str(year+1), freq="M")})
-    dd_pred=model.predict(months)          # will contain predictions and intervals
-
-    model.plot(dd_pred)
-    model.plot_components(dd_pred)
-
-Other parameters:
-* growth: String 'linear' or 'logistic' to specify a linear or logistic trend.
-* changepoint_range: Proportion of history in which trend changepoints will be estimated. Defaults to 0.8 for the first 80%.
-* weekly_seasonality, daily_seasonality: Fit weekly/daily seasonality.
-* can include explicit holidays and explicite change point dates
-* seasonality_mode: 'additive' (default) or 'multiplicative'.
-* changepoint_prior_scale: Parameter modulating the flexibility of the automatic changepoint selection. Large values will allow many changepoints, small values will allow few changepoints.
-* add regressors with `add_regressor`
-
-=== Exponential smoothing
-
-* http://www.statsmodels.org/stable/generated/statsmodels.tsa.holtwinters.ExponentialSmoothing.html
-* http://www.statsmodels.org/stable/generated/statsmodels.tsa.holtwinters.ExponentialSmoothing.fit.html
 
 === Other tutorials
 
@@ -1339,14 +1285,6 @@ Without shifting, you get additional oscillations (due to the phase shift).
     parser.add_argument("file_to_test")
     args=parser.parse_args()
     args.file_to_test
-
-
-    parser = argparse.ArgumentParser(description="...")
-    parser.add_argument("posarg", help="...")
-    parser.add_argument("--optarg", dest="<varname>", help="...")
-    args = parser.parse_args()
-    # some args will be None if not given
-
 
 
 == Threaded CSV
@@ -1996,6 +1934,19 @@ Can make predictions for old or a completely new group.
 == Misc
 
 You can use `scipy.signal.convolve` and an artificial `[1,1,1],[1,100,1],[1,1,1]` filter to do the "Game of Life" with arrays http://nbviewer.jupyter.org/gist/jiffyclub/3778422[Ref].
+
+== Python Profiling
+
+    import cProfile
+    pr = cProfile.Profile()
+    pr.enable()
+
+    ...
+
+    pr.disable()
+    pr.dump_stats("run.prof")
+
+    !snakeviz run.prof
 
 == Sympy
 

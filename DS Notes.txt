@@ -1469,7 +1469,7 @@ exclusion restriction -> Z indep of Y given A; hatA projection of A onto space s
 * Biaocchi'14: Tutorial in Biostatistics: Instrumental variable methods for causal inference
 * do sensitivity analysis (what if assumptions violated; what if there are defiers? what if Z directly affects Y?)
 
-===Weak instruments
+=== Weak instruments
 * measure strength of instrumental variable (how much encouragement works)
 * estimate proportion of compliers E[A|Z=1]-E[A|Z=0]
 * causal effect estimation unstable of only few are compliers
@@ -1479,3 +1479,7 @@ exclusion restriction -> Z indep of Y given A; hatA projection of A onto space s
 * 8:40 complier average causal effect or alternatively 2SLS (same result)
 * when more variables: use 2SLS
 * use robust std errors
+
+== Correlation
+
+* Maximum Information Criterion (MIC): seems bad https://arxiv.org/abs/1401.7645
