@@ -594,11 +594,6 @@ https://www.youtube.com/watch?v=XQfxndJH4UA
   * AQL: Arango query language
   * support Gremlin graph query
 
-== Clustering
-* Subspace clustering: cluster may exist only on subspace
-* OPTICS: easier hyperparameters than DBSCAN, in sklearn (v0.21)
-* unsupervised metric: http://scikit-learn.org/dev/modules/generated/sklearn.metrics.davies_bouldin_score.html[Davies Bouldin Score]
-
 == Pomegranade
 * https://youtu.be/YBknijEiABA?t=8m15s
 * fast and intuitive
@@ -1131,8 +1126,7 @@ http://www.ipam.ucla.edu/abstract/?tid=14548&pcode=DLT2018
 * Bengio: gradual disentangling manifolds
 * limitation of backprop: relies on infinitesimal representations; but very deep nets yield too sharp non-linearities; also not biologically plausible
 * idea: neurons try to predict future value and also match past; observation also clamped
-<<<<<<< HEAD
-=======
+
 
 == Reinforcement learning
 
