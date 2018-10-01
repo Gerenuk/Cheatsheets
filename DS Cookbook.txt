@@ -373,7 +373,7 @@ F-test to compare models that are _nested_. Generally cross-validation also migh
 | sklearn.datasets.load_*() +
 | sklearn.datasets.fetch_*()                | Small sample of standard datasets http://scikit-learn.org/stable/modules/classes.html#module-sklearn.datasets[Ref]
 | sklearn.datasets.load_sample_image(name)  | Load "china.jpg" or "flower.jpg" http://scikit-learn.org/stable/modules/generated/sklearn.datasets.load_sample_image.html#sklearn.datasets.load_sample_image[Ref]
-| sklearn.datasets.mldata_filename(name)    | Convert data name to mldata.org filename http://scikit-learn.org/stable/modules/generated/sklearn.datasets.mldata_filename.html#sklearn.datasets.mldata_filename[Ref]
+| sklearn.datasets.fetch_openml(..)         | http://scikit-learn.org/dev/modules/generated/sklearn.datasets.fetch_openml.html[Ref]
 | sklearn.datasets.make_*(..)               | Create artifical data http://scikit-learn.org/stable/modules/classes.html#samples-generator[Ref]
 | pandas_datareader.*                       | Different sources of financial data https://pandas-datareader.readthedocs.io/en/latest/remote_data.html[Ref]
 | matplotlib.cbook.get_sample_data(..)      | Matplotlib sample data https://matplotlib.org/api/cbook_api.html#matplotlib.cbook.get_sample_data[Ref]
@@ -388,6 +388,7 @@ F-test to compare models that are _nested_. Generally cross-validation also migh
 | Yellowbrick sample data                   | Samples from UCI http://www.scikit-yb.org/en/latest/api/datasets.html[Ref]
 | pd.util.testing.makeTimeDataFrame()       | Test data frame
 | pd.util.testing.makeDataFrame()           | Test data frame
+| sklearn.datasets.load_files(..)           | Subfolder names are categories
 |===
 
     fake=faker.Faker()
@@ -575,6 +576,10 @@ https://pandas.pydata.org/pandas-docs/stable/cookbook.html[Pandas Cookbook] exam
         return np.sum((x-y)**2)
 
     nbrs = NearestNeighbors(n_neighbors=4, algorithm='ball_tree', metric='pyfunc', func=mydist)
+
+== Missing data
+
+* `sklearn.impute`
 
 == Spark
 
@@ -1003,6 +1008,8 @@ Midpoint of colormap
     m.drawmeridians(np.arange(0,360,30))
     m.drawparallels(np.arange(-90,90,30))
     m.scatter(x,y,s=reg['Number']*3,c=reg['Number']/5,marker='o',zorder=4, cmap=cm.Paired,alpha=0.5)
+
+For problems with running basemap ("epsg" not found) set env var PROJ_
 
 === ??? axis
 
@@ -1966,6 +1973,16 @@ Can make predictions for old or a completely new group.
     with ix.searcher() as searcher:
         results=searcher.search(Term("content", "WORD"))
         display(results)
+
+== Image processing
+
+=== Segmentation
+
+    from skimage.segmentation import felzenzwalb, clear_border, mark_boundaries
+
+    seg=felzenszwalb(img, min_size=200, scale=500)
+    seg=clear_border(seg)
+    plt.imshow(mark_boundaries(img, seg), cmap=plt.cm.Set1_r)
 
 == System information
 
