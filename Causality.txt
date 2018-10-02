@@ -333,9 +333,9 @@ exclusion restriction -> Z indep of Y given A; hatA projection of A onto space s
 
 == Coursera Columbia Causality
 
-* causation might also be on individual level
+* causation might also be on individual level (singular level)
 * counterfactual should be meaningful (what if different)
 * partial correlation coefficient; condition on something
 * unclear what causation is
 * observational or experimental
-* 
+*

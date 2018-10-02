@@ -1,0 +1,128 @@
+= Stochastic process
+* https://www.coursera.org/learn/stochasticprocesses
+
+* probabilistic system envolving over time
+* random variable whose properties evolve
+* stochastics:
+** prob. theory
+** math. statistics (how to estimate)
+** stoch. processes -> jump processes, stoch. calculus, stoch. diff. eq., population dynamics
+* prob space:
+** Omega: all possible outcomes
+** F: sigma-algebra; Omega in F; Complement of A in F; if multiple set in F, then also their union in F; for [0,1] -> would need need to include closed and open intervals and also single points (Borel sigma-algebra)
+** P: probability measure; P(Omega)=1; P(A1,...)=sum P(Ak)if no intersection
+* random variable: measureable function xi: Omega->R; measureable: for any Borel subset xi^-1 belongs to F
+* random function, time T: X:TxOmega->R; X(t) random variable
+* T=R -> random/stochastic process (discrete time if N)
+* T=R^n -> random/stochastic field
+* Trajectory (path): function T->R since fixed omega (one realization)
+* finite dimensional distribution: (X_t1, X_t2, ...): non-independent components
+
+== Renewal processes
+
+* discrete time
+* S0=0
+* Sn=S(n-1)+xi_n
+* xi_k time between events; "inter-arrival times"
+* xi_k i.i.d. >0
+* F(0)=0 (of xi)
+* N_t=argmax_k(Sk<=t)
+* S_n>t same event as N_t<n
+
+=== Sum of random variables
+
+* convolution
+* F_(X+Y) = int_R F_x(x-y)dF(y) = F_x * F_y : conv. in terms of distr. functions
+* p_(X+Y) = int_R p_x(x-y) p(y)dy = p_x * p_y : conv. in terms of densities
+* F^(n*)=F*F*...*F
+*! F^(n*)(x)<=F^n(x) if F(0)=0; since sum xi_k<=x is included in all(xi_k<=x)
+*! F^(n*)(x)>=F^((n+1)*)(x); since all xi non-negative
+* commutative, associative
+
+Theorem:
+U(t)=sum_(n=1)^oo F^(n*)(t) converges to E[N_t]
+usually hard to find convolution and sum
+
+=== Laplace transform
+
+* f:R_+ -> R
+* L_x(s) = int_0^oo e^(-sx) f(x) dx
+* f density of xi -> L=E[e^-s xi]
+* L_(f1*f2)=L_f1 * L_f2 (densities)
+* F distrib. function of surely positive (F(0)=0) -> L_F=L_f(s)/s
+* L_(x^n) = n! / s^n
+* L_(e^ax) = 1 / (s-a)  [if a<s]
+
+=== Expectation N_t
+
+* U = F + U * F ("*" in distr. sense; see above)
+* = F + U * p if density exists ("*" slightly different; see above)
+* Laplace transform on both sides: L_U = L_F+L_U*L_p = L_p/s+L_U*L_p
+* -> L_U=L_p/(s(1-L_p(s))
+* -> find L_p -> find L_U -> "inverse"; guess, since Bromwich integral difficult]
+
+Example:
+p(x)=e^(-x)/2 + e^(-2x)
+L_p=(3s+4)/(2(s+1)(s+2))
+L_U=(3s+4)/(s^2(2s+3))
+-> partial fractions
+U(t)=4/3*t+1/9-1/9*e^(-3/2*t)
+
+=== Limit theorems for renewal process
+
++ xi_k i.i.d.
+* mu = E xi_1 finite -> N_t / t converges almost surely to 1/M
+* -> sum^ xi_k / n -> mu
+* sigma^2=Var xi_1
+* (N_t - t/mu)/(sigma*sqrt(t)/mu^3/2)) -> N(1,0)
+* -> (sum^n xi_k - n*mu) / (sigma sqrt(n)) -> N(1,0)
+
+== Poisson process
+
+* Poisson process = Renewal process with exponential xi ~ p(x) = lambda * exp(-lambda x)
+* F_(S_n)=1-exp(-lambda x)* sum_(k=0)^(n-1) (lambda *x)^k/k! [x>0]
+* p_(S_n)=lambda*(lambda x)^(n-1)/(n-1)! exp(-lambda x)
+* P{N_t=n}=exp(-lambda t)*(lambda t)^n/n! -> Poisson distribution
+*! Memory-less: P(X>u+v)=P(X>u) P(X>v)
+* -> if P(X>v)>0 -> P(X>u+v | X>v)=P(X>u) -> doesnt matter if aready waited
+* memoryless iff p(x)=lambda exp(-lambda x)
+* periodic bus not Poisson
+
+* Alternative definition of Poisson (count) process: N_0=0; N_t has independent  increments; N_t stationary increments N_t-N_s=N_(t-s)=Poisson(lambda(t-s)) (depends only on time difference)
+
+* Alternative definition of Poisson (count) process: Queueing theory, Probability that events occurs in small interval
+** P(N_(t+n)-N_t=1)=lambda h+O(h); P(N_(t+n)-N_t=2)=O(h)
+** N_0=0, N_t indep. increments, N_t stationary increments
+** lim_(h->0) (P(N_(t+n)-N_t>=2))/P(N_(t+n)-N_t=1)=0 (indep. increments; unlikely that two events occur at same time)
+
+* N_t ~ Pois(lambda t)
+
+== Non-homogenous Poisson process
+
+* Lambda(t) differentiable increasing function [like integrated rate function]; Lambda(0)=0
+* X_t=N_t non.-homog. PP iff
+** N_0=0, independent increments
+** N_t-N_s ~ Pois(Lambda(t)-Lambda(s))
+* lambda(t)=Lambda'(t) [intensity function]
+* E[N_t]=Lambda(t)
+* if Lambda=alpha*t^beta
+* Lambda(t) has inverse -> could use N_(Lambda^(-1)(t)) which would be homogenous Poisson process
+*! ->with rescaled time it is a normal (homogeneous) Process again
+
+* Derive renewal process from inhomog. PP: S_n=argmin_t {N_t=n}, xi_n=S_n-S_(n-1)
+* p_(xi_1)(t)=lambda(t)*exp(-Lambda(t))
+* Can xi_k be independent if inhomog. PP?
+*(?) -> non-homog. PP can be obtained from regular process iff actually homog. Poisson
+
+== Queuing theory
+
+* for non-homogen. also  P(N_(t+n)-N_t=1)=lambda(t) h+O(h) etc.
+* 3 letters:
+* Arrival process:
+** M if memoryless
+** D if deterministic
+** G if general (anything else)
+* Service times: M, D, G
+* Number of servers: pos. integers or infinity (no queueing)
+* M/G/infty
+... Week 2.12
