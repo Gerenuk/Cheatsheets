@@ -1,4 +1,23 @@
 * cross_validate gives more info than cross_val_score
 * GBT: depth 3-8
 * RandomizedSearchCV: use distributions from scipy.stats for parameters
-* 
+
+|===
+| compose.TransformedTargetRegressor(..)    | When target transformed (e.g. power) http://scikit-learn.org/dev/modules/generated/sklearn.compose.TransformedTargetRegressor.html#sklearn.compose.TransformedTargetRegressor[Ref]
+| gridsearch.refit_time_                    | Second used to refit model on whole dataset
+| classification_report(..., output_dict=True)  | Return dict of metrics
+|===
+
+== Metrics
+
+|===
+| sklearn.metrics.roc_auc_score(..., max_fpr)   | Standarized partial AUC
+|===
+
+== Other
+
+|===
+| sklearn.show_versions()                   | Print versions (sklearn, Python, BLAS, ...)
+|===
+
+* `n_jobs=None` (unset) and defaults can be set with `joblib.Parallel` context

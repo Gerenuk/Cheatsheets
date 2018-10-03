@@ -392,3 +392,34 @@ echo -e '\uE0B2 \uE0B0'  ->   
 grubx64 vs shimx64:
 * shimx64 for secure boot -> launch grubx64 in same dir
 * for other that grub, still call the file grubx64.efi
+
+== Filesystem
+
+* journaling options: journal, ordered (default), writeback (lost what during crash)
+* more modern: ZFS, btrfs
+
+== Ext
+* ext4: extends ext3, but old technology, stop-gap; large files, better fragmentation resistance, higher performance, improved timestamps
+* ext3: max 32000 subdirs, only second timestamps, max year 2038
+* limitations of ext4:
+** bad beyond 100 TB
+** not enough guarantees for data integrity (e.g. corruption while already on disk)
+
+== XFS
+* most-mainline non-ext
+* better for large files and large concurrency
+* default for RHEL 7
+* but hard to resize
+* not much better than ext4 unless you need mentioned features
+
+== ZFS
+* volume management; multiple storage device in one filesystem
+* block-level crypto checksumming
+* auto corruption repair (when redundant storage)
+* inline compression
+* rapid asny incremental replication
+* ...
+* but CDDL license is semi-permissive and conflicts with GPL
+
+== btrfs
+* 2018 too slow and buggy

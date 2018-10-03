@@ -1,0 +1,165 @@
+== Resources
+
+* https://en.wikipedia.org/wiki/Category:Image_processing[Wikipedia Image Processing Index]
+
+== Morphology
+
+* Examples: http://scikit-image.org/docs/dev/auto_examples/xx_applications/plot_morphology.html
+
+== Segmentation
+
+* options:
+** via edge detection (Canny seems good, Hough transform to complete edges)
+** thresholding (e.g. Otsu)
+** motion-based segmentation
+** mean-shift
+** graph-cut
+* http://scikit-image.org/docs/dev/api/skimage.segmentation.html#skimage.segmentation.felzenszwalb[FelzensZwalb] worked well
+* "Various Image Segmentation Techniques" (Kaur 2014) https://ijcsmc.com/docs/papers/May2014/V3I5201499a84.pdf[Ref]
+
+=== Thresholding
+
+* Otsu's method adjust to between/inter-class variance
+
+=== Region growing
+
+* need seed
+* need growing criterion
+* region splitting: split quadrants until interior satisfies a "uniformity function"
+
+=== Watershed
+
+* image is like mountain surface; watershed lines are where water could go to different minima
+* run this on gradient?
+* use markers to avoid over segmentation
+* internal markers (e.g. from threshold) to give starting state
+* external markers determine regions where an object is supposed to be found (e.g. from watershed on original image)
+* markers from linear, non-linear filtering, morphological processing
+* initialization suggestion: http://scikit-image.org/docs/dev/auto_examples/segmentation/plot_marked_watershed.html
+
+=== K-Means
+
+* e.g. intensity and spacial proximity important -> use 4D vector (x,y,z,scaledI)
+* `skimage.segmenation.slic`
+
+=== Graph-cut
+
+* http://scikit-image.org/docs/dev/auto_examples/segmentation/plot_ncut.html (?)
+* advanced
+* need measure for probability to belong to fore-/background
+* need measure for flow between neighboring pixels (e.g. modulus of gradient)
+
+=== Mean-shift
+
+* color+position in vector -> shift tracking point toward center of gravity of sphere around it
+
+== Edge detection
+
+* x/y-edges filter -> modulus -> threshold -> edge thinning -> Edges
+* skimage.filter edges:
+** good: prewitt, scharr, sobel
+** bad: roberts (unless gaussian before), laplace (?)
+* frangi and hessian to detect "pipes"(?)
+
+=== First order
+
+* Sobel: -1, -2, -1; 1, 2, 1
+* Roberts: 0, 1; -1, 0
+* Prewitt: -1, -1, -1; 1, 1, 1
+* Sobel diagonal: 0, 1, 2; -1, 0, 1,; -2, -1, 0
+* edge when f_x^2+f_y^2>threshold
+
+=== Second order
+
+* Laplacian nabla^2=f_xx+f_yy
+* simplest: 0, 1, 0; 1, -4, 1; 0, 1, 0
+* edge where zero crossing _and_ local variation above threshold (otherwise may be flat region)
+* zero crossing alone is binary outcome and hence not enough
+
+=== Canny
+
+* smooth image
+* find gradient with magnitude and angle
+* apply "non-maximal suppression" to gradient (use angle information; look at local max along potential edge)
+* double threshold to create connected edges (weak/strong threshold)
+
+=== Other
+* edge map at different scales: band-limit
+* e.g. Gaussian prefilter
+* or just filter is "Laplacian of Gaussian" (LoG)
+
+== Piecewise smooth by Mumford Shah
+* https://github.com/jacobgil/Ambrosio-Tortorelli-Minimizer
+* compromise between color quantization and edge lengths
+
+== Blob center detection
+http://scikit-image.org/docs/dev/auto_examples/features_detection/plot_blob.html
+
+== Morphology
+
+* https://en.wikipedia.org/wiki/Mathematical_morphology[Morphology (Wikipedia)]: analysis of geometrical structures in images
+* erosion: min of all pixel in neighborhood; "eat pixels"
+* dilation: max all all pixels in neighorhood
+* opening: erosion + dilation
+* closing: dilation + erosion
+* white tophat: image minus opening; returns small/thin bright regions
+* black tophat: image minus closing
+* skeletonize: thinning until 1-pixel path
+* convex hull
+* thinning: http://scikit-image.org/docs/dev/api/skimage.morphology.html#skimage.morphology.thin
+* medial axis: http://scikit-image.org/docs/dev/api/skimage.morphology.html#skimage.morphology.medial_axis
+* minima: http://scikit-image.org/docs/dev/api/skimage.morphology.html#skimage.morphology.h_minima
+* https://en.wikipedia.org/wiki/Hit-or-miss_transform[Hit or miss transformation]
+* https://en.wikipedia.org/wiki/Pruning_(morphology)[Pruning]
+
+== Exposure
+
+* local contrast enhancement: http://scikit-image.org/docs/dev/api/skimage.exposure.html#skimage.exposure.equalize_adapthist
+
+== Filters
+
+* inverse: http://scikit-image.org/docs/dev/api/skimage.filters.html#skimage.filters.inverse
+* show all threshold options: http://scikit-image.org/docs/dev/api/skimage.filters.html#skimage.filters.try_all_threshold
+* local threshold:
+** http://scikit-image.org/docs/dev/api/skimage.filters.html#skimage.filters.threshold_niblack
+** http://scikit-image.org/docs/dev/api/skimage.filters.html#skimage.filters.threshold_sauvola
+* `dd < threshold_yen(dd)` was ok
+* Emboss: like pseudo-shadows
+
+== Features
+
+* http://scikit-image.org/docs/dev/api/skimage.feature.html
+
+== Restoration
+
+* http://scikit-image.org/docs/dev/api/skimage.restoration.html
+
+== Other
+
+* http://scikit-image.org/docs/dev/api/skimage.util.html#skimage.util.view_as_blocks
+* http://scikit-image.org/docs/dev/api/skimage.util.html#skimage.util.view_as_windows (overlapping)
+* http://scikit-image.org/docs/dev/api/skimage.measure.html#skimage.measure.EllipseModel: Ellipse fitting
+* http://scikit-image.org/docs/dev/api/skimage.measure.html#skimage.measure.approximate_polygon
+* http://scikit-image.org/docs/dev/api/skimage.measure.html#skimage.measure.perimeter: total perimeter
+* http://scikit-image.org/docs/dev/api/skimage.measure.html#skimage.measure.regionprops: a lot of region properties
+* http://scikit-image.org/docs/dev/api/skimage.morphology.html#skimage.morphology.remove_small_objects
+* https://en.wikipedia.org/wiki/Granulometry_%28morphology%29[Granulometry]: Compute size distribution of objects in binary image
+
+== Volumentric data
+
+* http://scikit-image.org/docs/dev/api/skimage.measure.html#skimage.measure.marching_cubes_lewiner: find surfaces
+
+== Data
+
+* http://scikit-image.org/docs/dev/api/skimage.draw.html#skimage.draw.random_shapes[Random Geometric Shapes]
+* `skimage.data`:
+** binary_blobs: binary, labyrinth-like
+** chelsea: cat close-up
+** coffee: coffee cup
+** hubble_deep_field: stars and galaxies
+
+== Ideas
+
+* filter my x/y dimensions
+* ratio of segment area to bounding box
+* ratio of boundary pixels to x and/or y extension

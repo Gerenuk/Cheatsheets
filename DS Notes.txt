@@ -594,9 +594,6 @@ https://www.youtube.com/watch?v=XQfxndJH4UA
   * AQL: Arango query language
   * support Gremlin graph query
 
-== Clustering
-* Subspace clustering: cluster may exist only on subspace
-
 == Pomegranade
 * https://youtu.be/YBknijEiABA?t=8m15s
 * fast and intuitive
@@ -1129,8 +1126,7 @@ http://www.ipam.ucla.edu/abstract/?tid=14548&pcode=DLT2018
 * Bengio: gradual disentangling manifolds
 * limitation of backprop: relies on infinitesimal representations; but very deep nets yield too sharp non-linearities; also not biologically plausible
 * idea: neurons try to predict future value and also match past; observation also clamped
-<<<<<<< HEAD
-=======
+
 
 == Reinforcement learning
 
@@ -1153,6 +1149,7 @@ http://www.ipam.ucla.edu/abstract/?tid=14548&pcode=DLT2018
 * model-based approach is more sample efficient, but how to do it?
 * more complex tasks can be easier, since less overfitting
 
+<<<<<<< HEAD
 == Causality
 
 === Summary
@@ -1483,3 +1480,5 @@ exclusion restriction -> Z indep of Y given A; hatA projection of A onto space s
 == Correlation
 
 * Maximum Information Criterion (MIC): seems bad https://arxiv.org/abs/1401.7645
+=======
+>>>>>>> 2963ee00712e95292c09a78c59a74b4363b55e2d

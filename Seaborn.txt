@@ -14,6 +14,19 @@ https://seaborn.pydata.org/whatsnew.html
 | aspect=...                                | Width=Aspect*Size
 |===
 
+== General plots
+
+[cols="m,d"]
+|===
+| *relplot*(x, y, kind="scatter")           | https://seaborn.pydata.org/generated/seaborn.relplot.html[Ref]; `FacetGrid`returned
+| _kind_="line"                             |
+| *scatterplot*(x, y)                       | https://seaborn.pydata.org/generated/seaborn.scatterplot.html[Ref]
+| *lineplot*(x, y)                          | https://seaborn.pydata.org/generated/seaborn.lineplot.html[Ref]
+|===
+
+* options `hue=`, `style=`, `size=`
+* `lineplot` can show confidence intervals if multiply `y` for same `x`
+
 == Distribution plots
 
 [cols="m,d"]
@@ -56,9 +69,9 @@ https://seaborn.pydata.org/whatsnew.html
 
 [cols="m,d"]
 |===
-| *factorplot*(„“, data=df)                 | shows counts
-| *factorplot*(„a“, „b“, df, kind=) +
-  *factorplot*(x, y, hue=, data=, row=, col=) | x,y,hue; kind=“point“, „bar“, „box“; plots mean and 95CI
+| *catplot*(„“, data=df)                    | shows counts
+| *catplot*(„a“, „b“, df, kind=) +
+  *catplot*(x, y, hue=, data=, row=, col=)  | x,y,hue; kind=“point“, „bar“, „box“; plots mean and 95CI
 | _dodge_=0.05                              | to avoid errorbar overlap (jitter along x)
 | _hue_order_=[..]                          |
 | *boxplot*(df)                             | Multiple 1D distr.; whisker 1.5*IQR from quartiles
@@ -70,7 +83,13 @@ https://seaborn.pydata.org/whatsnew.html
 | *swarmplot*(x, y, hue, data)              | Point plot with non-overlapping semi-stacking points
 | *stripplot*(x, y, hue, data)              | Point plot for categories; optional jitter
 | *pointplot*(x, y, hue, data)              | Point estimates (e.g. mean) with error bars
+| *boxenplot*(..)                           | Boxplot with many quantiles; https://seaborn.pydata.org/generated/seaborn.boxenplot.html[Ref]
 |===
+
+* `catplot(.., kind=..)` https://seaborn.pydata.org/tutorial/categorical.html[Ref]:
+** scatter; `strip`, `swarm`
+** distribution: `box`, `boxen`, `violin`
+** estimate: `bar`, `count`, `point`
 
 == Other plots
 
@@ -81,7 +100,6 @@ https://seaborn.pydata.org/whatsnew.html
 | _square_=True                             |
 | _center_=..                               | Value for center for diverging data
 | *clustermap*()                            | Heatmap + hierarchical clustering at side
-| *tsplot(..)                               | Timeseries plot
 | *corrplot*(df)                            | Make correlation plot as heatmap between all variables
 | _sig_tail_="upper"                        | to show only positive
 | _cmap_range_=(..,..)                      |
@@ -115,7 +133,12 @@ https://seaborn.pydata.org/whatsnew.html
 | *desaturate*(color, factor)               | Desaturate a color by factor on saturation channel
 | *saturate*(color)                         | Fully saturate a color
 | *set_hls_values*(color, h, l, s)          | Set some of HSL of a color
+| *color_palette*(..)                       | Return a list of colors
+| with color_palette(..):                   | Use temporary for plots
+| *set_color_codes*()                       | Reassign matplotlib single letter colors to seaborn
 |===
+
+* `color_palette`: cubehelix palette with `"ch:..."`, `"hls"`, `"husl"`, cmap
 
 == Palettes
 
@@ -156,7 +179,7 @@ Palettes:
 | _margin_titles_=True                      | for variables values at side
 | _hue_order_=, row_order=                  |
 | _aspect_=                                 |
-| _size_=                                   |
+| _height_=                                 |
 | _palette_=dict(hueval=col,..)             |
 | _hue_kws_=dict(marker=..)                 |
 | _col_wrap_=                               |
@@ -181,7 +204,6 @@ Palettes:
 | g.*plot*(regplot, distplot, stats.pearsonr)   |
 | *jointplot*(xvar, xvar, df)               | Returns https://seaborn.pydata.org/generated/seaborn.JointGrid.html[JointGrid]
 | _kind_="hex"                              |
-| *tsplot*([ts1, ts2, ..])                  | noisy ts; plot mean of multiple timeseries; use 3D data for multiple timeseries types to plot (split by color) |
 |===
 
 == Cookbook
@@ -192,3 +214,7 @@ Change heatmap label orientation:
     plt.setp(cg.ax_heatmap.yaxis.get_majorticklabels(), rotation=0)
     
 To access cluster distance values use `cg.dendrogram_[col|row].linkage`.
+
+== Other
+
+* catplot `orient=` ?

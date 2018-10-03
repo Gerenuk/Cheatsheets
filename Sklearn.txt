@@ -1319,3 +1319,4 @@ Choosing a good minibatch size:
 == References
 
 * https://github.com/amueller/scipy_2015_sklearn_tutorial/tree/master/notebooks[Scipy 2015 Tutorial]
+* http://scikit-learn.org/stable/developers/contributing.html#apis-of-scikit-learn-objects[Writing own estimators]

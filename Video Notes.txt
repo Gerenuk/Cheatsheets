@@ -1208,4 +1208,33 @@ https://www.youtube.com/watch?v=tG22jrVFKpM
 * random initialization bad
 * data set: Omniglot, Mini Imagenet
 * could do: metric based
-*
+
+== Deploying
+* https://www.youtube.com/watch?v=8r4wNvbAYUQ&t=0s&list=WL&index=27
+* to run web app: WSGI
+* WSGI container
+* gunicorn to use it
+* bash script to run application (video 7:30; with exec; to receive signals)
+* do not log to files; esp. do not rotate them
+* configuration:
+** what varies between deployments? -> only put this
+** log level; LOG_LEVEL; machine readable(key value)/human readable(color)
+** exposition (HOST, PORT)
+** external resources
+** use environ variables (since sometimes hard to inject files into system)
+* wsgi.py for loading config
+* never put sensitive data into env! they always leak
+* use docker secrets, google cloud KMS, AWS secrets manager, hashicorp vault, ...
+* write class to get secrets
+* full URLs as credentials
+* for daily config changes -> make it redeployable (load balancer on multiple)
+* signal SIGTERM for clean shutdown
+* readiness communicated to load balancer by endpoint (e.g. /healthz, /__heartbeat__, /-/ready, ...)
+* liveness to show that not deadlock (needs restart); /-/liveness, __lbheartbeat__
+* __version__
+* /-/metrics
+* /-/log-level
+* log to stdout
+* do not use filesystem! (if diff ports) -> redis, postresql, ...
+* cluster managers
+* pypi.org as best practice example

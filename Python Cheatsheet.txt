@@ -52,6 +52,7 @@
 |===
 
 * object `True` unless `__len__==0`, `__bool__=False`, zero
+* most string commands have `start=` and `end=` option
 
 == Forgotten
 
