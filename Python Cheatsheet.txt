@@ -45,6 +45,7 @@
 | if (match := ..)                          | Assignment expression (Py3.8)
 | open(os.devnull, "w")                     |
 | heapq.merge(*its)                         | merge multiple sorted
+| sys.settrace(..)                          | Run before function calls/returns/...
 |===
 
 == Forgotten
@@ -436,6 +437,44 @@ Alternatives
     func.send(val)
     func.throw(..)         # exception in generator
     func.close()           # raises GeneratorExit in generator -> generator should raise GeneratorExit or StopIteration
+
+== Profiling
+
+* some save in "callgrind" format -> use viewer (e.g. KCacheGrind)
+* https://rivolaks.com/posts/profiling-python/
+
+=== Built-in cProfile
+
+    p = profile.Profile()
+    p.enable()
+
+    try:
+        ...
+    finally:
+        p.disable()
+        pstats.Stats(p).sort_stats('cumulative').print_stats(30)
+
+* but slow
+
+=== Yappi
+
+    yappi.start()
+
+    try:
+        ...
+    finally:
+        func_stats = yappi.get_func_stats()
+        func_stats.save('callgrind.out.' + datetime.now().isoformat(), 'CALLGRIND')
+        yappi.stop()
+        yappi.clear_stats()
+
+== Pyflame
+
+* https://pyflame.readthedocs.io/en/latest/[PyFlame]
+* from Uber; external agent
+* only Linux
+* nice with Docker
+* statistical profiler: less overhead since check call stack on at fixed intervals (e.g. 1000/sec)
 
 == Windows
 

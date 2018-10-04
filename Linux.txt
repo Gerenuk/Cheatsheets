@@ -393,6 +393,8 @@ grubx64 vs shimx64:
 * shimx64 for secure boot -> launch grubx64 in same dir
 * for other that grub, still call the file grubx64.efi
 
+Some distributions run init script through /lib/lsb/init-functions to get nicer output
+
 == Filesystem
 
 * journaling options: journal, ordered (default), writeback (lost what during crash)

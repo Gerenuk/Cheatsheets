@@ -1,5 +1,5 @@
 ////
-Seaborn 0.8.1 (Sep'17)
+Seaborn 0.9
 https://seaborn.pydata.org/whatsnew.html
 ////
 

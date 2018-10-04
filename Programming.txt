@@ -1,3 +1,12 @@
+= My naming convention
+
+== Jupyter
+* variables which should accessible across multiple cells -> Capital letter
+
+== Nested data
+* multiple of -> "...s"
+* element of -> "a_..." (or "one", "cur" ?)
+
 = Best programming practices
 
 Inheritance:
