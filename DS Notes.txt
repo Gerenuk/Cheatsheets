@@ -1480,5 +1480,29 @@ exclusion restriction -> Z indep of Y given A; hatA projection of A onto space s
 == Correlation
 
 * Maximum Information Criterion (MIC): seems bad https://arxiv.org/abs/1401.7645
-=======
->>>>>>> 2963ee00712e95292c09a78c59a74b4363b55e2d
+
+== ML Strategies
+* know what to tune to get some effect ("orthogonalization")
+* maybe also some minimum extra metrics
+* cross-val and test set should be same distribution
+* if a lot of data: use more percent in train data (10000 in test set?)
+* not having test set may be ok, if not final performance needed
+* Bayes optimal error is limit
+* Compare to human error performance (proxy for Bayes error) to judge train error (need bias or variance?)
+* DL quite robust to random label noise
+* count incorrect labels (remember that test set also may need treatment)
+* if train and test have to be different (semi-unsupervised): may draw conclusions about bias/variance to predictions of part of train set
+* multi-task learning: e.g. car needs to detect many things
+* sometimes breaking algorithm into steps helps (as compared to full end-to-end; may need to much data)
+
+== Decision trees
+* Gini more for continuous, Entropy for classes (http://paginas.fe.up.pt/~ec/files_1011/week%2008%20-%20Decision%20Trees.pdf)
+* Gini tends to find largest class, Entropy groups that make ~50%
+* Gini to minimize misclassification, Entropy for exploratory analysis
+* usually Gini and Entropy the same within 2% (https://rapid-i.com/rapidforum/index.php?topic=3060.0)
+* Entropy slightly slower to compute
+
+== Rule learner
+
+* PRIM: https://ir.library.louisville.edu/cgi/viewcontent.cgi?referer=&httpsredir=1&article=2454&context=etd
+* FOIL: needs boolean input

@@ -1,17 +1,17 @@
-= Start-up =
+== Start-up
 | export GNUPLOT_LIB="//PATH//" | where to search for gnu-files |
 | gnuplot [-noraise] [-persist] [//FILE//.gnu] [//FILE//.gnu] |  |
 | gnuplot - //FILE//.gnu << "//COMMANDS//" | execute commands before file.gnu |
 | ~/.gnuplot | commands to execute when starting gnuplot |
 | ~/.Xdefaults | X11 configuration, e.g. "gnuplot*background: white" |
 
-= Editing =
+== Editing
 | ^A | beginning of line |
 | ^E | end of line |
 | ^D | delete |
 | ^U | delete line |
 
-= Terminals =
+== Terminals
 | set term epslatex | for eps files |
 | set term svg | svg graphics |
 | set term x11 //N// [title "..."] | plot in plot; multiple plot windwows | 
@@ -22,12 +22,12 @@
 | set term pop |  |
 
 
-= Gnu-Files =
+== Gnu-Files
 | call "//FILE//" [//PARAMS//] | can call with params $0-$9 |
 | save "//FILE//" | store set, functions, variables, last plot command |
 | load "//FILE" | (does not load output, Make sure terminal is X11) |
 
-= General commands =
+== General commands
 | show | show settings of "set" commands |
 | test | test graphics, e.g. display styles |
 | history | display history |
@@ -35,7 +35,7 @@
 | `//COMMAND//` | as in bash |
 | !//COMMAND// | execute |
 
-= Characters =
+== Characters
 | ""@{/=56 -} {/=24 h}"" | \hbar |
 | ""{/=8 @{/Symbol=24 -}_{/=14 h}}"" | \hbar |
 | ""{/=14 @^{/Symbol=10 -}{/=14 h}}"" | \hbar |
@@ -43,7 +43,7 @@
 | ""{/Times-Italic x} [@^{/Symbol \\\260}A]"" | \hbar |
 | ""\305"" | \AA |
 
-= Labels, Marks, Key and Border =
+== Labels, Marks, Key and Border
 | set arrow ...| place arrow |
 | set label ...| put label |
 | set //NAME// "//TEXT//" at //POS// | put label |
@@ -55,7 +55,7 @@
 | set label "{centred}" at 0,0 |  |
 | set label "[t]{topaligned}" at 0,0 |  |
 
-= Axis, Grid and Tics =
+== Axis, Grid and Tics
 | set grid xtics | draw grid lines |
 | set mxtics | use minor tics |
 | set tics <in|out>| can be made outwards |
@@ -67,12 +67,12 @@
 | set timefmt ...| set time format |
 | set logscale x | use logscale for the x axis |
 
-= Settings =
+== Settings
 | bind | redefine key for interactive window |
 | set angles degrees | use degrees |
 | set encoding iso_8859_15 | access special \//###// |
 
-= Plotting Date =
+== Plotting Date
 To plot a "data" file "like 03/21/95 10:00  6.02e23":
 | set xdata time |  |
 | set timefmt "%m/%d/%y" |  |
@@ -82,19 +82,19 @@ To plot a "data" file "like 03/21/95 10:00  6.02e23":
 | set zero //THRESHOLD// | threshold for numerical errors |
 | plot "data" using 1:3 |  |
 
-= Plotting =
-== Data ==
+== Plotting
+=== Data
 | load "<perl -ne '...' <//DATAFILE//" | data preprocessing |
 | single blank line | discontinuity -> no line connection in graph |
 | double blank line | new index |
 | set datafile separator "//CHAR//" | separation (rather than whitespaces) |
 
-== Multiplotting ==
+=== Multiplotting
 | set multiplot | use same windows for plots (set size, set origin for positioning) |
 | set origin x,y | set origin for new graph |
 | set size | change size |
 
-== Settings ==
+=== Settings
 | set style filledcurves | fill curve area |
 | set title "//TITLE//"| create overall title |
 | set dummy //VAR// | set //VAR// as the new variable in functions |
@@ -102,7 +102,7 @@ To plot a "data" file "like 03/21/95 10:00  6.02e23":
 | set parametric | in 2D t is the variable and u,v in 3D |
 | set timestamp | plots timestamp |
 
-== Scaling ==
+=== Scaling
 | set autoscale | use autoscaling; fixmin for disabling extension to tics |
 | set yrange [] writeback | (with autoscale) stores autoscale range |
 | set yrange restore | restores save |
@@ -111,7 +111,7 @@ To plot a "data" file "like 03/21/95 10:00  6.02e23":
 | set offset l,r,t,b | use extra space in autoscaled graphs |
 | set size -1 | x-axis and y-axis match scale (not in X11 though) |
 
-== XY Plot command ==
+=== XY Plot command
 | plot "-" | read from STDIN, 'e' at beginning of line terminates entry |
 | plot "" | same file as before |
 | replot //EXTRAARGS// |  |
@@ -131,8 +131,8 @@ plot [x=-10:10] [-1:1] sin(x)
 | with vectors | x,y -> x+dx,y+dy |
 (scanf possible, set style for errorbars)
 
-== XYZ SURFACE PLOTS ==
-=== Configuration ===
+=== XYZ SURFACE PLOTS
+==== Configuration
 | set cntrparam bspline | smooth, but wrong values |
 | set cntrparam cubicspline | real values kept |
 | set contour surface | draw contours for splot |
@@ -141,13 +141,13 @@ plot [x=-10:10] [-1:1] sin(x)
 | set mapping cylindrical |  |
 | set pm3d | setup pm3d; e.g. change averaging of corners; see help  |
 
-=== SPlot command ===
+==== SPlot command
 | splot | Surface 3D plot |
 | splot 'data' | 1 column -> (line,index,data), 3 columns -> (datax,datay,dataz), 2 or 4 columns: last one is colour |
 | splot 'data' matrix | read file in matrix format with |
 | splot 'data' binary | read file in matrix format with annotated axis |
 
-= Fitting =
+== Fitting
 fit takes sigma for weighting if 3rd column given
 "var = value # FIXED " in paramfile means it's kept fixed for fit
 Parameters should be similar in magnitude
@@ -213,7 +213,7 @@ set mapping cylindrical	# How to interpret 3D data files
 set missing		# Sets the "Missing" data character in files
 set style [data|function|arrow|...]	# Set default styles
 
-= Useful help =
+== Useful help
 | help coordinates | positions |
 | help functions | different functions |
 | help commands | system commands |

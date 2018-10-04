@@ -1,5 +1,0 @@
-Things to possibly learn:
-
-*  Signal processing: wavelets [42], shearlets [43], curvelets [44], contourlets [45], bandlets [46]. Learn about time-frequency analysis [47], and try to apply it to your problems
-
-

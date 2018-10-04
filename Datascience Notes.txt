@@ -1,13 +1,11 @@
-News
-----
+== News
 * DARPA awards 3M$ to "Continuum Analytics" to develop:
   * scientific computation library "Blaze" [make numpy more useful for Big Data; out-of-core computations/distributed/stream]
   * visualization systen "Bokeh" (part of 100M$ XData Big Data effort)
 * 4M$ to KnowledgeVis/universities for open source "Visualization Design Environment"
 * 3M$ to Georgia Institute of Technology for scalable ML
 
-Software
---------
+== Software
 Storm & Kafka: stream processing
 Dremel (e.g. Google SaaS with BigQuery) & Drill (Opensource): very fast analytics on huge data
 R: works with Hadoop
@@ -19,8 +17,7 @@ Neo4j & InfiniteGraph: Graph DB
 Julia http://julialang.org/: new language for technical computing; parallelism
 
 
-Python frameworks
------------------
+=== Python frameworks
 Bulbflow (http://bulbflow.com/)
 - for graph databases
 - Gremlin query
@@ -44,21 +41,18 @@ H20 http://0xdata.github.io/h2o/
 - maths and statistics for Hadoop
 
 
-Python
-------
+== Python
 RPython
 - subset of Python
 - very fast
 - statically typed (ML-like)
 - but many features missing
 
-ML Algorithm shoud be
----------------------
+== ML Algorithm shoud be
 - consistent: for N->\infty converges to true underlying process (e.g. uniform distribution without patterns)
 - confidence: how probable is the result for a given sample
 
-Why momentum works
-==================
+== Why momentum works
 http://distill.pub/2017/momentum/
 * example convex quadratic xAx+bx
   * closed form solution for gradient descent
@@ -82,14 +76,12 @@ http://distill.pub/2017/momentum/
 * high momentum in SGD can compound error
 * but SGD noise can also regularize
 
-Kaggle Kazaonva
-===============
+== Kaggle Kazaonva
 * time series: ARCH, GARCH, ARIMA
 * high cardinality: FTRL, LibFFM, Vowpal, LibFM, SVD, Linear
 * Keras, Nolearn, Gensim
 
-Duplicate question detection
-============================
+== Duplicate question detection
 https://www.youtube.com/watch?v=vA1V8A69e9c
 TFIDF params: min_df=3, strip_accents="unicode", ngram_range=(1,2), sublinear_tf=True, stop_words="english"
 + sklearn defaults

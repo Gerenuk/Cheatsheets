@@ -338,4 +338,34 @@ exclusion restriction -> Z indep of Y given A; hatA projection of A onto space s
 * partial correlation coefficient; condition on something
 * unclear what causation is
 * observational or experimental
-*
+
+
+== MLSS Cadiz
+* core is structural equation model (SEM), which is of form X_a=f(X_b,..,X_c,noise)
+* noise is assumed independent
+* we are interested in the probability P_{do(X=a)} meaning the probability what would happen if we set X to a
+* we can use that P_{do(T=a)}(R=r|T=t,S=s)=P(R=1|T=t,S=s)
+* conditional independence is not enough to determine intervention since multiple graphs can be the same)
+* causality important only for intervention, not for prediction
+* d-separation of A and B by:
+** only NON-block with S: ->S<-
+** only block without S: ->O<-
+* to make conclusions, we need assumptions:
+** Markov: if A and B d-separated by S, then they are independent given S
+** Faithfulness: Markov reversed (no accidental independencies(?)); this is debateable
+* Spires method is fast, clever way to find a graph for finding independencies
+* Pearl method works, but slow
+* usually you need a lot of data to confirm all independencies (best to use HSIC)
+* for additive noise Y=f(X)+eps you can determine the causality direction; unless f is linear and the noise is Gaussian (in which case both directions look the same)
+* ICP package in R: put in data points from different "environment" and add environment label -> algorithm finds minimal causal set
+
+=== Summary
+* one can reason about causality by use a notation similar to P_{do(X=a)}
+* to determine causality:
+** find a independencies (hard problem; can use HSIC for it)
+** construct a graph which is consistent with the independencies in the d-separation
+* causality direction between just two variables X and Y cannot be found, unless:
+** you assume additive noise f(X)+eps
+** however, it shouldnt be that f is linear and the noise is Gaussian
+* the ICP package in R can be used to find causal structure:
+** you need data from multiple environments (different situations) and pass in the environment label to the function

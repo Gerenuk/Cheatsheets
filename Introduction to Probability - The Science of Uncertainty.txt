@@ -1,5 +1,4 @@
-Independence
-============
+== Independence
 * for all subsets of variables the AND probability is product of individual probability
 * -> any conditional prob when left/right diff indicies -> can remove conditional
 
@@ -24,8 +23,7 @@ P(t<=T<=t+d|T>t)=lambda*d (for small d)
 f(x|y)=f(x,y)/f(y)
 P(X in A|y)=int_A f(x|y)dx
 
-Derived distributions
-=====================
+== Derived distributions
 * use CDF for transformations
 * for continuous: Y=aX+b -> fY(y)=1/abs(a)*fX((y-b)/a)
 * a*N(mu,sig^2)+b ~ N(a*mu+b, a^2*sig^2); again normal distr!
@@ -39,11 +37,9 @@ Derived distributions
 * multiple variables:
   * X~Unif[0,1]; Y~Unif[0,1] -> X/Y~ Unif in 0..1 and 1/(2*z^2) in 1..
 
-Sum of two indep random variables
-=================================
+== Sum of two indep random variables
 
-Covariance
-==========
+== Covariance
 * if indep: E[XY]=E[X]E[Y]
 * cov(X,Y)=E[(X-E[X])*(Y-E[Y])]; 0 is indep
 * cov(X,X)=Var[X]
@@ -60,15 +56,13 @@ If Z,V,W indep., zero means and unit var.
 X=Z+V, Y=Z+W
 -> rho=0.5
 
-Conditional expectation as rand.varia.
-======================================
+== Conditional expectation as rand.varia.
 E[X|Y=y]=g(y) -> g(Y)=E[X|Y] is rand.varia.
 * E[E[X|Y]]=E[X]   (law of iterated expectations)
 
 E[revised forecast with more info later]=E[forecast now]
 
-Conditional variance
----------------------
+=== Conditional variance
 * Var_X[X|Y=y]
 * Var_X[X,Y] is rand.varia.
 
@@ -76,14 +70,12 @@ Var[X]=E[Var[X|Y]]+Var[E[X|Y]]=(var.within sections)+(var.between sections)
 
 (calc E[Var[X|Y]] and Var[E[X|Y]] from definitions and add)
 
-Sum of random var. of indep var.
---------------------------------
+=== Sum of random var. of indep var.
 * Y=X1+...+XN; iid, indep of N
 * E[Y]=E[N]E[X]
 * Var[Y]=E[N]*Var[X]+(E[X])^2*Var[N]
 
-Bayesian
-========
+== Bayesian
 * unknown is random variables; has distr. p(Theta)
 * observation process = p(x|Theta)
 * realization = x
@@ -101,8 +93,7 @@ mode: (a-1)/(a+b-2)
 MAP estimate: k/n
 LMS estimate: E(Theta|K=k)=(k+1)/(n+2)
 
-Linear models with normal noise
--------------------------------
+=== Linear models with normal noise
 * Xi = sum_j aij*Tj+Wi   ; W noise, T to be estimated; both indep and normal
 
 e.g. X=T+W; T~N(0,1), W~N(0,1) -> That=X/2
@@ -118,14 +109,12 @@ fT|X also normal -> max. is linear eq. (and mean=peak)
 MSE = E[(That-T)^2|x] = ... = Var(T|x) = 1/(sum 1/si^2) [indep of x!; same given x but also overall]
 exp(-(ax^2+bx+c)) -> mu=-b/2a, var=1/2a
 
-Trajectory estimation
----------------------
+=== Trajectory estimation
 * x(t) = T0+T1*t+T2*t^2  ; all indep. unknown T
 * some pairs (x,t) known
 * Xi=T0+T1*ti+T2*ti^2+Wi
 
-Linear normal models
---------------------
+=== Linear normal models
 * Ti and Xi linear fct of indep normal random variables -> linear regression
 * T_hat = linear fct of Xi
 * MAP = Exp(T|X)
@@ -133,8 +122,7 @@ Linear normal models
 -> joint max. and marginals (leaving only one var) give same estimates
 * Expect. of sq. deviation indep. of x
 
-Estimate by LMS
----------------
+=== Estimate by LMS
 * LMS -> same as conditional expectation
 * If minimizing conditional squared deviation -> use conditional mean
 * for many parameters (x or theta)  sometimes issues with equation complexity or computation
@@ -142,8 +130,7 @@ Estimate by LMS
 * Exp(Error)=0
 * var(Theta)=var(Estimator)+var(EstimationError)
 
-Linear least squares estimator
-------------------------------
+=== Linear least squares estimator
 * always ThetaHat = E[Theta|X]
 * ThetaHat = a*X+b
 * (ThetaHat-E[Theta])/(X-E[X])=Cov(Theta,X)/Var(X)=rho*sigmaTheta/sigmaX
@@ -151,13 +138,11 @@ Linear least squares estimator
 * ThetaL=E[Theta]+rho*sigma_Theta/sigma_X*(X-E[X])
 * E[(Theta_L-Theta)^2]=(1-rho^2)*Var(Theta) -> uncertainty gets reduced
 
-Coin with bias Theta
---------------------
+=== Coin with bias Theta
 * number of heads X
 * if uniform prior: ->Theta_LMS=(X+1)/(n+2); also linear, therefore also optimal linear estimator
 
-Multiple observations
----------------------
+=== Multiple observations
 * assume linear estimator: ThetaHat = sum a_i*X_i+b; minimize MSS
 * E[Theta|X] linear in X then ThetaHat_MLS=ThetaHat_LLMS
 
@@ -168,8 +153,7 @@ LMS:
 
 LMS -> ThetaHat = E[Theta|observations]
 
-Weak law of large numbers
--------------------------
+=== Weak law of large numbers
 sum(X_i)/n -> E[X]
 Prob. for deviation of sample mean from pop. mean diminishes to zero
 
@@ -182,8 +166,7 @@ P(|X-mu|>=c)<=sigma^2/c^2
 
 poll accuracy 1% with 5% error prob -> n=50000 by Chebyshev
 
-Convergence in probability
---------------------------
+=== Convergence in probability
 forall eps>0: lim_n->inf P(|X-a|>=eps)=0
 
 Xn->a, Yn->b => 
@@ -198,8 +181,7 @@ Convergence with prob 1: stronger
 
 Convergence to limiting CDF
 
-Central limit theorem
----------------------
+=== Central limit theorem
 * Xi i.i.d.
 * sum(Xi)/sqrt(n) so that variance stays constant
 * Zn=(Sn-n*mu)/sqrt(n)/sigma
@@ -209,23 +191,20 @@ Central limit theorem
 * proof: E[exp(s*Z_n)]->E[exp(s*Z)]; needs hard maths
 * Sn ~ N(n*mu, n*sigma^2)
 
-Classical (non-Bayesian) statistics
-===================================
+== Classical (non-Bayesian) statistics
 * Theta unknown constant (like physical constant)
 * Theta -> p_X(x;theta) -> X -> Estimator -> ThetaHat(X)
 * theta not random variable -> not in subscript; multiple candidate models
 * design estimator to make ThetaHat-theta small; no single best rule
 
-Estimating mean
----------------
+=== Estimating mean
 * let's use ThetaHat = sample mean
 * E[ThetaHat]=theta (unbiased)
 * ThetaHat_n -> theta (consistency)
 * MSE: E[(ThetaHat-theta)^2]=sigma^2/n; here indep of theta
 * E[(Thetatat-theta)^2]=var(ThetaHat-theta)+(E[ThetaHta-theta])^2=var(ThetaHat)+bias^2
 
-Confidence interval
--------------------
+=== Confidence interval
 * P(ThetaHat- <= theta <= ThetaHat+)>=1-alpha forall theta; random variables outside!
 * sum X_i/n where Xi iid with theta, sigma: P(ThetaHat_n -1.96*sigma/sqrt(n)<=theta<=ThetaHat_n+1.96*sigma/sqrt(n)) approx 0.95
 * -> but need sigma here; options:
@@ -233,8 +212,7 @@ Confidence interval
   * estimate sigma sigmaHat=sqrt(ThetaHat(1-ThetaHat))
 * since also estimate sigma -> t-table correction for n<=30
 
-Maximum Likelihood
-------------------
+=== Maximum Likelihood
 * if theta not an expectation of something
 * thetaHat_ML = argmax_theta p_X(x;theta)
 * same as flat prior
@@ -254,13 +232,11 @@ g(E[X])<=E[g(X)]
 Chernoff bound, a>0:
 P(X1+..+Xn>=n*mu+na) falls expententially with n
 
-Bernoulli process
-=================
+== Bernoulli process
 * seq of indep Bernoulli trials; p for hit
 * stochastic process: seq of random variables
 
-Poisson process
-===============
+== Poisson process
 * continuous time version of Bernoulli; n->inf
 * P(k,tau)=Prob. of k arrivals in interval tau=(lambda*tau)^k*exp(-lambda*tau)/k!
 * for very small delta (hence not more than one arrival):
@@ -289,13 +265,11 @@ Expected time until k=3 happen:
 
 (!) Splitting poisson processes: independent (unlike Bernoulli process where discreteness means that a taken slots means opposite stream slot is not taken)
 
-Random incidence paradox
-------------------------
+=== Random incidence paradox
 * you arrive at random moment, but find out interarrival time (also looking at time of last arrival)
 * -> will be double the normal interarrival time
 
-Limits
-------
+=== Limits
 * fix p, inf n: CLT
 * inf n, p to zero, np fixed!: Poisson
 * agree when p small, but np large
@@ -314,8 +288,7 @@ X Bernoulli q, N Poisson lambda -> Y Poisson lambda*q
 X geometric p, N geometric q -> Y geometric pq
 X exponential lambda, N geometric q -> Y exponential with lambda*q
 
-Markov chains
-=============
+== Markov chains
 conditional on current state, past and future are independent
 given current state, past doesn't matter
 
@@ -332,8 +305,7 @@ with a self-transition never periodic
 if recurrent states in single and and not periodic -> converges and indep of start
 (since copies eventually meet)
 
-Birth-Death processes
-=====================
+== Birth-Death processes
 0 to max M items; linear chain
 any time prob p_i for birth or q_i for death
 
@@ -353,8 +325,7 @@ for M->inf: E[X]=rho/(1-rho)
 
 Mixing time: exponential
 
-How many phone lines needed?
-============================
+== How many phone lines needed?
 calls start with Poisson lambda
 call duration exponential with parameter mu; but small durations actually not that likely
 -> satisfies Markov properties (only depends on recent past state)
@@ -368,24 +339,19 @@ lambda*pi_(i-1)=i*mu*pi_i
 pi_i=pi_0*lambda^i/mu^i/i!
 pi_0=1/sum lambda^i/mu^i/i!
 
-Short term behavior
-===================
-Absorption
-----------
+== Short term behavior
+=== Absorption
 * short-time behavior; p_ii=1 (stay in state)
 * you can write equations for probabilities for ending up in one sink or the other
 
-Mean time to absorption
------------------------
+=== Mean time to absorption
 * easy recurrence relation
 
-Mean first passage
-------------------
+=== Mean first passage
 * from i to s; expected number of steps
 * like absorption
 
-Gambler's ruin
-==============
+== Gambler's ruin
 * start with i euros, play until n euros or ruin in a fair game
 * winning probability = i/n
 * expected wealth = i
