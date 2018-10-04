@@ -70,7 +70,30 @@ To define new functions
 
     F.apply(x, gamma)
 
-* using __init__ and __call__ is old-style and will be deprecated
+* use `staticmethod` and `.apply()`; using __init__ and __call__ is old-style and will be deprecated
+
+    class Func(torch.autograd.Function):
+        @staticmethod
+        def forward(ctx, input):
+            ctx.save_for_backward(input)
+            return input**3
+
+        @staticmethod
+        def backward(ctx, grad_output):
+            """
+            In the backward pass we receive a Tensor containing the gradient of the loss
+            with respect to the output, and we need to compute the gradient of the loss
+            with respect to the input.
+            """
+            input, = ctx.saved_tensors
+            grad_input = grad_output.clone()
+            grad_input *= 2*input**2
+            return grad_input
+
+    x=torch.tensor(3.0, requires_grad=True)   # need float
+    y=Func.apply(x)
+    y.backward()
+    print(x.grad)         # dy/dx
 
 = Neural network module
 
@@ -152,6 +175,11 @@ For more complex models subclass:
 * http://pytorch.org/docs/master/notes/cuda.html#use-pinned-memory-buffers
 * `.cuda(async=True)`, data-loader `pin_memory=True`
 
+= Functions
+
+|===
+| torch.histc(input, min, max, bins)       | lower bound inclusive; for largest bin also max inclusive; values outside of range not counted
+|===
 
 = Snippets
 

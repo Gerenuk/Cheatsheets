@@ -1,6 +1,6 @@
 * max_features: higher when many useless features; may slow down quadratically; if higher -> need less trees
 * n_estimators: choose large, but will be slow
-* min_sample_leaf: >0.01%?
+* min_samples_leaf: >0.01%?
 
 * deeper trees -> less bias
 * more trees -> less variance
@@ -11,3 +11,9 @@
 * limit depth (~5) if few samples
 
 * for feature importances definitely tune max_features
+
+New experiment:
+* optimize max_features (float?)
+* next top candidate is max_leaf_nodes (can be 50 and much more?)
+* last top candidate is min_samples_leaf (lower values more common)
+

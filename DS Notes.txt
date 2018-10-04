@@ -1149,3 +1149,336 @@ http://www.ipam.ucla.edu/abstract/?tid=14548&pcode=DLT2018
 * model-based approach is more sample efficient, but how to do it?
 * more complex tasks can be easier, since less overfitting
 
+<<<<<<< HEAD
+== Causality
+
+=== Summary
+* treatment assignment must be non-factor
+* -> need to adjust for confounders (affect both treatment and outcome)
+
+==== Instrumental variables
+* when unmeasured confounders exist, but IV can be found
+* IV Z does affect treatment A, but not outcome Y (in a direct way); "exclusion"
+* Z randomized enough to be uncorrelated with noise/errors
+* 2-Stage-Least-Squares:
+* 1. regress A~Z+X
+* 2. regress Y~hatA+X
+* 3. coef of hatA is effect size
+* (hatA unconfounded)
+* monotonicity important(?)
+
+=== Assumptions
+* outcome Y, treatment A, pre-treatment covariates X
+
+==== Stable Unit Treatment Value Assumption (SUTVA)
+* no interference
+** units do not interfere with each other
+** no spillover or contagion
+* one version of treatment
+-> write potential outcomes of i-th subject only in terms of his treatment
+
+==== Consistency
+* Y^a is actually the outcomes with treatment A=a
+
+==== Ignorability!
+* most important
+* no unmeasured confounders
+* Y0, Y1 \perp A | X
+* among subjects with same X, treatment is *randomly* assigned
+* treatment assignment becomes non-factor
+* but usually need too many variables -> could lead to many empty cells
+-> alternatives: matching, inverse probability of treatment weighting, propensity score methods, instrumental variables (natural experiments with variables as randomizer)
+* need that (within known group) the prob. of treatment is random
+* causal graphs can show which variables needed to control for confounding
+
+==== Positivity
+* everybody had some chance of get either treatment
+* P(A=a|X=x)>0 forall a,x
+* variability in treatment assignment
+
+=== Observed data
+* E(Y|A=a,X=x) involves only observed data
+* =E(Y^a|A=a,X=x) by consistency
+* =E(Y^a|X=x) by ignorability
+* marginal, causal effect -> average over X
+
+=== Stratification
+* to estimate causal effects
+* E(Y^a) = sum_X E(Y|A=a,X=x) P(X=x)  -> E(Y|..) only some, P(X=x) over all
+* standardization = stratifying + averaging
+* -> split by confounder -> calculate rates within those subgroups
+* mean potential outcome: what if everybody had the treatment (transfer rate to untreated as well); subtract what if no-one had treatment
+
+=== Experiment design
+* try to compare only subject in more same situations
+
+==== Incident user design
+* compare at equal conditions by fixed time after start
+* incident user design, new user design
+* look at outcome after some fixed time after starting a treatment
+* not looking at only right now and whether they are treated; might include people who were treated in past
+* only unclear at what time to measure no non-treated people
+
+==== Active comparator design
+* have equal conditions by having some kind of treatment in all groups; no difference before
+* compare to other treatment -> no problem with "untreated" and time question
+* but causal question then more narrow
+
+=== Confounding
+* variables that affect treatment *and* outcome
+
+=== Graphical models
+* tell which variables independent, cond. indep, factor/simplify, ...
+* used to derived nonparametric causal effects
+* ...->A->X  :  P(X|A)=P(X|A,...)  or B\perp D,C|A
+
+Prob. factorization does not determine DAG uniquely (e.g. A->B or B->A)
+
+Inverted fork/Collider do not pass information between branches
+
+==== Blocking
+* Chains and Forks block by conditioning on middle
+* Colliders get unblocked by conditioning on middle
+* A and B d-separated by nodes C if all paths blocked
+
+-> "Chains and Forks are of metal and conduct electricity! Conditioning reverses effect on all. (Only colliders stop)"
+
+=== Confounder
+* only need to control for backdoor paths
+* front-door path: link from start outwards
+* exact front-door paths interesting only when Causal mediation analysis (how much through intermediate variables)
+* !back-door paths need to be controlled for (link goes into start) -> confounder which affects both start and end of chain -> identify variables which block all back-door paths
+* -> would have ignorability Y0,Y1 \perp A|X
+* if DAG slightly different, you need to control for other
+* !sometimes not possible since controlling for some observed would at best unblock a path (then all attempts may fail) ->everything (even below approaches) wrong
+* !controlling for can be done with: matching and inverse probability of treatment weighting
+
+==== Backdoor path criterion
+* blocks all backdoor paths; does not include any descendants of treatment
+* possible sets to block not unique
+* need to know DAG for this here
+* controlling for one var may however unblock a path if unobserved missing
+
+==== Disjunctive cause criterion
+* do not need to know full DAG
+* control (only) for all (observed) *causes* of exposure and/or outcome (i.e. need only direct relations)
+
+=== Randomized trials
+* no link between possible confounders and treatment -> distribution of pretreatment variables identical in all treatment groups ("covariate balance")
+
+=== Observational studies
+* as opposed to randomized trial
+
+==== Matching
+* select pre-treatment covariates which will satisfy ignorability assumption
+* match individual from treatment and control group on some covariate (need to drop of no matches found)
+* would also see exceptional people who are only in one group
+* ->treat like randomized trial
+* but will be effect on selected subgroup only (treated, when they are smaller)
+* fine balance: only approximate matches fine, if in the end still *same marginal distribution* of covariates for treated and control
+* sometimes multi-matches ok
+
+===== Matching on confounders - Finding distance
+* distance matrix (e.g. [robust] Mahalanobis distance)
+* covariance matrix as scaling
+* possible to use ranks of all covariates (to dismiss scaling effects): robust Mah. dist.
+
+=====  Greedy matching
+* fast, but not great
+* sometimes second iteration with more matches possible
+* "caliper": max acceptable distance
+
+===== Optimal matching
+* slow, but good
+* network flow optimization problem
+* constraints possible to make it feasible: match with one covariate exactly equal ("sparse matching")
+
+===== Assess balance
+* check covariate balance
+*e.g. use standardized differences (similar means): (mu1-mu2)/sqrt(mean(variance))
+      * <0.2 just about ok
+* or use hypothesis tests to compare means (but with many samples there is always a difference)
+* create "Table 1": summary statistics (e.g. mean) of covariates for matched groups (overall mean)
+
+==== Analyse matched data
+* test for treatment effect, estimate confidence interval
+
+===== Permutations tests, Exact tests
+* choose test statistic; permute and compute test -> see if it was unusual
+* reassign treated/control label
+* for 0/1 in treat/control: only 0-1 pairs can actually change; like McNemar test for paired data
+* paired t-test for continous
+* other outcome models:
+  * conditional logistic regression: matched binary outcome data
+  * stratified cox model:time-to-event (survival); baseline hazard stratified on matched sets
+  * generalized estimating equations (GEE): match ID variable used to specify clusters; estimate causal risk difference
+
+https://cran.r-project.org/web/packages/rcbalance/index.html for matching
+
+=== Sensitivity analysis
+* need balance on observed covariates ("overt bias")
+* "hidden bias": bias on unobserved variables; even worse if they are confounders
+* sensitivity analysis: how much hidden bias before conclusion would change (e.g. direction of determined causality)
+* no hidden bias: when prob. of treatment the same for matched persons
+* need odds-ratio=Gamma=1
+* how much can we increase Gamma in analysis before evidence of treatment disappears
+* R packages sensitivity2x2xk, sensitivityfull; a bit complex to explain here
+
+=== Propensity score
+* = probability of receiving treatment given covariates, pi_i=P(A=1|X)
+* balancing score: same propensity score (even if different covariates)
+* P(X|pi(X)=p, A=1)=P(X|pi(X)=p, A=0)
+* -> could use propensity score to stratify by this for causality analysis
+* could estimate propensity score from logistic regression X->A (we want the predicted probs)
+
+==== Matching on propensity score
+* look at prop.scores or control and treated (2 histograms for binary treatment)
+* -> having overlap to do matching would be good
+* -> trimming tails if extreme prop.scores only in control XOR treated
+* after trimming use nearest neighbor matching
+* Caliper: max distance to prevent too bad matches
+* e.g. Caliper=0.2*stddev(logit(prop.score))
+
+=== Inverse Probability of Treatment weighting (IPTW)
+* lets assume only one confounder X
+* prop.score(X=1) = 0.1, prop.score(X=0)=0.8
+* prop.score matching would select only few people (min(x=1,treated vs x=1,control))
+* !weigh by 1/P(A=a|X)   (a=[0,1])
+* ->instead matching you now average over all
+* creates un-confounded pseudo-populations
+* https://en.wikipedia.org/wiki/Horvitz%E2%80%93Thompson_estimator (weight data
+to account for oversampling)
+* assuming that prop.score model on X fully captures confounding
+
+* ! E[Y^1]=<Y>_(weight 1/pi, only where A=1)
+
+=== Marginal structural models
+* type of causal models
+* IPTW can be used to estimate params from model params
+* MSM: model for means of potential outcomes
+* Marginal: not conditional on confounders; averaging over whole population
+* Structural: model for potential outcomes, not observed outcomes
+* -> for all subjects and all outcomes simultaneously
+* e.g. E[Y^a]=psi0+psi1*a
+* or use logit(E[Y^a]) if binary -> exp(psi1)=causal odds ratio=odds(Y^1=1)/odds(Y^0=1)
+* MSM with effect modification: something that might have effect on treatment
+* -> include V (with interactions with A) on linear model; but usually just average out confounders; split causal effects by V
+
+ E(Y^a)=g^-1(...) not same as E(Y|A)=g^-1(...)
+since first version is "setting A" and second is conditioning on "A"
+(only same for randomized trials)
+-> need IPTW to create pseudo-populations
+->introduce weights (Video Week 4 IPTW Estimation 6:40)
+W=1/P(A=a_i|X_i)
+-> estimate prop.score first; fit GLM with weights
+-> use asymptotic (sandwich) variance estimator (or usw bootstrapping) since weighting might give incorrect standard errors (due to pseudo-population)
+
+=== Assessing balance
+* after prop.score model and created weights
+* diff. between A=1 and A=0
+* with standardized mean (smd) with pooled stddev -> for every covariate
+* weighted mean, weighted pooled variance -> smd.
+* svydesign package (R)
+* want smd<0.1
+
+* if still imbalanced after prop.score -> include interactions, non-linearity (better prop.score model)
+* larger weights (positivity assumption shaky) might lead to larger noise
+* ->bootstrapping for std errors: sample with replacement and estimate parameters
+* -> single instances with large weight will represent larger stddev in bootstrap
+
+=== Remedies for large weights
+* check why weights are large; what is unusual about them (problem with data? data extremes/anomalies? problem with prop.score model?)
+* maybe remove subjects which have extreme prop.scores (people who were likely or very unlikely be treated); e.g. trim above <2 and >98 percentiles
+*maybe just weight truncation: max allowable weight of 100 (clip weight); creates a bit of bias, but less variance
+
+R IPW package
+
+=== Doubly robust estimation; Augmented IPTW (AIPTW)
+* could also model m1(X)=E(Y|A=1,X)
+* average over: Y value if A=1 and m1(X) if A=0 (hence predict for untreated)
+* ! unbiased if outcome model correct OR(!) prop.score model correct
+-> augmentation <A/pi*Y+(1-A/pi)*m1(X)>
+* AIPTW can be more efficient than IPTW (smaller variance)
+* some theory says which are most efficient
+
+=== Instrumental variables (IV)
+* useful when *unmeasured* confounding -> cannot average over confounders
+* no ignorability
+* !Z (IV) affects treatment, but not (directly) the outcome (only through treatment; "exclusion restriction"; do not know from data)
+* e.g. randomly encourage smoker to stop smoking before experiment
+* e.g. assign people to groups but they may not comply
+* causal effect of encouragment (but not real causal effect): E[Y^ (Z=1)]-E[Y^(Z=0)]
+* IV in nature: quarter of birth, geographic distance to something
+* Z randomization to treatment, A actually treatment received (non-compliance)
+* Z -> A -> Y; X -> A; X ->Y
+* A^(Z=1), A^(Z=0)   ; A^1, A^0
+* causal effect of assignment on receipt = E[A^1 - A^0]
+* =1 if perfect compliance
+* randomization and consistency -> E[A^1]=E[A|Z=1], E[A^0]=E[A|Z=0]
+* causal effect of assignment on outcome = E[Y^(Z=1)-Y^(Z=0)]
+* = causal effect of treatment if perfect compliance
+* E[Y^(Z=1)]=E[Y|Z=1), E[Y^(Z=0)]=E[Y|Z=0]
+* but real causal effect of treatment?!
+* IV: use randomization of Z
+* subpopulations:
+** never-takers (cannot learn causal)
+** compliers (can learn since randomized)
+** defiers (always opposite than Z suggested; could learn; usually small population)
+** always-takers (cannot learn causal)
+* IV focus on local average treatment effect; not for whole population!
+* IV: E[Y^(Z=1) | A^0=0, A^1=1) - E[Y^(Z=0) | A^0=0, A^1=1) = E[Y^(Z=1)-Y^(Z=0)|compliers]; same subpopulation
+* !IV only makes statement about compliers -> Complier Average Causal Effect (CACE)
+* =E[Y^(A=1)-Y^(A=0)|compliers] since compliers
+* but we only know A and Z and not A^0 and A^1
+* !monotonicity assumption: there is no defiers (no systematic opposite; probability of treatment increases with encouragement) -> now can find causal effect among compliers
+* Intention to treat (ITT) = E[Y^(Z=1)-Y^(Z=0)]=E[Y|Z=1]-E[Y|Z=0]
+* expand in subgroups "always taker", "never taker", "complier"
+* for "always takers" and "never taker" indep. of Z
+* -> E[Y|Z=1]-E[Y|Z=0]=(E[Y|Z=1,compliers]-E[Y|Z=0,compliers])*P(compliers)   # rest cancels
+* CACE=E[Y^(A=1)|compliers]-E[Y^(A=0)|compliers]
+* CACE=(E[Y|Z=1)-E[Y|Z=0])/P(compliers)
+* P(compliers)=E[A|Z=1]-E[A|Z=0]
+* ! CACE=(E[Y|Z=1)-E[Y|Z=0]) / (E[A|Z=1]-E[A|Z=0])
+* for perfect compliance denominator is 1
+* IV:
+** strongest assumption: exclusion restriction
+** monotonicity makes calc possible
+
+=== IV in observational studies
+* Z binary or continuous ("dose of encouragement")
+* need to check "exclusion restriction" by subject matter knowledge
+* Z has to affect treatment
+* examples of IV:
+** time when there is change of treatment preferences over time (other drug become popular); "time randomizes"
+** distance to something (i.e. travel time)
+** mendelian randomization: some genes encourages alcohol, but not final outcome
+
+=== Two-stage least squares with IV
+* Y=beta0+A*beta1+eps
+* when confounding: A and eps correlated -> OLS fails
+1) A_i=alpha0+Z_i*alpha1+eps_i      # Z_i and eps_i indep. by randomization
+-> get predicted hatA_i=hatalpha0+Z_i*hatalpha1
+(predicted A_i based on Z_i alone)
+2) Y_i=beta0+hatA_i*beta1+eps_i
+exclusion restriction -> Z indep of Y given A; hatA projection of A onto space spanned by Z; hatA unconfounded (just determined from Z)
+-> beta1 estimate of causal effect CACE
+* 2SLS also works for non-binary: A ~ Z + X; Y ~ hatA + X
+* Biaocchi'14: Tutorial in Biostatistics: Instrumental variable methods for causal inference
+* do sensitivity analysis (what if assumptions violated; what if there are defiers? what if Z directly affects Y?)
+
+=== Weak instruments
+* measure strength of instrumental variable (how much encouragement works)
+* estimate proportion of compliers E[A|Z=1]-E[A|Z=0]
+* causal effect estimation unstable of only few are compliers
+* use other IV if too weak
+* strengthen IV: "near/far matching" make similar on confounder, but diff in IV (Baiocchi'12)
+* R package: ivpack
+* 8:40 complier average causal effect or alternatively 2SLS (same result)
+* when more variables: use 2SLS
+* use robust std errors
+
+== Correlation
+
+* Maximum Information Criterion (MIC): seems bad https://arxiv.org/abs/1401.7645
+=======
+>>>>>>> 2963ee00712e95292c09a78c59a74b4363b55e2d
