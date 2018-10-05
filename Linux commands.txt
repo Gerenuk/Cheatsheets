@@ -21,6 +21,10 @@
 | gawk 'BEGIN{FS=","};{printf "%.0f\n",$14}' <<<$_INPUT_;;    |
 | setserial -bg /dev/ttyS[0-9]*             |
 | gawk '{print $8}'                         | Print 8th column
+| xargs                                     | Read stdin and execute once per item separated by blanks
+| xargs -t                                  | Print
+| xargs -p                                  | Print and prompt for execution first
+| xargs -I % '  %  '                        | % is placeholder for items (e.g. when multiple commands wanted)
 |===
 
 
@@ -31,6 +35,8 @@
 | yarn-site.xml                             | YARN custom config
 | yarn-default.xml                          | YARN just defaults
 |===
+
+* `xargs` much faster than `exec {}`
 
 
 == Information about the system
@@ -584,6 +590,19 @@
 | file -i <file>                            | Detect encoding
 | iconv                                     | Convert encoding
 |===
+
+== Limit CPU
+
+* http://blog.scoutapp.com/articles/2014/11/04/restricting-process-cpu-usage-using-nice-cpulimit-and-cgroups
+* `nice <cmd> <cmd_args>`: less priority for process -> less CPU when load (usually nice=0, default nice command=10, nice 19=least priority)
+* `renice +10 <pid>`: for already running process
+* `cpulimit -l <percent> -p <pid>`: restrict to CPU share (by sending SIGSTOP/SIGCONT)
+* `cputool --cpu-limit <percent> -p <pid>`
+* processor affinity https://unix.stackexchange.com/questions/73/how-can-i-set-the-processor-affinity-of-a-process-on-linux[Unix StEx]: `taskset -c <mincpu>,<maxcpu> -p <pid>`
+
+== Resource limits
+
+* cgroups: `cgcreate` to create groups
 
 
 == Bash

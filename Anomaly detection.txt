@@ -35,6 +35,8 @@
 * https://github.com/adiyoss/DeepAnomaly[DeepAnomaly]: neural network, 2016
 * https://github.com/dmbee/seglearn[Seglearn]
 * https://github.com/christophmark/bayesloop[BayesLoop]
+* https://github.com/sk1010k/SmartSifter[SmartSifter]
+* https://stats.stackexchange.com/questions/137094/algorithms-for-time-series-anomaly-detection
 
 * https://github.com/baidu/Curve[Curve (Baidu)]: Labeling helper
 * https://github.com/Microsoft/TagAnomaly[TagAnomaly (Microsoft)]: Labeling helper
@@ -72,4 +74,46 @@
 == Other
 
 * https://github.com/albertcthomas/anomaly_tuning: Parameter tuning notebook
-* https://github.com/fastforwardlabs/anomaly_detection/blob/master/Anomaly%20Detection%20Post.ipynb[Fast forward labs]: Proabilistic programming notebook
+* https://github.com/fastforwardlabs/anomaly_detection/blob/master/Anomaly%20Detection%20Post.ipynb[Fast forward labs]: Probabilistic programming notebook
+* http://www.cs.cmu.edu/~./awm/tutorials/biosurv01.pdf[Bio Surv Slides]
+
+== Review Pimentel
+
+* "A review of nevlty detection" (Pimentel, Clifton, Tarassenko; 2014)
+* Subspaces could be important in high dimensions
+* Categories:
+** probabilistic: fit probability distribution and set threshold
+*** parametric: GMM; non-parametric: kernel-density estimation
+*** functional form may not be good fit
+*** need many samples
+*** threshold has no probabilistic interpretation since only probability density
+*** SmartSifter: Ref 117; https://github.com/sk1010k/SmartSifter[Python], hierarchical structure, discount past
+*** ICA-based: Ref 54, Ref 122
+*** fuzzy k-nearest clustering + GMM: Ref 48, Ref 49
+*** hidden state models: HMM, Kalman filter
+** distance-based: nearest neighbors
+*** outlier if far
+*** HighDOD for outlier subspaces: Ref 171
+*** Local Outlier Factor; alsosome variations
+*** cluster-based: find clusters and distances from prototypes
+*** need distance metric
+*** work incrementally
+** reconstruction-based: predict what would be normal
+*** many ideas with neural networks
+** domain-based: fit hard boundary
+*** one-class SVMs; many variations
+** information-theoretic: score groups by some IC
+*** doesnt seem that great
+* has multiple reference for outliers on categorical data
+* try PCA, Kernel PCA (maybe better with L1 norm); maybe CCA; Robust PCA
+
+== Tests
+
+* https://en.wikipedia.org/wiki/Grubbs%27_test_for_outliers[Grubbs test]: assume normality; detects outlier iteratively
+
+== Examples
+
+=== LSTM by Uber
+
+* https://eng.uber.com/neural-networks/
+* feature extraction was key (strength of curvature, spikiness, ...)

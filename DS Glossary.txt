@@ -10,4 +10,4 @@ Isotonic regression:: Regression such that estimations are monotonically increas
 Cross decomposition:: PLS (partial least squares) or CCA (canonical correlation analysis). Find latent variables which explain relations between matrix X and Y.
 Gaussian Mixture Model:: All data is generated from a mixture of finite number of Gaussians with unknown parameters.
 Partial dependence plot:: For GBRT in `sklearn.ensemble.partial_dependence`. Marginalized over all other features.
-
+Robust PCA:: "Robust PCA" (Candes 2009); http://statweb.stanford.edu/~candes/papers/RobustPCA.pdf[Paper]; Repeated do SVD and threshold
