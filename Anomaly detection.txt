@@ -79,7 +79,7 @@
 
 == Review Pimentel
 
-* "A review of nevlty detection" (Pimentel, Clifton, Tarassenko; 2014)
+* "A review of novlty detection" (Pimentel, Clifton, Tarassenko; 2014)
 * Subspaces could be important in high dimensions
 * Categories:
 ** probabilistic: fit probability distribution and set threshold

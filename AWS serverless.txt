@@ -1,0 +1,190 @@
+== EC2 for scaling
+* EC2: capacity on demand
+* still manage versions, patches
+* could have under-/overprovision
+* need buffers for spike
+
+== Serverless
+* focus on code only
+* no provision
+* no system admin
+* no security patches
+* no payment for idle resources
+* esp for spiky workload (for stable workload maybe rather EC2(?))
+
+== AWS Lambda
+* trigger:
+** PUT to S3
+** Update to DynamoDB
+** Call to API Gatewy endpoint
+** Mobile app back-end call
+* billing per 100ms; for execution and memory
+
+== DynamoDB (NoSQL)
+* key-based
+* streams, triggers, atomic counters, free-text search, ...
+* eventually consistent
+* great scaling
+* does not remove partitions when scaling down (?)
+
+== API Gateway
+* create REST APIs
+* authenticate
+* DDoS protection, throttling
+* unified API to multiple backends
+* pay per query
+* adv vs manual: less building blocks (e.g. no Lambda function); authorization (easier); not a clear answer
+
+== Amazon Cognito
+* user pool
+* sign-up, sign-in, data sync to apps
+* federate identities
+* store/sync data across devices
+
+== Amazon Simple Storage Service S3
+* cheap
+* million requests per second
+* store trillion of objects
+* (single object max 5TB(?))
+
+== IAM
+* Principal: Subject
+* Action: e.g. get object
+* Resource: e.g. S3 bucket
+* Effect: Allow/Deny
+
+== Tutorial
+https://github.com/aws-samples/aws-serverless-workshops/tree/master/WebApplication/1_StaticWebHosting
+* create S3
+* run CloudFormation script to copy files (CloudFormation step-by-step,connect to same S3)
+* make IAM policy to make it readable to public
+* enable static webhosting for S3 (tell which file and which endpoint)
+https://github.com/aws-samples/aws-serverless-workshops/tree/master/WebApplication/2_UserManagement
+* user management Cognito
+** create user pool (required info; password policy; sign-up allowed)
+* create App client (permissions for application); disable "Generate client secret"!
+*  modify S3 app "config.js" -> download -> modify set -> upload again:
+** userPoolId (see user pool)
+** userPoolClientId (see app client)
+** region (e.g. "eu-west-1" for Ireland)
+* register.html for user sign in -> could get token and paste to jwt.io (will decode token)
+https://github.com/aws-samples/aws-serverless-workshops/tree/master/WebApplication/3_ServerlessBackend
+* create DynamoDB table
+* create table Rides and primary partition key RideId (one partition can do 10-20GB data; 3000 reads/1000 writes capacity; consider "hot key" when skewed access frequency to keys)
+* partitions to consider; provision read and write capacity -> best practices
+* scan vs query: scan whole table; primary sort key within partition (?)
+* create IAM role for Lambda function
+** Lambda needs to call DynamoDB -> create role
+** attach policy AWSLambdaBasicExecution -> since creates logs
+** and inline policy -> visual editor -> allow PutItem, specific resource from DynamoDB: use Amazon Resource Name [ARN]
+* create Lambda function:
+** create function RequestUnicorn in node.js 6.10; choose role WildRydesLambda
+** copy paste code in browser
+** change table name in index.js if needed
+** handler set: index.handler 8event, context, callback)
+** could only limit number of concurrent exec and limit runtime
+* configure test event
+** tempate API Gateway Proxy -> JSON with request/header; incl. autorizer
+** shows billed duration, memory, ...
+https://github.com/aws-samples/aws-serverless-workshops/tree/master/WebApplication/4_RESTfulAPIs
+* create API gateway
+** create authorizer (if Lambda: own custom logic)
+** set authorizer for each resource
+** create new resource /ride; add POST action
+** API keys: for 3rd party usage plans
+
+== DynamoDB vs S3
+* S3 much more expensive for PUT (0.5cent/1000 PUT), but cheaper for storage
+* -> use DynamoDB for a lot of read/write
+* analytics -> Kinesis to S3 (bundle into single write)
+* for DynamoDB you can update parts of object; one write counts as write up to some byte limit
+
+== SQL
+* Athena (Presto)
+* Glue(?) (Spark)
+
+== Lambda
+* Event -> function -> Services
+* Event sources: S3, DynamoDB, Kinesis, Cognito, CloudFormation, CloudTrail, CodeCommit, CloudWatch [e.g. from cron-like], API Gateway, IoT Core, AWS Step functions, AppSync, SNS, SQS, Simple Email Service, ...
+* AWS SDK bundled with container
+* code as zip file
+*! if attached to VPC: coldstart slower
+* cold start: milliseconds to max 20sec (observed; 10sec VPC alone); kept warm for 5min (15min with VPC)
+* see cold start time: use log messages
+* 512MB in /tmp scratch space
+* no infrastructure guaranteed (CPU unknown,...)
+* containers not deleted when running
+* SSH into Lambda
+* runs up to 15min
+* def handler(event, context): gets to know runtime left
+* retry policy; may retry with new container
+* set up queue for case of failures
+* CloudWatch events to keep function warm
+* throw exception -> will not start
+* only choose memory (but more memory also more CPU)
+* see bookmark aws-lambda-power-tuning: runs with different settings
+* best practices:
+** minimize code size (e.g. remove comments)
+** use env vars to modify operational behavior
+** include all dependencies
+** adjust SQS visibility timeout (SQS may let messages reappear in queue)
+
+
+== Other
+* Step functions: workflow from Lambdas, e.g. parallel instances
+* AppSync: GraphQL
+* SNS Simple Notification Service: notifications to multiple destinations
+* SQS: Queue of messages, buffer
+* can have autoscaling lifecycle event (EC2)
+* CloudFront: cache static content (CDN); could also resize images with Lambda
+* WebApp: CloudFront/S3 for content; API Gateway/Lambda/DynamoDB for data
+
+== Kinesis
+* number of shards, one Lambda per shard
+* also data analytics
+* tune firehose buffer size and buffer interval
+* e.g. could bundle S3 writes
+* enable compression (e.g. Athena prices per data scan)
+* consider Amazon Redshift best practices
+* enable source record backup (raw data)
+
+== Compare Kinesis, SQS, SNS
+* SQS: queue (usually for one reader only)
+* Kinesis: need to allocate shards; better for larger data; 7 days retention; 1MB max record; at-least-once
+* SNS: after a few retries just forget message
+
+== Data Lake
+* S3 (multiple storage classes, versioning, encryption)
+* Lambda function to store Metadata in DynamoDB
+* Lambda -> ElasticSearch for search index
+* Query:
+** Glue (data catalog, crawler)
+** used by Athena or Redshift Spectrum (better if data that query a lot in constant cluster; but could work without)
+** QuickSight
+
+== Batch Processing
+* EMR, Glue (min 10min billing time since Spark cluster), ...
+* or S3 -> Lambda (Splitters/Mappers) -> DynamoDB (Mapper results) -> Lambda (Reducer) -> S3
+
+== ML Services
+* image/video/polly (parrot; text-to-speech)/transcribe (speech-to-text), translate, comprehen, Lex (chatbot)
+* AWS Step function to combine
+
+== Amazon Connect
+* Call-centers with Connect/Lex/...
+
+== AWS Serverless Application Model (AWS SAM)
+https://github.com/awslabs/serverless-application-model
+* SAM Template:
+** CloudFormation (?)
+** e.g. automatically create API Gateway if defined that need GetHtml
+* SAM CLI https://github.com/awslabs/aws-sam-cli: run Lambda locally, proxy-style APIs 
+* AutoPublishAlias: deploy new code in steps (e.g. Canary, 10% every 5min)
+
+== DevOps tutorial
+https://github.com/aws-samples/aws-serverless-workshops/tree/master/DevOps
+* set up CodeStar (free; only pay for resources)
+* Webservice, Nodejs, Lambda -> will use Express.js
+* -> Repo, Dashboard, Wiki
+* Source/Build/Deploy workflow
+* using services: CodeCommit, CodePipeline, CodeDeploy

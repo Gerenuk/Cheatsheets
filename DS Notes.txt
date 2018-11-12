@@ -1506,3 +1506,6 @@ exclusion restriction -> Z indep of Y given A; hatA projection of A onto space s
 
 * PRIM: https://ir.library.louisville.edu/cgi/viewcontent.cgi?referer=&httpsredir=1&article=2454&context=etd
 * FOIL: needs boolean input
+
+== Triangular coordinates
+

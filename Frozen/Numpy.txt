@@ -5,6 +5,7 @@
 == General
 
 * many commands have an `out=` option to specify destination data structure directly for performance
+* https://docs.scipy.org/doc/numpy/reference/[Reference]
 * https://docs.scipy.org/doc/numpy/search.html[Numpy search]
 * many commands have a `nan...` version which ignores nan values (but still error when all NaN)
 * some functions exists as array methods (?)
@@ -400,6 +401,10 @@ used set_numeric_ops() to override operators
 
 * http://www.scipy-lectures.org/advanced/advanced_numpy/[Advanced Numpy]
 * https://docs.scipy.org/doc/numpy/reference/arrays.interface.html[Low-level array interface]
+
+== Testing
+
+Some functions for testing (e.g. asserts, approx. equality) are in https://docs.scipy.org/doc/numpy/reference/routines.testing.html[Numpy Testing].
 
 == Numpy
 

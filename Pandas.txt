@@ -1492,6 +1492,10 @@ Delete duplicate column names: maybe select by dd.iloc[:, ...]
 * hdfs has a lot of overhead if you store small objects
 * multiindex on rows: -> .loc[(1,4),:] vs .loc[(1,):4]; tuples mean parts of same key
 
+== Testing
+
+Some testing functions are in https://pandas.pydata.org/pandas-docs/stable/api.html#testing-functions[Testing Ref], e.g. to compare DataFrames for equality.
+
 == References
 
 * http://nbviewer.jupyter.org/github/justmarkham/pandas-videos/blob/master/pandas.ipynb[Example notebook Markham]
@@ -1570,6 +1574,8 @@ Call ``pd.describe_option()`` to list all options (http://pandas.pydata.org/pand
     pd.set_option('display.max_rows', 500)
     pd.set_option('display.max_columns', 500)
     pd.set_option('display.width', 1000)
+
+    with pd.option_context("display.max_rows",10,"display.max_columns", 5):
     
 Selecting data
 --------------
