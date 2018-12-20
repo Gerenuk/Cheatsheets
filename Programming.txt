@@ -168,6 +168,8 @@ Scala issues:
 * 
 
 +++++++++++
+* Python `requests` library is said to be well designed
+
 Y-fast trie: store integer from bounded domain, supports exact and predecessor or successor queries in time O(log log M), using O(n) space [less than X-trie], where n is the number of stored values and M is the maximum value in the domain
 
 X-tree is an index tree structure based on the R-tree used for storing data in many dimensions. It differs from R-trees, R+-trees and R*-trees because it emphasizes prevention of overlap in the bounding boxes, which increasingly becomes a problem in high dimensions. In cases where nodes cannot be split without preventing overlap, the node split will be deferred, resulting in super-nodes. In extreme cases, the tree will linearize, which defends against worst-case behaviors observed in some other data structures.

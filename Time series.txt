@@ -555,6 +555,9 @@ asciimath:[|d|<0.5]
 * shock matrix could be useful in Eigenvectors
 * do not difference if doing a Granger causality test; difference only if other purpose and I(1) but not cointegrated
 * when cointegrated -> need VECM model
+* impulse response: `irf=result.irf(n); irf.plot()`
+* forecasting error variance decomposition: `fevd=result.fevd(n); fevd.plot()`
+* statistical test: `result.test_causality("y", ["x1", "x2"])`
 
 == Neural networks
 
@@ -639,7 +642,11 @@ asciimath:[|d|<0.5]
 * EWMA: not robust to outliers
 * bandpass filtering: similar to Hodrick-Prescott filter
 * Hodrick-Prescott filter: decomposes into trend and cyclical component; multi-variable optimization of mean-square-error
+* also Baxter-King and Christiano-Fitzgerald filter
 *! could also do same by L1 minimization: good when noise exponential, piece-wise linear, kinks in result show changes
+
+== Bayesian Dynamic Linear Models - DLM
+* estimation by Kalman filter recursion
 
 == Lomb-Scargle periodigrams
 
@@ -687,6 +694,7 @@ asciimath:[|d|<0.5]
 * ARCH: moving average of hidden noise; noise has to be estimated from autoregression
 * ARCH finite impulse response in noise power -> large variance effects disappear quickly
 * GARCH infinite impulse response in noise power -> impact from high variance in past can be longer than order of equation
+* "stochastic volatility model"
 
 asciimath:[Var(y_t|y_(t-1))=sigma_t^2=alpha_0+alpha_1 y_(t-1)^2]
 
@@ -800,6 +808,7 @@ https://www.youtube.com/watch?v=likDxYXhNQY
 * MASE can be very sensitive to a few series; worth concentrating on these if you really have to optimize for MASE
 ** maybe then use only linear growth (not exponential); additive seasonality (not multiplicative) - otherwise small weights
 * include a global trend (e.g. from across all series; if data from one industry)
+* for products consider it's production life-cycle (how long ago it was first produced); maybe assume some shape on top of this time scale
 
 == Filters
 
@@ -866,6 +875,7 @@ I took the lagging N components from the full time series (N=8 for the winning s
 == Vector Error Correction Model VECM
 * since differencing (of integrated series) eliminates valuable information -> VECM
 * use differences and extra term asciimath:[lambda e_(t-1)] where asciimath:[e_(t-1)=Y_(t-1)-alpha-beta X_(t-1)]
+* not non-stationary modeling(?)
 
 == Granger causality
 
@@ -880,6 +890,17 @@ I took the lagging N components from the full time series (N=8 for the winning s
 * -> do model without lagged values of other and do F-test (for SSR)
 *! if variables cointegrated -> use ECM model (see above: extra term -> do same test on coefs [incl. new coef])
 * read https://davegiles.blogspot.com/2011/04/testing-for-granger-causality.html
+* magnitude of G-causality = log(F-statistics) [Geweke 1982] Geweke, J. 1982 Measurement of linear dependence and feedback between multiple time series. Journal of the American Statistical Association 77, 304-313
+* use AIC to determine max order
+ spectral G-causality: fraction of contributed total power
+ * http://www.scholarpedia.org/article/Granger_causality
+ * usually only for linear, since other less understood
+ * assumes covariance stationary (otherwise use windowing - Hesse, W., Moller, E., Arnold, M. & Schack, B. 2003 The use of time-variant EEG Granger causality for inspecting directed interdependencies of neural assemblies. J Neurosci Methods 124, 27-44)
+ * detailed review of the theory and application of G-causality can be found in - Ding, M., Chen, Y., & Bressler, S.L. 2006 Granger causality: Basic theory and application to neuroscience. In Schelter. S., Winterhalder, N., & Timmer, J. Handbook of Time Series Analysis. Wiley, Wienheim
+
+== Causality with Information Theory
+Schreiber, T. 2000 Measuring information transfer. Phys Rev Lett 85, 461-4. -  introduced the concept of transfer entropy which is a version of mutual information operating on conditional probabilities. It is designed to detect the directed exchange of information between two variables, conditioned to common history and inputs. For a comparison of transfer entropy with other causal measures, including various implementations of G-causality, see -Methods for Quantifying the Causal Structure of
+Bivariate Time Series (Lungarella).  An advantage of information theoretic measures, as compared to standard G-causality, is that they are sensitive to nonlinear signal properties. A limitation of transfer entropy, as compared to G-causality, is that it is currently restricted to bivariate situations. Also, information theoretic measures often require substantially more data than regression methods such as G-causality - Pereda, E., Quiroga, R. Q. & Bhattacharya, J. 2005 Nonlinear multivariate analysis of neurophysiological signals. Prog Neurobiol 77, 1-37.
 
 === Toda-Yamamoto procedure
 * https://davegiles.blogspot.com/2011/04/testing-for-granger-causality.html

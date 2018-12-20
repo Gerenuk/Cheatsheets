@@ -1224,6 +1224,15 @@ https://www.youtube.com/watch?v=tG22jrVFKpM
 ** use environ variables (since sometimes hard to inject files into system)
 * wsgi.py for loading config
 * never put sensitive data into env! they always leak
+** some processes log/print env variables
+** passed to child processes
+** general other software and other engineers may not know that they are sensitive
+** could run `ps -eww <pid>`
+** -> with docker swarm could use
+*** `openssl rand -base64 32 | docker secret create secure-secret -`
+*** `docker service create --secret="secure-secret" redis:alpine`
+*** read secret contents from in-memory tmp in `/run/secrets/secure-secret`
+** could use https://github.com/square/keywhiz
 * use docker secrets, google cloud KMS, AWS secrets manager, hashicorp vault, ...
 * write class to get secrets
 * full URLs as credentials
@@ -1237,4 +1246,19 @@ https://www.youtube.com/watch?v=tG22jrVFKpM
 * log to stdout
 * do not use filesystem! (if diff ports) -> redis, postresql, ...
 * cluster managers
-* pypi.org as best practice example
+* pypi.org as best practice example; https://github.com/pypa/warehouse
+* https://hynek.me/talks/deploy-friendly/
+* do not put secrets in env vars: https://diogomonica.com/2017/03/27/why-you-shouldnt-use-env-variables-for-secret-data/
+* https://12factor.net/
+* managing passwords: https://coderanger.net/talks/secrets/
+* Hashicorp Vault: advanced secrets manager
+* secrets as URLs: https://pypi.org/project/yarl/
+* modern load balancing: https://blog.envoyproxy.io/introduction-to-modern-network-load-balancing-and-proxying-a57f6ff80236
+* other advice:
+** https://mvdirona.com/jrh/TalksAndPapers/JamesRH_Lisa.pdf
+* tools:
+** direnv: set envs as you enter directory
+** https://github.com/hynek/environ_config[environ_config (Python)]: env vars to dicts
+** templating env var to file: https://www.gnu.org/software/gettext/manual/html_node/envsubst-Invocation.html
+** templating from backends: https://github.com/kelseyhightower/confd
+** Hashicorp consul templating: https://github.com/hashicorp/consul-template

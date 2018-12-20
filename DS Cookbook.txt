@@ -60,6 +60,13 @@
        .layout(dims2).cols(..)       # different plots
     )                                # remaining variables will be slider
 
+== Exploration
+
+    p=sns.FacetGrid(df, hue="c")
+    p.map(sns.distplot, "y").add_legend()
+
+    sns.plt.legend() # ?
+    
 == Plot correlation
 
     sns.heatmap(df.corr())
@@ -1208,6 +1215,13 @@ Use my
 ** relative to `start` (`start=0` by default); can be date
 * to generate data use `smt.arma_generate_sample(ar=ar, ma=ma, nsample=n, burnin=burn)`
 
+=== Exponential Smoothing
+
+    from statsmodels.tsa.holtwinters import Holt
+    
+    model=Holt(y)        # ExponentialSmoothing with seasons
+    res=model.fit(smoothing_level=0.5, smoothing_slope=0.9, optimized=False)    # or leave it out for automatic
+
 === Other tutorials
 
     mdl = smt.AR(x).fit(maxlag=30, ic='aic', trend='nc')
@@ -1509,6 +1523,8 @@ To install
     conn = engine.connect()
     conn.execute(...)
 
+    conn.execute("insert into ... values (%s, %s, ...)", list(df[[..]].itertuples(False)))
+
     import pymysql
     conn=pymysql.connect(host="localhost", user="root", passwd="passwd")
     cur=conn.cursor()
@@ -1531,6 +1547,9 @@ To install
     conn.execute("begin")   # for transaction
     ...
     conn.execute("commit")
+
+
+* Placeholder (for `postgresql://`): `%s`
 
 
 SQLAlchemy: removes column names parts before a dot due to bugs in the SQLite driver as a workaround use

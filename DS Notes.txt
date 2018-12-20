@@ -45,6 +45,8 @@ http://techtv.mit.edu/collections/bcs/videos/30698-what-s-wrong-with-convolution
 
 * for 5MB text, 6 letters context provide enough context for optimal compression
 
+* Sliding suffix tree: https://arxiv.org/pdf/1801.07449v3.pdf
+
 == Hyperparameter tuning
 
 * Gaussian Processes: Interacting parameters
@@ -329,6 +331,10 @@ https://www.youtube.com/watch?v=kxp7eWZa-2M
 * ReLU: derivatives are such as to make same optimal learning rate in each layer due to weight convergence
 * machine translation: run RNN; hidden state is then thought vector (on very big data not as good as google though)
 * brain and backprop? -> explanation why still possible
+
+* Searching for optimal activation functions: https://arxiv.org/pdf/1710.05941v2.pdf
+** best is simple functions; often b(x, g(x))
+** working sightly better than ReLu: x*sig(beta*x) [Swish, beta fixed or trainable, non-monotonic], max(x, sig(x))
 
 == Machine learning that changes behavior in wild
 https://www.youtube.com/watch?v=QWCSxAKR-h0
@@ -884,6 +890,54 @@ https://www.youtube.com/watch?v=XBQzhjiaqhA
 ** different frontend (TF, MXNet, ..) and backends (CPU, GPU, ARM, Torch) possible
 ** challenges: new optimizations, new operators, ...
 
+== Principle Component Analysis -  PCA
+
+* http://alexhwilliams.info/itsneuronalblog/2016/03/27/pca/[Its Neuronal blog post]
+* max variance of loadings over instances (projections onto a principal component) -> loadings spread a lot
+* same as minimizing reconstruction loss
+* roughly since recon.loss^2+proj.var^2=const.
+* for a centered matrix asciimath:[X] and unit vector asciimath:[w] you can show https://stats.stackexchange.com/questions/32174/pca-objective-function-what-is-the-connection-between-maximizing-variance-and-m/136072#136072[that] asciimath:[Var(Xw) propto -|X-Xww^T|^2], hence maximizing the variance is the same as minimizing reconstruction error.
+* usually found by SVD (but doesnt work for tensors, missing data, ...)
+* first principal vector -> rank-1 reconstruction = outer product of 2 vectors (principal component and loadings)
+** loadings of rank-1 = how much of that 1 feature vector you want for each instance
+** loadings of rank-k = k feature vectors, how much of each you want for each instance
+* inconsistent when more features than instances (due to noise; http://dx.doi.org/10.1198/jasa.2009.0121[Johnston 2009])
+
+=== Estimating how many components to keep
+* threshold on singular value (from estimating noise; http://dx.doi.org/10.1109/TIT.2014.2323359[Gavish 2014]): asciimath:[lambda = 4 sigma sqrt(n)/sqrt(3)]
+* Bayesian alternative http://hd.media.mit.edu/tech-reports/TR-514.pdf[Minka 2000]
+
+=== Quadratically regularized PCA
+* similar to Ridge regression
+* quadratic penalty on both weights and loadings
+* similar to classical PCA (https://courses2.cit.cornell.edu/mru8/doc/udell15_thesis.pdf[Thesis])
+
+=== Sparse PCA
+* penalty of sum of L1 norm on both weights and loadings
+* often sparse result
+* similar results to PCA, but simpler components
+* no but guarantee that sparse is correct (http://statweb.stanford.edu/~candes/papers/LassoFDR.pdf[Su 2015], http://arxiv.org/abs/1601.04650[Avani 2016])
+
+=== Non-negative matrix factorization - NMF
+* exactly same optimization term as PCA (with asciimath:[W=XC]), but non-negativity contraint
+
+=== Logistic PCA
+* logistic loss; e.g. when data [0,1]
+* http://dx.doi.org/10.1109/TPAMI.2008.114[Kwak 2008], http://statweb.stanford.edu/~candes/papers/RobustPCA.pdf[Candes 2009], http://papers.nips.cc/paper/5430-non-convex-robust-pca.pdf[Netrapalli 2014]
+
+=== Robust PCA
+* when outliers; L1 or Huber loss
+
+=== Poisson PCA
+* http://qwone.com/~jason/papers/ijcai05-preference.pdf[Rennie 2005]
+
+=== Zero-inflated dimensionality reduction
+* http://dx.doi.org/10.1186/s13059-015-0805-z[Pierson 2015]
+
+=== With missing values
+* difficult http://www.jmlr.org/papers/volume11/ilin10a/ilin10a.pdf[Ilin 2010]
+* no analytic solution for any part, local minima, not even mean centering (bias) is clear
+
 == Statistical tests
 
 === F-test
@@ -989,7 +1043,14 @@ Uncertainty in neural networks
 * noise (maybe or not be constant per point)
 * model uncertainty
 
-== Entropy estimation
+== Entropy
+
+* difference of differential entropy and entropy not important when only differences of entropy considered
+* max entropy distribution:
+** given variance -> Gaussian
+** positive and given mean -> Exponential
+
+=== Entropy estimation
 http://techtalks.tv/talks/entropy-estimation-and-streaming-data-sebastian/59433/
 * Plugin estimator (naive): consistent, but biased
 * need adjustment: some address bias/variance/infinite classes
@@ -1149,7 +1210,6 @@ http://www.ipam.ucla.edu/abstract/?tid=14548&pcode=DLT2018
 * model-based approach is more sample efficient, but how to do it?
 * more complex tasks can be easier, since less overfitting
 
-<<<<<<< HEAD
 == Causality
 
 === Summary
@@ -1506,6 +1566,44 @@ exclusion restriction -> Z indep of Y given A; hatA projection of A onto space s
 
 * PRIM: https://ir.library.louisville.edu/cgi/viewcontent.cgi?referer=&httpsredir=1&article=2454&context=etd
 * FOIL: needs boolean input
+
+== Visualization
+
+* Mountain plot: Cumulative plot (F vs x), but mirrored down at y=0.5 -> easier to compare 5%-95%
+
+== Metrics
+
+=== ROC AUC
+* is also equal to the probability, that a random Positive/Negative pair has probabilities assigned which are ordered correctly (https://www.alexejgossmann.com/auc/)
+* invariance to prior class probabilities or class prevalence in the data.
+* can choose/change a decision threshold based on cost-benefit analysis after model training.
+* http://dl.acm.org/citation.cfm?id=1143874
+** domination in ROC same as domination in PR curve
+
+== Hyperparameter Tuning
+
+=== Good parameter ranges
+* experiments on OpenML:
+** https://arxiv.org/pdf/1802.09596.pdf
+** https://arxiv.org/pdf/1710.04725.pdf
+
+== Extrinsic Curvature
+
+* Cauchy: inverse of distance of intersection of two infinitely close normals
+* unique "osculating circle"
+* also |d vec(Tangent)/ds |
+* magnitude of acceleration if moving with unit speed
+* kappa = det(vecx', vecx'')/|vecx'|^3
+* 3D: kappa= |vecx' x vecx''|/|vecx'|^3
+* in 3D also need torsion (helical) to describe path (-> related by Frenet-Serret formulas)
+* also related to ratio of arc length and line distance
+
+== Approximate Median
+* to find k-th largest element you need <=5.43N comparisons (Blum, Floyd, Pratt)
+* you need 2N...2.94N comparison to find exact median (for sure O(N))
+* survey of Mike Paterson
+* to get exact median in 1 pass you need to store >=N/2 elements (for p passes O(N^1/p))
+* http://www.mathcs.emory.edu/~cheung/Courses/584-StreamDB/Syllabus/08-Quantile/Greenwald.html
 
 == Triangular coordinates
 

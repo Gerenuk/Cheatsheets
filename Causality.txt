@@ -330,6 +330,7 @@ exclusion restriction -> Z indep of Y given A; hatA projection of A onto space s
 * Holland, P. (1986), “Statistics and Causal Inference,” (with discussion), Journal of the American Statistical Association, 81, 945-970.
 * Sheehan, R. G., and Grieves, R. (1982), “Sunspots and Cycles: A Test of Causation,” Southern Economic Journal, 48, 775-777: Economic activity causes sun spots
 * Sobel, M. E. (1995), Causal Inference in the Social and Behavioral Sciences. Pp. 1-38 in G. Arminger, C. C. Clogg and M. E. Sobel (Eds.), Handbook of Statistical Modeling for the Social and Behavioral Sciences. New York: Plenum Press.
+* (?) Kleinberg: Causality, Probability, and Time; http://www.skleinberg.org/causality_book/
 
 = Coursera Columbia Causality
 
@@ -369,3 +370,16 @@ exclusion restriction -> Z indep of Y given A; hatA projection of A onto space s
 ** however, it shouldnt be that f is linear and the noise is Gaussian
 * the ICP package in R can be used to find causal structure:
 ** you need data from multiple environments (different situations) and pass in the environment label to the function
+
+== General
+
+* Structural Equation Modeling, Randomized Control Trials, Bayesian Networks
+* Levels:
+** Observational prediction (need joint probability only)
+** Prediction under intervention (need some causal structure)
+** Counterfactuals (need functional form)
+* Potential outcomes vs Causal graphs:
+** CG better to describe M-Bias (controlling for a variable which unblocks a path)
+
+== Other
+* Galles, Pearl: An axiomatic characterization of causal counterfactuals http://ftp.cs.ucla.edu/pub/stat_ser/R250.pdf[Link]
