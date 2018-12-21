@@ -279,3 +279,9 @@ Variable naming:
 * functions: verb is change state, noun if return value (what does 'create_database' mean)
 * "Clean Code", "The Art of readable code"
 +++++++++++++++
+
+Coding and testing tips:
+* use pure (immutable) values as boundaries; in tests and for logic functions
+* like "Clean architecture":
+* core: has paths, no deps, functional, no mutation
+* shell: deps, no paths, imperative

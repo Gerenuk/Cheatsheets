@@ -1,0 +1,35 @@
+https://www.youtube.com/watch?v=Fqq6F68SQFY
+* Docker alternatives: LXD, rkt, FreeBSD jails
+* Docker Community Edition, Docker Enterprise Edition
+* Resource: Linux Docker takes what it needs dynamically, Windows Docker need to specify exactly what it takes
+* Docker Service (Daemon); accessible by CLI or apps
+* default only accessible internally
+* Image:
+** from Docker registry (Docker hub)
+** or built from Docker file
+** -> can spin up containers
+* Container:
+** start/stop
+** when delete: data gone
+** run from CLI or GUI (Kitematic, Portainer, ...)
+* Docker registry:
+** pull/push; tag images
+** Docker Hub: standard registry; some (like Elastic) use only own registry
+** `docker search ...`
+* Dockerfile:
+** `Dockerfile`
+** info to build image
+** docs.docker.com
+** FROM alpine; FROM scratch
+** LABEL ...
+** ENTRYPOINT: when image build
+** CMD: when new container built
+* Alpine: 4MB Linux distro; often as base
+* container may just stop after a command
+* `docker run --name <name> <image>`
+* `docker run ... -p <localport>:<containerport> ...`
+* `docker run ... -d ...` : detach so that you can continue on console
+* `pip install docker`: control Docker daemon with Python
+* https://github.com/janwag/PyConDE2018_IntroToDocker/tree/master/Demo/5_docker_flask
+* learn:
+** https://www.edx.org/course/fundamentals-containers-kubernetes-red-red-hat-do081x
