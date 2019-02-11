@@ -41,3 +41,5 @@ Proxy from netstat -an
 Change password Remote Desktop: Ctrl-Alt-End (!)
 
 mklink to make symlinks in windows, but needs admin rights
+
+`where` : equivalent for Linux `which`

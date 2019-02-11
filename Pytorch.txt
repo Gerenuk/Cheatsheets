@@ -29,15 +29,13 @@
     outputs = model(inputs)
     outputs = outputs.cpu()
 
-= Variables
-
-* Variables: for computational graph to enable autodiff
-* in newer Pytorch just use tensor?
+= Tensors
 
 |===
-| v.data                                    | Initial tensor
-| v.grad                                    | Gradient
-| v.backward()                              | Update gradients
+| t.data                                    | Initial tensor
+| t.grad                                    | Gradient
+| t.backward()                              | Update gradients
+| t.requires_grad = True                    | Whether to calc graphs
 |===
 
 = Optimizer
@@ -54,6 +52,8 @@
         optimizer.step()       # apply new gradients
 
 = Autograd
+
+Explanation of autograd internals: https://www.youtube.com/watch?v=MswxJw-8PvE
 
 To define new functions
 
@@ -94,6 +94,20 @@ To define new functions
     y=Func.apply(x)
     y.backward()
     print(x.grad)         # dy/dx
+
+|===
+| t.retain_grad()                           | Tell tensor to keep intermediate grads; otherwise only leafs keep grad
+|===
+
+== Detaching
+
+|===
+| t.detach()                                | Gives tensor
+| t.numpy()                                 | Gives numpy
+| t.item()                                  | Gives int/float if single number
+| t.tolist()                                | Gives (nested) Python list
+|===
+
 
 = Neural network module
 

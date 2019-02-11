@@ -102,6 +102,7 @@
 * GARCH (when variance follows ARMA process)
 * CausalImpact (Google)
 * Shallow ANN
+* equal weight ensemble of ETS/ARIMA/Theta
 
 ==== Prophet (Facebook)
 
@@ -432,6 +433,16 @@ asciimath:[hat x_(t+1)=alpha x_t+alpha (1-alpha) x_(t-1)+ alpha (1-alpha)^2 x_(t
 * "Although the model allows estimating VARMA(p,q) specifications, these models are not identified without additional restrictions on the representation matrices, which are not built-in" (?)
 * VARMA: includes MA
 * special cases of ARMAX
+* error terms may be correlated
+* VAR stationary of all roots of asciimath:[det(I_k-Theta_1 z-Theta_2 z^2-...-Theta_p z^p)=0] are outside unit complex circle
+* single unit root if exactly one root z=+1 (holds if at least one of variables contains unit root)
+* can be used for Granger causality testing
+* to determine (max) lag length -> use VAR with AIC
+* to get BLUE, one can apply OLS to every equation individually
+* steps:
+** use AIC to find correct (max) lag
+** fit with OLS
+** use Portmanteau test on residuals to check model
 
 === ARIMA vs ETS
 
@@ -541,6 +552,12 @@ asciimath:[|d|<0.5]
 ** impulse response analysis, where the response of one variable to a sudden but temporary change in another variable is analysed;
 ** forecast error variance decomposition, where the proportion of the forecast variance of each variable is attributed to the effects of the other variables
 * Vector ARMA generalization but also more complicating
+* shock matrix could be useful in Eigenvectors
+* do not difference if doing a Granger causality test; difference only if other purpose and I(1) but not cointegrated
+* when cointegrated -> need VECM model
+* impulse response: `irf=result.irf(n); irf.plot()`
+* forecasting error variance decomposition: `fevd=result.fevd(n); fevd.plot()`
+* statistical test: `result.test_causality("y", ["x1", "x2"])`
 
 == Neural networks
 
@@ -602,8 +619,14 @@ asciimath:[|d|<0.5]
 * you could replace outliers with missing values
 * ideally do not use the future information to decide on missing or outlier values
 * more possible time series issues: last chapter of "Principles of business forecasting" (Ord, J. K., Fildes, R., & Kourentzes, N. (2017))
+* hard to beat SARIMAX (e.g. Python https://github.com/tgsmith61591/pyramid)
+* explore: time series itself, histogram of y, ACF, PACF(!)
+* weak stat: first two moments constant (mean, [co]var)
+* LSTM: does not need stationarity
+* model revert to mean (zero), but unit root (i.e. non-stationary)? -> coefs should reflect cointegration and obey some constraints
+* level shifts affect unit root and cointegration test and implication for VAR and causality tests(?)
 
-<<<<<<< HEAD
+
 == Time Series Classification
 
 * Nearest neighbor with Dynamic Time Warping hard to beat; also http://www.cs.ucr.edu/~eamonn/DTW_myths.pdf[DTW myths]
@@ -619,7 +642,11 @@ asciimath:[|d|<0.5]
 * EWMA: not robust to outliers
 * bandpass filtering: similar to Hodrick-Prescott filter
 * Hodrick-Prescott filter: decomposes into trend and cyclical component; multi-variable optimization of mean-square-error
+* also Baxter-King and Christiano-Fitzgerald filter
 *! could also do same by L1 minimization: good when noise exponential, piece-wise linear, kinks in result show changes
+
+== Bayesian Dynamic Linear Models - DLM
+* estimation by Kalman filter recursion
 
 == Lomb-Scargle periodigrams
 
@@ -631,20 +658,16 @@ asciimath:[|d|<0.5]
 == Change detection
 
 * https://stats.stackexchange.com/questions/139660/detecting-changes-in-time-series-r-example
-=======
-* hard to beat SARIMAX (e.g. Python https://github.com/tgsmith61591/pyramid)
 
-https://vimeo.com/274421819
+== Video
+* https://vimeo.com/274421819
 * multi-variate time series
 * to model effects from y on x: use vector for y -> components affect each other
 * Vector Autoregressive Models
 ** only for stationary; but sometimes differencing makes stationary
 ** if non-stat. but linear combination is stat (co-integration): can do "Vector error correction model")
 ** sm.tsa.VARMAX
-* explore: time series itself, histogram of y, ACF, PACF(!)
-* weak stat: first two moments constant (mean, [co]var)
-* LSTM: does not need stationarity
->>>>>>> 22a5c47b1094205e2fddbac4f0fc4af12eb7fcf9
+
 
 == Anomaly detection
 
@@ -671,6 +694,7 @@ https://vimeo.com/274421819
 * ARCH: moving average of hidden noise; noise has to be estimated from autoregression
 * ARCH finite impulse response in noise power -> large variance effects disappear quickly
 * GARCH infinite impulse response in noise power -> impact from high variance in past can be longer than order of equation
+* "stochastic volatility model"
 
 asciimath:[Var(y_t|y_(t-1))=sigma_t^2=alpha_0+alpha_1 y_(t-1)^2]
 
@@ -746,6 +770,7 @@ asciimath:[sigma_t^2=alpha_0+alpha_1 y_(t-1)^2]
 ** scaling (e.g. log) to equalize variance
 * http://people.duke.edu/~rnau/whatuse.htm
 * colored noise is stationary; hitting a guitar is not
+* *model* is stationary if coefs obey some relation for complex roots of a determinante
 
 
 == Trend estimation in time series signals
@@ -783,6 +808,7 @@ https://www.youtube.com/watch?v=likDxYXhNQY
 * MASE can be very sensitive to a few series; worth concentrating on these if you really have to optimize for MASE
 ** maybe then use only linear growth (not exponential); additive seasonality (not multiplicative) - otherwise small weights
 * include a global trend (e.g. from across all series; if data from one industry)
+* for products consider it's production life-cycle (how long ago it was first produced); maybe assume some shape on top of this time scale
 
 == Filters
 
@@ -846,3 +872,68 @@ I then fitted a weighted regression (weighted the most recent observations the m
 
 I took the lagging N components from the full time series (N=8 for the winning submission, which was selected arbitrarily) as features, then each of the 10 prediction times and 39 pollutant measures as targets. I then trained 390 Random Forests over the entire training data, one for each predicted offset time-pollutant combination. The Random Forest parameters were selected so that the models would be quick to train. https://github.com/benhamner/Air-Quality-Prediction-Hackathon-Winning-Model[code]
 
+== Vector Error Correction Model VECM
+* since differencing (of integrated series) eliminates valuable information -> VECM
+* use differences and extra term asciimath:[lambda e_(t-1)] where asciimath:[e_(t-1)=Y_(t-1)-alpha-beta X_(t-1)]
+* not non-stationary modeling(?)
+
+== Granger causality
+
+* http://web.vu.lt/mif/a.buteikis/wp-content/uploads/2018/04/Lecture_07.pdf
+* cause needs to precede effect
+* "Granger causality" not necessarily real causality
+* test that non-zero coef if we include past values of anothe feature
+* Null hypothesis = no Granger causality
+* unrestricted model: lagged values of self, lagged values of other, linear time (trend) term
+* -> no Granger if all coef of lagged other values zero
+* can do OLS when no unit root
+* -> do model without lagged values of other and do F-test (for SSR)
+*! if variables cointegrated -> use ECM model (see above: extra term -> do same test on coefs [incl. new coef])
+* read https://davegiles.blogspot.com/2011/04/testing-for-granger-causality.html
+* magnitude of G-causality = log(F-statistics) [Geweke 1982] Geweke, J. 1982 Measurement of linear dependence and feedback between multiple time series. Journal of the American Statistical Association 77, 304-313
+* use AIC to determine max order
+ spectral G-causality: fraction of contributed total power
+ * http://www.scholarpedia.org/article/Granger_causality
+ * usually only for linear, since other less understood
+ * assumes covariance stationary (otherwise use windowing - Hesse, W., Moller, E., Arnold, M. & Schack, B. 2003 The use of time-variant EEG Granger causality for inspecting directed interdependencies of neural assemblies. J Neurosci Methods 124, 27-44)
+ * detailed review of the theory and application of G-causality can be found in - Ding, M., Chen, Y., & Bressler, S.L. 2006 Granger causality: Basic theory and application to neuroscience. In Schelter. S., Winterhalder, N., & Timmer, J. Handbook of Time Series Analysis. Wiley, Wienheim
+
+== Causality with Information Theory
+Schreiber, T. 2000 Measuring information transfer. Phys Rev Lett 85, 461-4. -  introduced the concept of transfer entropy which is a version of mutual information operating on conditional probabilities. It is designed to detect the directed exchange of information between two variables, conditioned to common history and inputs. For a comparison of transfer entropy with other causal measures, including various implementations of G-causality, see -Methods for Quantifying the Causal Structure of
+Bivariate Time Series (Lungarella).  An advantage of information theoretic measures, as compared to standard G-causality, is that they are sensitive to nonlinear signal properties. A limitation of transfer entropy, as compared to G-causality, is that it is currently restricted to bivariate situations. Also, information theoretic measures often require substantially more data than regression methods such as G-causality - Pereda, E., Quiroga, R. Q. & Bhattacharya, J. 2005 Nonlinear multivariate analysis of neurophysiological signals. Prog Neurobiol 77, 1-37.
+
+=== Toda-Yamamoto procedure
+* https://davegiles.blogspot.com/2011/04/testing-for-granger-causality.html
+* Toda, H. Y and T. Yamamoto (1995). "Statistical inferences in vector autoregressions with possibly integrated processes." Journal of Econometrics, 66, 225-250.
+* find orders of integration for both series; M = max order
+* find max lag by VAR on undifferenced(!) original series; increase order until no serial autocorrelation(!),e.g. LM test; P = best lag
+* do VAR with P+M lags on undifferenced series; e.g. one could include additional lags as exog variable
+* test P coef with Wald test for non-zero (other M coefs are only to "fix up the asymptotics") -> chi(p) under null
+* rejecting test supports Granger causality
+
+* if some series have same order of integration -> Johansen's method for check for cointegration -> cointegrated series must have some Granger causality (if conflicting answer, maybe sample too small for assumptions)
+* F-test no valid since lags enter model as regressors
+* invalid to use t-tests to select max lag
+* not considering the P+M lag (Y-T approach) will make results meaningless (but for m=0 could do the simple way)
+
+== Learning material
+
+=== Unchecked
+
+Books:
+* Modeling Financial Time Series (Taylor)
+* Introduction to Time Series and Forecasting (Brockwell)
+* Analysis of Financial Time Series (Tsay)
+* Time Series Analysis and its Applications with R Examples (Shumway)
+* Econometric Analysis (Green)
+* Econometrics (Hayashi)
+* Almost None of the theory of stochastic processes (Shalizi)
+* Ch7 of: New Introduction to Multiple Time Series Analysis (Lütkepohl)
+* causality, probability, and time book cover Causality, Probability, and Time  (Kleinberg)
+* https://www.cambridge.org/core/books/causal-inference-for-statistics-social-and-biomedical-sciences/71126BE90C58F1A431FE9B2DD07938AB
+
+Courses:
+* https://courses.edx.org/courses/course-v1:GTx+ISYE6402+2T2018/course/
+
+Other:
+* http://stat565.cwick.co.nz/

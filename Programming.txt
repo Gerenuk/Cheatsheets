@@ -1,3 +1,12 @@
+= My naming convention
+
+== Jupyter
+* variables which should accessible across multiple cells -> Capital letter
+
+== Nested data
+* multiple of -> "...s"
+* element of -> "a_..." (or "one", "cur" ?)
+
 = Best programming practices
 
 Inheritance:
@@ -159,6 +168,8 @@ Scala issues:
 *
 
 +++++++++++
+* Python `requests` library is said to be well designed
+
 Y-fast trie: store integer from bounded domain, supports exact and predecessor or successor queries in time O(log log M), using O(n) space [less than X-trie], where n is the number of stored values and M is the maximum value in the domain
 
 X-tree is an index tree structure based on the R-tree used for storing data in many dimensions. It differs from R-trees, R+-trees and R*-trees because it emphasizes prevention of overlap in the bounding boxes, which increasingly becomes a problem in high dimensions. In cases where nodes cannot be split without preventing overlap, the node split will be deferred, resulting in super-nodes. In extreme cases, the tree will linearize, which defends against worst-case behaviors observed in some other data structures.
@@ -269,6 +280,7 @@ Variable naming:
 * "Clean Code", "The Art of readable code"
 +++++++++++++++
 
+<<<<<<< HEAD
 == Complexity
 http://bigocheatsheet.com/
 
@@ -277,3 +289,10 @@ http://bigocheatsheet.com/
 * Mergesort: N space
 * Heapsort: 1 space
 * Shellsort: 1 space, but NLogN^2 time
+=======
+Coding and testing tips:
+* use pure (immutable) values as boundaries; in tests and for logic functions
+* like "Clean architecture":
+* core: has paths, no deps, functional, no mutation
+* shell: deps, no paths, imperative
+>>>>>>> b077e6579580db02a565e263770bb320bb286753

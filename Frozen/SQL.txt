@@ -22,7 +22,8 @@
 | *load data infile* 'filename' *into table* tbl    | http://dev.mysql.com/doc/refman/5.7/en/load-data.html
 | *load data infile* ... *fields terminated by* '\t' *enclosed by* '' *ignore* 1 *lines* |
 | *select* ... *into outfile* 'filename'    | http://dev.mysql.com/doc/refman/5.7/en/select-into.html
-| *truncate* tbl                            |
+| *truncate* tbl                            | Delete all from table (but may not work due to foreign key constraints)
+| *delete from* tbl                         | Delete all from table
 | *select* ... *from* ...                   | http://dev.mysql.com/doc/refman/5.7/en/select.html
 | *select* ... *from* ... *where* ... *group by* .... |
 | *select* ... *having* ...                 | *Applied last; Can refer to aggregations (e.g. max(a)), but not to WHERE clause

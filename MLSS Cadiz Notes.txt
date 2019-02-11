@@ -67,17 +67,6 @@
 * hashing pairs is similar to a x^T^Mx term
 * using matrix factorization x^T^UU^T^x can help small categories, but averages large categories undesirably
 
-=== Causality
-* one can reason about causality by use a notation similar to P_{do(X=a)}
-* to determine causality:
-** find a independencies (hard problem; can use HSIC for it)
-** construct a graph which is consistent with the independencies in the d-separation
-* causality direction between just two variables X and Y cannot be found, unless:
-** you assume additive noise f(X)+eps
-** however, it shouldnt be that f is linear and the noise is Gaussian
-* the ICP package in R can be used to find causal structure:
-** you need data from multiple environments (different situations) and pass in the environment label to the function
-    
 == Multi-armed bandits
 * there are many guarantees about optimal procedures (e.g. Gittins index), however they turn out to be too idealized for practice
 * Thompson sampling was mysterious for why it works, but now has multiple theoretical guarantees (also frequentists)
@@ -183,7 +172,8 @@
 ** union of the features sets with a constant set
 ** substraction of the feature set for a constant set (reflection)
 * generalization to integer mapping possible (i.e. \[0..K\]^n^->R instead of [0,1]) but you lose some properties
-* can be used to optimize for clustering or sparsity in objects like graphs 
+* can be used to optimize for clustering or sparsity in objects like graphs
+
 === Maximizing monotone submodular functions with constraints
 * generally this problem is NP-hard
 * however a greedy algorithm can be shown to yield at least factor (1-1/e) of the optimum
@@ -197,6 +187,7 @@
 * problems can be solved with a relaxation: make continous interpolation, solve, round to binary
 * -> simple multi-linear relaxation to translate continous space to something based on the function values of the set (continous function value is weighted average of functions value on set elements [corners])
 * for more average bounds, rather than worst-case, look into "curvature" (see her website)
+
 === Maximizing non-monotone submodular functions
 * double-greedy algorithm has guarantees:
 ** either add to "inclusion set" (starting from empty set)
@@ -204,6 +195,7 @@
 * the guarantees is 1/2 of the optimum
 * this method also turns out to be optimal for polynomial time algorithms
 * a local search would have 1/3 guarantee
+
 === Minimizing submodular functions without constraints
 * similar to convex optimization
 * multi-linear extension is NOT convex
@@ -215,6 +207,7 @@
 * for optimization use subgradient
 * minimizing this problem is an active area of research
 * current algorithms (2015) are n^3^Tlog n+n^4^log^2^(n)s
+
 === Minimizing submoduar functions with constraints
 * difficult, not even constant factor guarantees exist
 
@@ -295,22 +288,3 @@
 ** need to weight data points (positive/negative)
 * model initialization doesn't matter since we start from last model
 * about 10000 ads for one sale
-
-== Causality
-* core is structural equation model (SEM), which is of form X_a=f(X_b,..,X_c,noise)
-* noise is assumed independent
-* we are interested in the probability P_{do(X=a)} meaning the probability what would happen if we set X to a
-* we can use that P_{do(T=a)}(R=r|T=t,S=s)=P(R=1|T=t,S=s)
-* conditional independence is not enough to determine intervention since multiple graphs can be the same)
-* causality important only for intervention, not for prediction
-* d-separation of A and B by:
-** only NON-block with S: ->S<-
-** only block without S: ->O<-
-* to make conclusions, we need assumptions:
-** Markov: if A and B d-separated by S, then they are independent given S
-** Faithfulness: Markov reversed (no accidental independencies(?)); this is debateable
-* Spires method is fast, clever way to find a graph for finding independencies
-* Pearl method works, but slow
-* usually you need a lot of data to confirm all independencies (best to use HSIC)
-* for additive noise Y=f(X)+eps you can determine the causality direction; unless f is linear and the noise is Gaussian (in which case both directions look the same)
-* ICP package in R: put in data points from different "environment" and add environment label -> algorithm finds minimal causal set

@@ -1,22 +1,62 @@
-== Clustering
+= Clustering
 
 * Subspace clustering: cluster may exist only on subspace
 * OPTICS: easier hyperparameters than DBSCAN, in sklearn (v0.21)
 * unsupervised metric: http://scikit-learn.org/dev/modules/generated/sklearn.metrics.davies_bouldin_score.html[Davies Bouldin Score]
 
-=== Normalized cuts
+== Implementations
+* https://github.com/annoviko/pyclustering[PyClustering]
+* https://github.com/topics/clustering-algorithm
+* https://github.com/AaronX121/Clustering (Matlab)
+* https://github.com/cmmp/pyproclus[PROCLUS]
+* https://github.com/dimitrs/CLTree[CLTree]
+* https://github.com/canonizer/gpumafia[MAFIA]
+* https://github.com/trueprice/python-graph-clustering[Graph Clustering]
+* https://github.com/mitscha/ssc_mps_py[SSC-OMP]
+* https://github.com/nachtm/HighDimensionalClustering
+* https://elki-project.github.io/howto/clustering[ELKI]
+* https://www.rdocumentation.org/packages/wskm[EWKM] (R)
+
+== References
+* Jain: "Data clustering - 50 years beyond K-means" 2010
+
+== k-Means
+
+* with sparsity assumption and whitening, k-means produces ICA
+* bilatering filtering: calculate mean only for points close in data set (e.g. images)
+
+=== Initialize
+* Forgy, Random Partition
+* k-means++
+
+== Properties of algorithms
+* convex admissiable: if convex hulls for not intersect
+* cluster-proportion admissible: not change of some clusters cloned
+* omission admissable: not change if removing one cluster
+* monotone admissable: does not change when monotone transformation applied to elements
+* monotone -> cannot be hierarchical (Fisher, Van Ness)
+* Kleinberg: cannot have all 3 of
+** scale invariance: arbitrary scaling to similarity metric
+** richness: must be able to achieve all possible partitions of data
+** consistency: no change if shrink within-cluster distance and stretch between-cluster distance
+
+== Normalized cuts
 
 * good, but slow (?)
 * "Normalized cuts and image segmentation" (Shi, Malik)
 
-=== Mean shift - Feature space clustering
+== Mean shift - Feature space clustering
 
 * "Mean shift analysis and applications" (Comaniciu)
 * "Mean Shift: A Robust Approach Toward Feature Space Analysis" (Comaniciu)
 * smooth data, but preserve boundaries between regions
 * dilate points as hypersphere
 
+<<<<<<< HEAD
 === Felsenszwalb for Images
+=======
+== Felsenszwalb
+>>>>>>> b077e6579580db02a565e263770bb320bb286753
 
 * http://people.cs.uchicago.edu/~pff/papers/seg-ijcv.pdf["Efficient graph-based image segmentation"] (Felsenszwalb)
 * fast (NlogN in pixels)
@@ -36,11 +76,12 @@
 ** interior extra score could be shape dependent (e.g. ratio of area to perimeter)
 ** do graph in (x,y,r,g,b) feature space -> e.g. better if color important, e.g. image of flowers
 
-=== Cycles in graph embedded image plane
+== Cycles in graph embedded image plane
 
 * "Globally optimal regions and boundaries as minimum ratio weight cycles" (Jerman, Ishikawa)
 * was mentioned, but not clear if it works
 
+<<<<<<< HEAD
 == Kleinberg theorem
 http://alexhwilliams.info/itsneuronalblog/2015/10/01/clustering2/
 * scale-invariant: no change when scale all values
@@ -51,3 +92,57 @@ http://alexhwilliams.info/itsneuronalblog/2015/10/01/clustering2/
 ** if until k cluster -> no richness (both others): cannot have >k clusters
 ** if distance r stopping -> no scale-invariance
 ** scale-eps stopping -> no consistency
+=======
+== Subspace clustering
+* CLIQUE Agrawal 1998
+* FINDIT Woo 2004 (?) http://koasas.kaist.ac.kr/bitstream/10203/1990/1/K.G.%20Woo,%20J.H.%20%20Lee,%20M.H.%20Kim%20and%20Y.J.%20Lee,FINDIT,%20Vol.%2046,%20No.%204,%20P.%20255-271,%202004,%203.pdf[PDF]
+* Ahmad 2011 "A k-means type clustering algorithm for subspace clustering of mixed numeric and
+categorical dataset" https://ac.els-cdn.com/S0167865511000602/1-s2.0-S0167865511000602-main.pdf?_tid=e05691e4-07fa-4acd-8158-6a5ef0a7f048&acdnat=1542205306_28f6ee8b450825d216bbf14761d95ad2[PDF]
+* Moise 2009: "Subspace and projected clustering: experimental evaluation and analysis"
+* https://sfb876.tu-dortmund.de/PublicPublicationFiles/spain_2013a.pdf[Thesis PDF]
+* Vijendra 2010: "Efficient Clustering for High Dimensional Data: Subspace Based Clustering and Density Based Clustering" https://scialert.net/fulltext/?doi=itj.2011.1092.1105[Link]
+* SUBCLU Kailing 2004
+* PROCLUS Aggarwal 1999, ORCLUS Aggarwal 2000
+* FIRES framework Kriegel 2005
+* CLICK Zaki 2007
+* COSA Friedman 2004
+* FINDIT Woo 2004
+* CLTree Liu 2000
+* ENCLUS Cheng 1999
+* pMAFIA Nagesh 2001
+* DOC Procopiuc 2002
+* O-Cluster Milenova 2002
+* EWKM Jing 2007
+* SCHISM Sequeira 2004
+* STATPC
+* Alelyani: "Feature Selection for Clustering: A Review" https://pdfs.semanticscholar.org/f116/7e2e1fa07cdf432c10beb373e07efd6a5e58.pdf[PDF]
+
+== Categorical data
+* k-modes Huang 1997
+* COOLCAT Barbara 2002
+* CACTUS Ganti 1999
+
+== CLICKS
+* Zaki 2007: "CLICKS: An effective algorithm for mining subspace clusters in categorical datasets" https://ac.els-cdn.com/S0169023X06000176/1-s2.0-S0169023X06000176-main.pdf?_tid=617d0a36-7428-4a71-9f55-3b60cd963277&acdnat=1542205004_aedb96bc56f1c85e4b3b20094f4a9224[PDF]
+
+== Graph-based/Spectral clustering
+* Normalized-cut: efficient, approximate
+* Modified Normalized Cut - MNCut: for more than 2 clusters
+
+== Similarities between clusterings
+* Jain: "Landscape of Clustering Algorithms" https://ml2.inf.ethz.ch/papers/2004/jain.icpr04.pdf[Link]
+* types:
+** Chameleon
+** Cure/Graph partitioning
+** k-mean, spectral, EM
+
+== Ensembles
+* run multiple clusterings -> create similarity matrix of what was in same cluster -> cluster on this again
+
+== Co-clustering
+* also Direct clustering, Bi-dimensional clustering, Double clustering, Coupled clustering, Bimodel clustering
+* find clusters in both features and samples (what belongs together)
+
+== Finding number of clusters
+* X-means, G-mean; repeatedly split
+>>>>>>> b077e6579580db02a565e263770bb320bb286753

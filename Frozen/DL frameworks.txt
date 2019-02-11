@@ -1,5 +1,4 @@
-Recommendation
-==============
+== Recommendation
 * Keras, Tensorflow
 * Torch for flexibility
 * https://blogs.technet.microsoft.com/machinelearning/2018/03/14/comparing-deep-learning-frameworks-a-rosetta-stone-approach/
@@ -8,8 +7,7 @@ Recommendation
 ** PyTorch medium fast
 ** different ranking for other tasks!
 
-Comparison
-==========
+== Comparison
 * Tensorflow better than Theano for production
 * Tensorflow better for industry; Multi-GPU
 * Theano pure Python; Cannot do faster lower level language
@@ -17,35 +15,30 @@ Comparison
 * PyTorch more flexible, intuitive, easier to debug than Theano
 * Theano for some things faster than Tensorflow (A3C?)
 
-Tensorflow
-==========
+== Tensorflow
 * low-level
 * by Google
 * Python lib
 * multiple CPU/GPU
 
-Theano
-======
+== Theano
 * low-level
 * like Tensorflow, but not scalable and no multi-GPU
 
-Keras
-=====
+== Keras
 * high-level
 * on Tensorflow, Theano, ..
 * Python
 * good documentation
 
-Caffe (2)
-=========
+== Caffe (2)
 * expression, speed, modularity
 * Berkeley
 * C++ with Python interface
 * mainly CNN
 * Caffe Model Zoo with pretrained networks
 
-Torch
-=====
+== Torch
 * Lua
 * Facebook, Twitter, Google
 * C++, CUDA
@@ -53,47 +46,39 @@ Torch
 * PyTorch
 * easier debugging than TF?
 
-DeepLearning4J
-==============
+== DeepLearning4J
 * Java
 * industry-focused
 
-MXNet
-=====
+== MXNet
 * support for R, Python, C++, Julia
 * C++/CUDA
 * multi-GPU/computer
 * reference lib by Amazon
 
-MS Cognitive Toolkit
-====================
+== MS Cognitive Toolkit
 * prev CNTK
 * Reinf. Learn, GAN,...
 * faster than Tensorflow on multiple machines?
 
-Lasagne
-=======
+== Lasagne
 * high-level on Theano
 * Keras better
 
-BigDL
-=====
+== BigDL
 * DL on Spark
 * uses Intel MKL
 * can also load pretrained Torch/Caffe
 
-Blocks
-======
+== Blocks
 * Theano framework for building ANN
 * bit more flexible than Lasagne
 * nice RNN
 
-Chainer
-=======
+== Chainer
 * dynamic computation graphs
 
-= PyTorch vs Tensorflow
-== Pytorch
+== PyTorch vs Tensorflow Pytorch
 * no separation between CPU/GPU version; but maybe more code needed
 * no official Windows distr?
 * cleaner code since Pythonic
@@ -106,15 +91,15 @@ Chainer
 * better for deployinf at scale
 * has larger community
 
-= Chainer vs PyTorch
+== Chainer vs PyTorch
 http://docs.chainer.org/en/stable/comparison.html
 * fuller multiproc
 * better runtime debugging(?)
 
-= Characteristics
+== Characteristics
 http://www.kai-waehner.de/blog/2017/04/24/visual-analytics-open-source-deep-learning-frameworks/
 * CNTK: great at RNN
 * MXNet: great multi-GPU
 
-= Other comparison
+== Other comparison
 https://deeplearning4j.org/compare-dl4j-tensorflow-pytorch

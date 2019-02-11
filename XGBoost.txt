@@ -79,3 +79,30 @@ Parallelized
 Missing values
 CV at each iteration -> opt num of boosting iterations
 Warm restart
+
+--------
+* CART: score at each leaf
+* Winning competitions: Avito Context Ad Click, Crowdflower, WWW2015 Microsoft Malware
+* use Taylor of loss with 1st and 2nd derivative
+* add regularization = gamma * [number of leaves] + 1/2 * lambda * sum (leafweight_i)^2
+* find decision tree along gradient
+* combination of boosted trees with conditional random field 
+* https://github.com/dmlc/xgboost/blob/master/demo/README.md
+
+* test data set: https://archive.ics.uci.edu/ml/datasets/Covertype (7 classes)
+
+Performance:
+* sketch_eps to consider only top splits
+* approximation on split points
+
+parameters (https://xgboost.readthedocs.org/en/latest/parameter.html#parameters-for-tree-booster):
+* sketch_eps: consider only the best splits
+* shrinkage only effects score of leaf nodes, not tree shape
+* num trees: 100-1000, depending on data size
+* learning rate: [2-10] / #trees, fine tune
+* row sampling: [0.5, 0.75, 1.0] grid search
+* column sampling: [0.4, 0.6, 0.8, 1.0] grid search
+* min leaf weight: 3/[%rare events] fine tune
+* max tree depth: [4,6,8,10] grid search
+* min split gain: 0
+* http://datascience.stackexchange.com/questions/9364/hypertuning-xgboost-parameters

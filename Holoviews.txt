@@ -1,8 +1,9 @@
 = Holoviews
 
 ////
-Status: 1.9.2
+Status: 1.10
 Release notes: https://github.com/ioam/holoviews/releases
+http://holoviews.org/releases.html
 ////
 
 :toc:
@@ -33,6 +34,10 @@ Release notes: https://github.com/ioam/holoviews/releases
 * possible to slice, de-/re-compose data directly on elements
 * `/assets` directory for data (?)
 
+JupyterLab support with
+
+    jupyter labextension install @pyviz/jupyterlab_pyviz
+
 == Elements
 
 http://holoviews.org/reference/index.html[Containers, Elements, Streams, Apps Reference]
@@ -61,7 +66,7 @@ http://holoviews.org/Reference_Manual/holoviews.element.html[Element API Referen
 
 * both `group` and `label` are used for legend by default
 * parameters handles by http://ioam.github.io/param/[sublibrary]
-
+* Dask directly supported
 
 == Dimensions / Axes
 
@@ -126,11 +131,12 @@ Other dimension properties:
 | [color_index=_num_]                       | Use this column in data for color
 | [yticks=..]                               | Position
 | el << Spikes(..)                          | Add marginal distribution
-| Hextiles((x, y))                          | Hexbin
+| Hextiles((x, y))                          | Hexbin http://holoviews.org/reference/elements/bokeh/HexTiles.html[Ref]
 | Histogram(np.histogram(_vals_, bins="auto"))  | Histogram
 | [projection="polar"]                      | Polar histogram
 | [norm={axiswise:True}]                    |
-| HeatMap({..})                             |
+| HeatMap({..})                             | http://holoviews.org/reference/elements/bokeh/HeatMap.html[Ref]
+| _radial_=True                             | http://holoviews.org/reference/elements/bokeh/RadialHeatMap.html[Ref]
 | HeatMap(dd.groupby(["x", "y"]).z.sum().to_dict())  | HeatMap (discrete); Matplotlib backend will also plot numbers
 | el.hist(num_bins=.., dimension=["x", "y"])    | Add marginal histograms with Bokeh; Creates `SideHistogram`
 | Raster(..)                                | 2D keys are integers
@@ -138,7 +144,7 @@ Other dimension properties:
 | Image(.., bounds=(..))                    | 2D with continous implicitely regular bounds; continuous unlike `Raster`
 | RGB(np.dstack([r,g,b])                    | Image with channels
 | Distribution(..)                          | Distribution (KDE); uses Seaborn
-| Bivariate(..)                             | Bivariate contour plots; uses Seaborn
+| Bivariate(..)                             | Bivariate contour plots; uses Seaborn(?)
 | Regression(..)                            |
 | %%opts Bivariate [joint=True]             |
 | TimeSeries(..)                            | Time series plot; uses Seaborn http://seaborn.pydata.org/generated/seaborn.tsplot.html[tsplot]
@@ -158,6 +164,14 @@ Other dimension properties:
 | Polygons(..)                              |
 | Bounds((left, bottom, right, top))        | Rectangular box
 | [aspect=..]                               | Set aspect for various elements
+| Sankey(..)                                | http://holoviews.org/reference/elements/bokeh/Sankey.html[Ref]
+| TriMesh(..)                               | http://holoviews.org/reference/elements/bokeh/TriMesh.html[Ref]
+| Chord(..)                                 | Points on circle with connections http://holoviews.org/reference/elements/bokeh/Chord.html[Ref]
+| Labels(..)                                | http://holoviews.org/reference/elements/bokeh/Labels.html[Ref]
+| Div(..)                                   | Arbitrary HTML http://holoviews.org/reference/elements/bokeh/Div.html[Ref]
+| Violin(..)                                | https://holoviews.org/reference/elements/bokeh/Violin.html[Ref]
+| PointDraw(..) +
+  PolyEdit(..)                              | Editable interactive tools http://holoviews.org/reference/streams/bokeh/PointDraw.html[Ref]
 |===
 
 
@@ -172,6 +186,8 @@ Other dimension properties:
 
 
 == Style
+
+http://holoviews.org/user_guide/Styling_Plots.html[Styling Guide]
 
 * usually done by IPython `%%output`, `%%opts` commands
 
@@ -195,6 +211,8 @@ Other dimension properties:
 [cols="m,d"]
 |===
 | help(hv.util.parser.OptsSpec)             | Help
+| el.options(..=.., ..)                     | All-in-one without distinction of plot/style/norm
+| _backend_="matplotlib"                    | Change backend
 | %opts ..                                  | Global settings
 | %%opts ..                                 | Cell settings
 | %%opts _Type_[._Group_[._Label_]] ...     | Identify Element
@@ -347,6 +365,8 @@ Palettes are continuous. They will normalize and cover whole range, whereas Cycl
 |===
 
 == Colormapping
+
+http://holoviews.org/user_guide/Colormaps.html[Colormaps Guide]
 
 [cols="m,d"]
 |===
@@ -559,6 +579,8 @@ Applied on `kdims`. Indexing information seen with `print(el)`
 |===
 
 == Working with large data
+
+http://holoviews.org/user_guide/Large_Data.html[Large Data Guide]
 
 Using Datashader to plots millions of points and also handle overplotting nicely.
 

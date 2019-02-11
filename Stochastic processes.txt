@@ -126,3 +126,47 @@ U(t)=4/3*t+1/9-1/9*e^(-3/2*t)
 * Number of servers: pos. integers or infinity (no queueing)
 * M/G/infty
 ... Week 2.12
+
+== Lévy processes
+
+* comparing:
+** all: F(0)=0; indep. increments (differences jointly indep.), stationary incr. (differences time-indep.)
+** Poisson: N_t-N_s ~ Poisson(lambda*(t-s))
+** Brownian: W_t-W_s ~ Norm(0, t-s)
+** Lévy: L_t-L_s ~ P(t-s); infinitely divisible distr.
+* L_t stochastically continuous: L_(t+h) -> L_t; P(jump(h->0)>eps)->0
+* -> no calender effects (?)
+* Trajectories: Càdlàg functions ("continue à droite, limite à gauche")
+** f(t+)=f(t)
+* there exists modification to make Lévy almost surely Càdlàg
+* any Levy process <-> infinitely divisible distr. at some time
+* L_t determined by L_1; know distr. at any time point from just one time
+* E[L_t]=t*E[L_1]
+* Var[L_t]=t*Var[L-1]
+* Covariance: K(t,s)=min(t,s)*Var[L-1] -> non-stationary
+
+=== Characteristic exponent - Cumulant
+
+* function E[exp(-i*L_t)]=exp(t*phi(u))
+
+== Infinitely divisible distribution
+
+* xi=Y_1+..+Y_n for all n>=2
+* characteristic function is phi_0^n for all n -> sqrt[n](phi) always characteristic function
+* Examples:
+** Normal distr.
+** Cauchy is infinitely divisible (also Cauchy)
+** Gamma is infinitely divisible (alpha determines skewness and kurtosis; beta is scale parameter: scaling X only scales beta); positive half-line
+** Exponential distr.
+** Negative binomial, Geometric distr.
+** Poisson, Compound Poisson
+
+== Stable distribution
+
+* xi_1+...+xi_n=a_n*xi+b_n
+* -> same distribution
+* stable -> infinitely distr. (e.g. Normal, Cauchy; not others)
+
+== Lévy measure
+
+* characterizes structure of jumps

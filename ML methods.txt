@@ -1,0 +1,340 @@
+= Machine learning methods
+
+== Artifical Neural networks
+
+=== General
+* for example error loss
+* train by stochastic gradient descent
+* vanishing gradient problem for more than 1 hidden layer (information passed back small wrt weights)
+* overfitting and local minima a problem
+* overview of types: http://www.toptal.com/machine-learning/an-introduction-to-deep-learning-from-perceptrons-to-deep-networks
+
+=== Deep learning
+* http://www.reddit.com/r/MachineLearning/comments/22u1yt/is_deep_learning_basically_just_neural_networks/
+* due to vanishing gradient effect the entangled non-linear interactions make it hard to propagate error into deeper levels
+* solutions: train lower layers in greedy (ignoring higher layer) fashion by simply looking for regularities in data
+* newer solution: now no pre-training, but new activation function and regularisation method ->
+  * use rectified linear units (ReLU [faster training]; more modern Maxout) and drop-out (suffer less from vanishing gradient); pre-training no longer beneficial (unsupervised only when labels sparse)
+* ReLU+dropout for classification (e.g. layer 1 tanh + 2-3 maxout)
+* Sigmoid+Sparsity better for autoencoder
+* not good at finding discontinous or periodic features(?)
+
+=== Sparse coding
+* example is http://fastml.com/deep-learning-made-easy/:
+  * chose layers and nodes per layer; 100/100 best (everything else [more/less nodes/layers] worse)
+  * here without substracting mean better
+
+=== Auto encoder
+* reconstruct own data, but pass it through a bottle-neck to force compression
+* Structure:
+  * Input: N inputs, +1 bias
+  * Hidden layer: few (<N) nodes, +1 bias
+  * Output: same N values as input
+* Stacked autoencoder: more layers, train layers individually
+
+=== Restricted Boltzmann Machine
+* generative stochastic neural network that can learn a probability distribution over its inputs
+* Structure:
+  * Visible units
+  * Hidden units: fully connected to visible units
+  * Bias layer
+
+=== Deep Belief Networks
+* stacked RBMs
+
+=== Convolutional neural networks
+* like learnable filters
+* learn filters where weights are shared with different pixels
+* for image recognition: subsampling layers used (methods: max pooling, average pooling, stochastic pooling)
+* training with modified backpropagation
+
+=== Deep learning groups
+* Toronto:
+  * Geoff Hinton
+  * drop-out
+  * Google Protocal Buffers as config for deepnet
+  * cudamat
+* Montreal:
+  * Yoshua Bengio
+  * maxout (companion to drop-out; facilitate optimization and improve accuracy)
+  * YAML for pylearn2 library
+  * theano for lower operations
+
+=== Resources
+* http://ufldl.stanford.edu/wiki/index.php/UFLDL_Tutorial
+* https://plus.google.com/u/0/communities/112866381580457264725
+* http://deeplearning.net/
+
+Adaptive neuro fuzzy inference system (ANFIS) is a kind of neural network that is based on Takagi–Sugeno fuzzy inference system. Since it integrates both neural networks and fuzzy logic principles, it has potential to capture the benefits of both in a single framework. Its inference system corresponds to a set of fuzzy IF–THEN rules that have learning capability to approximate nonlinear functions.[1] Hence, ANFIS is considered to be a universal estimator.[2]
+
+=== CHAID
+* Chi-Squared Automatic Interaction Detection
+* whitebox decision tree
+* performance slow, unstable results
+* needs discrete variables
+* merges buckets and looks for correlations with target
+* good for categorical variables
+* detects interactions of categoricals
+
+=== MARS
+* does splitting similar to CART
+* h(x)=\prod (x-t)_+(t-x)_+ (contributes only to specific regions)
+* f(x)=\beta_0 + \sum \beta_m h_m(x)
+* greedy approach for finding basis functions; until max number of terms or error small
+* picks pair (a-x_i)_-, (x_i-a)_+ and combines with what was in the solution before
+* each variable only once in each term (otherwise complicating splines)
+* does regression (better) or classification
+* forward step overfits -> term with smallest CV score removed
+* uses training set and cross-validation
+* fast: #vars * #train * (#maxterms)^3
+* correlation can be issue
+* classification: PolyMARS (Poly approx of LogReg)
+* R MRAS treats 0/1 as numeric, makes logreg at end; not so good
+* good for: many dimensions, nominal variables
+* can give variable importances
+* pyearth, orange data mining
+* no big data* bias at nodes for wiggly fct
+
+=== Ordinal regression
+Ordinal Regression denotes a family of statistical learning methods in which the goal is to predict a variable which is discrete and ordered. For example, predicting the movie rating on a scale of 1 to 5 starts can be considered an ordinal regression task.
+
+=== Frequent subgraph mining
+
+=== Rupture detection
+* sudden drop in continuous line
+
+=== von Mises distribution
+* circular normal distribution
+* directional statistics
+* exp(kappa*cos(x-mu))
+
+=== k-optimal pattern discovery
+K-optimal pattern discovery is a data mining technique that provides an alternative to the frequent pattern discovery approach that underlies most association rule learning techniques.
+k-optimal pattern discovery techniques find the k patterns that optimize a user-specified measure of interest.
+
+=== Random Forest
+* GBT for dimensions <4000; Random Forest >4000 dim
+* for multi-class rather RF?
+* weird predictions for out-of-range instances
+* overfitting if: small max_features, deep trees
+* higher max_features -> similar trees -> need less trees
+* drop unimportant columns first (for speed)?
+* runtime: feat^2 * 2^depth
+* pruned tree when noisy data
+* you can subset fully grown tree after training
+* reduce bias: deeper trees; reduce variance: more trees, small max_feat (also incr. bias)
+* ExtraTrees faster?
+* tune max_feat (at 300 trees, 1 leaf) -> tune leaf -> tune num trees
+* Sklearn feature importance: Features used at the top of the tree contribute to the final prediction decision of a larger fraction of the input samples. The expected fraction of the samples they contribute to can thus be used as an estimate of the relative importance of the features. (http://scikit-learn.org/stable/modules/ensemble.html#feature-importance-evaluation)
+
+=== Boosting Trees
+* depth 1-3; 500 trees; tune learning rate
+
+=== Oblique Random Forest
+* Rotation Forest: PCA+Random rotation
+* can fit x1*x2*x2*x4 (which is usually hard); but boosting can too
+* bad if additive main effects
+* PPforest (https://github.com/natydasilva/PPforest): LDA
+
+=== Interpretability
+http://stats.stackexchange.com/questions/21152/obtaining-knowledge-from-a-random-forest
+
+
+== Aggregation/Ensembles
+Types:
+* after the fact: combine existing complete solution (not same as multilayer which can share tasks; not independent); blending
+* before the fact: give different data sets to each; e.g. boosting
+
+=== Blending
+* need fresh "aggregation set" to validate weights for combination
+* alpha can become negative too
+* evaluate contribution by taking out a particular solution
+
+== Linear vs non-linear models
+* linear probabilities better understood
+* non-linear only when indication that linear not enough
+* linear univariate or vector autoregressive models are unable to generate asymmetrical cyclical time-series
+
+
+== Clustering
+
+==== Determine number of clusters
+* http://stackoverflow.com/questions/15376075/cluster-analysis-in-r-determine-the-optimal-number-of-clusters/15376462
+
+== Various
+* Low-discrepancy sequence: pseudo-random sequence which covers space uniformly
+
+== Logistic regression
+* will fit correct c1*x1+c2*x1^2 succesfully even if real dependence is (x-a)^2 [simple test done]
+
+
+Random forest tuning:
+* sometimes use a lot of trees (5000) and reduce sample if needed
+* 130 trees enough?
+* my suggestion:
+  * criterion='entropy' (unless imbalanced[?])
+  * class_weight=None (default; unless imbalanced[?])
+  * n_estimators=100 (but only 0.5% AUC loss if only 30 trees)
+  * max_depth=None (default; Limiting can improve performance a bit, but not really a difference even when optimizing)
+  * max_features optimize in [0...0.85] ('sqrt' is most fine within 2%, but occasionally it can make a big difference)
+  * min_weight_fraction_leaf optimize [1e-8...0.5] (Uniform prior is fine; Only little difference [score, duration] to fixed min_samples_leaf=2)
+  * n_calls=100 (skopt; often takes <50, but sometimes even more; convergence criterion would be nice)
+* suboptimal:
+   * other limit variables (min_samples_leaf, min_samples_split, min_impurity_split) are slightly less effective; even though min_samples_leaf at least is most often 1, 2 or 3.
+   * max_features=sqrt often works (within 1% AUC), but can also be quite off
+   * optimizing max_depth not worth it
+   * max_depth=20 can sometimes improve score, but only little and not much faster
+* note that optimal max_features may depend on other parameters
+* limiting max_leaf_nodes alone is bad
+* more max_depth usually just better
+* more n_estimators usually just better
+* left to try:
+  * min_impurity_split
+  * try multiple tree criteria at once
+* OOB score seems to approximate accuracy well
+* OOB roc (from rf.oob_decision_function_) approximates OK (worse than accuracy) and seems to be more pessimistic at low AUC
+
+== Gaussian Processes
+* is a distribution over functions
+* all subsets of coordinates are also Gaussian; simply subset the covariance(??) matrix
+* all variables are joints Gaussian
+* inference is linear algebra only
+
+== Ensembles
+* needs strong base classifiers
+* Bayes optimal classifier: ensemble of all hypothesis weight proportional to prob. of data
+
+== Factorization machines
+https://www.youtube.com/watch?v=LV4JLTIZxNU
+https://www.slideshare.net/SessionsEvents/steffen-rendle-research-scientist-google-at-mlconf-sf
+* in matrix factorization can learn unseen interactions
+* sometimes better than MF: SVD++, Vectorized NN models, ... (Netflix)
+* MF unclear if more than 2 vars (timeSVD, timeTF, ...)
+* Tensor fact: ParaFac, PITF(?), ...
+* Sequential Fact. Models: FMC, FPMC, ..
+* often fact. model tailored to model, need learning algo, ...
+* polynomial regression: add interactions, p^2 params
+* sparse vector in linear regression: no cross effects
+* polynomial on recommendation: cannot estimate interactions from data unless observed
+* combine linear + factorization
+* factorization machines: interactions are product of k-dim vectors (if degree 2 used)
+* -> k*p parameters (instead of p^2)
+* same as MF with biases since w0+w1+w2+<v1,v2>
+* 3-var FM same as PITF (3 pairwise interactions)
+* could add time as 1 numeric var (next to other onehots)
+* could also bin time and add as onehot
+* computation O(p*k) [or even p is number of non-zero]
+* multi-linear (helps for learning algorithms; Gibbs sampler,...)
+* learning SGD, MCMC, ...; runtime O(k*N*i) [N=#non-zero, i=#iterations, k=dim.coef vector]
+
+== Categorical encoding
+* LabelEncoding: map to (random) integers
+* Count Encoding: replace by appearance (maybe log for counts); unseen=1
+* Label count encoding: replace by ranks of appearance
+* Target encoding:
+  * bit like stacking on a single-variable model
+  * do in cross-val manner
+  * add smoothing to avoid encoding to 0
+  * add random noise to avoid overfitting
+* Embedding: with ANN
+
+== Numerical encoding
+* Binning + Onehot of bins: can do non-linear
+* for linear algos: Polynomial kernal, RF embedding, Genetic algo, t-SNE/Spectral embedding/LLE
+
+== Geo features
+* closeness to hub
+* Kriging
+
+== Fraud features
+* never same location
+* location far away
+
+== Unbalanced data
+* speed of imblearn methods:
+** NearMiss fastest
+** InstanceHardnessThreshold second, but needs threshold?
+** TomekLink, EditedNearestNeighbours, NeighbourhoodCleaningRule OK
+** AllKNN, OneSidedSelection slow
+** RepeatedEditedNearestNeighbours slower
+** CondensedNearestNeighbour slowest
+
+== Unbalanced data and rules needed
+* Generate a lot of features
+* Select top features by (Spark) Random Forest
+* Undersample (Tomek, SmoteENN, ...); possibly plain undersample first if real method too slow
+* run RIPPER on undersampled data
+* select rules which would be effective on an independent data set
+* finally simplify rules by common sense
+* maybe also relabeling if cases by RF works?
+
+== Feature selection
+* keep features which are derivatives of each other together (e.g. {max, mean, count}); e.g. "mean" might shadow "count", while "count" would be better and more interpretable
+
+== Text classification
+* word2vec + VLAD (Vector of locally aggregated descriptors) was useful for transaction categorization
+
+== Edge detection
+* there are different "types" of edges (https://stackoverflow.com/questions/22064982/edge-detection-method-better-than-canny-edge-detection)
+* Canny very good
+* Sobel ok and faster
+* Gabor only for texture analysis
+* Log-Gabor filter good for natural images (better than Gabor); also see http://nbviewer.jupyter.org/github/bicv/LogGabor/blob/master/LogGabor.ipynb, https://dsp.stackexchange.com/questions/13907/difference-between-gabor-and-log-gabor-function
+
+== XGBoost
+* use custom complex gain (not entropy)
+* could enable histogram method
+
+== LightGBM
+https://www.youtube.com/watch?v=5CWwwtEM2TA
+* histogram based
+* do not check all splits, check only some of them, use binning
+*-> faster; 12x XGB
+* optimizations for sparse data
+* faster for many param
+
+== CatBoost
+https://www.youtube.com/watch?v=5CWwwtEM2TA
+* prevent overfitting
+* fights "gradient bias"
+* oblivious trees
+* default params great
+* need to specify what is cat type
+* slower; 30x XGV
+
+== P-Curve analysis
+* look at p-value distribution from multiple studies (all p<0.05)
+* uniform -> random, no effect
+* smaller values more often -> possibly effect
+
+== Stacking validation
+Saved as "Validation schemes for 2-nd models"
+
+=== Simple holdout
+* split A, B, C, Test
+* fit many models on A -> make meta features on B, C, Test
+* fit metamodel on B (hyperparam on C)
+* refit metamodel on B+C -> predict based on meta features (for Test)
+
+== Out-of-Fold holdout
+* same as simple, but A/B are in/out-fold
+*...
+
+== Image segmentation
+* U-Net
+* Tiramisu (better?)
+
+== Regression
+
+If you model ln y ~ ln x with y and x of any form, then you can look at the coef of ln(x) to see whether x*y increases or decreases on changes.
+
+Generally f(y)=a*g(x)+... and M=A(x)*B(y), and you want A*g'/A'=1
+
+Only for least mean squared, you can replace points by average.
+f(x-l)+f(y-l)=2f((x+y)/2-l)+C(x,y) -> f(a)=A*a^2+B*a+C
+
+== Variational autoencoder
+https://www.youtube.com/watch?v=9zKuYvjFFS8
+* like autoencoder, but latent bottleneck is just mean/stddev and a Gaussian with that
+* disentangled VAE, when penalty on number of latent (so that no correlated); by weighting non-normality differently
+
