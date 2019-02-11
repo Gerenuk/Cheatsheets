@@ -1,3 +1,5 @@
+C:\Users\anton\Google Drive\Math
+
 = Misc
 
 * Frege's theorem: Peano axioms can be derived in second-order logic from Hume's principle
@@ -9,6 +11,12 @@
 * The fact that if you lay a piece of paper on your desk and trace around its outline, then crumble/wad the paper up and put it back inside the lines that there will always be a point on the paper exactly above where it started relative to the desk
 * And, no matter how you stir your coffee there will always be some point in the liquid that ends in the same place that it was before mixing.
 * x*y^(sgn(x)) is associative but not commutative
+* Blaschke's Theorem: A convex planar domain with minimal generalized diameter >1 always contains a circle of radius 1/3
+* Ham Sandwich Theorem: The volumes of any  -dimensional solids can always be simultaneously bisected by a -dimensional hyperplane
+* Space curves Fundamental theorem: Exactly determined by curvature and torsion as function of path lenth
+* Condition number: The ratio  of the largest to smallest singular value in the singular value decomposition of a matrix. The base-logarithm of  is an estimate of how many base- digits are lost in solving a linear system with that matrix. In other words, it estimates worst-case loss of precision
+* Tetrahedra pack tightly, even when jumbled together 
+* Bernstein polynomials: Used for approxating functions
 
 = Curiosities
 

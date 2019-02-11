@@ -421,6 +421,7 @@
 | wget -rkp -l _DEPTH_ -A _SUFFIX_ -R _SUFFIX_ -np | recursive, convert linKs,Page requisites, No Parent
 | write _USER_[@_HOST_] [tty1]              | write message
 | nohup _COMMAND_                           | command does not quit at hungup (e.g. logout)
+| drill <URL>                               | DNS lookup (instead of `dig`)
 |===
 
 == SSH
@@ -472,6 +473,7 @@
 | ifconfig wlan0 192.168.0.2; route add default gw 192.168.0.1  | manual IP
 | iptraf                                    | interactive colorful IP LAN monitor
 | sudo ss -lnptu                            | List listening processes
+| vnstat                                    | Usage tracker
 |===
 
 == Programming issues
@@ -598,3 +600,9 @@ apt instead of apt-get and apt-cache easier. can also manage apt.conf
 
 https://github.com/athityakumar/colorls
 https://github.com/ogham/exa
+
+== Fix for timeout network connection (with Spark)
+
+    net.ipv4.tcp_keepalive_time = 300
+    net.ipv4.tcp_keepalive_probes = 9
+    net.ipv4.tcp_keepalive_intvl = 75

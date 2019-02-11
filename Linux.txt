@@ -32,6 +32,12 @@ while(<>){
   CODE}
 
 
+Install new fonts:
+copy to ~/.local/share/fonts
+maybe run fc-cache
+run fc-list to list
+
+
 du --max-depth=1 /home/ | sort -n -r
 
 Route stdout and stderr to different files

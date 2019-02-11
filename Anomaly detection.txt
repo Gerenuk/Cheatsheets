@@ -69,6 +69,12 @@
 * RNN, LSTM
 * Subsequence clustering?
 
+== Data
+* https://github.com/numenta/NAB
+* https://research.yahoo.com/news/announcing-benchmark-dataset-time-series-anomaly-detection
+* https://webscope.sandbox.yahoo.com/catalog.php?datatype=s&did=70
+* http://kdd.ics.uci.edu/databases/kddcup99/kddcup99.html
+
 == Other
 
 * https://github.com/albertcthomas/anomaly_tuning: Parameter tuning notebook

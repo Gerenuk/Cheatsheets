@@ -16,7 +16,7 @@
 * smooth data, but preserve boundaries between regions
 * dilate points as hypersphere
 
-=== Felsenszwalb
+=== Felsenszwalb for Images
 
 * http://people.cs.uchicago.edu/~pff/papers/seg-ijcv.pdf["Efficient graph-based image segmentation"] (Felsenszwalb)
 * fast (NlogN in pixels)
@@ -40,3 +40,14 @@
 
 * "Globally optimal regions and boundaries as minimum ratio weight cycles" (Jerman, Ishikawa)
 * was mentioned, but not clear if it works
+
+== Kleinberg theorem
+http://alexhwilliams.info/itsneuronalblog/2015/10/01/clustering2/
+* scale-invariant: no change when scale all values
+* consistency: no change if increase cluster separation and decrease intra-cluster
+* (?)richness: no unlabeled points all cluster results possible (with some distance function)
+* with single linkage clustering:
+** fuse nearest
+** if until k cluster -> no richness (both others): cannot have >k clusters
+** if distance r stopping -> no scale-invariance
+** scale-eps stopping -> no consistency

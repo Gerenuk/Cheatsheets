@@ -156,7 +156,7 @@ Scala issues:
 
 == Length
 * Rust longer than C
-* 
+*
 
 +++++++++++
 Y-fast trie: store integer from bounded domain, supports exact and predecessor or successor queries in time O(log log M), using O(n) space [less than X-trie], where n is the number of stored values and M is the maximum value in the domain
@@ -268,3 +268,12 @@ Variable naming:
 * functions: verb is change state, noun if return value (what does 'create_database' mean)
 * "Clean Code", "The Art of readable code"
 +++++++++++++++
+
+== Complexity
+http://bigocheatsheet.com/
+
+=== Sorting
+* Quicksort: N^2 Worst time, LogN space
+* Mergesort: N space
+* Heapsort: 1 space
+* Shellsort: 1 space, but NLogN^2 time
