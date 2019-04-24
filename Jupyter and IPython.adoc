@@ -126,6 +126,12 @@
 
 == Tips
 
+=== Plotting
+
+    # to reduce image size?
+    %config InlineBackend.figure_formats = ['svg']
+    %matplotlib inline
+
 === Remote access
 
     nohup juypter notebook --no-browser --port=8888 &         # on remote machine

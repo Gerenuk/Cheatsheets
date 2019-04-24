@@ -430,6 +430,17 @@ http://pandas.pydata.org/pandas-docs/stable/api.html#multiindex[MultiIndex]
 | df.*filter*(regex=r"..")                  | Select column by name regex
 |===
 
+Fastest way to subselect:
+
+    mask = s.values != 1
+    s_new = pd.Series(s.values[mask], s.index[mask])        # 43mu.s
+    
+    s.loc[lambda x: x!= 1]    # 173mu.s
+    
+    s[s!=1]    # 394mu.s
+    
+    s.where(lambda x: x!=1).dropna()    # 774mu.s
+
 [cols="m,d"]
 |===
 | s.pipe(lambda s:s[s])                     | Select only where True
@@ -515,7 +526,7 @@ http://pandas.pydata.org/pandas-docs/stable/api.html#multiindex[MultiIndex]
 | s.index.*isin*([..])                      | when not sure which labels exists
 | MultiIndex.*isin*([..], level=..)         |
 | df.*isin*({col1:[..], col2:..})           | multiple checks
-| s.*where*(boolarr)                        | return same shape; NaN where not selected; if inplace= then modifies data
+| s.*where*(boolarr, other=nan)             | return same shape; NaN where not selected; if inplace= then modifies data
 | df.*where*(boolarr, other=falseval)       | falseval can be full df too
 | _try_cast_=True                           | Try to cast result back to input type (if possible)
 | _raise_on_error_=False                    | Do not raise error on invalid types (e.g. on strings)
@@ -586,6 +597,7 @@ http://pandas.pydata.org/pandas-docs/stable/api.html#multiindex[MultiIndex]
 | pd.*to_datetime*(df[["year","month","day"]])  | Automatically combines date parts
 | s.*astype*("category")                    | Do categorical format
 | pd.to_datetime(df.index, format='%Y')     |
+| pd.datetime.strptime(f"{year}-{week}1", "%Y-%W-%w")   | Parse week numbers into date (Mondays)
 |===
 
 * `convert_objects` deprecated
@@ -1089,7 +1101,8 @@ Unfortunately, default map hard-coded in `_get_stand_colors` (https://stackoverf
 [cols="m,d"]
 |===
 | pandas.tools.plotting.                    | Complex plotting tools
-| *scatter_matrix*(df)                      |
+| *scatter_matrix*(df)                      | 
+| _ax_ = ...                                | Broken. Will overwrite previous figure
 | *andrews_curves*(df, <groupvar>)          | Sample attributes as Fourier coef
 | *parallel_coordinates*(df, <groupvar>)    |
 | *lag_plot*(s)                             | For time series; One value vs a lagged value
@@ -1180,6 +1193,20 @@ http://pandas.pydata.org/pandas-docs/version/0.15.2/options.html#list-of-options
   
 == Time series
 
+|===
+| Concept | Explanation | Scalar type | Array Type | Creation
+| Datetimes | Date, Time, TZ | Timestamp | DatetimeIndex | to_datetime, date_range
+| Time deltas | Absolute time duration | Timedelta | TimedeltaIndex | to_timedelta, timedelta_range
+| (Calendar) Period | Point in time and frequency | Period | PeriodIndex | Period, period_range
+| Date offsets | Offsets with calendar arithmetic | DateOffset | - | - | DateOffset
+|===
+
+* DateOffset: changes components (e.g. month), but not neccessarily constant number of seconds between
+* DateOffset subclasses with hour or smaller behave like Timedelta
+* https://pandas.pydata.org/pandas-docs/stable/user_guide/timeseries.html#offset-aliases[Offset]
+* https://pandas.pydata.org/pandas-docs/stable/user_guide/timeseries.html#anchored-offsets[Anchored Offset]
+* Indexing behaviour depends on resolution (`df.index.resolution`). Less exact resolution selects all from this (e.g. day
+
 [cols="m,d"]
 |===
 | pd.Series(.., index=pd.date_range(start, periods=.., freq=..) |
@@ -1195,12 +1222,13 @@ http://pandas.pydata.org/pandas-docs/version/0.15.2/options.html#list-of-options
 | Period("2011-11")                         | Frequency "M" infered
 | ts.to_period()                            | Index to period
 | ps.to_timestamp()                         | Index from period to timestamp
-| pd.to_datetime(..)                        | Parse into datetime suitable for Pandas
+| pd.to_datetime(..)                        | Parse into datetime suitable for Pandas; many formats understood
 | pd.to_datetime(pd.Series([.., ..]))       | Creates series of Datetime64
 | pd.to_datetime([.., ..])                  | Creates DatetimeIndex
 | pd.to_datetime(.., format="%Y%m%d")       | Can speed up!
 | pd.to_datetime(df)                        | DataFrame with "year", "month", "day" (or more) will be converted
 | pd.to_datetime([..], unit="s")            |
+| _origin_=pd.Timestamp(..)                 | Use different epoch start for timestamps
 | ts.loc["01/01/2011"]                      | Parses to dates (`.loc` to avoid confusion)
 | ts.loc[datetime(..)]                      |
 | ts["01/01/2011":"10/01/2011"]             | Endpoints included
@@ -1212,7 +1240,7 @@ http://pandas.pydata.org/pandas-docs/version/0.15.2/options.html#list-of-options
 | ts.tshift(1)                              | Modifies index
 | pd.to_pydatetime(tsidx)                   | Convert to Python native
 | dtidx.astype(int)                         | Convert to timestamp
-|
+| pd.offsets.Week(weekday=..)               | Always particular day of week
 |===
 
 * careful, that `dayfirst=True` is not strict and will silently be inactive if the data format is not allowing it
@@ -1229,6 +1257,7 @@ http://pandas.pydata.org/pandas-docs/version/0.15.2/options.html#list-of-options
 * BusinessDay, BusinessHour, AbstractHolidayCalendar supported
 * resample cookbook: http://pandas.pydata.org/pandas-docs/stable/cookbook.html#cookbook-resample
 * time zone: http://pandas.pydata.org/pandas-docs/stable/timeseries.html#time-zone-handling
+* `datetime` and `Timestamp` have exactly seconds, and behave like this for indexing
 
 * Time operations usually work on
 ** http://pandas.pydata.org/pandas-docs/stable/api.html#datetimeindex[`DatetimeIndex`]
@@ -1248,6 +1277,7 @@ http://pandas.pydata.org/pandas-docs/version/0.15.2/options.html#list-of-options
 |===
 | pd.*date_range*(..)                       | Regular frequency (default daily) date index
 | pd.date_range(.., freq="MS")              | Month start range
+| _periods_=.., _freq_==..                  | Number of periods starting from a start time
 | pd.*bdate_range*(..)                      | Business day date index (also custom holiday masks possible)
 | pd.*to_timedelta*(..)                     |
 | pd.*period_range*(..)                     |

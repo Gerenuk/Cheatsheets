@@ -902,6 +902,7 @@ https://www.youtube.com/watch?v=XBQzhjiaqhA
 ** loadings of rank-1 = how much of that 1 feature vector you want for each instance
 ** loadings of rank-k = k feature vectors, how much of each you want for each instance
 * inconsistent when more features than instances (due to noise; http://dx.doi.org/10.1198/jasa.2009.0121[Johnston 2009])
+* sklearn PCA.noise_variance_ seems to estimate the noise which was not fitted
 
 === Estimating how many components to keep
 * threshold on singular value (from estimating noise; http://dx.doi.org/10.1109/TIT.2014.2323359[Gavish 2014]): asciimath:[lambda = 4 sigma sqrt(n)/sqrt(3)]
@@ -1038,6 +1039,14 @@ https://www.youtube.com/watch?v=aStvaXMhGGs
 * t-SNE assumes local linearity
 * -> bad if noisy data -> PCA to smooth data (see sklearn); do PCA 50 first
 * -> if data too complex -> use auto-encoder first
+* perplexity:
+* early_exaggeration: if too small (e.g. below default 12), then cluster parts might not meet each other
+* if you have too few examples in one area, it may split into little islands
+
+Method(?):
+* t-SNE on "interesting columns" (e.g. ones which predictive of a key state measure)
+* color by each feature and see which creates a cluster
+* redo t-SNE with only these features
 
 Uncertainty in neural networks
 * noise (maybe or not be constant per point)
@@ -1606,4 +1615,9 @@ exclusion restriction -> Z indep of Y given A; hatA projection of A onto space s
 * http://www.mathcs.emory.edu/~cheung/Courses/584-StreamDB/Syllabus/08-Quantile/Greenwald.html
 
 == Triangular coordinates
+
+== Decay of memory model
+
+asciimath:[A exp(-at)+B exp(-bt)]
+* "The universal decay of collective memory and attention" (Candia)
 

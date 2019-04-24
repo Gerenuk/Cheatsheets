@@ -256,3 +256,11 @@ $RANDOM
 
 $@  # expand position arguments
 
+
+
+while read -r line; do
+echo "$line"
+done <<END
+abc/abc
+def/def
+END

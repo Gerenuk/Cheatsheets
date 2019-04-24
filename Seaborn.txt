@@ -10,9 +10,11 @@ https://seaborn.pydata.org/whatsnew.html
 == General
 
 |===
-| size=...                                  | Plot size
 | aspect=...                                | Width=Aspect*Size
+| height=...                                |
 |===
+
+// obsolete? | size=...                                  | Plot size
 
 == General plots
 

@@ -183,6 +183,8 @@
 | ulimit                                    | limit ressources for processes
 | kill [-s signal] _PID_                    | send a signal to process
 | killall _NAME_                            | kill by name
+| pkill -u <user>                           | Kill all processes from this user
+| killall -u <user>                         | Kill all processes from this user
 | ldconfig -V                               | update library cache (verbose)
 | echo "15" > /proc/PID/oom_adj             | favour PID for killing by out of memory handler
 | cat /proc/PID/oom_score                   | show dynamic OOM score
@@ -305,7 +307,7 @@
 | fdisk -l                                  | show partitions (run as root)
 | dd                                        | copies data with optional lowlevel conversions
 | mkdir                                     | make directory
-| mkdir -p <dir>                            | create full dir path if not existent
+| mkdir -p <dir>                            | create full dir path if not existent; do not show error
 | mv -b ...                                 | backup instead of overwriting
 | mv -u ...                                 | update files
 | mmv _PAT1_ _PAT2_                         | multiple move with #1,#2... for matches
@@ -465,6 +467,7 @@
 | netcat _HOST_ _PORT_                      | connect to host
 | netcat -l -p _PORT_                       | listen to connection
 | netstat                                   | network info
+| netstat -tlpn                             | TCP, Listening, Show program/call too, Numeric IPs (e.g. 127.0.0.1)
 | nmap -sP _HOSTS_                          | only pi
 | nmap -O _HOST_                            | determine OS
 | nmap -sS -sF -sX -sN                      | stealth scans

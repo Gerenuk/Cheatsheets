@@ -124,6 +124,7 @@
 | str.rpartition                            |
 | str.splitlines                            | No extra empty strings, like with split()
 | str.split(sep=None, maxsplit=-1)          |
+| sum(..., start=...)                       | However consider `join`, `math.fsum`, `chain`
 | while: ... else: ...                      | one final statement; skipped by "break"
 | ContextDecorator                          | to use CM as decorator
 | ExitStack                                 | handle multiple CMs
@@ -145,6 +146,7 @@
 | "{0:{1}}".format(a,width)                 | reference other fields also
 | "{:%}"                                    | Percent (times 100)
 | "{:c}".format(unicode_int)                | Print unicode from number
+| "{a[2]}".format(a="123")                  | You can reference sub-elements (but not slices)
 | "..".format_map({..})                     |
 | chr(i)                                    | Unicode
 | "\x..", "\u....", "\U........"            | Different length unicode code point spec
@@ -354,6 +356,7 @@ https://docs.python.org/3/library/re.html#regular-expression-syntax[Python Regex
 | _pdts_ = pd.Timestamp(_dt_)               |
 | _dt_ = _pdts_.to_pydatetime()             |
 | _date_ = _pdts_.date()                    |
+| _datetime_ = dt.datetime.combine(time, dt.datetime.min.time())    |
 |===
 
 Timestamp is UTC seconds since seconds since 1970-01-01 00:00. Hence
@@ -386,6 +389,7 @@ https://stackoverflow.com/questions/13703720/converting-between-datetime-timesta
 | date.isoformat(" ")                       | YYYY-MM-DD HH:MM:SS (char is separator; default "T")
 | date.strptime(datetext, format)           | Parse time
 | dt.strftime(format)                       | Format time
+| format="%x"                               | Locale date(?)
 | date.ctime()                              | longer string with weekday etc.
 | time.monotonic()                          |
 | np.is_busday(.., busdaycal=..)            |
