@@ -165,7 +165,7 @@ Scala issues:
 
 == Length
 * Rust longer than C
-* 
+*
 
 +++++++++++
 * Python `requests` library is said to be well designed
@@ -280,8 +280,19 @@ Variable naming:
 * "Clean Code", "The Art of readable code"
 +++++++++++++++
 
+<<<<<<< HEAD
+== Complexity
+http://bigocheatsheet.com/
+
+=== Sorting
+* Quicksort: N^2 Worst time, LogN space
+* Mergesort: N space
+* Heapsort: 1 space
+* Shellsort: 1 space, but NLogN^2 time
+=======
 Coding and testing tips:
 * use pure (immutable) values as boundaries; in tests and for logic functions
 * like "Clean architecture":
 * core: has paths, no deps, functional, no mutation
 * shell: deps, no paths, imperative
+>>>>>>> b077e6579580db02a565e263770bb320bb286753

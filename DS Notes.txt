@@ -331,6 +331,7 @@ https://www.youtube.com/watch?v=kxp7eWZa-2M
 * ReLU: derivatives are such as to make same optimal learning rate in each layer due to weight convergence
 * machine translation: run RNN; hidden state is then thought vector (on very big data not as good as google though)
 * brain and backprop? -> explanation why still possible
+* ImageNet SOTA: ResNet, AmoebaNet; Top1 84.3% (2018), Top5 97%
 
 * Searching for optimal activation functions: https://arxiv.org/pdf/1710.05941v2.pdf
 ** best is simple functions; often b(x, g(x))
@@ -345,6 +346,7 @@ https://www.youtube.com/watch?v=fe-uxTUnoCs
 
 == Deep learning
 * optimization RMSProp w Mom.m ADaM (easiest to tune); SGD w/ Mom. (harder)
+* BatchNorm: speeds up convergence; allows higher learning rates
 
 == Introduction to Gaussian Processes
 https://www.youtube.com/watch?v=JSY2rha7qOw
@@ -1548,6 +1550,84 @@ exclusion restriction -> Z indep of Y given A; hatA projection of A onto space s
 
 == Correlation
 
+<<<<<<< HEAD
+=== Maximum Information Criterion (MIC)
+
+* seems bad https://arxiv.org/abs/1401.7645
+
+=== Maximal Correlation: max(Corr(f(X), g(Y)))
+* -> Alternativ Conditional Expectations (ACE)
+* iteratively, cubic spline modelling
+* not good if data correlates with high discontinous place
+* R: acepack
+* https://www.quora.com/Correlation-can-measure-only-the-linear-relationship-between-variables-What-are-the-methods-for-measuring-non-linear-relationships-between-two-variables[Quora]
+
+=== Non-linear correlation information entropy (NCIE)
+* Wang 2005: "A nonlinear correlation measure for multivariable data set"
+
+=== CANOVA
+* Wang 2015: "Efficient test for nonlinear dependence of two continuous variables"
+* https://sourceforge.net/projects/canova/
+
+=== Mutual Information
+* KL[p(x,y)||p(x)p(y)]
+* H(X)-H(X|Y)=H(Y)-H(Y|X)=H(X,Y)-H(X|Y)-H(Y|X)
+
+=== Total Correlation
+* one generalization of Mutual Information for more than 2 inputs
+* sum H(Xi) - H(X1..Xn)
+
+=== Dual Total Correlation, Excess Entropy, Binding Information
+* https://en.wikipedia.org/wiki/Dual_total_correlation[Wikipedia]
+* another generalization of Mutual Information
+* H(X1..Xn)-sum H(Xi|X\Xi)
+
+=== Randomized Dependence Coefficient
+
+=== Coefficient of determination R^2
+
+=== Distance Correlation
+* Proportion of variance in dependent variable that is predictable from indep. var
+
+=== Spearman's rank
+* for monotonic
+
+
+== Random number generator
+https://en.wikipedia.org/wiki/Blum_Blum_Shub
+* Blum Blum Shub: x <- x^2 mod M
+* M=pq and some certain restrictions
+* could calculate n-th number direction without recursion
+
+== Model comparison
+https://sebastianraschka.com/blog/2018/model-evaluation-selection-part4.html
+
+== Principal Component Analysis
+* R1-PCA is a rotationally invariant L1 norm (Ding, Zha)
+* for mean centered: |Xc|->max, |c|=1
+* SVD method only if not tensor or no missing data
+* w=Xc -> X ~ w c^T (like simple outer product; every observation is some fixed base vector times a scaling [loadings])
+* for d principal components: d base vectors, d loadings for each instance; X ~ W C^T
+* same objective: minimize squared residuals or projection
+* PCA bad if p>n; overfits to noise, inconsistent
+* number of components to pick:
+** estimate noise in data sigma
+** min. singular value 4*sigma*sqrt(n)/sqrt(3) [for square matrix nxn]
+* hard if missing values (no analytics, local minima, no analytical even for bias term)
+
+=== Variations
+http://alexhwilliams.info/itsneuronalblog/2016/03/27/pca/
+* Quadratically regularized PCA: penalized W and C elements by square; solved analytically with SVD
+* PCA and QR-PCA non-convex but solved exactly
+* other methods only bi-convex: can alternate between finding W and C
+* Sparse PCA: L1 norm on W and C elements
+* Non-negative Matrix Factorization: same as PCA, but W and C elements >=0 (ofc only when Xij>=0)
+* Logistic PCA: logistic loss (when Xij={-1,1})
+* Robust PCA: L1 of residuals or Huber
+* Poisson PCA
+* PCA on ordinal data
+* Zero-inflated dimensionality reduction
+=======
 * Maximum Information Criterion (MIC): seems bad https://arxiv.org/abs/1401.7645
 
 == ML Strategies
@@ -1613,8 +1693,6 @@ exclusion restriction -> Z indep of Y given A; hatA projection of A onto space s
 * survey of Mike Paterson
 * to get exact median in 1 pass you need to store >=N/2 elements (for p passes O(N^1/p))
 * http://www.mathcs.emory.edu/~cheung/Courses/584-StreamDB/Syllabus/08-Quantile/Greenwald.html
-
-== Triangular coordinates
 
 == Decay of memory model
 

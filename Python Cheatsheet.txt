@@ -51,6 +51,8 @@
 | o.__bases__                               |
 | o.__class__                               |
 | o.__subclasses__()                        |
+| isinstance(x, numbers.Real)               | Check for number (int and float)
+| open(.., "w", buffering=1)                | Line flush
 |===
 
 * object `True` unless `__len__==0`, `__bool__=False`, zero
@@ -165,6 +167,7 @@
 |===
 | exec(open(f).read())                      | exec file
 | os.scandir()                              | Dir iteration
+| Path.iterdir()                            | Dir iteration
 | OSError                                   | Raised by open
 | open(.., "x")                             | exclusive creation; raise FileExistsError if file exists
 | open(.., "r+")                            | Open for updating
@@ -294,6 +297,8 @@ On Linux no creation time accessible, so use `os.path.getmtime()` or `os.stat().
 |===
 
 Usually wrapper around platform C math library. ValueError or OverflowError. NaN only when arguments NaN.
+
+* `int(float(1e16+1))` will truncate the first time
 
 == Functional
 

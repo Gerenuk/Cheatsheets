@@ -491,6 +491,9 @@ F-test to compare models that are _nested_. Generally cross-validation also migh
 | quilt                                     | https://docs.quiltdata.com/get-started/quick-start[Quick Start]
 |===
 
+* OpenML data sets which are not too easy (for RF): 37, 4134, 41142, 298, 336, 716, 732, 750, 753, 783, 850, 863, 886, 889, 907, 908, 915, 922, 955, 983, 1012, 1045, 1048, 1064, 1071, 1412, 1436, 1441, 1446, 1448, 1450, 1453, 1463, 1473, 1479, 1484, 1506, 1547, 1566, 1572, 1589, 4329, 40645, 40646, 40647, 40648, 40649, 40650
+** where `min_samples_split` help(?) vs overfitting of `max_features` alone: 137, 850, 1064, 1484, 908, 1071, 888, 983, 40647, 298
+
 == Data Operations
 
 === Reduce multiple conditions
@@ -628,6 +631,12 @@ https://pandas.pydata.org/pandas-docs/stable/cookbook.html[Pandas Cookbook] exam
 
     # itertools.groupby-like
     df.A.groupby( (df.A != df.A.shift()) .cumsum()).groups
+
+=== Time
+
+|===
+| date_col.dt.to_period("M")                | Convert to monthly (will be Period)
+|===
 
 == kNN custom metric
 
@@ -2091,3 +2100,12 @@ You cannot subtract `dt.time()` instances.
         (points0.opts(color="black") * points1.opts(color="coral"))
         + (dynhist(points0, "black") * dynhist(points1, "coral"))
     )
+
+== Spreadsheets
+
+* Pyspread (but buggy dependencies last time)
+* LibreOffice access:
+** http://christopher5106.github.io/office/2015/12/06/openoffice-libreoffice-automate-your-office-tasks-with-python-macros.html[Tutorial]
+** https://github.com/lfagundes/oosheet
+** https://pypi.org/project/pyoo/
+

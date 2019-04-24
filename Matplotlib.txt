@@ -39,14 +39,22 @@ TODO:
 
 [cols="m,d"]
 |===
-| *figure*(_figsize_=..)                    | Add new figure. Can reference previous figures by ID. http://matplotlib.org/api/pyplot_api.html#matplotlib.pyplot.figure[Ref]
-| *figure*(_num_=1, _clear_=True)           | New window only if no same `num` exists
+| fig, ax = plt.*subplots*(..)              | New figure and axis
+| _figsize_=(..,..)                         |
 | fig.*set_size_inches*(8, 11)              |
 | *show*(..)                                | Display a figure http://matplotlib.org/api/pyplot_api.html#matplotlib.pyplot.show[Ref]
 | *sca*(ax)                                 | Set current axes. Current figure updated to parent of ax http://matplotlib.org/api/pyplot_api.html#matplotlib.pyplot.sca[Ref]
 | *draw*()                                  | Redraw current figure http://matplotlib.org/api/pyplot_api.html#matplotlib.pyplot.draw[Ref]
 | *tight_layout*(..)                        | Adjust subplot parameters to give specified padding if clipped labels http://matplotlib.org/api/pyplot_api.html#matplotlib.pyplot.tight_layout[Ref]
-| _pad_=1.08                                | 
+| _pad_=1.08                                |
+|===
+
+More low-level
+
+[cols="m,d"]
+|===
+| *figure*(_figsize_=..)                    | Add new figure. Can reference previous figures by ID. http://matplotlib.org/api/pyplot_api.html#matplotlib.pyplot.figure[Ref]
+| *figure*(_num_=1, _clear_=True)           | New window only if no same `num` exists
 |===
 
 === Multi-layout
@@ -202,7 +210,7 @@ TODO:
 | *stackplot*(x, Y)                         | Y is matrix
 | _baseline_='wiggle'                       | 'sym', 'wiggle' (minimize slopess), 'weighted_wiggle'
 | _labels_=[..]                             | List of labels
-| _colors_=[..]                             |  
+| _colors_=[..]                             |
 | r = stackplot(..)                         | Returns `PolyCollection` https://matplotlib.org/api/collections_api.html#matplotlib.collections.PolyCollection[Ref]
 | san = mpl.sankey.*Sankey*(...) +
   san.add() +
@@ -250,7 +258,7 @@ TODO:
 | _bins_=(int, int)                         | For each dimension
 | _bins_=arrx,arry                          | Bin edges
 | _bins_=arr                                | (both) Bin edges
-| counts, xedges, yedges, image = hist2d(..)| 
+| counts, xedges, yedges, image = hist2d(..)|
 | figimage(X)                               |
 | _resize_=True                             |
 |===
@@ -267,7 +275,7 @@ TODO:
 | polycoll = pcolor(..)                     | http://matplotlib.org/api/collections_api.html#matplotlib.collections.PolyCollection[PolyCollection]
 | *imshow*(M,..)                            | Display an image http://matplotlib.org/api/pyplot_api.html#matplotlib.pyplot.imshow[Ref]
 | _interpolation_=...                       |
-| **kwargs                                  | http://matplotlib.org/api/artist_api.html#matplotlib.artist.Artist[Artist] 
+| **kwargs                                  | http://matplotlib.org/api/artist_api.html#matplotlib.artist.Artist[Artist]
 | image = imshow(..)                        | http://matplotlib.org/api/image_api.html#matplotlib.image.AxesImage[AxesImage]
 | *matshow*(A)                              | http://matplotlib.org/api/pyplot_api.html#matplotlib.pyplot.matshow[Ref]
 | *spy*(Z, _precision_=..)                  | plot sparsity pattern of array (whether cell close to zero) http://matplotlib.org/api/pyplot_api.html#matplotlib.pyplot.spy[Ref]
@@ -383,6 +391,19 @@ TODO:
 | *box*(False)                              | Turn off axes box
 |===
 
+Remove bounding box:
+
+    ax.spines['top'].set_visible(False)
+    ax.spines['right'].set_visible(False)
+    ax.spines['bottom'].set_visible(False)
+    ax.spines['left'].set_visible(False)
+
+Hide axis:
+
+    frame1.axes.get_xaxis().set_visible(False)
+    # or
+    frame1.axes.get_xaxis().set_ticks([])
+
 === Ticks
 
 [cols="m,d"]
@@ -411,6 +432,11 @@ TODO:
 | ax.*convert_xunits*(x)                    | For axis with unit support shttps://matplotlib.org/api/_as_gen/matplotlib.axes.Axes.convert_xunits.html#matplotlib.axes.Axes.convert_xunits[Ref]
 | plt.xticks(rotation=50, fontsize=10, ha="right")  |
 |===
+
+    plt.xticks(pos, labels)
+
+    ax.set_xticks(pos)
+    ax.set_xticklabels(labels)
 
 * https://matplotlib.org/api/axes_api.html#ticks-and-tick-labels[Ticks and Labels]
 * https://matplotlib.org/examples/ticks_and_spines/tick-locators.html[Locator examples]
@@ -664,6 +690,7 @@ Valid color names are:
 | help(colormaps)                           |
 | mpl.cm.*get_cmap*(name)                   | https://matplotlib.org/devdocs/api/cm_api.html#matplotlib.cm.get_cmap[Ref]
 | mpl.cm.*register_cmap*(name, cmap)        | https://matplotlib.org/devdocs/api/cm_api.html#matplotlib.cm.register_cmap[Ref]
+| plt.rcParams['axes.prop_cycle'].by_key()['color'] | Get default color from Cycler
 |===
 
 * Selected color palettes: "copper", "gray", "hot", "pink", "spring", "summer"; less useful "cool", "bone", "flag", "hsv", "prism", "nipy_spectral", "winter"
@@ -749,40 +776,43 @@ conformal:
 | matplotlib.rcsetup.all_backends           |
 |===
 
+When markers cut off -> adjust limits
+
 ax.add_collection(mpl.collections.PolyCollection([[(0,0), (0,1), (1,1)], [(0.5,0.5), (2,3), (1,1)]], array=np.array([0,1]), cmap=mpl.cm.get_cmap("autumn"), edgecolor="none"))
 ax.autoscale_view()
 
 
 == Rotate Ticks
 
+
 	plt.xticks(rotation=45, ha="right")
     ax.tick_params(axis='x', rotation=45)
     
     plt.setp( axs[1].xaxis.get_majorticklabels(), rotation=45)
 
-	for l in ax.get_xticklabels():
-	  	l.set_rotation(90)
-	
+    for l in ax.get_xticklabels():
+        l.set_rotation(90)
+
 == Save to PDF
 
-	fig.savefig(filename, format="PDF", bbox_inches="tight")
-	
+    fig.savefig(filename, format="PDF", bbox_inches="tight")
+
 == Remove labels
 
-	ax.xaxis.set_ticks([])
+    ax.xaxis.set_ticks([])
 
 == Remove full axis
 
-	ax.xaxis.set_visible(False)
+    ax.xaxis.set_visible(False)
 
 == Disable offset for axis
 
-	ax.get_xaxis().get_major_formatter().set_useOffset(False) # otherwise offset +2e3 shown
+    ax.get_xaxis().get_major_formatter().set_useOffset(False) # otherwise offset +2e3 shown
 
 == Set Tick positions
 
     plt.gca().xaxis.set_major_locator(mpl.ticker.MultipleLocator(1))
-    
+
 == Set Tick thousands separator
 
-	ax.xaxis.set_major_formatter(mpl.ticker.FuncFormatter(lambda x,i:format(x, "6,.0f").replace(",", ".")))
+    ax.xaxis.set_major_formatter(mpl.ticker.FuncFormatter(lambda x,i:format(x, "6,.0f").replace(",", ".")))

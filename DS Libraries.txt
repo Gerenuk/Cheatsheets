@@ -4,30 +4,34 @@
 
 == RECOMMENDED in this document
 
-* recommendations from individual mentions
-* *High dim decision boundary plot*
-** understand points close to decision boundary
-* *YellowBrick*
-** Rank/correlate features
-** parallel coordinates
-** cluster evaluation
-** some text visualization
-** some supervised learning reports
-* *Hypertools*
-** evaluate missing values interpolated by PPCA
-** align (rotated?) matrices
-** cluster visualization
-** explore data
-* *ELI5*
-** Explain ML models
-** Text model explainers
-** Feature/prediction explainer
-** LIME
-** Permutation importance
-* *Xam*
-** check out occasionally
-* *Supersmoother*
-** curve smooths with automatic neighbourhood size
+=== High dim decision boundary plot
+* understand points close to decision boundary
+
+=== YellowBrick
+* Rank/correlate features
+* parallel coordinates
+* cluster evaluation
+* some text visualization
+* some supervised learning reports
+
+=== Hypertools
+* evaluate missing values interpolated by PPCA
+* align (rotated?) matrices
+* cluster visualization
+* explore data
+
+=== ELI5
+* Explain ML models
+* Text model explainers
+* Feature/prediction explainer
+* LIME
+* Permutation importance
+
+=== Xam
+* check out occasionally
+
+=== Supersmoother
+* curve smooths with automatic neighbourhood size
 
 == Programming support
 
@@ -132,7 +136,7 @@
 
 * https://python-lenses.readthedocs.io/en/latest/tutorial/intro.html[Lenses]: Query/modify nested Python data structures
 * glom: access nested data; error/exception treatment
-
+* https://github.com/ContinuumIO/intake
 
 == REP (Yandex)
 

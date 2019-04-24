@@ -1246,6 +1246,81 @@ https://www.youtube.com/watch?v=tG22jrVFKpM
 * log to stdout
 * do not use filesystem! (if diff ports) -> redis, postresql, ...
 * cluster managers
+<<<<<<< HEAD
+* pypi.org as best practice example
+
+== Optimization
+https://www.youtube.com/watch?v=-ofK_SMKjUY
+* L1 regression can be solved with linear programming and u/v for pos/neg error
+* easily extensible to quantile regression
+* cvxpy: also quadratic
+* for approximation
+** (f(x+h)-f(x))/h : O(h) error
+** (f(x+h/2)-f(x-h/2))/h : O(h^2) error
+
+== Lévy flights
+https://www.youtube.com/watch?v=KUA39Ku-3U4
+* Levy distribution: fat tail
+* Normal, Cauchy, Levy all have scaling property: can be scaled to sigma=1 with (x-mu)/c
+* easy in log-fourier; like characteristic function
+* Lindeberg for CLT: when tails decaying -> normalized sum converges to Gaussian
+* for power-tails -> limiting distr. is a stable distr? (with appropriate scaling)
+* stable: sums always same shape (only scaled and translated maybe)
+* normalization constants sqrt[alpha](n); 0<alpha<=2; parameter of stability
+* Feller Vol. 2 good to read
+
+== Moment-based estimation for hierarchical models
+https://www.youtube.com/watch?v=en2rGSYvYlc
+* predict probability of liking a stichfix product
+* needs to be personalized
+* hierarchical models needs (items scores, personal scores; by re-use information)
+* X_i*beta + Z_i*gamma_i; i are grouping levels, Z_i are grouping vectors
+* X_i and Z_i may be identical (?)
+* simpilar to Ridge-regression, but more Bayesian(?)
+* hierarchical needs less samples than purely group-specific model
+* R package `lme4` , `nlme`,j `mbest`
+* fitting complexity for likelihood: #numobs * q^2 + #numgroups * q^4; q number of effects (num coefficients/columns?)
+* -> use moment based techniques (`mbest`); can easily parallelize; a bit less statistically-efficient; but much faster; but R package cannot do large memory; also Spark package
+* moment-based explanation starts 16:00 in video
+* do least squares fit simply on all columns (X and Z); do SVD on all matrices; ...
+* -> finally get unbiased estimates (if we knew beta; but use estimator)
+
+== Netflix deploy
+https://www.infoq.com/presentations/netflix-polyglot-containers
+* Paved road:
+** Java
+** build with Gradle (instead Maven, Ant); many plugins from Netflix (Nebula); Jenkins, Artifactory
+** debian file created
+** bake to immutable servers (AMI never changed; only recreated)
+** deploy with Spinnaker to ASG
+* Nebula: OSPackage to make debian from Java
+* but also Python and Javascript
+* -> still use Gradle to create Deb?
+* but there are too many JS build tools
+
+=== NEWT tool
+* not open source (yet?)
+* CLI
+* still runs Nebula
+* Docker container with tool (no need to install Java)
+* but need Docker
+* -> newt can setup itself
+* also add "build" command
+* .newt.yml on project dir as config; including tool versions
+* "newt exec" runs in shell
+* app-types: template; listed with bare newt init
+* newt init command; asks questions
+* cleanup
+* configurable commands (command interpretation depends on app-type)
+* doc app-type:
+** mkdocs
+** newt serve -> local webserver with browser which allows markdown
+** -> commit push
+* added spinnaker and CI commands
+* commands log -> newt report-error sends out error automatically
+* multiple people can contribute
+* native/natural experience for all languages
+=======
 * pypi.org as best practice example; https://github.com/pypa/warehouse
 * https://hynek.me/talks/deploy-friendly/
 * do not put secrets in env vars: https://diogomonica.com/2017/03/27/why-you-shouldnt-use-env-variables-for-secret-data/
@@ -1262,3 +1337,4 @@ https://www.youtube.com/watch?v=tG22jrVFKpM
 ** templating env var to file: https://www.gnu.org/software/gettext/manual/html_node/envsubst-Invocation.html
 ** templating from backends: https://github.com/kelseyhightower/confd
 ** Hashicorp consul templating: https://github.com/hashicorp/consul-template
+>>>>>>> b077e6579580db02a565e263770bb320bb286753

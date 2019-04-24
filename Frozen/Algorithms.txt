@@ -24,7 +24,7 @@ Fowler-Noll-Vo hash:
     hash0=OFFSET
     forall x:
        hash <- (hash*PRIME) XOR x
-   
+
 == Red-Black-Tree
 Average and Worst case:
 * Search/Insert/Delete: Log
@@ -154,3 +154,15 @@ Lowest common ancestor:: find ancestor in tree
 Aho–Corasick algorithm:: multi-string search
 Maximum subarray problem:: find the contiguous subarray within a one-dimensional array of numbers which has the largest sum (can contain negative numbers!)
 
+
+== Name Matching
+* Try a basic similarity metric and find examples what should match and what shouldn’t. Based on these insights, hand made rules will be most useful in the end.
+* Names are rarely misspelled (if it’s a database and not hand-typed), it’s rather different pre/post words which cause trouble
+* Often only one or two words are in common. Common word overlap metrics are not so useful. It’s better to hand-tune for what to do depending on word overlap counts. You most likely want to keep the word order.
+* Normalize names (accents, umlauts)
+* Replace special characters, by empty string or space character. Depends on specific character.
+* You may want to allow abbrevations to match. E.g. “Max Planck Institut Aachen” vs „MPI-Aachen“
+* Remove manually found “stopwords” (and, of, the, saint, …)
+* First few words most likely need to match
+* All this is easy to make efficient with pure Python
+* Also initials abbrevations would need to be compensated (e.g “Abc D. E. Fgh” <-> “Abc Dd Ee Fgh”). Note that here, keeping the capscase (not normalizing yet) can be useful. We usually compressed single characters (“D. E.” -> “DE”) and we allowed short all-caps words to match to first letters of multiple words (“Abc DE” == “Abc Dd Ee”)
