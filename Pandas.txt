@@ -617,7 +617,7 @@ Fastest way to subselect:
 [cols="m,d"]
 |===
 | pd.*concat*([df1,..])                     | On top of each other; Generates union of columns
-| pd.*concat*([df1,..], axis=1)             | Side by side
+| pd.*concat*([df1,..], axis=1)             | Side by side (but need to reset_index first if no align?!)
 | pd.*concat*([df1,..], join="outer")       | None dropped (but ValueError if all None)
 | pd.*concat*({"key1":df1,..})              | dict keys used as `keys=` (option `keys=` can still select which to take)
 | _axis_=                                   |

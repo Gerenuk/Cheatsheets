@@ -430,7 +430,8 @@ Hide axis:
 | mpl.ticker.*EngFormatter*(unit='', places=None, sep=' ')  | https://matplotlib.org/api/ticker_api.html#matplotlib.ticker.EngFormatter[Ref]
 | mpl.ticker.*FuncFormatter*(func)          | https://matplotlib.org/devdocs/api/ticker_api.html#matplotlib.ticker.FuncFormatter[Ref]
 | ax.*convert_xunits*(x)                    | For axis with unit support shttps://matplotlib.org/api/_as_gen/matplotlib.axes.Axes.convert_xunits.html#matplotlib.axes.Axes.convert_xunits[Ref]
-| plt.xticks(rotation=50, fontsize=10, ha="right")  |
+| plt.xticks(rotation=45, fontsize=10, ha="right")  |
+| ax.xaxis.set_tick_params(rotation=45) |
 |===
 
     plt.xticks(pos, labels)
@@ -476,6 +477,8 @@ Hide axis:
 [cols="m,d"]
 |===
 | *xlabel*(..)                              | http://matplotlib.org/api/pyplot_api.html#matplotlib.pyplot.xlabel[Ref]
+| ax.*set_xlabel*(..)                       |
+| _color_=..                                |
 | *plot*(.., _label_="..") +
 | *legend*(_loc_="best")                    | Add legend, Label starting with _ are not shown (https://matplotlib.org/api/pyplot_api.html#matplotlib.pyplot.legend)
 | _frameon_=False                           |

@@ -57,6 +57,7 @@
 
 * object `True` unless `__len__==0`, `__bool__=False`, zero
 * most string commands have `start=` and `end=` option
+* for set operations `-` is stronger than `|`
 
 == Forgotten
 
@@ -215,7 +216,8 @@ On Linux no creation time accessible, so use `os.path.getmtime()` or `os.stat().
 
 * Name namedtuple same as variable name to make in picklable or have at least A=myname=namedtuple("A", ...)
 * often pickle.DEFAULT_PROTOCOL < pickle.HIGHEST_PROTOCOL
-* Protocol 4 (HIGHEST, from Python 3.4) 10% faster and slightly smaller than Protocol 3 (Default Python 3)
+* Protocol 4 (HIGHEST, from Python 3.4) 10% faster [but not much?] and slightly smaller than Protocol 3 (Default Python 3)
+* Feather can be much faster for DataFrames (?), but does not support index
 
 == Libraries
 

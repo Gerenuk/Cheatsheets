@@ -1,0 +1,88 @@
+
+    import hvplot.pandas
+    df.hvplot()
+    
+== General
+
+|===
+| hvplot.help("line")                       | Help
+| df.hvplot(..)                             |
+| kind="scatter"                            |
+| by="var"                                  | Hue split
+| value_label=".."                          | Label (esp. when multiple y)
+| _rot_=90                                  | Rotate x labels
+| height=.., width=..                       | Size
+| legend=False                              |
+| groupby=".."                              | Group and show interactive slider
+| subplots=True                             | Subplots for multi-column plots
+| shared_axes=False                         | To unlink subplot axis scales
+| .cols(n)                                  | Show subplots in columns
+| row="..", col=".."                        | Grid subplots
+| xaxis=False                               |
+|===
+
+* use `*` and `+` to compose plots like in Holoviews (e.g. scatter and line)
+* more options on https://hvplot.pyviz.org/user_guide/Customization.html[Customization]
+
+== Plots
+
+Namespace for `hvplot`
+
+|===
+| .area()                                   | https://hvplot.pyviz.org/user_guide/Plotting.html#Area[Filled area]
+| stacked=True                              |
+| x, min, max                               | ?
+| .bar()                                    | https://hvplot.pyviz.org/user_guide/Plotting.html#Bars[Bars]
+| .bivariate()                              | https://hvplot.pyviz.org/user_guide/Plotting.html#Bivariate[Contour density plot]
+| .box()                                    | https://hvplot.pyviz.org/user_guide/Plotting.html#Box-Whisker-Plots[Box whiskers]
+| invert=True                               | Horizontal layout
+| .heatmap(x, y, C)                         | https://hvplot.pyviz.org/user_guide/Plotting.html#HeatMap[Heatmap]
+| reduce_function=np.mean                   |
+| colorbar=True                             |
+| .hexbin()                                 | https://hvplot.pyviz.org/user_guide/Plotting.html#HexBins[Hexbins]
+| .hist()                                   | https://hvplot.pyviz.org/user_guide/Plotting.html#Histogram[Histogram]
+| bins=..                                   |
+| bin_range=(.., ..)                        | min max of bins
+| .kde()                                    | https://hvplot.pyviz.org/user_guide/Plotting.html#KDE[Kernel density estimate]
+| .line()                                   | https://hvplot.pyviz.org/user_guide/Plotting.html#The-plot-method[Plain line]
+| .scatter()                                | https://hvplot.pyviz.org/user_guide/Plotting.html#Scatter[Scatter]
+| c=.., cmap=..                             |
+| datashade=True                            | For large data
+| .step()                                   | https://hvplot.pyviz.org/user_guide/Plotting.html#Step[Steps]
+| stacked=True                              |
+| where="mid"                               | `"pre"`, `"mid"`, `"post"`
+| .table(columns=[..])                      | https://hvplot.pyviz.org/user_guide/Plotting.html#Tables[SlickGrid table]
+| .violin()                                 |
+|===
+
+* specify `x`, `y` (also lists) or `columns`, `index`
+    
+== Explicit
+
+    from hvplot import hvplot
+    plot = hvPlot(df)
+    plot(y="Var")
+    
+== Streamz
+
+    from streamz.dataframe import Random
+    df = Random(interval='200ms', freq='50ms')
+    df.hvplot()
+    
+    df.table(backlog=10)
+    
+== Other
+
+|===
+| from hvplot.sample_data import intake_crime +
+  crime = intake_crime.read() +
+  crime = intake_crime.to_dask().persist()  | Load sample data
+| bokeh_plot = hv.render(plot)              | Convert to Bokeh (e.g. for embedding)
+| hvplot.show(plot)                         | On console. Opens browser
+| hvplot.save(plot, "file.html")            |
+| hvplot.save(plot, "file.png")             | Needs Selenium and PhantomJS
+| resources=bokeh.resources.INLINE          | to not rely on CDN
+|===
+
+    handle = display(.., display_id="..")
+    handle.update(new_plot)

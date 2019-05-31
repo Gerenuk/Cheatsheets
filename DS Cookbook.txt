@@ -2100,6 +2100,15 @@ You cannot subtract `dt.time()` instances.
         (points0.opts(color="black") * points1.opts(color="coral"))
         + (dynhist(points0, "black") * dynhist(points1, "coral"))
     )
+    
+== IPyVolume
+
+    ipv.figure()
+    ipv.quickscatter(dd_map[cols[0]], dd_map[cols[1]], dd_map[cols[2]], color=[...], size=1)
+    ipv.selector_default()
+    ipv.show()
+
+    idx_selected = ipv.gcf().scatters[0].selected
 
 == Spreadsheets
 

@@ -102,3 +102,11 @@ Frechet distance:
 median(avg(...))
 need avg since otherwise behaviour at median too uncertain
 cnt in avg drives bounds (sqrt(c)); cnt in median for confidence (exp(-c/8))
+
+== UMAP
+* https://umap-learn.readthedocs.io/en/latest/parameters.html[Parameters]:
+** n_neighbours: default 15 fine; 2-100; higher values produce less stray clusters
+** min_dist: default 0.1; 0-0.99
+** metric: euclidean L2, manhattan L1, chebychev max; 
+* can do supervised setting with target
+* might be rather sensitive to individual values which cluster on discrete values -> maybe check for those first

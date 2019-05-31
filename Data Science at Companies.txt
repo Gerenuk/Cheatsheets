@@ -1,0 +1,16 @@
+== Separate Product Owner and Disciplinary Manager
+
+* PO only tells "What" but not "How" and should not enforce it (threatening with bonus, due to pressure from above)
+
+== Other
+
+* there are no "data science products", only projects
+* need vision to know where to go and what to work on
+
+== Scrum
+
+* big user stories -> epics; in Jira rather a theme and label
+* actionable insights
+* spike: no estimation -> time-box instead
+* user story: business value?; who, what, why
+* multi-colored backlog if multiple products

@@ -322,6 +322,10 @@ http://ipython.org/ipython-doc/rel-0.13/interactive/reference.html#automatic-inv
 
 from IPython.core.debugger import set_trace
 
+Could try:
+
+    globals().update(locals())   # inside functions
+
 Saving the notebook
 -------------------
 To convert as notebook use `nbconvert <http://ipython.org/ipython-doc/rel-1.0.0/interactive/nbconvert.html>`_

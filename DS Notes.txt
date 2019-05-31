@@ -1550,7 +1550,6 @@ exclusion restriction -> Z indep of Y given A; hatA projection of A onto space s
 
 == Correlation
 
-<<<<<<< HEAD
 === Maximum Information Criterion (MIC)
 
 * seems bad https://arxiv.org/abs/1401.7645
@@ -1699,3 +1698,24 @@ http://alexhwilliams.info/itsneuronalblog/2016/03/27/pca/
 asciimath:[A exp(-at)+B exp(-bt)]
 * "The universal decay of collective memory and attention" (Candia)
 
+
+== Anomaly Detection
+
+=== PyOD methods
+
+Tested on 2D data with simple outliers with default parameters and 0.01 contamination:
+* Good:
+** KNN (tune: contamination, n_neighbors [30], p [maybe], method [largest (default)]; leaf_size just for speed)
+* Bad:
+** ABOD (seemed ok, but needs tuning and still did not do what was needed)
+** CBLOF (Exception?)
+** FeatureBagging
+** HBOS
+** IForest (some weird extrapolation)
+** LOF (cannot contain an obvious high density corner)
+** MCD (useless ellipse)
+** OCSVM (cannot contain an obvious high density corner)
+** PCA
+** SOS (did not find an envelope)
+* Failed:
+** LOCI (did not finish in any time)
