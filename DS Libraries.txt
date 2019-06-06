@@ -137,6 +137,8 @@
 * https://python-lenses.readthedocs.io/en/latest/tutorial/intro.html[Lenses]: Query/modify nested Python data structures
 * glom: access nested data; error/exception treatment
 * https://github.com/ContinuumIO/intake
+* https://github.com/SciTools/iris[Iris]: Working with (geo) data; regridding etc.
+* https://yt-project.org/[Yt]: Volumetric data
 
 == REP (Yandex)
 

@@ -432,6 +432,10 @@ Hide axis:
 | ax.*convert_xunits*(x)                    | For axis with unit support shttps://matplotlib.org/api/_as_gen/matplotlib.axes.Axes.convert_xunits.html#matplotlib.axes.Axes.convert_xunits[Ref]
 | plt.xticks(rotation=45, fontsize=10, ha="right")  |
 | ax.xaxis.set_tick_params(rotation=45) |
+| plt.axis("off")                           | Disable Axes, Ticks and Labels
+| plt.xticks([], [])                        | Disable Ticks and Labels
+| plt.tick_params(bottom=False)             |
+| labelbottom=False                         |
 |===
 
     plt.xticks(pos, labels)
