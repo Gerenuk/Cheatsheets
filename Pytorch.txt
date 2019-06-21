@@ -341,3 +341,10 @@ Other:
 
         if not train:
             save_best_model(epoch_validation_accuracy)
+
+== UNSORTED
+
+|===
+| t.float()                                 | Convert to float
+| (x>0).float()                             |
+|===

@@ -34,6 +34,10 @@ Pandas HDF very fast (see Pandas doc; much fast than SQL)
 * dict name access 1x (but 4x memory size)
 * class name access 1.5x
 
+== Math
+
+* `x * x` much faster than `x ** 2`
+
 == Fast hashes
 
 * SHA1, MD5; xxhash
@@ -83,7 +87,7 @@ Pandas HDF very fast (see Pandas doc; much fast than SQL)
 
 * Psycho
 * Pyrex
-  
+
 == Various results
 
 * plain tuple creation 14x faster than dict creation

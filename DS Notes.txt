@@ -348,7 +348,9 @@ https://www.youtube.com/watch?v=fe-uxTUnoCs
 * optimization RMSProp w Mom.m ADaM (easiest to tune); SGD w/ Mom. (harder)
 * BatchNorm: speeds up convergence; allows higher learning rates
 
-== Introduction to Gaussian Processes
+== Gaussian Processes
+
+=== Introduction to Gaussian Processes
 https://www.youtube.com/watch?v=JSY2rha7qOw
 * sum of Gaussians is Gaussian
 * scaling Gaussian also Gaussian
@@ -359,6 +361,15 @@ https://www.youtube.com/watch?v=rrBhHDzmgUA
 * Taken theorem: just single coordinate x(t), but together with x(t-D), x(t-2D) can reconstruct
 Lyapunov coef and topology if dynamics (e.g. Lorenz attractor)
 * -> could use convergent cross-mapping by comparing x(t),x(t-D) - y(t),y(t-D)
+
+=== Distill article
+https://distill.pub/2019/visual-exploration-gaussian-processes/
+* cov. matrix symmetric and positive semi-definite
+* Gaussian closed under conditioning and marginalization
+* marginalization (with conv.matrix): simply take the block on diagonal
+** new mean will depend on value of conditioned variable, but not cov.matrix
+
+
 
 == Tensorflow
 * Python and C++ frontend to specify computations graph
@@ -1541,7 +1552,6 @@ exclusion restriction -> Z indep of Y given A; hatA projection of A onto space s
 
 == Correlation
 
-<<<<<<< HEAD
 === Maximum Information Criterion (MIC)
 
 * seems bad https://arxiv.org/abs/1401.7645
@@ -1674,7 +1684,7 @@ http://alexhwilliams.info/itsneuronalblog/2016/03/27/pca/
 * also |d vec(Tangent)/ds |
 * magnitude of acceleration if moving with unit speed
 * kappa = det(vecx', vecx'')/|vecx'|^3
-* 3D: kappa= |vecx' x vecx''|/|vecx'|^3
+* 3D: kappa= |vecx' x vecx''|/|vecx'|^3 = a_perp / v^2
 * in 3D also need torsion (helical) to describe path (-> related by Frenet-Serret formulas)
 * also related to ratio of arc length and line distance
 
@@ -1685,6 +1695,25 @@ http://alexhwilliams.info/itsneuronalblog/2016/03/27/pca/
 * to get exact median in 1 pass you need to store >=N/2 elements (for p passes O(N^1/p))
 * http://www.mathcs.emory.edu/~cheung/Courses/584-StreamDB/Syllabus/08-Quantile/Greenwald.html
 
-== Triangular coordinates
+== Neural Nets just Bags?
+https://medium.com/bethgelab/neural-networks-seem-to-follow-a-puzzlingly-simple-strategy-to-classify-images-f4229317261f
+* NN with a 33x33 vision and sum is almost as good as best
+* heavy texture focus
+* insensitive to shuffling of image
+* CNNs use the many weak statistical regularities present in natural images for classification
 
->>>>>>> b077e6579580db02a565e263770bb320bb286753
+== Projection Pursuit
+* optimize some "projection index"
+* e.g. kurtosis -> minimize
+** https://towardsdatascience.com/interesting-projections-where-pca-fails-fe64ddca73e6
+** "Fast and simple methods for the optimization of kurtosis used as a projection pursuit index" (Hou, Wentzell)
+** however only when class sizes about equal
+** better when number of classes 2^n
+** need about 10 samples per variable
+
+== Information loss in dimensionality reduction
+https://www.youtube.com/watch?v=yN64YMNNEdc
+* precision ~ injectivity
+* recall ~ continuity
+* prec + recall < 2
+*

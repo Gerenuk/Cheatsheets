@@ -66,7 +66,7 @@
     p.map(sns.distplot, "y").add_legend()
 
     sns.plt.legend() # ?
-    
+
 == Plot correlation
 
     sns.heatmap(df.corr())
@@ -1227,7 +1227,7 @@ Use my
 === Exponential Smoothing
 
     from statsmodels.tsa.holtwinters import Holt
-    
+
     model=Holt(y)        # ExponentialSmoothing with seasons
     res=model.fit(smoothing_level=0.5, smoothing_slope=0.9, optimized=False)    # or leave it out for automatic
 
@@ -1982,6 +1982,25 @@ Can make predictions for old or a completely new group.
 
 You can use `scipy.signal.convolve` and an artificial `[1,1,1],[1,100,1],[1,1,1]` filter to do the "Game of Life" with arrays http://nbviewer.jupyter.org/gist/jiffyclub/3778422[Ref].
 
+== Convolution
+
+    np.random.seed(123)
+    x=np.random.uniform(size=(20,11))
+    k=np.random.normal(size=(4,11))
+
+    conv=convolve2d(x, k,  mode="same", boundary="wrap")
+
+    fx=fft2(x)
+    fk=fft2(k, s=x.shape)
+
+    inv=ifft2(fx*fk)
+
+    m=-k.shape[0]//2+1
+    n=-k.shape[1]//2+1
+    inv=np.roll(np.roll(inv, m, axis=0), n, axis=1)
+
+    assert np.all(np.all(np.isclose(inv, conv)))
+
 == Python Profiling
 
     import cProfile
@@ -2011,3 +2030,47 @@ You can use `scipy.signal.convolve` and an artificial `[1,1,1],[1,100,1],[1,1,1]
 ** http://christopher5106.github.io/office/2015/12/06/openoffice-libreoffice-automate-your-office-tasks-with-python-macros.html[Tutorial]
 ** https://github.com/lfagundes/oosheet
 ** https://pypi.org/project/pyoo/
+
+== Streaming Plots
+
+    %%opts .. {+framewise}
+
+    from holoviews.streams import Pipe
+
+    def make_plot(data): # full data
+        return ....options(framewise=True)
+
+    pipe=Pipe(data=[])  # use correct data format here or plots will not show
+
+    plot=hv.DynamicMap(make_plot, streams=[pipe])
+
+    display(plot)
+    -> pipe.send(..)
+
+== Shell commands
+
+|===
+| find . -name '*part*'                     |
+| -iname                                    | case-insensitive
+| -regex                                    | regex
+| -iregex                                   | regex (case-in.)
+| grep -R 'str'                             | Search recursively
+|===
+
+== UNSORTED
+
+=== Convex hull of points
+
+    from scipy.spatial import ConvexHull
+
+    def encircle(x,y, ax=None, **kw):
+        p = np.c_[x,y]
+        hull = ConvexHull(p)
+        poly = plt.Polygon(p[hull.vertices,:], **kw)
+        ax.add_patch(poly)
+
+=== Pandas
+
+    df.isna().sum()    # check missing values
+
+

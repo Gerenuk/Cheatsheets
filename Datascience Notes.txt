@@ -102,3 +102,21 @@ Frechet distance:
 median(avg(...))
 need avg since otherwise behaviour at median too uncertain
 cnt in avg drives bounds (sqrt(c)); cnt in median for confidence (exp(-c/8))
+
+== Dimensionality reduction
+https://www.youtube.com/watch?v=9iol3Lk6kyU
+* there is only Matrix Factorization and Neighbor Graphs
+
+=== Matrix Factorization
+* Sparse PCA: |U|2=1, |U|0<=k
+* 1-archetype PCA: k-Means (almost)
+* Exponential family matrix factorization
+** Normal Distribution Matrix Factorization = PCA
+** Poisson Distribution Matrix Factorization = NMF (almost)
+** Multinomial M.F. = LDA (almost)
+
+=== Neighbor Graphs
+* Isomap: kNN weight by ambient distance (Euclidean); build complete graph weighted by shortest path length
+* Spectral Embedding: weigh edges by kernel
+* t-SNE: kNN and vary bandwidth of kernel; normalize outgoing edge to 1; symmetrize edges; renormalized total edge weight to 1; force directed graph layout
+* UMAP:

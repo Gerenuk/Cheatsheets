@@ -18,6 +18,8 @@
 * https://github.com/smirmik/CAD[CAD]: Contextual Anomaly Detector; winner of a NAB competition
 * https://github.com/STREAM3/pyISC[PyISC]
 * https://github.com/seninp/saxpy[SaxPy]
+* https://github.com/twitter/AnomalyDetection[Twitter Anomaly Detection]: Statisticall robust with seasonality
+* https://github.com/sahandha/eif[Extended Isolation Forest]: Random angles Isolated Forest
 
 * https://github.com/MentatInnovations/datastream.io[datastream.io]
 * https://github.com/nlittlepoole/thermometr[Thermometr]: Twitter S-H-ESD algorithm
@@ -113,6 +115,11 @@
 *** doesnt seem that great
 * has multiple reference for outliers on categorical data
 * try PCA, Kernel PCA (maybe better with L1 norm); maybe CCA; Robust PCA
+
+== Algorithms
+
+* HiCS: "High Contrast Subspace for Density-based Outlier Ranking" (Keller)
+* Projected Outliers with Grids; HOS-Miner; Outrank; Subspace outlier detection; Outres
 
 == Tests
 

@@ -937,3 +937,6 @@ Courses:
 
 Other:
 * http://stat565.cwick.co.nz/
+
+== UNSORTED
+* could do gaussian basis functions for each month

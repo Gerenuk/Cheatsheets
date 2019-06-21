@@ -52,11 +52,7 @@
 * smooth data, but preserve boundaries between regions
 * dilate points as hypersphere
 
-<<<<<<< HEAD
-=== Felsenszwalb for Images
-=======
-== Felsenszwalb
->>>>>>> b077e6579580db02a565e263770bb320bb286753
+== Felsenszwalb for Images
 
 * http://people.cs.uchicago.edu/~pff/papers/seg-ijcv.pdf["Efficient graph-based image segmentation"] (Felsenszwalb)
 * fast (NlogN in pixels)
@@ -81,7 +77,6 @@
 * "Globally optimal regions and boundaries as minimum ratio weight cycles" (Jerman, Ishikawa)
 * was mentioned, but not clear if it works
 
-<<<<<<< HEAD
 == Kleinberg theorem
 http://alexhwilliams.info/itsneuronalblog/2015/10/01/clustering2/
 * scale-invariant: no change when scale all values
@@ -145,4 +140,13 @@ categorical dataset" https://ac.els-cdn.com/S0167865511000602/1-s2.0-S0167865511
 
 == Finding number of clusters
 * X-means, G-mean; repeatedly split
->>>>>>> b077e6579580db02a565e263770bb320bb286753
+
+== Clustering hard
+* k-mean does not see local differences and may miss low density clusters in favor of splitting a high density cluster
+* single-linkage does not see global structures and may merge clusters
+
+== Convex clustering
+* like hierarchical clustering, for continuous?
+
+== Ensemble clustering
+* take average of multiple different clusterings (or runs)
