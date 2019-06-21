@@ -1,0 +1,4 @@
+https://damianavila.github.io/RISE/
+conda install -c conda-forge rise
+
+Enable: View/Cell Toolbar/Slideshow

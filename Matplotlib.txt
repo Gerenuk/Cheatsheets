@@ -26,7 +26,7 @@ TODO:
 | _ls_=                                     | linestyle ("solid", "dashed", "dashdot", "dotted", (offset, on-off-dash-seq), "-", ...)
 | _lw_=                                     | linewidth
 | _data_=                                   | Most plots take `data` and use column names for `xysc`, `color`, `edgecolors`, `facecolors`, `linewidths`
-| _zorder_=                                 | z-order
+| _zorder_=                                 | z-order (>3 to make it above rest)
 | _marker_="go"                             | https://matplotlib.org/devdocs/api/markers_api.html[Markers API], https://matplotlib.org/gallery/lines_bars_and_markers/marker_reference.html#sphx-glr-gallery-lines-bars-and-markers-marker-reference-py[Gallery Ref]
 | plt.rc("figure", figsize=(20,10))         | Default figure size
 |===
@@ -349,6 +349,14 @@ More low-level
 | *plot_wireframe*(..)                      |
 |===
 
+    %matplotlib notebook
+    from mpl_toolkits.mplot3d import Axes3D
+
+    fig, ax=plt.subplots()
+    ax=Axes3D(fig)
+
+    ax.scatter(x, y, z)
+
 * https://matplotlib.org/devdocs/api/toolkits/mplot3d.html[mplot3d]
 * https://matplotlib.org/devdocs/gallery/index.html#mplot3d-toolkit[mplot3d gallery]
 
@@ -424,7 +432,8 @@ Hide axis:
 | mpl.ticker.*EngFormatter*(unit='', places=None, sep=' ')  | https://matplotlib.org/api/ticker_api.html#matplotlib.ticker.EngFormatter[Ref]
 | mpl.ticker.*FuncFormatter*(func)          | https://matplotlib.org/devdocs/api/ticker_api.html#matplotlib.ticker.FuncFormatter[Ref]
 | ax.*convert_xunits*(x)                    | For axis with unit support shttps://matplotlib.org/api/_as_gen/matplotlib.axes.Axes.convert_xunits.html#matplotlib.axes.Axes.convert_xunits[Ref]
-| plt.xticks(rotation=50, fontsize=10, ha="right")  |
+| plt.xticks(rotation=45, fontsize=10, ha="right")  |
+| ax.xaxis.set_tick_params(rotation=45) |
 |===
 
     plt.xticks(pos, labels)
@@ -433,6 +442,7 @@ Hide axis:
     ax.set_xticklabels(labels)
 
 * https://matplotlib.org/api/axes_api.html#ticks-and-tick-labels[Ticks and Labels]
+* https://matplotlib.org/examples/ticks_and_spines/tick-locators.html[Locator examples]
 * https://matplotlib.org/devdocs/api/ticker_api.html[Ticker API]
 * https://matplotlib.org/api/axes_api.html#twinning[Twinning]
 * https://matplotlib.org/api/axes_api.html#units[Unit support]
@@ -469,6 +479,8 @@ Hide axis:
 [cols="m,d"]
 |===
 | *xlabel*(..)                              | http://matplotlib.org/api/pyplot_api.html#matplotlib.pyplot.xlabel[Ref]
+| ax.*set_xlabel*(..)                       |
+| _color_=..                                |
 | *plot*(.., _label_="..") +
 | *legend*(_loc_="best")                    | Add legend, Label starting with _ are not shown (https://matplotlib.org/api/pyplot_api.html#matplotlib.pyplot.legend)
 | _frameon_=False                           |
@@ -522,10 +534,13 @@ Hide axis:
   ax.xaxis.set_major_formatter(mpl.dates.AutoDateFormatter(mpl.dates.AutoDateLocator()))    |
 | fig.*autofmt_xdate*(bottom=0.2, rotation=30, ha='right', which=None) | https://matplotlib.org/api/_as_gen/matplotlib.figure.Figure.html#matplotlib.figure.Figure.autofmt_xdate[Ref]
 | matplotlib.dates.*DateFormatter*          | https://matplotlib.org/api/dates_api.html#matplotlib.dates.DateFormatter[Ref]
+| matplotlib.dates.*WeekLocator*            | 
 | mpl.dates.*num2timedelta*(x)              | Convert number of days to `timedelta` object
 | mpl.dates.*drange*(start, end, delta)     | Create date range a internal float format; `start`/`end` is `datetime`, `delta` is `timedelta`
 |===
 
+* Locators: https://matplotlib.org/api/dates_api.html#date-tickers[Ref]
+* Formatters: https://matplotlib.org/api/dates_api.html#date-formatters[Ref]
 * may be enough to set data locator and formatter
 * some info on https://matplotlib.org/api/dates_api.html#module-matplotlib.dates[mpl.dates]
 * major_formatter needs to be after xtickslabel
@@ -630,6 +645,7 @@ Hide axis:
 | *imsave*(..)                              | Save an array as an image file http://matplotlib.org/api/pyplot_api.html#matplotlib.pyplot.imsave[Ref]
 | *savefig*(..)                             | Save current figure http://matplotlib.org/api/pyplot_api.html#matplotlib.pyplot.savefig[Ref]
 | _metadata_={..}                           | Save metadata
+| _bbox_inches_ = "tight"                   | Adjust labels (or they might be clipped off)
 | matplotlib.use('Agg')                     | Avoid output after `savefig`
 | *figimage*(..)                            | Add non-resampled image http://matplotlib.org/api/pyplot_api.html#matplotlib.pyplot.figimage[Ref]
 | *plotfile*(fname)                         | Plot data from file http://matplotlib.org/api/pyplot_api.html#matplotlib.pyplot.plotfile[Ref]
@@ -775,7 +791,11 @@ ax.autoscale_view()
 
 == Rotate Ticks
 
-    plt.xticks(rotation=45, ha="right")
+
+	plt.xticks(rotation=45, ha="right")
+    ax.tick_params(axis='x', rotation=45)
+    
+    plt.setp( axs[1].xaxis.get_majorticklabels(), rotation=45)
 
     for l in ax.get_xticklabels():
         l.set_rotation(90)

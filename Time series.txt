@@ -635,6 +635,14 @@ asciimath:[|d|<0.5]
 * http://sites.google.com/site/waleedkadous/publications/phd.pdf pages 30-54
 * https://www.amazon.com/Neural-Networks-Speech-Sequence-Recognition/dp/1850321701
 
+=== Dynamic Time Warping (DTW)
+
+* "Everything you know about dynamic time warping is wrong" (Ratanamahatana, Keogh):
+** you need to resample timeseries to equal length, but that does not hurt performance! Using different length sequence would require unclear normalization for the differently accumulated noise
+** constraining the matching does not hurt performance (empirically Sakoe-Chiba with 1-10% [often 3%] works well)
+** DTW is already fast (almost linear)
+** 2 bounds possible: Sakoe-Chiba (equal width band), Itakura (Parallelogram)
+
 == Trend estimation
 
 * simple moving average: not robust to outlier

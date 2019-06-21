@@ -1,0 +1,28 @@
+https://code.visualstudio.com/docs/editor/codebasics
+
+== Multicursor
+* Alt-Click
+* Ctrl-Alt-Up/Down
+* Select, Ctrl-Shift-L: add cursor at each following selection
+
+== Selection
+* Ctrl-D: current word, iterative also add next same word
+* Alt-Shift-Right: Expand selection
+* Shift-Alt: Box selection
+
+== Search
+* Ctrl-Shift-F: search currently opened files
+
+== Editing
+* Shift-Alt-F: Format document
+
+== View
+* Shift-Click on folding icon: all regions inside too
+* Ctrl-k Ctrl-0: fold all
+* keys for fold regions or all, etc.
+
+== Navigate
+* Ctrl-Tab: open files
+* Alt-Left/Right: alternative between diff lines of same files
+* Ctrl-Click: go to definition
+* Ctrl-Alt-Click: open definition in side view

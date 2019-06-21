@@ -263,3 +263,12 @@ shopt -s checkjobs  | do not exit if jobs in background
 shopt -s globstar   | ** for recursive
 shopt -s extglob    | regex-like glob
 set -C      | disallow ">" overwrites (use ">|" to do anyway)
+
+
+while read -r line; do
+echo "$line"
+done <<END
+abc/abc
+def/def
+END
+

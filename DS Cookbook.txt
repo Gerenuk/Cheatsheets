@@ -60,6 +60,73 @@
        .layout(dims2).cols(..)       # different plots
     )                                # remaining variables will be slider
 
+== Binning
+
+[cols="m,d"]
+|===
+| hist, bin_edges = np.histogram(x, bins="auto")    | https://docs.scipy.org/doc/numpy/reference/generated/numpy.histogram.html[numpy.histogram]
+| weights = [..]                            |
+| density = True                            | integral over range is 1
+| range=(min, max)                          |
+| np.histogramdd(..)                        | https://docs.scipy.org/doc/numpy/reference/generated/numpy.histogramdd.html[Ref]
+| np.digitize(x, bins)                      | Return indices of bins https://docs.scipy.org/doc/numpy/reference/generated/numpy.digitize.html[Ref]
+| np.searchsorted(a, v)                     | Find indices into sorted array https://docs.scipy.org/doc/numpy/reference/generated/numpy.searchsorted.html#numpy.searchsorted[Ref]
+| scipy.stats.binned_statistic(..)          | Apply functions on bin insread of counting https://docs.scipy.org/doc/scipy/reference/generated/scipy.stats.binned_statistic.html[Ref]
+| scipy.stats.binned_statistic_dd(..)       | Apply functions on bin insread of counting https://docs.scipy.org/doc/scipy/reference/generated/scipy.stats.binned_statistic_dd.html[Ref]
+| scipy.stats.cumfreq(a, numbins=..)        | Cumulative histogram https://docs.scipy.org/doc/scipy/reference/generated/.cumfreq.html#.cumfreq[Ref]
+| scipy.stats.relfreq(a, numbins=..)        | Relative frequency histogram https://docs.scipy.org/doc/scipy/reference/generated/.relfreq.html#.relfreq[Ref]
+|===
+
+* https://github.com/EelcoHoogendoorn/Numpy_arraysetops_EP[numpy-index]: faster library?
+* https://docs.scipy.org/doc/numpy-1.15.0/reference/generated/numpy.histogram_bin_edges.html#numpy.histogram_bin_edges[bin edge calculation]
+* for increasing bins: `np.digitize(x, bins, right=True) == np.searchsorted(bins, x, side='left')`
+* `digitize`: `bins[i-1] <= x < bins[i]``; `0` or `len(x)` if beyond bounds
+
+=== Grouping
+
+    edges = pd.cut(dd.col, bins=100).apply(attrgetter("left"))
+    groups = dd.groupby(edges)
+
+* https://pandas.pydata.org/pandas-docs/stable/generated/pandas.cut.html#pandas.cut[pandas.cut]
+
+== Plot histogram
+
+|===
+| sns.distplot(df[col])                     | https://seaborn.pydata.org/generated/seaborn.distplot.html#seaborn.distplot[Ref]
+| df.hist(col)                              | https://pandas.pydata.org/pandas-docs/stable/generated/pandas.DataFrame.hist.html[Ref]
+|===
+
+    # manual
+    width=2
+    hist=np.histogram(data, bins=np.arange(min(data), max(data)+3, width))
+    plt.bar(hist[1][:-1], hist[0]/sum(hist[0]), width=width*0.9)
+
+* set `mpl.rcParams["hist.bins"]='auto'`
+
+== Heatmap
+
+    sns.jointplot(
+        "x", "y", data=df,
+        kind="hex", size=10,
+        gridsize=100,
+        bins="log", mincnt=1,
+        cmap="viridis",
+        )
+
+    df.plot.hexbin(
+        "x", "y",
+        bins="log", mincnt=1,
+        cmap="viridis",
+        )
+
+    # manual
+    dp = df.apply(lambda x: Series(np.histogram(x, bins=bins)[0], index=bins[:-1]))
+    plt.pcolor(dp)
+
+* https://seaborn.pydata.org/generated/seaborn.jointplot.html[seaborn.jointplot]
+* https://matplotlib.org/api/_as_gen/matplotlib.pyplot.hexbin.html[pyplot.hexbin]
+* https://pandas.pydata.org/pandas-docs/stable/generated/pandas.DataFrame.plot.hexbin.html[pandas hexbin]
+
 == Exploration
 
     p=sns.FacetGrid(df, hue="c")
@@ -77,7 +144,22 @@
 
 === Linear Regression
 
-==== Scikit-learn Linear Regression
+==== Numpy Linear Regression (fastest)
+
+    X = np.vstack([x, np.ones(len(x))]).T
+
+    coef, residuals, rank, singular_values = np.linalg.lstsq(X, y)
+
+2x as fast a scikit-learn.LinearRegression
+
+==== Scipy Linear Regression (fastest too)
+
+    slope, intercept, r_value, p_value, std_err = scipy.stats.linregress(x,y)
+
+lingress(x) if Nx2 array. Same as numpy raw version
+
+
+==== Scikit-learn Linear Regression (fast)
 
     from sklearn import linear_model
 
@@ -86,7 +168,13 @@
     model.fit(np.reshape(x, (len(x),1)),y)
     print(model.intercept_, model.coef_)
 
-==== Statsmodels Linear Regression
+==== Numpy Linear Regression (slow)
+
+    coef=np.polyfit(x,y,1)
+
+* more than coef if options full=True, rcond=True, etc. https://docs.scipy.org/doc/numpy/reference/generated/numpy.polyfit.html[Ref]
+
+==== Statsmodels Linear Regression (slow, but info)
 
     import statsmodels.api as sm
 
@@ -102,25 +190,6 @@
 
 Regression result variables can be found on http://www.statsmodels.org/dev/generated/statsmodels.regression.linear_model.RegressionResults.html[Ref].
 The specific OLSResults adds `get_influence`, `outlier_test`, `el_test` (emp.likelihood test), `conf_int_el` http://www.statsmodels.org/dev/_modules/statsmodels/regression/linear_model.html#OLSResults[Ref].
-
-
-==== Numpy Linear Regression
-
-    X = np.vstack([x, np.ones(len(x))]).T
-
-    coef, residuals, rank, singular_values = np.linalg.lstsq(X, y)
-
-==== Numpy Linear Regression
-
-    coef=np.polyfit(x,y,1)
-
-* more than coef if options full=True, rcond=True, etc. https://docs.scipy.org/doc/numpy/reference/generated/numpy.polyfit.html[Ref]
-
-==== Scipy Linear Regression
-
-    slope, intercept, r_value, p_value, std_err = scipy.stats.linregress(x,y)
-
-lingress(x) if Nx2 array
 
 === Splines
 
@@ -243,6 +312,7 @@ F-test to compare models that are _nested_. Generally cross-validation also migh
 |===
 | np.linalg.cond(mat)                       | Condition number of matrix (different norms possible) https://docs.scipy.org/doc/numpy/reference/generated/numpy.linalg.cond.html[Ref]
 | np.arctan2(y, x)                          |
+| np.isfinite(x)                            | Not NaN and not Inf
 |===
 
 === Eigenvalues
@@ -288,6 +358,13 @@ F-test to compare models that are _nested_. Generally cross-validation also migh
     link=linkage(dd, metric="cosine")   # or other param? method="centroid"??
     sns.clustermap(dd, row_linkage=link, col_linkage=link, cmap="magma_r")
 
+
+    from scipy.cluster.hierarchy import linkage
+    link=linkage(dd.T, metric="correlation", method="complete")    # distance = 1 - correlation
+    link[:,2]=np.log10(link2[:,2]+1e-10)+11                        # resolve small distances better
+    fig, ax = plt.subplots(figsize=(20, 80))
+    denres=dendrogram(link, labels=dd.columns, orientation="right", ax=ax, color_threshold=8, leaf_font_size=8, above_threshold_color="lightgray");
+
 == Scikit-learn tools
 
 [col="m,d"]
@@ -323,9 +400,13 @@ F-test to compare models that are _nested_. Generally cross-validation also migh
 * https://matplotlib.org/users/colormaps.html[Matplotlib color maps]
 * https://matplotlib.org/examples/color/colormaps_reference.html[Matplotlib color map examples]
 * https://bokeh.github.io/colorcet/[Bokeh colorcet]
++ https://colorcet.pyviz.org/user_guide/index.html[colorcet]
 * http://colorbrewer2.org/#type=qualitative&scheme=Paired&n=8[Colorbrewer]
 * https://jiffyclub.github.io/palettable/[Palettable]
 * https://bokeh.pydata.org/en/latest/docs/reference/palettes.html[Bokeh palettes]
+* https://matplotlib.org/cmocean/[cmocean]
+* https://seaborn.pydata.org/tutorial/color_palettes.html[Plotting colormaps with Seaborn]
+* https://nicoguaro.github.io/posts/cyclic_colormaps/[Cyclic color maps]
 * suggested qualitative color palettes:
 ** https://matplotlib.org/examples/color/colormaps_reference.html[Set1]
 ** https://bokeh.pydata.org/en/latest/docs/reference/palettes.html[Category10]
@@ -340,6 +421,7 @@ F-test to compare models that are _nested_. Generally cross-validation also migh
 [col="m,d"]
 |===
 | plt.cm.get_cmap("viridis", N)             | Get discrete colormap (e.g. to see contours in hexbin plots
+| cycler.cycler("color", plt.cm.Set3.colors)    |
 |===
 
 === Print Matplotlib colormap names
@@ -379,7 +461,10 @@ F-test to compare models that are _nested_. Generally cross-validation also migh
 | img = scipy.misc.face(gray=False)         | Image of a racoon
 | np.random.randn(100, 10)                  | Standard normal matrix
 | np.random.normal(loc=0, scale=1, size=(100,10))   | Non-standard normal matrix
-| columns=list(string.ascii_lowercase[:10]) | Quick alphabetic column names
+| random.choices(pop, k=..)                 | https://docs.python.org/3/library/random.html#random.choices[Ref]
+| np.random.choice(pop, size=..)            | https://docs.scipy.org/doc/numpy/reference/generated/numpy.random.choice.html[Ref]
+| pd.read_csv("https://..")                 |
+| DataFrame(..., columns=list(string.ascii_lowercase[:10])) | Quick alphabetic column names
 | sm.datasets.get_rdataset(name)            | Download and return R dataset http://www.statsmodels.org/dev/datasets/statsmodels.datasets.get_rdataset.html#statsmodels.datasets.get_rdataset[Ref]
 | patsy.demo_data(*"pqr")                   | Generated data. "a-m" categorical, "p-z" numerical http://patsy.readthedocs.io/en/latest/API-reference.html#patsy.demo_data[Ref]
 | imblearn.datasets.fetch_datasets()[".."]  | http://contrib.scikit-learn.org/imbalanced-learn/stable/datasets/index.html[Ref]
@@ -403,6 +488,7 @@ F-test to compare models that are _nested_. Generally cross-validation also migh
 | pd.util.testing.makeTimeDataFrame()       | Test data frame
 | pd.util.testing.makeDataFrame()           | Test data frame
 | sklearn.datasets.load_files(..)           | Subfolder names are categories
+| quilt                                     | https://docs.quiltdata.com/get-started/quick-start[Quick Start]
 |===
 
 * OpenML data sets which are not too easy (for RF): 37, 4134, 41142, 298, 336, 716, 732, 750, 753, 783, 850, 863, 886, 889, 907, 908, 915, 922, 955, 983, 1012, 1045, 1048, 1064, 1071, 1412, 1436, 1441, 1446, 1448, 1450, 1453, 1463, 1473, 1479, 1484, 1506, 1547, 1566, 1572, 1589, 4329, 40645, 40646, 40647, 40648, 40649, 40650
@@ -413,17 +499,6 @@ F-test to compare models that are _nested_. Generally cross-validation also migh
 === Reduce multiple conditions
 
     functools.reduce(lambda x,y:x & y, [..])
-
-=== Binning
-
-   [..] = np.digitize(x, bins=[..])            # bins[i-1] <= x < bins[i]; 0 or len(x) if beyond bounds
-
-   hist, bin_edges = np.histogram(x, bins)
-   # bins = "auto"    -> good allround for plotting
-   # weights = [..]
-   # density = True   -> integral over range is 1
-
-   np.histogramdd(..)   # Multidimensional
 
 === Search in list
 
@@ -513,27 +588,6 @@ But also includes self-pairs.
 === Groupby like itertools
 
     df.A.groupby((df.A != df.A.shift())
-
-=== Heatmap
-
-   dp = df.apply(lambda x: Series(np.histogram(x, bins=bins)[0], index=bins[:-1]))
-   plt.pcolor(dp)
-
-=== Heatmap
-
-    sns.jointplot("x", "y", data=df,
-                  kind="hex", size=10,
-                  gridsize=100, bins="log", mincnt=1, cmap="viridis",
-                  )
-
-=== Groupby and index
-
-   catidxs, bins = pd.cut(df, bins=.., retbins=True, labels=False, include_lowest=True)
-   df.groupby(bins[catidxs])...
-
-   pd.cut(s).apply(attrgetter("left"))
-
-http://stackoverflow.com/questions/17050202/plot-timeseries-of-histograms-in-python
 
 === Mask values
 
@@ -690,12 +744,6 @@ Previous customer value
 
 == Seaborn
 
-=== Heatmap
-
-    sns.jointplot("var1", "var2", data=df, kind="hex", joint_kws=dict(gridsize=40))
-
-    df.plot.hexbin("x", "y", bins="log", mincnt=1, cmap="viridis")
-
 === Colors
 
 Color points in any scatter plot
@@ -764,6 +812,13 @@ Tooltips can also be a HTML string. Special variables like "$color[hex]:fill_col
     p.extra_y_ranges={"abc":Range1d(..,..)}
     p.circle(.., y_range_name="abc")
     p.add_layout(LinearAxis(y_range_name="abc"), "left")
+
+=== Tight grid plots
+
+    plt.tight_layout()          # may help
+    plt.subplots_adjust(hspace=0.4, wspace=0.4)    # manual adjustment
+
+Some Seaborn commands take a `gridspec_kws` parameter
 
 === Matplotlib compatibility
 
@@ -899,12 +954,6 @@ Midpoint of colormap (unless use vmin, vmax)
                     return  val*abs(vmin-midpoint) + midpoint
                 else:
                     return  val*abs(vmax-midpoint) + midpoint
-
-=== Plot histogram
-
-    width=2
-    hist=np.histogram(data, bins=np.arange(min(data),max(data)+3,width))
-    plt.bar(hist[1][:-1], hist[0]/sum(hist[0]), width=width*0.9)
 
 === Plot KDE density
 
@@ -2014,6 +2063,18 @@ You can use `scipy.signal.convolve` and an artificial `[1,1,1],[1,100,1],[1,1,1]
 
     !snakeviz run.prof
 
+== Time
+
+    time.strftime("%H:%M:%S", time.localtime(time.time()))
+
+    midnight = dt.time.min
+
+=== Seconds since midnight
+
+    seconds = ((t - t.replace(hour=0, minute=0, second=0, microsecond=0)).total_seconds()
+
+You cannot subtract `dt.time()` instances.
+
 == Sympy
 
 === Integration
@@ -2022,6 +2083,51 @@ You can use `scipy.signal.convolve` and an artificial `[1,1,1],[1,100,1],[1,1,1]
     init_printing()
     a, b=symbols("a b")
     simplify(integrate(a, (a, -oo, oo)))
+
+== Plotting
+
+== Rotate labels
+
+    for ax in axs.ravel():
+        ax.xaxis.label.set_rotation(90)
+        ax.yaxis.label.set_rotation(0)
+        ax.yaxis.labelpad = 150
+
+== Linked Data Histogram
+
+    %%opts Points [tools=["lasso_select"]]
+
+    def dynhist(points, color):
+        def hist(index):
+            selected = points.iloc[index]
+
+            return hv.Histogram(np.histogram(selected["x"], bins="doane", density=True)).opts(
+                fill_color=color, alpha=0.3, framewise=True,
+            )
+
+        selection = hv.streams.Selection1D(source=points)
+
+        return hv.DynamicMap(hist, streams=[selection])
+
+
+    points0 = hv.Points(data.query("col==0"), kdims=["x", "y"])
+    points1 = hv.Points(data.query("col==1"), kdims=["x", "y"])
+
+    selection1 = hv.streams.Selection1D(source=points1)
+
+    (
+        (points0.opts(color="black") * points1.opts(color="coral"))
+        + (dynhist(points0, "black") * dynhist(points1, "coral"))
+    )
+
+== IPyVolume
+
+    ipv.figure()
+    ipv.quickscatter(dd_map[cols[0]], dd_map[cols[1]], dd_map[cols[2]], color=[...], size=1)
+    ipv.selector_default()
+    ipv.show()
+
+    idx_selected = ipv.gcf().scatters[0].selected
 
 == Spreadsheets
 
@@ -2072,5 +2178,4 @@ You can use `scipy.signal.convolve` and an artificial `[1,1,1],[1,100,1],[1,1,1]
 === Pandas
 
     df.isna().sum()    # check missing values
-
 
