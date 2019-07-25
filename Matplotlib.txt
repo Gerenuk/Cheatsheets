@@ -47,6 +47,7 @@ TODO:
 | *draw*()                                  | Redraw current figure http://matplotlib.org/api/pyplot_api.html#matplotlib.pyplot.draw[Ref]
 | *tight_layout*(..)                        | Adjust subplot parameters to give specified padding if clipped labels http://matplotlib.org/api/pyplot_api.html#matplotlib.pyplot.tight_layout[Ref]
 | _pad_=1.08                                |
+| ax.*set*(..=.., ..=..)                    | Set multiple axis attributes
 |===
 
 More low-level
@@ -114,7 +115,7 @@ More low-level
 | _marker_="go"                             | Marker https://matplotlib.org/api/_as_gen/matplotlib.pyplot.plot.html?highlight=plot#matplotlib.pyplot.plot[Ref]
 | **kwargs                                  | https://matplotlib.org/api/_as_gen/matplotlib.lines.Line2D.html#matplotlib.lines.Line2D[Line2D]
 | [line1, ..] = plot(..)                    |
-| *plot*(x, y, "go")                        | Green Circles
+| *plot*(x, y, "go")                        | Green Circles (Scatter plot)
 | *plot*(y, "go")                           | Green Circles
 | *plot*(x1, y1, x2, y2, ...)               |
 | *plot*(x1, y1, "f1", x2, y2, "f2", ...)   |
@@ -165,6 +166,7 @@ More low-level
 | **kwargs                                  | Patch properties https://matplotlib.org/api/_as_gen/matplotlib.patches.Patch.html#matplotlib.patches.Patch[Ref]
 | plt.hist(mat, histtype="step", lw=1)      | Multiple histograms
 | *scatter*(x, y)                           | http://matplotlib.org/api/pyplot_api.html#matplotlib.pyplot.scatter[Ref]
+| _data_=..                                 | Specify column names then
 | _s_=[..]                                  | Size in points^2
 | _c_=[..]                                  | Color; Single, List of colors, List for values to map
 | _cmap_=[..]                               | Colormap
@@ -782,6 +784,8 @@ conformal:
 | matplotlib.rcsetup.non_interactive_bk     |
 | matplotlib.rcsetup.all_backends           |
 |===
+
+    plt.gca().set(xlim=.., xlabel=.., ...)
 
 When markers cut off -> adjust limits
 

@@ -23,7 +23,7 @@
 | out.fields()                              | Split lines by whitespaces
 | out.grep(text)                            | Grep on outputs
 | %rehashx                                  | Load all PATH as aliases
-| %reset		                            | Remove user namescape
+| %reset                                    | Remove user namescape
 | %config                                   | show configurable classes
 | exec In[2]+In[5:8]                        | Reexecute _2,_5,_6,_7
 | %macro _name_ 2 5:8                       | Save lines 2,5,6,7; `print <name>` to see
@@ -42,6 +42,12 @@
 | %ll                                       | Print (with color)
 | %capture _out_var_                        | Run cell and capture output in `CaptureIO` object
 | %tb                                       | Print last traceback
+| %conda                                    |
+| %pip                                      |
+| <div class="alert alert-block alert-info">    | Blue box
+| ... alert-warning                         | Yellow box
+| ... alert-success                         | Green box
+| ... alert-danger                          | Red box
 |===
 
 
@@ -177,7 +183,7 @@ Start with
     cm.update('livereveal', {'transition': 'slide',
                              'start_slideshow_at': 'selected',
                              })
-		     
+
 Change "Cell Toolbar:" to "Slideshow"
 
 Maybe javascript in HTML output
@@ -226,8 +232,8 @@ Maybe javascript in HTML output
 
     import IPython
     IPython.start_ipython(argv=[])
-	
-	
+
+
 == Trusting notebooks
 
 * https://jupyter-notebook.readthedocs.io/en/latest/security.html
@@ -249,9 +255,9 @@ Command line execution
 To start the IPython HTML Notebook run
 ::
    ipython3 notebook --matplotlib inline <PATH>
-   
+
 (don't use --pylab since it will pollute the namespace with numpy.all etc.)
-   
+
 Recommended imports
 ...................
 ::
@@ -268,26 +274,26 @@ To enable `autoreload <http://ipython.org/ipython-doc/dev/config/extensions/auto
 ::
     %load_ext autoreload
     %autoreload 2
-    
+
 Note that it's possible to restrict to particular modules.
 
 The ``IPython.lib.deepreload`` module allows you to recursively reload a module: changes made to any of its dependencies will be reloaded without having to exit
 ::
     from IPython.lib.deepreload import reload as dreload
-    
+
 Profiles
 ........
 To create a new profile in a custom directory use
 ::
     ipython3 profile create --profile-dir=./<...>
-    
+
 Interaction
 -----------
 To suppress text output (of e.g. a plot) use one of
 ::
     plt.plot(A);
     x = plt.plot(A)
-    
+
 Text
 ....
 Text can be inserted by setting the cell to `markdown <https://github.com/adam-p/markdown-here/wiki/Markdown-Here-Cheatsheet>`_. The basic markdown is
@@ -301,13 +307,13 @@ Text can be inserted by setting the cell to `markdown <https://github.com/adam-p
     * item
     [linkname](linkurl)
     `code`
-    
+
     H1  | H2
     --- |
     A   | B
-    
+
     $LaTeX$
-    
+
 Tables
 ......
 Formatted HTML tables can be done with `ipy_table <http://nbviewer.ipython.org/github/epmoyer/ipy_table/blob/master/ipy_table-Reference.ipynb>`:
@@ -331,12 +337,12 @@ Saving the notebook
 To convert as notebook use `nbconvert <http://ipython.org/ipython-doc/rel-1.0.0/interactive/nbconvert.html>`_
 ::
     ipython3 nbconvert --to html notebook.ipynb
-    
+
 To suppress code cells use a template with content
 ::
     {%- extends 'html_full.tpl' -%}
     {% block input %}
-    {%- endblock input %} 
+    {%- endblock input %}
     {% block in_prompt %}
     {%- endblock in_prompt %}
 
@@ -349,3 +355,8 @@ ipython kernel install --prefix /tmp
 
 Next install spec:
 jupyter kernelspec install /tmp/share/jupyter/kernels/python3
+
+Install Jupyterlab extension (npm package):
+jupyter labextension install <my-extension>
+
+

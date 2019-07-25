@@ -645,7 +645,24 @@ http://holoviews.org/Tutorials/Exporting.html[Exporting Tutorial]
 | hm.table().to.scatter3d()                 | Mapped 2D data as 3D scatter
 | el.clone(datatype=["xarray"])             | Create as new data types
 | %%opts Overlay [tabs=True]                | Enable Tab view
+| title=".."                                | Title
+| title_format=".."                         |
 |===
 
     renderer = hv.Store.renderers["matplotlib"].instance(fig="svg", holomap="gif")
     renderer.save(layout, "name")
+
+
+    from holoviews.operation import Operation
+    import param
+
+    class Func(Operation):
+        func = param.Callable()
+
+        def _process(self, element, key=None):
+            x = element["x"]
+            y = element["y"]
+
+            y_new = self.p.func(y)
+
+            return hv.Curve((x, y_new))

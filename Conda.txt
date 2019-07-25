@@ -1,0 +1,6 @@
+If default and conda-forge mixed: conda config –set channel_priority strict
+https://www.anaconda.com/understanding-and-improving-condas-performance/
+
+== Metachannel
+Use https://medium.com/@marius.v.niekerk/conda-metachannel-f962241c9437 if slow with conda-forge
+It is effectively a server-side solve that is cached and reused for multiple people

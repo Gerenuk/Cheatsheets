@@ -5,6 +5,10 @@
 * there are N.logN algorithms but they either have very large factors or are incorrect for a few inputs
 * most sorting networks not stable
 * network being able to sort 0s and 1s only, can sort any numbers (theorem)
+** optimal sorting and O(1) space: Heapsort
+** but avg. Nlog^2N: Shellsort
+** but logN space and worst N^2: Quicksort
+** N space: Mergesort, Timsort
 
 == Top 10
 * Monte Carlo method or Metropolis algorithm, devised by John von Neumann, Stanislaw Ulam, and Nicholas Metropolis;

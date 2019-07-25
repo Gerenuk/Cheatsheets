@@ -149,7 +149,7 @@
     X = np.vstack([x, np.ones(len(x))]).T
 
     coef, residuals, rank, singular_values = np.linalg.lstsq(X, y)
-    
+
 2x as fast a scikit-learn.LinearRegression
 
 ==== Scipy Linear Regression (fastest too)
@@ -357,8 +357,8 @@ F-test to compare models that are _nested_. Generally cross-validation also migh
     from scipy.cluster.hierarchy import linkage
     link=linkage(dd, metric="cosine")   # or other param? method="centroid"??
     sns.clustermap(dd, row_linkage=link, col_linkage=link, cmap="magma_r")
-    
-    
+
+
     from scipy.cluster.hierarchy import linkage
     link=linkage(dd.T, metric="correlation", method="complete")    # distance = 1 - correlation
     link[:,2]=np.log10(link2[:,2]+1e-10)+11                        # resolve small distances better
@@ -812,12 +812,12 @@ Tooltips can also be a HTML string. Special variables like "$color[hex]:fill_col
     p.extra_y_ranges={"abc":Range1d(..,..)}
     p.circle(.., y_range_name="abc")
     p.add_layout(LinearAxis(y_range_name="abc"), "left")
-    
+
 === Tight grid plots
 
     plt.tight_layout()          # may help
     plt.subplots_adjust(hspace=0.4, wspace=0.4)    # manual adjustment
-    
+
 Some Seaborn commands take a `gridspec_kws` parameter
 
 === Matplotlib compatibility
@@ -2031,6 +2031,25 @@ Can make predictions for old or a completely new group.
 
 You can use `scipy.signal.convolve` and an artificial `[1,1,1],[1,100,1],[1,1,1]` filter to do the "Game of Life" with arrays http://nbviewer.jupyter.org/gist/jiffyclub/3778422[Ref].
 
+== Convolution
+
+    np.random.seed(123)
+    x=np.random.uniform(size=(20,11))
+    k=np.random.normal(size=(4,11))
+
+    conv=convolve2d(x, k,  mode="same", boundary="wrap")
+
+    fx=fft2(x)
+    fk=fft2(k, s=x.shape)
+
+    inv=ifft2(fx*fk)
+
+    m=-k.shape[0]//2+1
+    n=-k.shape[1]//2+1
+    inv=np.roll(np.roll(inv, m, axis=0), n, axis=1)
+
+    assert np.all(np.all(np.isclose(inv, conv)))
+
 == Python Profiling
 
     import cProfile
@@ -2047,13 +2066,13 @@ You can use `scipy.signal.convolve` and an artificial `[1,1,1],[1,100,1],[1,1,1]
 == Time
 
     time.strftime("%H:%M:%S", time.localtime(time.time()))
-    
+
     midnight = dt.time.min
-    
+
 === Seconds since midnight
 
     seconds = ((t - t.replace(hour=0, minute=0, second=0, microsecond=0)).total_seconds()
-    
+
 You cannot subtract `dt.time()` instances.
 
 == Sympy
@@ -2073,7 +2092,7 @@ You cannot subtract `dt.time()` instances.
         ax.xaxis.label.set_rotation(90)
         ax.yaxis.label.set_rotation(0)
         ax.yaxis.labelpad = 150
-        
+
 == Linked Data Histogram
 
     %%opts Points [tools=["lasso_select"]]
@@ -2100,7 +2119,7 @@ You cannot subtract `dt.time()` instances.
         (points0.opts(color="black") * points1.opts(color="coral"))
         + (dynhist(points0, "black") * dynhist(points1, "coral"))
     )
-    
+
 == IPyVolume
 
     ipv.figure()
@@ -2117,4 +2136,46 @@ You cannot subtract `dt.time()` instances.
 ** http://christopher5106.github.io/office/2015/12/06/openoffice-libreoffice-automate-your-office-tasks-with-python-macros.html[Tutorial]
 ** https://github.com/lfagundes/oosheet
 ** https://pypi.org/project/pyoo/
+
+== Streaming Plots
+
+    %%opts .. {+framewise}
+
+    from holoviews.streams import Pipe
+
+    def make_plot(data): # full data
+        return ....options(framewise=True)
+
+    pipe=Pipe(data=[])  # use correct data format here or plots will not show
+
+    plot=hv.DynamicMap(make_plot, streams=[pipe])
+
+    display(plot)
+    -> pipe.send(..)
+
+== Shell commands
+
+|===
+| find . -name '*part*'                     |
+| -iname                                    | case-insensitive
+| -regex                                    | regex
+| -iregex                                   | regex (case-in.)
+| grep -R 'str'                             | Search recursively
+|===
+
+== UNSORTED
+
+=== Convex hull of points
+
+    from scipy.spatial import ConvexHull
+
+    def encircle(x,y, ax=None, **kw):
+        p = np.c_[x,y]
+        hull = ConvexHull(p)
+        poly = plt.Polygon(p[hull.vertices,:], **kw)
+        ax.add_patch(poly)
+
+=== Pandas
+
+    df.isna().sum()    # check missing values
 

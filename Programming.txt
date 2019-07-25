@@ -134,6 +134,13 @@ For the complete article, updated for Intel Composer XE 2013,  please open the a
 Someones idea:
 prevent over/underflow in log sum(exp(x)) subtract max -> m+log sum(x-m)
 
+== Tests
+
+* i/N == float(f"0.{i:07}") for i in range(N=1e7)
+* np.linspace(0, 1, 11) is actually short format float and hence spacings are not perfectly equal
+* 1/10*3 != 3/10
+* 0.1+0.2 != 0.3; 0.3-0.2 != 0.1
+
 = Font
 * http://hivelogic.com/articles/top-10-programming-fonts
 * Best first: Inconsolata, Consolas (commerc.), Deja vu sans mono, Proggy, Monaco
@@ -280,7 +287,6 @@ Variable naming:
 * "Clean Code", "The Art of readable code"
 +++++++++++++++
 
-<<<<<<< HEAD
 == Complexity
 http://bigocheatsheet.com/
 
@@ -295,4 +301,11 @@ Coding and testing tips:
 * like "Clean architecture":
 * core: has paths, no deps, functional, no mutation
 * shell: deps, no paths, imperative
->>>>>>> b077e6579580db02a565e263770bb320bb286753
+
++++++++
+Never mix decisions and dependencies
+logic goes only in the functional core
+dependencies go only in the imperative shell
+
+== Liskov Substitution Principle
+* "mehr rein, weniger raus" (Bedingungen, Typen)

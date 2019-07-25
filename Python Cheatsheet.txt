@@ -6,6 +6,7 @@
 
 [cols="m,d"]
 |===
+| breakpoint()                              | General way for breakpoint
 | random.randint(a,b)                       | a<=N<=b
 | random.choice(seq)                        | return one element
 | locale.setlocale(locale.LC_ALL, "German") |
@@ -120,7 +121,7 @@
 | str.endswith((s1,s2))                     | true if one of them
 | string.ascii_letters                      | "abc...ABC..."
 | str.isalpha()                             | Unicode 5 letter categories
-| str.isdecimal()                           |
+| str.isdecimal()                           | For numbers
 | str.isprintable()                         | All printable (not Other or Separator) incl. space
 | str.isspace()                             | Only whitespaces (Other or Separator)
 | str.partition(sep)                        | (head, sep, tail)
@@ -138,6 +139,8 @@
 | str.replace(.., _count_=..)               | Replace only that often
 | str.zfill(_width_)                        | Prepend zeros until width; consider sign too
 |===
+
+* `isdecimal` to check for `[0-9]+`;  `isnumeric` for other languages, `isdigit` also does `^2`
 
 == Printing
 
@@ -160,6 +163,29 @@
 | print("\u0336"+"\u0336b".join(word))      | Strike-through
 | pprint(..., compact=True)                 | wrap item lists after width only
 | "\x1b[01;29m...\x1b[00m"                  | numbers 29-37 (8 colours)
+| "{a+b=}"                                  | `print("a+b=", eval(a+b))`
+|===
+
+== Math
+
+[cols="m,d"]
+|===
+| remainder(x, y)                           |
+| dist(x, y)                                | Euclidean distance
+| hypot(*coor)                              | Euclidean norm
+| prod(it, start=1)                         | Product
+| isqrt(n)                                  | Floor(Sqrt(n))
+|===
+
+== Statistics
+
+[cols="m,d"]
+|===
+| fmean(data)                               | Mean on floats. Faster than `mean` but not as accurate
+| geometric_mean(data)                      | Geometric mean
+| multimode(data)                           | List of value which are most frequent (multiple if tie)
+| quantile(dist,...)                        | Quantiles https://docs.python.org/3.8/library/statistics.html#statistics.quantiles[Ref]
+| NormalDist(mu=0, sigma=1)                 | Normal distribution object https://docs.python.org/3.8/library/statistics.html#statistics.NormalDist[Ref]
 |===
 
 == File system
@@ -208,7 +234,7 @@ On Linux no creation time accessible, so use `os.path.getmtime()` or `os.stat().
 | __reversed__                              |
 | __getattribute__                          | called
 | __getattr__                               | only when missing?
-| __index__                                 | used for bin(), oct()...
+| __index__                                 | used for bin(), oct()... or fallback when no `__float__` etc.
 | __trunc__                                 | real truncate
 |===
 
