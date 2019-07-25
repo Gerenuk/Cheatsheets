@@ -19,6 +19,7 @@
 * Methods like ElasticNet, Lasso, LogReg, ... can fit multiple parameters incrementally, reducing computation
 * LassoLarsIC can choose parameters by AIC or BIC
 * just clip predictions (esp. when averaging from multiple models)
+* predict only when certain: train model with mean and confidence predictions, mask predictions below some confidence threshold such that mean predictions achieve the needed quality, evaluate models by their number of predictions made
 
 === Eslami - Patterns for Research in Machine Learning [[http://arkitus.com/PRML/ Link]] =
 * Use version control (to collaborate, replicate, work from multiple computers)

@@ -1755,3 +1755,33 @@ Tested on 2D data with simple outliers with default parameters and 0.01 contamin
 * Failed:
 ** LOCI (did not finish in any time)
 
+== Label Noise
+https://www.youtube.com/watch?v=o2-GM2roZ_w
+"Shaky Ground (truth)- Learning with Label Noise - Yaniv Katz"
+* pretty insightful, slides saved as PDF "shaky ground"
+* Linear SVM is a bit more stable to small label noise than RF, but then (for >50%) breaks down harder; also RF a bit more stable than RBF-SVM
+* feature selection hard, models turn out more complex, need much larger data
+* types: random, random by depends only on true label, depends on features and label
+* approaches:
+** cleansing: detect suspected instances (e.g. on nearest neighbors, anomaly detection), but filters minority class
+** robust model: e.g. ResNet more robust than some other DNN, MAE loss more robust than Categorical cross entropy
+** noise tolerant learning: learn model weights and noise distribution simultaneously, prior
+* M-estimators more robust (Tukey cost, Huber cost) -> higher residuals less effect
+* -> using just any method already helps (about equally)
+* tune how many labels to filter
+
+== Pavel Pleskov Kaggle
+* you can augment all data (also NLP, tables?)
+
+= What's so special about Euclidean distance
+* Agostino: A characterization with applications to mobility and spatial voting
+* 5 requirements leading to Euclidean
+* value-sensitive: d(x,y)<d(x,y') where in y' one coordinate is d1(xj,yj)<d1(xj,y'j); like monotonic on coordinates
+* order-sensitive: if y' has yi und yj swapped, then (xi-xj)(yi-yj)>0 -> d(x,y)<d(x,y'); swaps always increase distance
+* Manhattan not order-sensitive
+* Spearman und Kendall order-sensitive but not value-sensitive
+* all Minkowsky both value- and order-sensitive
+* Euclidean is order-sensitive in a way which is monotonically related to distance between swapped values
+* permutation invariance
+* d(x,y)=d([x,z],[y,z]) (high dimensions)
+...
