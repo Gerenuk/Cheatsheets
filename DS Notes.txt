@@ -1719,3 +1719,10 @@ Tested on 2D data with simple outliers with default parameters and 0.01 contamin
 ** SOS (did not find an envelope)
 * Failed:
 ** LOCI (did not finish in any time)
+
+== Simple linear regression
+
+y = a * x + b
+
+a = (n* sum (x*y) - sum x * sum y) / (n*sum (x**2) - (sum x)**2)
+b = (sum y * sum (x**2) - sum x * sum (x*y)) / (n*sum(x**2)-(sum x)**2)
