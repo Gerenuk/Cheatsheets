@@ -1755,6 +1755,7 @@ Tested on 2D data with simple outliers with default parameters and 0.01 contamin
 * Failed:
 ** LOCI (did not finish in any time)
 
+<<<<<<< HEAD
 == Label Noise
 https://www.youtube.com/watch?v=o2-GM2roZ_w
 "Shaky Ground (truth)- Learning with Label Noise - Yaniv Katz"
@@ -1785,3 +1786,13 @@ https://www.youtube.com/watch?v=o2-GM2roZ_w
 * permutation invariance
 * d(x,y)=d([x,z],[y,z]) (high dimensions)
 ...
+=======
+== Simple linear regression
+
+y = a * x + b
+
+a = (n* sum (x*y) - sum x * sum y) / (n*sum (x**2) - (sum x)**2)
+b = (sum y * sum (x**2) - sum x * sum (x*y)) / (n*sum(x**2)-(sum x)**2)
+
+
+>>>>>>> 995789658292f24ca6f91b3be6ff3ab8e0675bb8

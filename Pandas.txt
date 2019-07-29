@@ -1177,6 +1177,7 @@ http://pandas.pydata.org/pandas-docs/version/0.15.2/options.html#list-of-options
 | s.*reindex*(new_idx).interpolate(method=..)   | Create new values
 | s.*isna*() +
   s.*notna*()                               | Test for NaN, None
+| pd.*isna*(...)                            | Use this for test since np.isnan would break for NaT
 |===
 
 * currently np.nan used; not liked masked approach from scikits.timeseries

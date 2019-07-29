@@ -1,0 +1,3162 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<!--[if IE]><meta http-equiv="X-UA-Compatible" content="IE=edge"><![endif]-->
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="generator" content="Asciidoctor 1.5.5.dev">
+<title>Summary</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Open+Sans:300,300italic,400,400italic,600,600italic%7CNoto+Serif:400,400italic,700,700italic%7CDroid+Sans+Mono:400,700">
+<style>
+/* Asciidoctor default stylesheet | MIT License | http://asciidoctor.org */
+/* Remove comment around @import statement below when using as a custom stylesheet */
+/*@import "https://fonts.googleapis.com/css?family=Open+Sans:300,300italic,400,400italic,600,600italic%7CNoto+Serif:400,400italic,700,700italic%7CDroid+Sans+Mono:400,700";*/
+article,aside,details,figcaption,figure,footer,header,hgroup,main,nav,section,summary{display:block}
+audio,canvas,video{display:inline-block}
+audio:not([controls]){display:none;height:0}
+[hidden],template{display:none}
+script{display:none!important}
+html{font-family:sans-serif;-ms-text-size-adjust:100%;-webkit-text-size-adjust:100%}
+body{margin:0}
+a{background:transparent}
+a:focus{outline:thin dotted}
+a:active,a:hover{outline:0}
+h1{font-size:2em;margin:.67em 0}
+abbr[title]{border-bottom:1px dotted}
+b,strong{font-weight:bold}
+dfn{font-style:italic}
+hr{-moz-box-sizing:content-box;box-sizing:content-box;height:0}
+mark{background:#ff0;color:#000}
+code,kbd,pre,samp{font-family:monospace;font-size:1em}
+pre{white-space:pre-wrap}
+q{quotes:"\201C" "\201D" "\2018" "\2019"}
+small{font-size:80%}
+sub,sup{font-size:75%;line-height:0;position:relative;vertical-align:baseline}
+sup{top:-.5em}
+sub{bottom:-.25em}
+img{border:0}
+svg:not(:root){overflow:hidden}
+figure{margin:0}
+fieldset{border:1px solid silver;margin:0 2px;padding:.35em .625em .75em}
+legend{border:0;padding:0}
+button,input,select,textarea{font-family:inherit;font-size:100%;margin:0}
+button,input{line-height:normal}
+button,select{text-transform:none}
+button,html input[type="button"],input[type="reset"],input[type="submit"]{-webkit-appearance:button;cursor:pointer}
+button[disabled],html input[disabled]{cursor:default}
+input[type="checkbox"],input[type="radio"]{box-sizing:border-box;padding:0}
+input[type="search"]{-webkit-appearance:textfield;-moz-box-sizing:content-box;-webkit-box-sizing:content-box;box-sizing:content-box}
+input[type="search"]::-webkit-search-cancel-button,input[type="search"]::-webkit-search-decoration{-webkit-appearance:none}
+button::-moz-focus-inner,input::-moz-focus-inner{border:0;padding:0}
+textarea{overflow:auto;vertical-align:top}
+table{border-collapse:collapse;border-spacing:0}
+*,*:before,*:after{-moz-box-sizing:border-box;-webkit-box-sizing:border-box;box-sizing:border-box}
+html,body{font-size:100%}
+body{background:#fff;color:rgba(0,0,0,.8);padding:0;margin:0;font-family:"Noto Serif","DejaVu Serif",serif;font-weight:400;font-style:normal;line-height:1;position:relative;cursor:auto}
+a:hover{cursor:pointer}
+img,object,embed{max-width:100%;height:auto}
+object,embed{height:100%}
+img{-ms-interpolation-mode:bicubic}
+.left{float:left!important}
+.right{float:right!important}
+.text-left{text-align:left!important}
+.text-right{text-align:right!important}
+.text-center{text-align:center!important}
+.text-justify{text-align:justify!important}
+.hide{display:none}
+body{-webkit-font-smoothing:antialiased}
+img,object,svg{display:inline-block;vertical-align:middle}
+textarea{height:auto;min-height:50px}
+select{width:100%}
+.center{margin-left:auto;margin-right:auto}
+.spread{width:100%}
+p.lead,.paragraph.lead>p,#preamble>.sectionbody>.paragraph:first-of-type p{font-size:1.21875em;line-height:1.6}
+.subheader,.admonitionblock td.content>.title,.audioblock>.title,.exampleblock>.title,.imageblock>.title,.listingblock>.title,.literalblock>.title,.stemblock>.title,.openblock>.title,.paragraph>.title,.quoteblock>.title,table.tableblock>.title,.verseblock>.title,.videoblock>.title,.dlist>.title,.olist>.title,.ulist>.title,.qlist>.title,.hdlist>.title{line-height:1.45;color:#7a2518;font-weight:400;margin-top:0;margin-bottom:.25em}
+div,dl,dt,dd,ul,ol,li,h1,h2,h3,#toctitle,.sidebarblock>.content>.title,h4,h5,h6,pre,form,p,blockquote,th,td{margin:0;padding:0;direction:ltr}
+a{color:#2156a5;text-decoration:underline;line-height:inherit}
+a:hover,a:focus{color:#1d4b8f}
+a img{border:none}
+p{font-family:inherit;font-weight:400;font-size:1em;line-height:1.6;margin-bottom:1.25em;text-rendering:optimizeLegibility}
+p aside{font-size:.875em;line-height:1.35;font-style:italic}
+h1,h2,h3,#toctitle,.sidebarblock>.content>.title,h4,h5,h6{font-family:"Open Sans","DejaVu Sans",sans-serif;font-weight:300;font-style:normal;color:#ba3925;text-rendering:optimizeLegibility;margin-top:1em;margin-bottom:.5em;line-height:1.0125em}
+h1 small,h2 small,h3 small,#toctitle small,.sidebarblock>.content>.title small,h4 small,h5 small,h6 small{font-size:60%;color:#e99b8f;line-height:0}
+h1{font-size:2.125em}
+h2{font-size:1.6875em}
+h3,#toctitle,.sidebarblock>.content>.title{font-size:1.375em}
+h4,h5{font-size:1.125em}
+h6{font-size:1em}
+hr{border:solid #ddddd8;border-width:1px 0 0;clear:both;margin:1.25em 0 1.1875em;height:0}
+em,i{font-style:italic;line-height:inherit}
+strong,b{font-weight:bold;line-height:inherit}
+small{font-size:60%;line-height:inherit}
+code{font-family:"Droid Sans Mono","DejaVu Sans Mono",monospace;font-weight:400;color:rgba(0,0,0,.9)}
+ul,ol,dl{font-size:1em;line-height:1.6;margin-bottom:1.25em;list-style-position:outside;font-family:inherit}
+ul,ol,ul.no-bullet,ol.no-bullet{margin-left:1.5em}
+ul li ul,ul li ol{margin-left:1.25em;margin-bottom:0;font-size:1em}
+ul.square li ul,ul.circle li ul,ul.disc li ul{list-style:inherit}
+ul.square{list-style-type:square}
+ul.circle{list-style-type:circle}
+ul.disc{list-style-type:disc}
+ul.no-bullet{list-style:none}
+ol li ul,ol li ol{margin-left:1.25em;margin-bottom:0}
+dl dt{margin-bottom:.3125em;font-weight:bold}
+dl dd{margin-bottom:1.25em}
+abbr,acronym{text-transform:uppercase;font-size:90%;color:rgba(0,0,0,.8);border-bottom:1px dotted #ddd;cursor:help}
+abbr{text-transform:none}
+blockquote{margin:0 0 1.25em;padding:.5625em 1.25em 0 1.1875em;border-left:1px solid #ddd}
+blockquote cite{display:block;font-size:.9375em;color:rgba(0,0,0,.6)}
+blockquote cite:before{content:"\2014 \0020"}
+blockquote cite a,blockquote cite a:visited{color:rgba(0,0,0,.6)}
+blockquote,blockquote p{line-height:1.6;color:rgba(0,0,0,.85)}
+@media only screen and (min-width:768px){h1,h2,h3,#toctitle,.sidebarblock>.content>.title,h4,h5,h6{line-height:1.2}
+h1{font-size:2.75em}
+h2{font-size:2.3125em}
+h3,#toctitle,.sidebarblock>.content>.title{font-size:1.6875em}
+h4{font-size:1.4375em}}
+table{background:#fff;margin-bottom:1.25em;border:solid 1px #dedede}
+table thead,table tfoot{background:#f7f8f7;font-weight:bold}
+table thead tr th,table thead tr td,table tfoot tr th,table tfoot tr td{padding:.5em .625em .625em;font-size:inherit;color:rgba(0,0,0,.8);text-align:left}
+table tr th,table tr td{padding:.5625em .625em;font-size:inherit;color:rgba(0,0,0,.8)}
+table tr.even,table tr.alt,table tr:nth-of-type(even){background:#f8f8f7}
+table thead tr th,table tfoot tr th,table tbody tr td,table tr td,table tfoot tr td{display:table-cell;line-height:1.6}
+body{tab-size:4}
+h1,h2,h3,#toctitle,.sidebarblock>.content>.title,h4,h5,h6{line-height:1.2;word-spacing:-.05em}
+h1 strong,h2 strong,h3 strong,#toctitle strong,.sidebarblock>.content>.title strong,h4 strong,h5 strong,h6 strong{font-weight:400}
+.clearfix:before,.clearfix:after,.float-group:before,.float-group:after{content:" ";display:table}
+.clearfix:after,.float-group:after{clear:both}
+*:not(pre)>code{font-size:.9375em;font-style:normal!important;letter-spacing:0;padding:.1em .5ex;word-spacing:-.15em;background-color:#f7f7f8;-webkit-border-radius:4px;border-radius:4px;line-height:1.45;text-rendering:optimizeSpeed}
+pre,pre>code{line-height:1.45;color:rgba(0,0,0,.9);font-family:"Droid Sans Mono","DejaVu Sans Mono",monospace;font-weight:400;text-rendering:optimizeSpeed}
+.keyseq{color:rgba(51,51,51,.8)}
+kbd{font-family:"Droid Sans Mono","DejaVu Sans Mono",monospace;display:inline-block;color:rgba(0,0,0,.8);font-size:.65em;line-height:1.45;background-color:#f7f7f7;border:1px solid #ccc;-webkit-border-radius:3px;border-radius:3px;-webkit-box-shadow:0 1px 0 rgba(0,0,0,.2),0 0 0 .1em white inset;box-shadow:0 1px 0 rgba(0,0,0,.2),0 0 0 .1em #fff inset;margin:0 .15em;padding:.2em .5em;vertical-align:middle;position:relative;top:-.1em;white-space:nowrap}
+.keyseq kbd:first-child{margin-left:0}
+.keyseq kbd:last-child{margin-right:0}
+.menuseq,.menu{color:rgba(0,0,0,.8)}
+b.button:before,b.button:after{position:relative;top:-1px;font-weight:400}
+b.button:before{content:"[";padding:0 3px 0 2px}
+b.button:after{content:"]";padding:0 2px 0 3px}
+p a>code:hover{color:rgba(0,0,0,.9)}
+#header,#content,#footnotes,#footer{width:100%;margin-left:auto;margin-right:auto;margin-top:0;margin-bottom:0;max-width:62.5em;*zoom:1;position:relative;padding-left:.9375em;padding-right:.9375em}
+#header:before,#header:after,#content:before,#content:after,#footnotes:before,#footnotes:after,#footer:before,#footer:after{content:" ";display:table}
+#header:after,#content:after,#footnotes:after,#footer:after{clear:both}
+#content{margin-top:1.25em}
+#content:before{content:none}
+#header>h1:first-child{color:rgba(0,0,0,.85);margin-top:2.25rem;margin-bottom:0}
+#header>h1:first-child+#toc{margin-top:8px;border-top:1px solid #ddddd8}
+#header>h1:only-child,body.toc2 #header>h1:nth-last-child(2){border-bottom:1px solid #ddddd8;padding-bottom:8px}
+#header .details{border-bottom:1px solid #ddddd8;line-height:1.45;padding-top:.25em;padding-bottom:.25em;padding-left:.25em;color:rgba(0,0,0,.6);display:-ms-flexbox;display:-webkit-flex;display:flex;-ms-flex-flow:row wrap;-webkit-flex-flow:row wrap;flex-flow:row wrap}
+#header .details span:first-child{margin-left:-.125em}
+#header .details span.email a{color:rgba(0,0,0,.85)}
+#header .details br{display:none}
+#header .details br+span:before{content:"\00a0\2013\00a0"}
+#header .details br+span.author:before{content:"\00a0\22c5\00a0";color:rgba(0,0,0,.85)}
+#header .details br+span#revremark:before{content:"\00a0|\00a0"}
+#header #revnumber{text-transform:capitalize}
+#header #revnumber:after{content:"\00a0"}
+#content>h1:first-child:not([class]){color:rgba(0,0,0,.85);border-bottom:1px solid #ddddd8;padding-bottom:8px;margin-top:0;padding-top:1rem;margin-bottom:1.25rem}
+#toc{border-bottom:1px solid #efefed;padding-bottom:.5em}
+#toc>ul{margin-left:.125em}
+#toc ul.sectlevel0>li>a{font-style:italic}
+#toc ul.sectlevel0 ul.sectlevel1{margin:.5em 0}
+#toc ul{font-family:"Open Sans","DejaVu Sans",sans-serif;list-style-type:none}
+#toc li{line-height:1.3334;margin-top:.3334em}
+#toc a{text-decoration:none}
+#toc a:active{text-decoration:underline}
+#toctitle{color:#7a2518;font-size:1.2em}
+@media only screen and (min-width:768px){#toctitle{font-size:1.375em}
+body.toc2{padding-left:15em;padding-right:0}
+#toc.toc2{margin-top:0!important;background-color:#f8f8f7;position:fixed;width:15em;left:0;top:0;border-right:1px solid #efefed;border-top-width:0!important;border-bottom-width:0!important;z-index:1000;padding:1.25em 1em;height:100%;overflow:auto}
+#toc.toc2 #toctitle{margin-top:0;margin-bottom:.8rem;font-size:1.2em}
+#toc.toc2>ul{font-size:.9em;margin-bottom:0}
+#toc.toc2 ul ul{margin-left:0;padding-left:1em}
+#toc.toc2 ul.sectlevel0 ul.sectlevel1{padding-left:0;margin-top:.5em;margin-bottom:.5em}
+body.toc2.toc-right{padding-left:0;padding-right:15em}
+body.toc2.toc-right #toc.toc2{border-right-width:0;border-left:1px solid #efefed;left:auto;right:0}}
+@media only screen and (min-width:1280px){body.toc2{padding-left:20em;padding-right:0}
+#toc.toc2{width:20em}
+#toc.toc2 #toctitle{font-size:1.375em}
+#toc.toc2>ul{font-size:.95em}
+#toc.toc2 ul ul{padding-left:1.25em}
+body.toc2.toc-right{padding-left:0;padding-right:20em}}
+#content #toc{border-style:solid;border-width:1px;border-color:#e0e0dc;margin-bottom:1.25em;padding:1.25em;background:#f8f8f7;-webkit-border-radius:4px;border-radius:4px}
+#content #toc>:first-child{margin-top:0}
+#content #toc>:last-child{margin-bottom:0}
+#footer{max-width:100%;background-color:rgba(0,0,0,.8);padding:1.25em}
+#footer-text{color:rgba(255,255,255,.8);line-height:1.44}
+.sect1{padding-bottom:.625em}
+@media only screen and (min-width:768px){.sect1{padding-bottom:1.25em}}
+.sect1+.sect1{border-top:1px solid #efefed}
+#content h1>a.anchor,h2>a.anchor,h3>a.anchor,#toctitle>a.anchor,.sidebarblock>.content>.title>a.anchor,h4>a.anchor,h5>a.anchor,h6>a.anchor{position:absolute;z-index:1001;width:1.5ex;margin-left:-1.5ex;display:block;text-decoration:none!important;visibility:hidden;text-align:center;font-weight:400}
+#content h1>a.anchor:before,h2>a.anchor:before,h3>a.anchor:before,#toctitle>a.anchor:before,.sidebarblock>.content>.title>a.anchor:before,h4>a.anchor:before,h5>a.anchor:before,h6>a.anchor:before{content:"\00A7";font-size:.85em;display:block;padding-top:.1em}
+#content h1:hover>a.anchor,#content h1>a.anchor:hover,h2:hover>a.anchor,h2>a.anchor:hover,h3:hover>a.anchor,#toctitle:hover>a.anchor,.sidebarblock>.content>.title:hover>a.anchor,h3>a.anchor:hover,#toctitle>a.anchor:hover,.sidebarblock>.content>.title>a.anchor:hover,h4:hover>a.anchor,h4>a.anchor:hover,h5:hover>a.anchor,h5>a.anchor:hover,h6:hover>a.anchor,h6>a.anchor:hover{visibility:visible}
+#content h1>a.link,h2>a.link,h3>a.link,#toctitle>a.link,.sidebarblock>.content>.title>a.link,h4>a.link,h5>a.link,h6>a.link{color:#ba3925;text-decoration:none}
+#content h1>a.link:hover,h2>a.link:hover,h3>a.link:hover,#toctitle>a.link:hover,.sidebarblock>.content>.title>a.link:hover,h4>a.link:hover,h5>a.link:hover,h6>a.link:hover{color:#a53221}
+.audioblock,.imageblock,.literalblock,.listingblock,.stemblock,.videoblock{margin-bottom:1.25em}
+.admonitionblock td.content>.title,.audioblock>.title,.exampleblock>.title,.imageblock>.title,.listingblock>.title,.literalblock>.title,.stemblock>.title,.openblock>.title,.paragraph>.title,.quoteblock>.title,table.tableblock>.title,.verseblock>.title,.videoblock>.title,.dlist>.title,.olist>.title,.ulist>.title,.qlist>.title,.hdlist>.title{text-rendering:optimizeLegibility;text-align:left;font-family:"Noto Serif","DejaVu Serif",serif;font-size:1rem;font-style:italic}
+table.tableblock>caption.title{white-space:nowrap;overflow:visible;max-width:0}
+.paragraph.lead>p,#preamble>.sectionbody>.paragraph:first-of-type p{color:rgba(0,0,0,.85)}
+table.tableblock #preamble>.sectionbody>.paragraph:first-of-type p{font-size:inherit}
+.admonitionblock>table{border-collapse:separate;border:0;background:none;width:100%}
+.admonitionblock>table td.icon{text-align:center;width:80px}
+.admonitionblock>table td.icon img{max-width:none}
+.admonitionblock>table td.icon .title{font-weight:bold;font-family:"Open Sans","DejaVu Sans",sans-serif;text-transform:uppercase}
+.admonitionblock>table td.content{padding-left:1.125em;padding-right:1.25em;border-left:1px solid #ddddd8;color:rgba(0,0,0,.6)}
+.admonitionblock>table td.content>:last-child>:last-child{margin-bottom:0}
+.exampleblock>.content{border-style:solid;border-width:1px;border-color:#e6e6e6;margin-bottom:1.25em;padding:1.25em;background:#fff;-webkit-border-radius:4px;border-radius:4px}
+.exampleblock>.content>:first-child{margin-top:0}
+.exampleblock>.content>:last-child{margin-bottom:0}
+.sidebarblock{border-style:solid;border-width:1px;border-color:#e0e0dc;margin-bottom:1.25em;padding:1.25em;background:#f8f8f7;-webkit-border-radius:4px;border-radius:4px}
+.sidebarblock>:first-child{margin-top:0}
+.sidebarblock>:last-child{margin-bottom:0}
+.sidebarblock>.content>.title{color:#7a2518;margin-top:0;text-align:center}
+.exampleblock>.content>:last-child>:last-child,.exampleblock>.content .olist>ol>li:last-child>:last-child,.exampleblock>.content .ulist>ul>li:last-child>:last-child,.exampleblock>.content .qlist>ol>li:last-child>:last-child,.sidebarblock>.content>:last-child>:last-child,.sidebarblock>.content .olist>ol>li:last-child>:last-child,.sidebarblock>.content .ulist>ul>li:last-child>:last-child,.sidebarblock>.content .qlist>ol>li:last-child>:last-child{margin-bottom:0}
+.literalblock pre,.listingblock pre:not(.highlight),.listingblock pre[class="highlight"],.listingblock pre[class^="highlight "],.listingblock pre.CodeRay,.listingblock pre.prettyprint{background:#f7f7f8}
+.sidebarblock .literalblock pre,.sidebarblock .listingblock pre:not(.highlight),.sidebarblock .listingblock pre[class="highlight"],.sidebarblock .listingblock pre[class^="highlight "],.sidebarblock .listingblock pre.CodeRay,.sidebarblock .listingblock pre.prettyprint{background:#f2f1f1}
+.literalblock pre,.literalblock pre[class],.listingblock pre,.listingblock pre[class]{-webkit-border-radius:4px;border-radius:4px;word-wrap:break-word;padding:1em;font-size:.8125em}
+.literalblock pre.nowrap,.literalblock pre[class].nowrap,.listingblock pre.nowrap,.listingblock pre[class].nowrap{overflow-x:auto;white-space:pre;word-wrap:normal}
+@media only screen and (min-width:768px){.literalblock pre,.literalblock pre[class],.listingblock pre,.listingblock pre[class]{font-size:.90625em}}
+@media only screen and (min-width:1280px){.literalblock pre,.literalblock pre[class],.listingblock pre,.listingblock pre[class]{font-size:1em}}
+.literalblock.output pre{color:#f7f7f8;background-color:rgba(0,0,0,.9)}
+.listingblock pre.highlightjs{padding:0}
+.listingblock pre.highlightjs>code{padding:1em;-webkit-border-radius:4px;border-radius:4px}
+.listingblock pre.prettyprint{border-width:0}
+.listingblock>.content{position:relative}
+.listingblock code[data-lang]:before{display:none;content:attr(data-lang);position:absolute;font-size:.75em;top:.425rem;right:.5rem;line-height:1;text-transform:uppercase;color:#999}
+.listingblock:hover code[data-lang]:before{display:block}
+.listingblock.terminal pre .command:before{content:attr(data-prompt);padding-right:.5em;color:#999}
+.listingblock.terminal pre .command:not([data-prompt]):before{content:"$"}
+table.pyhltable{border-collapse:separate;border:0;margin-bottom:0;background:none}
+table.pyhltable td{vertical-align:top;padding-top:0;padding-bottom:0;line-height:1.45}
+table.pyhltable td.code{padding-left:.75em;padding-right:0}
+pre.pygments .lineno,table.pyhltable td:not(.code){color:#999;padding-left:0;padding-right:.5em;border-right:1px solid #ddddd8}
+pre.pygments .lineno{display:inline-block;margin-right:.25em}
+table.pyhltable .linenodiv{background:none!important;padding-right:0!important}
+.quoteblock{margin:0 1em 1.25em 1.5em;display:table}
+.quoteblock>.title{margin-left:-1.5em;margin-bottom:.75em}
+.quoteblock blockquote,.quoteblock blockquote p{color:rgba(0,0,0,.85);font-size:1.15rem;line-height:1.75;word-spacing:.1em;letter-spacing:0;font-style:italic;text-align:justify}
+.quoteblock blockquote{margin:0;padding:0;border:0}
+.quoteblock blockquote:before{content:"\201c";float:left;font-size:2.75em;font-weight:bold;line-height:.6em;margin-left:-.6em;color:#7a2518;text-shadow:0 1px 2px rgba(0,0,0,.1)}
+.quoteblock blockquote>.paragraph:last-child p{margin-bottom:0}
+.quoteblock .attribution{margin-top:.5em;margin-right:.5ex;text-align:right}
+.quoteblock .quoteblock{margin-left:0;margin-right:0;padding:.5em 0;border-left:3px solid rgba(0,0,0,.6)}
+.quoteblock .quoteblock blockquote{padding:0 0 0 .75em}
+.quoteblock .quoteblock blockquote:before{display:none}
+.verseblock{margin:0 1em 1.25em 1em}
+.verseblock pre{font-family:"Open Sans","DejaVu Sans",sans;font-size:1.15rem;color:rgba(0,0,0,.85);font-weight:300;text-rendering:optimizeLegibility}
+.verseblock pre strong{font-weight:400}
+.verseblock .attribution{margin-top:1.25rem;margin-left:.5ex}
+.quoteblock .attribution,.verseblock .attribution{font-size:.9375em;line-height:1.45;font-style:italic}
+.quoteblock .attribution br,.verseblock .attribution br{display:none}
+.quoteblock .attribution cite,.verseblock .attribution cite{display:block;letter-spacing:-.025em;color:rgba(0,0,0,.6)}
+.quoteblock.abstract{margin:0 0 1.25em 0;display:block}
+.quoteblock.abstract blockquote,.quoteblock.abstract blockquote p{text-align:left;word-spacing:0}
+.quoteblock.abstract blockquote:before,.quoteblock.abstract blockquote p:first-of-type:before{display:none}
+table.tableblock{max-width:100%;border-collapse:separate}
+table.tableblock td>.paragraph:last-child p>p:last-child,table.tableblock th>p:last-child,table.tableblock td>p:last-child{margin-bottom:0}
+table.tableblock,th.tableblock,td.tableblock{border:0 solid #dedede}
+table.grid-all th.tableblock,table.grid-all td.tableblock{border-width:0 1px 1px 0}
+table.grid-all tfoot>tr>th.tableblock,table.grid-all tfoot>tr>td.tableblock{border-width:1px 1px 0 0}
+table.grid-cols th.tableblock,table.grid-cols td.tableblock{border-width:0 1px 0 0}
+table.grid-all *>tr>.tableblock:last-child,table.grid-cols *>tr>.tableblock:last-child{border-right-width:0}
+table.grid-rows th.tableblock,table.grid-rows td.tableblock{border-width:0 0 1px 0}
+table.grid-all tbody>tr:last-child>th.tableblock,table.grid-all tbody>tr:last-child>td.tableblock,table.grid-all thead:last-child>tr>th.tableblock,table.grid-rows tbody>tr:last-child>th.tableblock,table.grid-rows tbody>tr:last-child>td.tableblock,table.grid-rows thead:last-child>tr>th.tableblock{border-bottom-width:0}
+table.grid-rows tfoot>tr>th.tableblock,table.grid-rows tfoot>tr>td.tableblock{border-width:1px 0 0 0}
+table.frame-all{border-width:1px}
+table.frame-sides{border-width:0 1px}
+table.frame-topbot{border-width:1px 0}
+th.halign-left,td.halign-left{text-align:left}
+th.halign-right,td.halign-right{text-align:right}
+th.halign-center,td.halign-center{text-align:center}
+th.valign-top,td.valign-top{vertical-align:top}
+th.valign-bottom,td.valign-bottom{vertical-align:bottom}
+th.valign-middle,td.valign-middle{vertical-align:middle}
+table thead th,table tfoot th{font-weight:bold}
+tbody tr th{display:table-cell;line-height:1.6;background:#f7f8f7}
+tbody tr th,tbody tr th p,tfoot tr th,tfoot tr th p{color:rgba(0,0,0,.8);font-weight:bold}
+p.tableblock>code:only-child{background:none;padding:0}
+p.tableblock{font-size:1em}
+td>div.verse{white-space:pre}
+ol{margin-left:1.75em}
+ul li ol{margin-left:1.5em}
+dl dd{margin-left:1.125em}
+dl dd:last-child,dl dd:last-child>:last-child{margin-bottom:0}
+ol>li p,ul>li p,ul dd,ol dd,.olist .olist,.ulist .ulist,.ulist .olist,.olist .ulist{margin-bottom:.625em}
+ul.unstyled,ol.unnumbered,ul.checklist,ul.none{list-style-type:none}
+ul.unstyled,ol.unnumbered,ul.checklist{margin-left:.625em}
+ul.checklist li>p:first-child>.fa-square-o:first-child,ul.checklist li>p:first-child>.fa-check-square-o:first-child{width:1em;font-size:.85em}
+ul.checklist li>p:first-child>input[type="checkbox"]:first-child{width:1em;position:relative;top:1px}
+ul.inline{margin:0 auto .625em auto;margin-left:-1.375em;margin-right:0;padding:0;list-style:none;overflow:hidden}
+ul.inline>li{list-style:none;float:left;margin-left:1.375em;display:block}
+ul.inline>li>*{display:block}
+.unstyled dl dt{font-weight:400;font-style:normal}
+ol.arabic{list-style-type:decimal}
+ol.decimal{list-style-type:decimal-leading-zero}
+ol.loweralpha{list-style-type:lower-alpha}
+ol.upperalpha{list-style-type:upper-alpha}
+ol.lowerroman{list-style-type:lower-roman}
+ol.upperroman{list-style-type:upper-roman}
+ol.lowergreek{list-style-type:lower-greek}
+.hdlist>table,.colist>table{border:0;background:none}
+.hdlist>table>tbody>tr,.colist>table>tbody>tr{background:none}
+td.hdlist1,td.hdlist2{vertical-align:top;padding:0 .625em}
+td.hdlist1{font-weight:bold;padding-bottom:1.25em}
+.literalblock+.colist,.listingblock+.colist{margin-top:-.5em}
+.colist>table tr>td:first-of-type{padding:0 .75em;line-height:1}
+.colist>table tr>td:last-of-type{padding:.25em 0}
+.thumb,.th{line-height:0;display:inline-block;border:solid 4px #fff;-webkit-box-shadow:0 0 0 1px #ddd;box-shadow:0 0 0 1px #ddd}
+.imageblock.left,.imageblock[style*="float: left"]{margin:.25em .625em 1.25em 0}
+.imageblock.right,.imageblock[style*="float: right"]{margin:.25em 0 1.25em .625em}
+.imageblock>.title{margin-bottom:0}
+.imageblock.thumb,.imageblock.th{border-width:6px}
+.imageblock.thumb>.title,.imageblock.th>.title{padding:0 .125em}
+.image.left,.image.right{margin-top:.25em;margin-bottom:.25em;display:inline-block;line-height:0}
+.image.left{margin-right:.625em}
+.image.right{margin-left:.625em}
+a.image{text-decoration:none;display:inline-block}
+a.image object{pointer-events:none}
+sup.footnote,sup.footnoteref{font-size:.875em;position:static;vertical-align:super}
+sup.footnote a,sup.footnoteref a{text-decoration:none}
+sup.footnote a:active,sup.footnoteref a:active{text-decoration:underline}
+#footnotes{padding-top:.75em;padding-bottom:.75em;margin-bottom:.625em}
+#footnotes hr{width:20%;min-width:6.25em;margin:-.25em 0 .75em 0;border-width:1px 0 0 0}
+#footnotes .footnote{padding:0 .375em 0 .225em;line-height:1.3334;font-size:.875em;margin-left:1.2em;text-indent:-1.05em;margin-bottom:.2em}
+#footnotes .footnote a:first-of-type{font-weight:bold;text-decoration:none}
+#footnotes .footnote:last-of-type{margin-bottom:0}
+#content #footnotes{margin-top:-.625em;margin-bottom:0;padding:.75em 0}
+.gist .file-data>table{border:0;background:#fff;width:100%;margin-bottom:0}
+.gist .file-data>table td.line-data{width:99%}
+div.unbreakable{page-break-inside:avoid}
+.big{font-size:larger}
+.small{font-size:smaller}
+.underline{text-decoration:underline}
+.overline{text-decoration:overline}
+.line-through{text-decoration:line-through}
+.aqua{color:#00bfbf}
+.aqua-background{background-color:#00fafa}
+.black{color:#000}
+.black-background{background-color:#000}
+.blue{color:#0000bf}
+.blue-background{background-color:#0000fa}
+.fuchsia{color:#bf00bf}
+.fuchsia-background{background-color:#fa00fa}
+.gray{color:#606060}
+.gray-background{background-color:#7d7d7d}
+.green{color:#006000}
+.green-background{background-color:#007d00}
+.lime{color:#00bf00}
+.lime-background{background-color:#00fa00}
+.maroon{color:#600000}
+.maroon-background{background-color:#7d0000}
+.navy{color:#000060}
+.navy-background{background-color:#00007d}
+.olive{color:#606000}
+.olive-background{background-color:#7d7d00}
+.purple{color:#600060}
+.purple-background{background-color:#7d007d}
+.red{color:#bf0000}
+.red-background{background-color:#fa0000}
+.silver{color:#909090}
+.silver-background{background-color:#bcbcbc}
+.teal{color:#006060}
+.teal-background{background-color:#007d7d}
+.white{color:#bfbfbf}
+.white-background{background-color:#fafafa}
+.yellow{color:#bfbf00}
+.yellow-background{background-color:#fafa00}
+span.icon>.fa{cursor:default}
+.admonitionblock td.icon [class^="fa icon-"]{font-size:2.5em;text-shadow:1px 1px 2px rgba(0,0,0,.5);cursor:default}
+.admonitionblock td.icon .icon-note:before{content:"\f05a";color:#19407c}
+.admonitionblock td.icon .icon-tip:before{content:"\f0eb";text-shadow:1px 1px 2px rgba(155,155,0,.8);color:#111}
+.admonitionblock td.icon .icon-warning:before{content:"\f071";color:#bf6900}
+.admonitionblock td.icon .icon-caution:before{content:"\f06d";color:#bf3400}
+.admonitionblock td.icon .icon-important:before{content:"\f06a";color:#bf0000}
+.conum[data-value]{display:inline-block;color:#fff!important;background-color:rgba(0,0,0,.8);-webkit-border-radius:100px;border-radius:100px;text-align:center;font-size:.75em;width:1.67em;height:1.67em;line-height:1.67em;font-family:"Open Sans","DejaVu Sans",sans-serif;font-style:normal;font-weight:bold}
+.conum[data-value] *{color:#fff!important}
+.conum[data-value]+b{display:none}
+.conum[data-value]:after{content:attr(data-value)}
+pre .conum[data-value]{position:relative;top:-.125em}
+b.conum *{color:inherit!important}
+.conum:not([data-value]):empty{display:none}
+dt,th.tableblock,td.content,div.footnote{text-rendering:optimizeLegibility}
+h1,h2,p,td.content,span.alt{letter-spacing:-.01em}
+p strong,td.content strong,div.footnote strong{letter-spacing:-.005em}
+p,blockquote,dt,td.content,span.alt{font-size:1.0625rem}
+p{margin-bottom:1.25rem}
+.sidebarblock p,.sidebarblock dt,.sidebarblock td.content,p.tableblock{font-size:1em}
+.exampleblock>.content{background-color:#fffef7;border-color:#e0e0dc;-webkit-box-shadow:0 1px 4px #e0e0dc;box-shadow:0 1px 4px #e0e0dc}
+.print-only{display:none!important}
+@media print{@page{margin:1.25cm .75cm}
+*{-webkit-box-shadow:none!important;box-shadow:none!important;text-shadow:none!important}
+a{color:inherit!important;text-decoration:underline!important}
+a.bare,a[href^="#"],a[href^="mailto:"]{text-decoration:none!important}
+a[href^="http:"]:not(.bare):after,a[href^="https:"]:not(.bare):after{content:"(" attr(href) ")";display:inline-block;font-size:.875em;padding-left:.25em}
+abbr[title]:after{content:" (" attr(title) ")"}
+pre,blockquote,tr,img,object,svg{page-break-inside:avoid}
+thead{display:table-header-group}
+svg{max-width:100%}
+p,blockquote,dt,td.content{font-size:1em;orphans:3;widows:3}
+h2,h3,#toctitle,.sidebarblock>.content>.title{page-break-after:avoid}
+#toc,.sidebarblock,.exampleblock>.content{background:none!important}
+#toc{border-bottom:1px solid #ddddd8!important;padding-bottom:0!important}
+.sect1{padding-bottom:0!important}
+.sect1+.sect1{border:0!important}
+#header>h1:first-child{margin-top:1.25rem}
+body.book #header{text-align:center}
+body.book #header>h1:first-child{border:0!important;margin:2.5em 0 1em 0}
+body.book #header .details{border:0!important;display:block;padding:0!important}
+body.book #header .details span:first-child{margin-left:0!important}
+body.book #header .details br{display:block}
+body.book #header .details br+span:before{content:none!important}
+body.book #toc{border:0!important;text-align:left!important;padding:0!important;margin:0!important}
+body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-break-before:always}
+.listingblock code[data-lang]:before{display:block}
+#footer{background:none!important;padding:0 .9375em}
+#footer-text{color:rgba(0,0,0,.6)!important;font-size:.9em}
+.hide-on-print{display:none!important}
+.print-only{display:block!important}
+.hide-for-print{display:none!important}
+.show-for-print{display:inherit!important}}
+</style>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.6.3/css/font-awesome.min.css">
+</head>
+<body class="article">
+<div id="header">
+</div>
+<div id="content">
+<div class="sect1">
+<h2 id="truesummary"><a class="anchor" href="#truesummary"></a>Summary</h2>
+<div class="sectionbody">
+<div class="ulist">
+<ul>
+<li>
+<p>mostly from <a href="https://otexts.org/fpp2/">Forecasting: Principles and Practice (Hyndman, Athanasopoulos)</a></p>
+</li>
+<li>
+<p>centered moving average will smooth out seasons (e.g. 1/8,1/4,1/4,1/4,1/8)</p>
+</li>
+<li>
+<p>maybe transform data if want to restrict to range (e.g. log for positive values) or variances are changing (e.g. Box-Cox transform)</p>
+<div class="ulist">
+<ul>
+<li>
+<p>&#8594; remember to do correct back transformation, since with the naive way the mean is biased</p>
+</li>
+</ul>
+</div>
+</li>
+<li>
+<p>you may consider modelling effects as additive or multiplicative</p>
+</li>
+<li>
+<p>forecasting with co-integrated features may require special treatment(?)</p>
+</li>
+<li>
+<p>include spike dummy variables for special events</p>
+</li>
+<li>
+<p>you need stationary time series for ARIMA-like models &#8594; use KPSS test &#8594; use difference if small p-value (otherwise variance/interval estimates are incorrect)</p>
+</li>
+<li>
+<p>you can include features (rather than target alone); in FPP "Dynamic regression models"; basically error term in normal linear regression modelled as ARIMA</p>
+<div class="ulist">
+<ul>
+<li>
+<p>need stationary, and if differencing ideally difference all the same time</p>
+</li>
+<li>
+<p>do linear regression first and see if residuals really follow an ARIMA process</p>
+</li>
+</ul>
+</div>
+</li>
+<li>
+<p>could include lagged features, if lagged effects reasonable</p>
+<div class="ulist">
+<ul>
+<li>
+<p>check lagged cross-correlation (but see whitening below)</p>
+</li>
+</ul>
+</div>
+</li>
+<li>
+<p>use AICc or CV to choose models (but differencing cannot be found with this since changes data)</p>
+</li>
+<li>
+<p>for ARIMA(p,d,q), if p=0 or q=0: can detect model from behaviour of ACF/PACF plots</p>
+</li>
+<li>
+<p>test residuals:</p>
+<div class="ulist">
+<ul>
+<li>
+<p>use Ljung-Box test to see if residuals are white noise</p>
+</li>
+<li>
+<p>use AR(1) or Cochrane-Orcutt test to check for autocorrelation in residuals</p>
+</li>
+<li>
+<p>&#8594; if not, you are missing information and may need a better model (more features, transformations, &#8230;&#8203;)</p>
+</li>
+</ul>
+</div>
+</li>
+<li>
+<p>usually prediction intervals are too narrow since many choices not accounted for</p>
+</li>
+<li>
+<p>bagging: do many predictions and average</p>
+</li>
+<li>
+<p>permanent shocks cannot be estimated from time-series model</p>
+</li>
+<li>
+<p>monthly (ideally seasonal) points can improve forecast a lot, even if you actually want to optimize the yearly sum forecast</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p><strong>! regressing on past values is not consistent, need one of
+<strong> conditional least squares
+</strong> conditional MLE
+*</strong> exact MLE</p>
+</div>
+<div class="sect2">
+<h3 id="truewhitening"><a class="anchor" href="#truewhitening"></a>Whitening</h3>
+<div class="ulist">
+<ul>
+<li>
+<p><a href="https://onlinecourses.science.psu.edu/stat510/node/75/" class="bare">https://onlinecourses.science.psu.edu/stat510/node/75/</a></p>
+</li>
+<li>
+<p>determine a model for <span class=""><img src="http://localhost:50550/afx/cache/0db1eabc084e93f6e5da2ca6c3468a86.png" alt=""></span></p>
+</li>
+<li>
+<p>apply filter with coef from above model on <span class=""><img src="http://localhost:50550/afx/cache/415290769594460e2e485922904f345d.png" alt=""></span> now (filter is operator on left of <span class=""><img src="http://localhost:50550/afx/cache/ae08e90431155b910b3d7efab849395a.png" alt=""></span>)</p>
+</li>
+<li>
+<p>check cross-correlation between <span class=""><img src="http://localhost:50550/afx/cache/dc9ac40b41667592c2b52d59c68753be.png" alt=""></span> and filtered <span class=""><img src="http://localhost:50550/afx/cache/415290769594460e2e485922904f345d.png" alt=""></span> to determine good lags</p>
+</li>
+</ul>
+</div>
+</div>
+<div class="sect2">
+<h3 id="trueweak-stationarity"><a class="anchor" href="#trueweak-stationarity"></a>Weak stationarity</h3>
+<div class="ulist">
+<ul>
+<li>
+<p>properties do not depend on absolute time (e.g. fixed time seasons; but may still have cycles due to dependence on past values)</p>
+</li>
+<li>
+<p>mean, variance and covariances time-independent</p>
+</li>
+</ul>
+</div>
+</div>
+<div class="sect2">
+<h3 id="truefeature-preparation-summary"><a class="anchor" href="#truefeature-preparation-summary"></a>Feature preparation summary</h3>
+<div class="ulist">
+<ul>
+<li>
+<p>include lagged values</p>
+</li>
+<li>
+<p>transform (e.g. Box-Cox) to make variance stable</p>
+</li>
+<li>
+<p>transform (e.g. Log) if want to enforce certain range for target</p>
+</li>
+<li>
+<p>for back-transforms need special correction to make means unbiased!</p>
+</li>
+<li>
+<p>feature selection with AICc or CV possible</p>
+</li>
+</ul>
+</div>
+</div>
+<div class="sect2">
+<h3 id="truearima-summary"><a class="anchor" href="#truearima-summary"></a>ARIMA summary</h3>
+<div class="ulist">
+<ul>
+<li>
+<p>find out needed order of differencing <span class=""><img src="http://localhost:50550/afx/cache/8277e0910d750195b448797616e091ad.png" alt=""></span></p>
+<div class="ulist">
+<ul>
+<li>
+<p>with KPSS test (difference more as long small p-value; AIC not suitable here since data different)</p>
+</li>
+<li>
+<p>KPSS doesn&#8217;t seem enough &#8594; test with autocorrelation test</p>
+</li>
+</ul>
+</div>
+</li>
+<li>
+<p>use AIC or CV to find ARIMAA <span class=""><img src="http://localhost:50550/afx/cache/83878c91171338902e0fe0fb97a8c47a.png" alt=""></span> and <span class=""><img src="http://localhost:50550/afx/cache/7694f4a66316e53c8cdd9d9954bd611d.png" alt=""></span> orders; find if including constant</p>
+</li>
+<li>
+<p>test residuals for remaining information (Ljung-Box test)</p>
+</li>
+<li>
+<p>ARIMA seems to work better than Prophet, but is more sensitive to "level shifts" (will think level shift jumps will repeat after one occurence)</p>
+</li>
+<li>
+<p>auto-correlation left if Durbin-Watson statistics low(?)</p>
+</li>
+<li>
+<p>interesting to distinguish deterministic trends from unit root or(?) stochastic trendsS</p>
+<div class="ulist">
+<ul>
+<li>
+<p>&#8594; Augmented Dickey-Fuller is best to test for unit root (determined my MC experiments)</p>
+</li>
+</ul>
+</div>
+</li>
+<li>
+<p>with unit roots, model just will be invalid without adjustment</p>
+</li>
+</ul>
+</div>
+<div class="sect3">
+<h4 id="truedetails"><a class="anchor" href="#truedetails"></a>Details</h4>
+<div class="ulist">
+<ul>
+<li>
+<p><a href="https://www.quora.com/How-do-I-analyze-time-series-and-its-characteristics-that-means-stationarity-tendency-etc-to-determine-which-prediction-forecast-method-ARIMA-for-instance-is-most-suitable" class="bare">https://www.quora.com/How-do-I-analyze-time-series-and-its-characteristics-that-means-stationarity-tendency-etc-to-determine-which-prediction-forecast-method-ARIMA-for-instance-is-most-suitable</a></p>
+</li>
+<li>
+<p>first check (lagged) correlations between variables
++ ADF test, but, before check for trend(?)</p>
+</li>
+<li>
+<p>if indep. variables &#8594; Engel-Granger cointegration test for long-run relationship [but before check for unit root since I(1) variables cannot be cointegrated with I(0) variables]</p>
+<div class="ulist">
+<ul>
+<li>
+<p>if cointegration &#8594; VECM model since long-term deviations will correct short-term dependencies (also add lagged variables and dummies for seasons)</p>
+</li>
+<li>
+<p>if no cointegration &#8594; difference all variables with unit root; add seasons and lags</p>
+</li>
+</ul>
+</div>
+</li>
+<li>
+<p>add moving averages if it helps dynamics</p>
+</li>
+</ul>
+</div>
+</div>
+<div class="sect3">
+<h4 id="trueseasonal-arima-summary"><a class="anchor" href="#trueseasonal-arima-summary"></a>Seasonal ARIMA summary</h4>
+<div class="ulist">
+<ul>
+<li>
+<p>usually multiplicative version (lag operators multiplied)</p>
+</li>
+<li>
+<p>use <span class=""><img src="http://localhost:50550/afx/cache/d2e6f79f0d9d49acb96e49b44d1fd04f.png" alt=""></span> and <span class=""><img src="http://localhost:50550/afx/cache/faeecaecd2a838af69efc65e4f08bcdd.png" alt=""></span> (?) (for <span class=""><img src="http://localhost:50550/afx/cache/6ff8838206f8f60f5b02ff48e436186b.png" alt=""></span> seasonal would face away(?))</p>
+</li>
+<li>
+<p>suggested <span class=""><img src="http://localhost:50550/afx/cache/e1785ced1e76f074ac34c000787ed184.png" alt=""></span> (?)</p>
+</li>
+</ul>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="trueholt-winters-summary"><a class="anchor" href="#trueholt-winters-summary"></a>Holt-Winters summary</h3>
+<div class="ulist">
+<ul>
+<li>
+<p>make sure to use version with trend and dampening (0.8-0.98)</p>
+</li>
+<li>
+<p>parameter estimation may be tricky/unstable</p>
+</li>
+</ul>
+</div>
+</div>
+<div class="sect2">
+<h3 id="truearima-with-features"><a class="anchor" href="#truearima-with-features"></a>ARIMA with features</h3>
+<div class="ulist">
+<ul>
+<li>
+<p>difference target and features equally</p>
+</li>
+</ul>
+</div>
+</div>
+<div class="sect2">
+<h3 id="truesuccessful-models"><a class="anchor" href="#truesuccessful-models"></a>Successful models</h3>
+<div class="ulist">
+<ul>
+<li>
+<p>SARIMAX: but does not work if period large (e.g. yearly seasons on weekly data); weaker of irregular/sparse data</p>
+</li>
+<li>
+<p>damped Holt-Winters</p>
+</li>
+<li>
+<p>auto.arima &#174;: may need to force to search more exhaustively</p>
+</li>
+<li>
+<p>Pyramid (Python auto-arima)</p>
+</li>
+<li>
+<p>ETS (Error-Trend-Season): non-linear ETS is not ARIMA</p>
+</li>
+<li>
+<p>Seasons could be handled with Fourier terms <span class=""><img src="http://localhost:50550/afx/cache/e8ebad3ae4b04a15ff15cc502702e95f.png" alt=""></span>,[sin]] (2*pi*k*t/T)] "harmonic regression"</p>
+</li>
+<li>
+<p>TBATS</p>
+</li>
+<li>
+<p>LSTM, RNN</p>
+</li>
+<li>
+<p>XGB, ANN</p>
+</li>
+<li>
+<p>GARCH (when variance follows ARMA process)</p>
+</li>
+<li>
+<p>CausalImpact (Google)</p>
+</li>
+<li>
+<p>Shallow ANN</p>
+</li>
+<li>
+<p>equal weight ensemble of ETS/ARIMA/Theta</p>
+</li>
+</ul>
+</div>
+<div class="sect3">
+<h4 id="trueprophet-facebook"><a class="anchor" href="#trueprophet-facebook"></a>Prophet (Facebook)</h4>
+<div class="ulist">
+<ul>
+<li>
+<p><code>pip install fbprophet</code>; needs <code>cython</code> and <code>pystan</code></p>
+</li>
+<li>
+<p>package is mainly for the masses who cannot tune more complex models</p>
+</li>
+<li>
+<p>seems to model seasonality with yearly, monthly, weekly patterns</p>
+</li>
+<li>
+<p>usually models addition of</p>
+<div class="ulist">
+<ul>
+<li>
+<p>piece-wise linear trend or saturating growth trend</p>
+</li>
+<li>
+<p>seasonality (multiple scales; modelled with Fourier)</p>
+</li>
+<li>
+<p>optionally explicit holidays</p>
+</li>
+</ul>
+</div>
+</li>
+<li>
+<p>can include holidays as explicit input</p>
+</li>
+<li>
+<p>modelled in Stan (few lines only)</p>
+</li>
+<li>
+<p>resistant to outliers</p>
+</li>
+<li>
+<p>no need for regular spacing; fast</p>
+</li>
+<li>
+<p>for saturating growth model: can specify total scaling manually</p>
+</li>
+<li>
+<p>can explictely define change points</p>
+</li>
+<li>
+<p>Prophet has more interpretable parameters (you can include manual changepoints etc.)</p>
+</li>
+<li>
+<p>there is a paper describing the approach</p>
+</li>
+<li>
+<p>documentation: <a href="https://facebook.github.io/prophet/docs/quick_start.html" class="bare">https://facebook.github.io/prophet/docs/quick_start.html</a></p>
+</li>
+<li>
+<p><a href="https://github.com/facebook/prophet/blob/master/python/fbprophet/forecaster.py">parameters Prophet</a></p>
+</li>
+<li>
+<p>robust; for normal seasonality ARIMA seems better</p>
+</li>
+<li>
+<p>can fit changepoints well - after they occured - but may output too many changepoints (and unstable to tune to just 1 changepoint in a hockey stick curve)</p>
+</li>
+</ul>
+</div>
+</div>
+<div class="sect3">
+<h4 id="truemodel-choice"><a class="anchor" href="#truemodel-choice"></a>Model choice</h4>
+<div class="ulist">
+<ul>
+<li>
+<p>linear ETS is special case of ARIMA</p>
+</li>
+<li>
+<p>non-linear ETS no equivalent ARIMA</p>
+</li>
+<li>
+<p>some ARIMA not a ETS</p>
+</li>
+<li>
+<p>all ETS non-stationary, some ARIMA stationary</p>
+</li>
+<li>
+<p>harmonic regression or other packages if multiple periods</p>
+</li>
+<li>
+<p>special methods for low-integer counts (e.g. Croston&#8217;s method; <a href="https://otexts.org/fpp2/counts.html">FPP Counts</a>)</p>
+</li>
+</ul>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="truem4-forecasting-competition-summary"><a class="anchor" href="#truem4-forecasting-competition-summary"></a>M4 Forecasting competition summary</h3>
+<div class="ulist">
+<ul>
+<li>
+<p>Winner: Smyl from Uber <a href="https://www.reddit.com/r/MachineLearning/comments/8tajvh/d_hybrid_rnn_model_wins_m4_forecasting_competition/" class="bare">https://www.reddit.com/r/MachineLearning/comments/8tajvh/d_hybrid_rnn_model_wins_m4_forecasting_competition/</a></p>
+<div class="ulist">
+<ul>
+<li>
+<p>combination of ETS and RNN</p>
+</li>
+<li>
+<p>excellent prediction interval calibration</p>
+</li>
+</ul>
+</div>
+</li>
+<li>
+<p>pure ML was bad; hard to beat baseline</p>
+</li>
+<li>
+<p>other best models mostly classical techniques (after winner 2-6 places only small differences); they often underestimate prediction interval (apart from top 2 winners)</p>
+</li>
+<li>
+<p>helpful to include information from individual series and <strong>whole dataset</strong> (like hierarchical; mb like global trend)</p>
+</li>
+<li>
+<p>damped forecast better than naive linear extrapolation</p>
+</li>
+<li>
+<p>seasonal time series less noisy</p>
+</li>
+<li>
+<p>traditional techniques not so sensitive to amount of data</p>
+</li>
+</ul>
+</div>
+</div>
+<div class="sect2">
+<h3 id="truespecial-models"><a class="anchor" href="#truespecial-models"></a>Special models</h3>
+<div class="ulist">
+<ul>
+<li>
+<p>Hierarchical/grouped models: when want to model parts and whole</p>
+</li>
+<li>
+<p>Vector Autoregression (VAR): when interactions between multiple targets</p>
+<div class="ulist">
+<ul>
+<li>
+<p>can plot impuls response <code>res.irf</code></p>
+</li>
+<li>
+<p>forecast error variance decomposition <code>res.fevd</code></p>
+</li>
+<li>
+<p>Granger causality <code>res.test_causality(var1, var2)</code></p>
+</li>
+</ul>
+</div>
+</li>
+<li>
+<p>Low integer count prediction: there are special methods for this; e.g. predict non-zero values and time between them</p>
+</li>
+</ul>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="truestate-space-models"><a class="anchor" href="#truestate-space-models"></a>State space models</h2>
+<div class="sectionbody">
+<div class="ulist">
+<ul>
+<li>
+<p><a href="http://www.statsmodels.org/dev/statespace.html#module-statsmodels.tsa.statespace" class="bare">http://www.statsmodels.org/dev/statespace.html#module-statsmodels.tsa.statespace</a></p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p><span class=""><img src="http://localhost:50550/afx/cache/680f25441b99ebe0b440e944c95feb75.png" alt=""></span></p>
+</div>
+<div class="paragraph">
+<p><span class=""><img src="http://localhost:50550/afx/cache/7eb96badad260aa1f195c12bca6fca98.png" alt=""></span></p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>Z: endog x states x n_obs (if time-invariant, then no n_obs)</p>
+</li>
+</ul>
+</div>
+<div class="sect2">
+<h3 id="truear-model-as-state-space-models"><a class="anchor" href="#truear-model-as-state-space-models"></a>AR model as state space models</h3>
+<div class="paragraph">
+<p><span class=""><img src=" 0" alt=""></span> alpha_t]</p>
+</div>
+<div class="paragraph">
+<p><span class=""><img src=" phi_2" alt=""></span>,[1 0]] alpha_(t-1) +[[1],[0]] eta_t]</p>
+</div>
+<div class="paragraph">
+<p><span class=""><img src="http://localhost:50550/afx/cache/381344811401494c715d064bfeec3c9a.png" alt=""></span>,[y_(t-1)]]]</p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="truemultiplicative-seasonal"><a class="anchor" href="#truemultiplicative-seasonal"></a>Multiplicative seasonal</h3>
+<div class="paragraph">
+<p><span class=""><img src="http://localhost:50550/afx/cache/e3ae75d2b854bf91ae8d2b29edc4e30c.png" alt=""></span></p>
+</div>
+<div class="paragraph">
+<p>where</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><span class=""><img src="http://localhost:50550/afx/cache/cb7a24bb7528f934b841b34c3a73e0c7.png" alt=""></span> are polynomials on the lag operator</p>
+</li>
+<li>
+<p><span class=""><img src="http://localhost:50550/afx/cache/98d54ca1c6d205f769894aa9322d50a2.png" alt=""></span> is differencing operator</p>
+</li>
+<li>
+<p>variables with "bar" are for seasonal component</p>
+</li>
+<li>
+<p><span class=""><img src="http://localhost:50550/afx/cache/03c7c0ace395d80182db07ae2c30f034.png" alt=""></span> is length of season</p>
+</li>
+<li>
+<p>e.g. lag polynomial is <span class=""><img src="http://localhost:50550/afx/cache/8bdb5141dcedb15951122b7710a35805.png" alt=""></span></p>
+</li>
+<li>
+<p>a <span class=""><img src="http://localhost:50550/afx/cache/905b566b5fb4359eb506b353ea3775f2.png" alt=""></span> and <span class=""><img src="http://localhost:50550/afx/cache/1be6aadb8c0c9e59bd10235bf9a4c224.png" alt=""></span> would after expansion mean <span class=""><img src="http://localhost:50550/afx/cache/1565b1705e8c17d4ee2b994fb5848fa0.png" alt=""></span></p>
+</li>
+</ul>
+</div>
+</div>
+<div class="sect2">
+<h3 id="trueother"><a class="anchor" href="#trueother"></a>Other</h3>
+<div class="ulist">
+<ul>
+<li>
+<p><a href="http://www.statsmodels.org/dev/statespace.html#unobserved-components">Unobserved components</a></p>
+</li>
+<li>
+<p><a href="http://www.statsmodels.org/dev/statespace.html#vector-autoregressive-moving-average-with-exogenous-regressors-varmax">VARMAX</a></p>
+</li>
+<li>
+<p><a href="http://www.statsmodels.org/dev/statespace.html#dynamic-factor-models">Dynamic factor models</a></p>
+</li>
+</ul>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="trueplots"><a class="anchor" href="#trueplots"></a>Plots</h2>
+<div class="sectionbody">
+<div class="ulist">
+<ul>
+<li>
+<p>x-axis: month; within month show year development (an total mean for this month, but over years)</p>
+</li>
+<li>
+<p>scatter plot (matrix) of y&#8217;s</p>
+</li>
+<li>
+<p>autocorrelation with diff lags</p>
+</li>
+<li>
+<p>ACF of residuals</p>
+</li>
+</ul>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="truetests"><a class="anchor" href="#truetests"></a>Tests</h2>
+<div class="sectionbody">
+<div class="ulist">
+<ul>
+<li>
+<p>Portmanteau test: test residuals whether they could be white noise</p>
+<div class="ulist">
+<ul>
+<li>
+<p>Box-Pierce test: sum of h residuals squared; use h=10 for non-seasonal, h=2*season for seasonal, but h&#8656;T/5</p>
+</li>
+<li>
+<p>Ljung-Box test: more accurate than Box-Pierce; chi^2 test</p>
+</li>
+</ul>
+</div>
+</li>
+<li>
+<p>Breusch-Godfrey test (Lagrange Multiplier) test for serial correlation: joint hypothesis that there is no autocorrelation in the residuals up to a certain specified order; small p-value &#8594; significant autocorrelation remaining in the residuals.</p>
+</li>
+</ul>
+</div>
+<div class="sect2">
+<h3 id="trueunit-root-test-for-stationarity"><a class="anchor" href="#trueunit-root-test-for-stationarity"></a>Unit root test for stationarity</h3>
+<div class="ulist">
+<ul>
+<li>
+<p>unit root: problem in model estimation (?)</p>
+</li>
+<li>
+<p>determine whether differencing needed for stationarity</p>
+</li>
+<li>
+<p>KPSS Kwiatkowski-Phillips-Schmid-Shin test: differencing if small p-value</p>
+</li>
+<li>
+<p>also check if seasonal differencing needed</p>
+</li>
+<li>
+<p>with autocorrelation:</p>
+<div class="ulist">
+<ul>
+<li>
+<p>while coef estimate is still unbiased, it may be off because a feature with predictive power is not in the model</p>
+</li>
+<li>
+<p>(hidden) variance of estimates increased</p>
+</li>
+<li>
+<p>estimated std errors to narrow; all statistics too optimistic</p>
+</li>
+</ul>
+</div>
+</li>
+</ul>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="trueautocorrelation"><a class="anchor" href="#trueautocorrelation"></a>Autocorrelation</h2>
+<div class="sectionbody">
+<div class="ulist">
+<ul>
+<li>
+<p>trend &#8594; ACF drops slowly</p>
+</li>
+<li>
+<p>white noise &#8594; 95% within -+ 2/sqrt(T) [T is length of time series]; if large deviations or too many &#8594; not white noise</p>
+</li>
+<li>
+<p>model still unbiased if autocorrelated residuals, but prediction intervals may be wrong</p>
+</li>
+<li>
+<p>(Durbin-Watson tests for first order autocorrelation only; also does not work if target is reused as future feature; 0: pos 1st autocorr, 2: no 1st autocorr, 4: neg 1st autocorr)</p>
+</li>
+<li>
+<p>AR(1) more powerful test; Cochrane-Orcutt almost same result</p>
+</li>
+<li>
+<p>to fix:</p>
+<div class="ulist">
+<ul>
+<li>
+<p>add feature</p>
+</li>
+<li>
+<p>change functional form</p>
+</li>
+</ul>
+</div>
+</li>
+<li>
+<p>if after 1st difference no significant correlations &#8594; random walk</p>
+</li>
+<li>
+<p>PACF: last coef of AR model</p>
+</li>
+<li>
+<p>AR: ACF damped exp + sines; PACF zero after p lags</p>
+</li>
+<li>
+<p>MA: ACF zero after q lags, PACF damped exp + sines</p>
+</li>
+<li>
+<p>ARMA: ACF eventually dominated by AR and then dies out; PACF eventually dominated by MA and the dies out</p>
+</li>
+</ul>
+</div>
+<div class="sect2">
+<h3 id="truear-autocorrelation"><a class="anchor" href="#truear-autocorrelation"></a>AR autocorrelation</h3>
+<div class="paragraph">
+<p><span class=""><img src="http://localhost:50550/afx/cache/6e518241c757bc64da390e1ed587ea71.png" alt=""></span></p>
+</div>
+<div class="paragraph">
+<p><span class=""><img src="http://localhost:50550/afx/cache/8990d403063fcca3257ce81caed3b48b.png" alt=""></span></p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>mean and variance finite only when <span class=""><img src="http://localhost:50550/afx/cache/6f2ca638fefa6c1163e905273afc3e38.png" alt=""></span></p>
+</li>
+</ul>
+</div>
+</div>
+<div class="sect2">
+<h3 id="truema-autocorrelation"><a class="anchor" href="#truema-autocorrelation"></a>MA autocorrelation</h3>
+<div class="ulist">
+<ul>
+<li>
+<p>ACF has non-zero only at order of MA</p>
+</li>
+<li>
+<p>MA model best seen in ACF</p>
+</li>
+<li>
+<p>invertible if algebraically equivalent to converging (decaying coef) of infinite order AR model</p>
+<div class="ulist">
+<ul>
+<li>
+<p>from multiple models matching a ACF, choose invertible (<a href="http://iacs-courses.seas.harvard.edu/courses/am207/blog/lecture-17.html" class="bare">http://iacs-courses.seas.harvard.edu/courses/am207/blog/lecture-17.html</a>)</p>
+</li>
+</ul>
+</div>
+</li>
+<li>
+<p>invertibility is programmed into time-series software to enable solution</p>
+</li>
+</ul>
+</div>
+<div class="sect3">
+<h4 id="truepartial-autocorrelation"><a class="anchor" href="#truepartial-autocorrelation"></a>Partial autocorrelation</h4>
+<div class="ulist">
+<ul>
+<li>
+<p>conditional correlation</p>
+</li>
+<li>
+<p>1st order PACF same as 1st order ACF</p>
+</li>
+</ul>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="truebox-cox-transform"><a class="anchor" href="#truebox-cox-transform"></a>Box-Cox transform</h2>
+<div class="sectionbody">
+<div class="ulist">
+<ul>
+<li>
+<p><span class=""><img src="http://localhost:50550/afx/cache/df978c2c6d9c77e56b2b33c7e4ea7267.png" alt=""></span> (or <span class=""><img src="http://localhost:50550/afx/cache/e6ba008f7445070cca1c7232290cdf99.png" alt=""></span> if <span class=""><img src="http://localhost:50550/afx/cache/21958a690e5634d79350966aebffa8c9.png" alt=""></span>)</p>
+</li>
+<li>
+<p>best if seasonal variation about equal sizes</p>
+</li>
+<li>
+<p>does not work if <span class=""><img src="http://localhost:50550/afx/cache/d344832eab49b389f0103f5a1eec98c0.png" alt=""></span></p>
+</li>
+<li>
+<p>forecasts not sensitive on <span class=""><img src="http://localhost:50550/afx/cache/945f3fc449518a73b9f5f32868db466c.png" alt=""></span>; but may have large effects on prediction intervals
+*! not the the back transform gets the mean biased &#8594; needs correction if want to add up results (e.g. aggregate); need forecast variance</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p><span class=""><img src="http://localhost:50550/afx/cache/c016bbd4b08d409427cb15c9744e4f39.png" alt=""></span></p>
+</div>
+<div class="paragraph">
+<p><span class=""><img src="http://localhost:50550/afx/cache/27171d4b6b05d9d133722497975042aa.png" alt=""></span></p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>you could pick 3 points from the QQ curve and optimize <span class=""><img src="http://localhost:50550/afx/cache/de0e4de091702ec8c15d293af6b09c85.png" alt=""></span> to make it linear</p>
+</li>
+</ul>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="truemetrics"><a class="anchor" href="#truemetrics"></a>Metrics</h2>
+<div class="sectionbody">
+<div class="ulist">
+<ul>
+<li>
+<p>MAE for median</p>
+</li>
+<li>
+<p>RMSE for mean</p>
+</li>
+<li>
+<p>MAPE: mean of percentage error (only makes sense if meaningful zero); heavier weight on negative error</p>
+</li>
+<li>
+<p>(sMAPE: <span class=""><img src="http://localhost:50550/afx/cache/0fb199ec10077410e9a6f9ed7a743e6c.png" alt=""></span>; not recommended!)</p>
+</li>
+<li>
+<p>MASE mean absolute scaled error: scale errors based on training MAE from a simple forecast (e.g. naive forecasts)</p>
+</li>
+<li>
+<p>Hyndman, R. J., &amp; Koehler, A. B. (2006). Another look at measures of forecast accuracy. International Journal of Forecasting, 22, 679–688.</p>
+</li>
+</ul>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="trueprediction-intervals"><a class="anchor" href="#trueprediction-intervals"></a>Prediction intervals</h2>
+<div class="sectionbody">
+<div class="ulist">
+<ul>
+<li>
+<p><a href="https://otexts.org/fpp2/prediction-intervals.html" class="bare">https://otexts.org/fpp2/prediction-intervals.html</a></p>
+</li>
+<li>
+<p>1 step ahead: stddev about same as that of residuals</p>
+</li>
+<li>
+<p>for basic methods, there are equations (e.g. <span class=""><img src="http://localhost:50550/afx/cache/e94475b018c8127f31e72bca668ecb48.png" alt=""></span> for naive method)</p>
+</li>
+<li>
+<p>bootstrap method: iteratively cumulate errors</p>
+</li>
+</ul>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="trueselecting-features"><a class="anchor" href="#trueselecting-features"></a>Selecting features</h2>
+<div class="sectionbody">
+<div class="ulist">
+<ul>
+<li>
+<p><a href="https://otexts.org/fpp2/selecting-predictors.html" class="bare">https://otexts.org/fpp2/selecting-predictors.html</a></p>
+</li>
+<li>
+<p>try multiple model versions; e.g. all feature subsets</p>
+</li>
+<li>
+<p>or do backward feature selection; not necessarily best model, but always good model</p>
+</li>
+<li>
+<p>(forward selection if all features are too many)</p>
+</li>
+<li>
+<p>(Adjusted R^2: equivalent to minimizing stderr; selects too many)</p>
+</li>
+<li>
+<p>LOO-CV (fast methods)</p>
+</li>
+<li>
+<p>AIC (for large T same as CV method)</p>
+</li>
+<li>
+<p>AICc: corrected, since for small T selects too many features</p>
+</li>
+<li>
+<p>(BIC: for large T similar to leave-v-out where <span class=""><img src="http://localhost:50550/afx/cache/249cb301511b3a7605043fa6542184c1.png" alt=""></span>)
+*&#8594; use AIC/CV, in FPP AICc is used</p>
+</li>
+</ul>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="truetrend"><a class="anchor" href="#truetrend"></a>Trend</h2>
+<div class="sectionbody">
+<div class="ulist">
+<ul>
+<li>
+<p>estimate trend by smoothing or regression</p>
+</li>
+<li>
+<p>additive (substract trend) or multiplicative (divide trend)</p>
+</li>
+</ul>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="trueexponential-smoothing"><a class="anchor" href="#trueexponential-smoothing"></a>Exponential smoothing</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p><span class=""><img src="http://localhost:50550/afx/cache/832702dfeff40bf6a7849a697de0f8a7.png" alt=""></span></p>
+</div>
+<div class="paragraph">
+<p><span class=""><img src="http://localhost:50550/afx/cache/fe5c4051a99495c76bced0667ae8376d.png" alt=""></span></p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>average between last observation and previous forecast</p>
+</li>
+<li>
+<p>same as ARIMA(0,1,1) without a constant &#8594; could fit this and then determine <span class=""><img src="http://localhost:50550/afx/cache/ae3860b8aee9eecffffd92ca01cf65f0.png" alt=""></span></p>
+</li>
+<li>
+<p>double exponential smoothing when trend</p>
+<div class="ulist">
+<ul>
+<li>
+<p>combine predictions of trend (differences) and level (values)</p>
+</li>
+<li>
+<p>same as ARIMA(0,2,2) without a constant</p>
+</li>
+</ul>
+</div>
+</li>
+<li>
+<p>capture trend and seasonality</p>
+</li>
+<li>
+<p><span class=""><img src="http://localhost:50550/afx/cache/a01be9d851518d546ff5e6ab4ac53cbd.png" alt=""></span></p>
+</li>
+<li>
+<p>need to choose smoothing and initial parameters</p>
+</li>
+<li>
+<p>Holt extended method to allow for trend: forecast/level/trend equation</p>
+</li>
+<li>
+<p>Gardner &amp; McKenzie: added dampening to a flat line (parameter 0.8&#8230;&#8203;0.98)</p>
+</li>
+<li>
+<p>can include seasons</p>
+</li>
+<li>
+<p>forecast by iterating model (and setting unknown errors to zero)</p>
+</li>
+<li>
+<p>data can be non-stationary; actually Exponential smoothing sub-optimal if data is already stationary</p>
+</li>
+<li>
+<p>to fit linear trends (but allow for outliers on turns), i.e. log(abs(error)), one could use smoothing_level=0.95, smoothing_slope=0.6, trend="mul", damped=False</p>
+</li>
+<li>
+<p>for sqr(error): smoothing_level=0.95, smoothing_slope=0.95, trend="mul", damped=True</p>
+</li>
+<li>
+<p>M4 concluded that damped=True is more successful</p>
+</li>
+<li>
+<p>often multiplicative trend more stable; additive trend only slightly easier to understand</p>
+</li>
+<li>
+<p>curve usually looks like shadowed one month later (due to unpredictability of changes)</p>
+</li>
+<li>
+<p>Simple exponential smoothing: just one level equation and smoothing parameter <span class=""><img src="http://localhost:50550/afx/cache/2c1743a391305fbf367df8e4f069f9f9.png" alt=""></span> (how strongly reacts to newest observation); all real future forecasts are the same ("flat forecast"); may look like shifted to right</p>
+</li>
+<li>
+<p>Holt linear trend: additionally one trend equation with a new parameter <span class=""><img src="http://localhost:50550/afx/cache/987bcab01b929eb2c07877b224215c92.png" alt=""></span>; optionally another damping parameter <span class=""><img src="http://localhost:50550/afx/cache/cb7a24bb7528f934b841b34c3a73e0c7.png" alt=""></span></p>
+</li>
+<li>
+<p>Holt-Winters method: additaionyll seasonality equation with parameter <span class=""><img src="http://localhost:50550/afx/cache/05b048d7242cb7b8b57cfa3b1d65ecea.png" alt=""></span></p>
+</li>
+</ul>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="truearima"><a class="anchor" href="#truearima"></a>ARIMA</h2>
+<div class="sectionbody">
+<div class="ulist">
+<ul>
+<li>
+<p>capture autocorrelation</p>
+</li>
+<li>
+<p>needs to be stationary</p>
+</li>
+<li>
+<p>AR: model dependence on past values; momentum, mean reversion</p>
+</li>
+<li>
+<p>AM: model shocks in error; unexpected temporary events</p>
+</li>
+<li>
+<p>ARMA: ignore volatility clustering effects</p>
+</li>
+<li>
+<p>cyclic maybe be stationary if depends on on past values and not absolute time</p>
+</li>
+<li>
+<p>ACF:</p>
+<div class="ulist">
+<ul>
+<li>
+<p>non-stationary: drop slowly, r1 often large and positive</p>
+</li>
+<li>
+<p>stationary: drops quickly</p>
+</li>
+</ul>
+</div>
+</li>
+<li>
+<p>stationary &#8594; do difference and Ljung-Box test (want large p value)</p>
+</li>
+<li>
+<p><a href="https://otexts.org/fpp2/MA.html" class="bare">https://otexts.org/fpp2/MA.html</a></p>
+</li>
+<li>
+<p>AR: autoregression of target</p>
+</li>
+<li>
+<p>MA: regression on past forecast errors</p>
+</li>
+<li>
+<p>AR theoretically same as MA with large order</p>
+</li>
+<li>
+<p>with some constraints MA model is invertible and also same as AR model with large order; invertible when recent observations more predictive than past(?)</p>
+</li>
+<li>
+<p>for stationary data we coefs are restricted:</p>
+<div class="ulist">
+<ul>
+<li>
+<p>AR(1): <span class=""><img src="http://localhost:50550/afx/cache/8c018f92d7d2da7c274608609b53a3aa.png" alt=""></span></p>
+</li>
+<li>
+<p>AR(2): <span class=""><img src="http://localhost:50550/afx/cache/328faa7dc65effc381dd1cb8892e1869.png" alt=""></span>, <span class=""><img src="http://localhost:50550/afx/cache/e4fe870ad83bf2bd579bfa67a7657717.png" alt=""></span></p>
+</li>
+<li>
+<p>AR(3): complex restrictions</p>
+</li>
+</ul>
+</div>
+</li>
+<li>
+<p>&#8594; linear model on (differenced) target and past prediction errors</p>
+</li>
+<li>
+<p>also includes a constant term</p>
+</li>
+<li>
+<p>ARIMA(p,d,q): order of autoregr.,  degree of differencing,  order of moving average</p>
+</li>
+<li>
+<p>with c=0: differencing 0/1/2 will model zero/constant/line</p>
+</li>
+<li>
+<p>with c!=0: differencing 0/1/2 will model mean/line/quadratic</p>
+</li>
+<li>
+<p>for cycles need p&gt;=2; then <span class=""><img src="http://localhost:50550/afx/cache/9e4dab5911feed372bc921271b262953.png" alt=""></span></p>
+</li>
+<li>
+<p>sometime possible to tell p and q from ACF/PACF plots</p>
+</li>
+<li>
+<p>PACF is like last coef in AR(k) model</p>
+</li>
+<li>
+<p>finding p/q from ACF/PACF plot:
+**! ACF/PACF plot only help if only one of p&gt;0 or q&gt;0</p>
+<div class="ulist">
+<ul>
+<li>
+<p>ARIMA(p,d,0): ACF exp decay or sine; PACF spike p, but none beyond (sharp drop)</p>
+</li>
+<li>
+<p>ARIMA(0,d,q): PACF exp decay or sine; ACF spike q, but none beyond (sharp drop)</p>
+</li>
+</ul>
+</div>
+</li>
+<li>
+<p>estimation methods complex and different software can give different results</p>
+</li>
+<li>
+<p>AIC can be used to find parameters (has term <span class=""><img src="http://localhost:50550/afx/cache/47b39923776289cd203cf96b5baaf213.png" alt=""></span>)
+*! d parameter cannot be found from AIC since it changes data and AIC not comparable</p>
+</li>
+<li>
+<p>prediction intervals complicating; for stationary models (d=0) they will converge
+*! prediction errors too narrow since variation in parameters, model order, etc not accounted</p>
+</li>
+<li>
+<p>seasonal ARIMA:</p>
+<div class="ulist">
+<ul>
+<li>
+<p>(0,1): single spike in ACF, decay in PACF</p>
+</li>
+<li>
+<p>(1,0): decay in ACF, single spike in PACF</p>
+</li>
+</ul>
+</div>
+</li>
+<li>
+<p>trend can be deterministic or stochastic &#8594; stochastic trend can be dealt with with differencing</p>
+</li>
+</ul>
+</div>
+<div class="sect2">
+<h3 id="truebooks"><a class="anchor" href="#truebooks"></a>Books</h3>
+<div class="ulist">
+<ul>
+<li>
+<p>Box, G. E. P., Jenkins, G. M., Reinsel, G. C., &amp; Ljung, G. M. (2015). Time series analysis: Forecasting and control (5th ed). Hoboken, New Jersey: John Wiley &amp; Sons.</p>
+</li>
+<li>
+<p>math background: Brockwell, P. J., &amp; Davis, R. A. (2016). Introduction to time series and forecasting (3rd ed). New York, USA: Springer.</p>
+</li>
+<li>
+<p>alternatie autoarima: Peña, D., Tiao, G. C., &amp; Tsay, R. S. (Eds.). (2001). A course in time series analysis. New York, USA: John Wiley &amp; Sons.</p>
+</li>
+<li>
+<p>long memory ARMA models: Section 5.1 of Shumway and Stoffer</p>
+</li>
+</ul>
+</div>
+</div>
+<div class="sect2">
+<h3 id="trueauto-arima-from-r"><a class="anchor" href="#trueauto-arima-from-r"></a>auto.arima from R</h3>
+<div class="ulist">
+<ul>
+<li>
+<p><a href="https://otexts.org/fpp2/arima-r.html" class="bare">https://otexts.org/fpp2/arima-r.html</a></p>
+</li>
+<li>
+<p>unit root test, minimize AIC, fit MLE</p>
+</li>
+<li>
+<p>d&#8656;2 determined from KPSS test</p>
+</li>
+<li>
+<p>initial (0,0) (2,2) (1,0) (0,1); if d&lt;2: use constant, but also fit (0,0) without constant</p>
+</li>
+<li>
+<p>start from best of initial and vary parameters to find better models</p>
+</li>
+<li>
+<p><code>approximation=FALSE</code> and <code>stepwise=FALSE</code> for more search</p>
+</li>
+<li>
+<p>need to be force to search more parameters, if want more brute force</p>
+</li>
+</ul>
+</div>
+</div>
+<div class="sect2">
+<h3 id="trueidentifying-arima-models"><a class="anchor" href="#trueidentifying-arima-models"></a>Identifying ARIMA models</h3>
+<div class="ulist">
+<ul>
+<li>
+<p><a href="http://people.duke.edu/~rnau/arimrule.htm" class="bare">http://people.duke.edu/~rnau/arimrule.htm</a></p>
+</li>
+</ul>
+</div>
+<div class="sect3">
+<h4 id="truedifferencing"><a class="anchor" href="#truedifferencing"></a>Differencing</h4>
+<div class="ulist">
+<ul>
+<li>
+<p>positive autocorr. to high order &#8594; difference more</p>
+</li>
+<li>
+<p>lag-1 small &#8594; no more differencing</p>
+</li>
+<li>
+<p>lag-1 &lt; -0.5 &#8594; overdifferenced</p>
+</li>
+<li>
+<p>best differencing order often when stddev smallest</p>
+</li>
+<li>
+<p>no-order differencing usually includes constant term to allow for non-zero mean</p>
+</li>
+<li>
+<p>one-order differencing usually with constant term of series has trend</p>
+</li>
+<li>
+<p>two-order differencing usally no constant term</p>
+</li>
+</ul>
+</div>
+</div>
+<div class="sect3">
+<h4 id="trueidentifying-ar-and-ma-terms"><a class="anchor" href="#trueidentifying-ar-and-ma-terms"></a>Identifying AR and MA terms</h4>
+<div class="ulist">
+<ul>
+<li>
+<p>PACF sharp cutoff or lag-1 positive (looks underdiff) &#8594; one more AR term (lag beyond which PACF cuts off is indicated number of terms)</p>
+</li>
+<li>
+<p>ACF sharp cutoff or lag-1 negative (looks overdiff) &#8594; add MA term</p>
+</li>
+<li>
+<p>sometimes AR and MA terms cancel &#8594; try one fewer AR and MA term (esp. if converged after only more than 10 steps)</p>
+</li>
+<li>
+<p>beware of multiple AR <em>and</em> multiple MA terms in same model</p>
+</li>
+<li>
+<p>unit root in AR (sum of AR coef ~ 1) &#8594; reduce num. AR terms by one and increase differencing</p>
+</li>
+<li>
+<p>unit root in MA (sum of MA coef ~ 1) &#8594; reduce num. MA terms by one and reduce order of differening</p>
+</li>
+<li>
+<p>if long term forecasts erratic or unstable &#8594; probably unit root in AR or MA</p>
+</li>
+<li>
+<p>term too high &#8594; model may explode on short outlier patterns</p>
+</li>
+</ul>
+</div>
+</div>
+<div class="sect3">
+<h4 id="trueidentify-seasonal-part"><a class="anchor" href="#trueidentify-seasonal-part"></a>Identify seasonal part</h4>
+<div class="ulist">
+<ul>
+<li>
+<p>if seasons &#8594; always use seasonal differencing (otherwise seasonal pattern fades out over time)</p>
+</li>
+<li>
+<p>but seasonal diff &#8656; 1</p>
+</li>
+<li>
+<p>seasonal diff + nonseasonal diff &#8656; 2</p>
+</li>
+<li>
+<p>if seasonal: use <span class=""><img src="http://localhost:50550/afx/cache/111bb025692e5ba52c23eae1d47b2035.png" alt=""></span> and <span class=""><img src="http://localhost:50550/afx/cache/2d2b701bbd2888966f9ae78c71b60095.png" alt=""></span> (if trend)</p>
+</li>
+<li>
+<p>autocorr positive at lag S &#8594; add sAR term</p>
+</li>
+<li>
+<p>autocorr negative at lag S &#8594; add sMA term</p>
+</li>
+<li>
+<p>sAR + sMA &#8656; 2 (or overfitting and estimation problems)</p>
+</li>
+</ul>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="truevar-varma-models"><a class="anchor" href="#truevar-varma-models"></a>VAR/VARMA models</h2>
+<div class="sectionbody">
+<div class="ulist">
+<ul>
+<li>
+<p>"Although the model allows estimating VARMA(p,q) specifications, these models are not identified without additional restrictions on the representation matrices, which are not built-in" (?)</p>
+</li>
+<li>
+<p>VARMA: includes MA</p>
+</li>
+<li>
+<p>special cases of ARMAX</p>
+</li>
+<li>
+<p>error terms may be correlated</p>
+</li>
+<li>
+<p>VAR stationary of all roots of <span class=""><img src="http://localhost:50550/afx/cache/d9d5c8407d6688613811cfe167b0ca0f.png" alt=""></span> are outside unit complex circle</p>
+</li>
+<li>
+<p>single unit root if exactly one root z=+1 (holds if at least one of variables contains unit root)</p>
+</li>
+<li>
+<p>can be used for Granger causality testing</p>
+</li>
+<li>
+<p>to determine (max) lag length &#8594; use VAR with AIC</p>
+</li>
+<li>
+<p>to get BLUE, one can apply OLS to every equation individually</p>
+</li>
+<li>
+<p>steps:</p>
+<div class="ulist">
+<ul>
+<li>
+<p>use AIC to find correct (max) lag</p>
+</li>
+<li>
+<p>fit with OLS</p>
+</li>
+<li>
+<p>use Portmanteau test on residuals to check model</p>
+</li>
+</ul>
+</div>
+</li>
+</ul>
+</div>
+<div class="sect2">
+<h3 id="truearima-vs-ets"><a class="anchor" href="#truearima-vs-ets"></a>ARIMA vs ETS</h3>
+<div class="ulist">
+<ul>
+<li>
+<p>linear ETS is special case of ARIMA</p>
+</li>
+<li>
+<p>non-linear ETS no equivalent ARIMA</p>
+</li>
+<li>
+<p>some ARIMA not a ETS</p>
+</li>
+<li>
+<p>all ETS non-stationary, some ARIMA stationary</p>
+</li>
+<li>
+<p>AIC cannot be used to compare ARIMA and ETS because diff model class and diff MLE</p>
+</li>
+<li>
+<p>but could use time series CV to compare</p>
+</li>
+</ul>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="truearfima-fractional-differences-model"><a class="anchor" href="#truearfima-fractional-differences-model"></a>ARFIMA Fractional differences model</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p><span class=""><img src="http://localhost:50550/afx/cache/f9f19534bd63a74712ea4ab68732d7be.png" alt=""></span></p>
+</div>
+<div class="paragraph">
+<p><span class=""><img src="http://localhost:50550/afx/cache/4dd6ed60b8c43f0ab328c4b4f68a0e33.png" alt=""></span></p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>when ACF slowly goes to 0</p>
+</li>
+<li>
+<p>hard to interpret</p>
+</li>
+</ul>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="truethreshold-models"><a class="anchor" href="#truethreshold-models"></a>Threshold models</h2>
+<div class="sectionbody">
+<div class="ulist">
+<ul>
+<li>
+<p><a href="https://onlinecourses.science.psu.edu/stat510/node/82/" class="bare">https://onlinecourses.science.psu.edu/stat510/node/82/</a></p>
+</li>
+<li>
+<p>different behavior when value of a variable beyond some threshold</p>
+</li>
+<li>
+<p>special case of RSM (regime switching models)</p>
+</li>
+<li>
+<p>TAR threshold autoregressive models</p>
+</li>
+</ul>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="truedynamic-regression"><a class="anchor" href="#truedynamic-regression"></a>Dynamic regression</h2>
+<div class="sectionbody">
+<div class="ulist">
+<ul>
+<li>
+<p><a href="https://otexts.org/fpp2/estimation.html" class="bare">https://otexts.org/fpp2/estimation.html</a></p>
+</li>
+<li>
+<p>fit linear model and see if residuals follow AR process</p>
+</li>
+<li>
+<p>normal linear regression, but let (auto-correlated) error <span class=""><img src="http://localhost:50550/afx/cache/0288bde0c2d593f2b5766f61b826a650.png" alt=""></span> follow an ARIMA model (with white noise error <span class=""><img src="http://localhost:50550/afx/cache/3cd38ab30e1e7002d239dd1a75a6dfa8.png" alt=""></span>)</p>
+</li>
+<li>
+<p>cannot just minimize (auto-correlated) <span class=""><img src="http://localhost:50550/afx/cache/0288bde0c2d593f2b5766f61b826a650.png" alt=""></span> since would be biased, statistical tests would be incorrect, AIC would be incorrect, p-values would be too small &#8594; minimize <span class=""><img src="http://localhost:50550/afx/cache/3cd38ab30e1e7002d239dd1a75a6dfa8.png" alt=""></span> from ARIMA model
+*! require that target and all of features are stationary (otherwise coefs will not be consistent)</p>
+</li>
+<li>
+<p>exception for stationarity requirement: co-integrated (linear combination of non-stationary is actually stationary)</p>
+</li>
+<li>
+<p>to keep variable nature, apply same differencing to all of them at once ("model in differences")</p>
+</li>
+<li>
+<p>now only need ARMA model (not ARIMA)</p>
+</li>
+<li>
+<p>to forecast, you also need to predict features (e.g. by assuming past averages)</p>
+</li>
+<li>
+<p>Pankratz, A. E. (1991): "Forecasting with dynamic regression models."</p>
+</li>
+<li>
+<p>Generalization of dynamic regression models, "transfer function models": Box, G. E. P., Jenkins, G. M., Reinsel, G. C., &amp; Ljung, G. M. (2015). "Time series analysis: Forecasting and control" (5th ed)</p>
+</li>
+</ul>
+</div>
+<div class="sect2">
+<h3 id="truetrend-modeling"><a class="anchor" href="#truetrend-modeling"></a>Trend modeling</h3>
+<div class="ulist">
+<ul>
+<li>
+<p>options:</p>
+<div class="ulist">
+<ul>
+<li>
+<p>deterministic trend: constant term in target prediction</p>
+</li>
+<li>
+<p>stochastic trend: using differencing (<span class=""><img src="http://localhost:50550/afx/cache/2d2b701bbd2888966f9ae78c71b60095.png" alt=""></span>) in error model (will have wider prediction intervals; but that may be good because it considers changing trends)</p>
+</li>
+</ul>
+</div>
+</li>
+</ul>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="truespectral-density"><a class="anchor" href="#truespectral-density"></a>Spectral density</h2>
+<div class="sectionbody">
+<div class="ulist">
+<ul>
+<li>
+<p><a href="https://onlinecourses.science.psu.edu/stat510/node/80/" class="bare">https://onlinecourses.science.psu.edu/stat510/node/80/</a></p>
+</li>
+</ul>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="trueseasons-with-harmonic-regression"><a class="anchor" href="#trueseasons-with-harmonic-regression"></a>Seasons with Harmonic regression</h2>
+<div class="sectionbody">
+<div class="ulist">
+<ul>
+<li>
+<p><a href="https://otexts.org/fpp2/dhr.html" class="bare">https://otexts.org/fpp2/dhr.html</a></p>
+</li>
+<li>
+<p>for long seasonal trends: dynamic regression with Fourier terms often better; especially since ARIMA does not like large periods (24 for hourly just about fine)</p>
+</li>
+<li>
+<p>also differencing daily data on a year ago is just noisy</p>
+</li>
+<li>
+<p>&#8594; use harmonic regression for seasons and ARMA for short-term</p>
+</li>
+<li>
+<p>only drawback is that seasons are assumed to be constant</p>
+</li>
+<li>
+<p>10/365 for yearly and 3/7 for weekly components works well (?)</p>
+</li>
+</ul>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="truelagged-features"><a class="anchor" href="#truelagged-features"></a>Lagged features</h2>
+<div class="sectionbody">
+<div class="ulist">
+<ul>
+<li>
+<p>include lagged features if it makes sense (due to delayed effects)</p>
+</li>
+<li>
+<p>choose number of lags by AIC</p>
+</li>
+</ul>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="truehierarchical-grouped-time-series"><a class="anchor" href="#truehierarchical-grouped-time-series"></a>Hierarchical/grouped time series</h2>
+<div class="sectionbody">
+<div class="ulist">
+<ul>
+<li>
+<p>when target can be split into (hierarchical) categories (e.g. type or region)</p>
+</li>
+<li>
+<p>want "coherent" add up of series</p>
+</li>
+<li>
+<p>there is always: [all-intermediate-level-targets] = [Summing matrix] * [Bottom-level-targets]</p>
+</li>
+<li>
+<p>Wickramasuriya, S. L., Athanasopoulos, G., &amp; Hyndman, R. J. (2018). Optimal forecast reconciliation for hierarchical and grouped time series through trace minimization</p>
+</li>
+<li>
+<p>"Grouped time series": Also independent (crossed) categorisation and not just a single tree</p>
+</li>
+<li>
+<p>bottom-up approach: just predict bottom level and sum</p>
+</li>
+<li>
+<p>top-down approach: predict top level and then predict proportions of categories; may perform well</p>
+</li>
+<li>
+<p>check <a href="https://otexts.org/fpp2/top-down.html" class="bare">https://otexts.org/fpp2/top-down.html</a> for more</p>
+</li>
+<li>
+<p>middle-out approach: predict from middle and expand by summing or using proportions</p>
+</li>
+<li>
+<p>generally incoherent forecasts can be made coherent with a "reconciliation matrix"</p>
+</li>
+<li>
+<p>optimal reconciliation matrix: <a href="https://otexts.org/fpp2/reconciliation.html" class="bare">https://otexts.org/fpp2/reconciliation.html</a>; "MinT" approach</p>
+<div class="ulist">
+<ul>
+<li>
+<p>no top-down approach can be unbiased</p>
+</li>
+<li>
+<p>need to estimate forecast error variance &#8594; use approximations</p>
+</li>
+</ul>
+</div>
+</li>
+<li>
+<p>further reading:</p>
+<div class="ulist">
+<ul>
+<li>
+<p>Gross &amp; Sohl (1990) provide a good introduction to the top-down approaches.</p>
+</li>
+<li>
+<p>The reconciliation methods were developed in a series of papers, which are best read in the following order: Hyndman et al. (2011), Athanasopoulos et al. (2009), Hyndman, Lee, &amp; Wang (2016), Wickramasuriya et al. (2018).</p>
+</li>
+<li>
+<p>Athanasopoulos, Hyndman, Kourentzes, &amp; Petropoulos (2017) extends the reconciliation approach to deal with temporal hierarchies.</p>
+</li>
+</ul>
+</div>
+</li>
+</ul>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="truecomplex-multiple-seasonality"><a class="anchor" href="#truecomplex-multiple-seasonality"></a>Complex, multiple seasonality</h2>
+<div class="sectionbody">
+<div class="ulist">
+<ul>
+<li>
+<p><a href="https://otexts.org/fpp2/complexseasonality.html" class="bare">https://otexts.org/fpp2/complexseasonality.html</a></p>
+</li>
+<li>
+<p><code>msts</code>, <code>mstl</code> classes in R: specify all frequencies</p>
+</li>
+<li>
+<p>or use harmonic regression (include Fourier terms for each frequency <span class=""><img src="http://localhost:50550/afx/cache/b9ece18c950afbfa6b0fdbfa4ff731d3.png" alt=""></span>): <span class=""><img src="http://localhost:50550/afx/cache/6b076fcc6bf226e25704073321deb82b.png" alt=""></span>; optimize number of terms by AICc</p>
+</li>
+<li>
+<p>or TBATS model by Livera, Hyndman, Synder: combination of Fourier, exp. smoothing, Box-Cox, automated</p>
+<div class="ulist">
+<ul>
+<li>
+<p>however prediction intervals often too wide</p>
+</li>
+<li>
+<p>do not allow for features</p>
+</li>
+</ul>
+</div>
+</li>
+<li>
+<p>more sophisticated:
+*+ Hyndman, R. J., &amp; Fan, S. (2010). Density forecasting for long-term peak electricity demand. IEEE Transactions on Power Systems, 25(2), 1142–1153.</p>
+<div class="ulist">
+<ul>
+<li>
+<p>Fan, S., &amp; Hyndman, R. J. (2012). Short-term load forecasting based on a semi-parametric additive model. IEEE Transactions on Power Systems, 27(1), 134–141.</p>
+</li>
+</ul>
+</div>
+</li>
+</ul>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="truevector-autoregression-var-where-bi-directional-influence"><a class="anchor" href="#truevector-autoregression-var-where-bi-directional-influence"></a>Vector autoregression (VAR) where bi-directional influence</h2>
+<div class="sectionbody">
+<div class="ulist">
+<ul>
+<li>
+<p>target influences features</p>
+</li>
+<li>
+<p>influence cross-terms</p>
+</li>
+<li>
+<p>choose how many variables (choose only few by information criterion) and how many lags to use</p>
+</li>
+<li>
+<p>for co-integrated features use "vector error correction model"</p>
+</li>
+<li>
+<p>predict recursively with 1-step predictions</p>
+</li>
+<li>
+<p><code>VARselect()</code> from R <code>vars</code> package select number of lags; Hyndmann suggests BIC (SC) criterions since AIC chooses too many features</p>
+</li>
+<li>
+<p>making cross-influence possible seems raw, but VAR useful when:</p>
+<div class="ulist">
+<ul>
+<li>
+<p>forecasting a collection of related variables where no explicit interpretation is required</p>
+</li>
+<li>
+<p>testing whether one variable is useful in forecasting another (the basis of Granger causality tests);</p>
+</li>
+<li>
+<p>impulse response analysis, where the response of one variable to a sudden but temporary change in another variable is analysed;</p>
+</li>
+<li>
+<p>forecast error variance decomposition, where the proportion of the forecast variance of each variable is attributed to the effects of the other variables</p>
+</li>
+</ul>
+</div>
+</li>
+<li>
+<p>Vector ARMA generalization but also more complicating</p>
+</li>
+<li>
+<p>shock matrix could be useful in Eigenvectors</p>
+</li>
+<li>
+<p>do not difference if doing a Granger causality test; difference only if other purpose and I(1) but not cointegrated</p>
+</li>
+<li>
+<p>when cointegrated &#8594; need VECM model</p>
+</li>
+<li>
+<p>impulse response: <code>irf=result.irf(n); irf.plot()</code></p>
+</li>
+<li>
+<p>forecasting error variance decomposition: <code>fevd=result.fevd(n); fevd.plot()</code></p>
+</li>
+<li>
+<p>statistical test: <code>result.test_causality("y", ["x1", "x2"])</code></p>
+</li>
+</ul>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="trueneural-networks"><a class="anchor" href="#trueneural-networks"></a>Neural networks</h2>
+<div class="sectionbody">
+<div class="ulist">
+<ul>
+<li>
+<p>use <span class=""><img src="http://localhost:50550/afx/cache/83878c91171338902e0fe0fb97a8c47a.png" alt=""></span> lags and <span class=""><img src="http://localhost:50550/afx/cache/8ce4b16b22b58894aa86c421e8759df3.png" alt=""></span> nodes in a simple (autoregressive) neural network NNAR(p,k)</p>
+</li>
+<li>
+<p><code>nnetar()</code></p>
+</li>
+<li>
+<p>since not a stochastic model, no clear prediction intervals &#8594; pick random errors from a distribution while predicting and simulate possible future paths</p>
+</li>
+<li>
+<p><a href="http://www.ijcaonline.org/archives/volume143/number11/zaytar-2016-ijca-910497.pdf">On weather</a></p>
+</li>
+<li>
+<p><a href="https://deepmind.com/blog/wavenet-generative-model-raw-audio/">Wavenet</a></p>
+</li>
+<li>
+<p><a href="http://web.engr.oregonstate.edu/~tgd/publications/mlsd-ssspr.pdf">Overview</a></p>
+</li>
+<li>
+<p><a href="https://stats.stackexchange.com/questions/8000/proper-way-of-using-recurrent-neural-network-for-time-series-analysis" class="bare">https://stats.stackexchange.com/questions/8000/proper-way-of-using-recurrent-neural-network-for-time-series-analysis</a></p>
+</li>
+<li>
+<p><a href="http://www.obitko.com/tutorials/neural-network-prediction/introduction.html" class="bare">http://www.obitko.com/tutorials/neural-network-prediction/introduction.html</a></p>
+</li>
+</ul>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="truebootstrapping-and-bagging"><a class="anchor" href="#truebootstrapping-and-bagging"></a>Bootstrapping and bagging</h2>
+<div class="sectionbody">
+<div class="ulist">
+<ul>
+<li>
+<p>"blocked bootstrap" random sections of remainder time series (i.e. without trend ans season) select and joined together</p>
+</li>
+<li>
+<p>&#8594; measure of forecast uncertainty</p>
+</li>
+</ul>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="truechange-detection"><a class="anchor" href="#truechange-detection"></a>Change detection</h2>
+<div class="sectionbody">
+<div class="ulist">
+<ul>
+<li>
+<p>Chow test: test whether fitting two linear regression for each time period would give different slopes/offsets</p>
+</li>
+<li>
+<p>Package Prophet (Facebook) can fit various seasonalities and underlying piece-wise linear trends with PyStan</p>
+</li>
+</ul>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="truegeneral"><a class="anchor" href="#truegeneral"></a>General</h2>
+<div class="sectionbody">
+<div class="ulist">
+<ul>
+<li>
+<p>all can be additive or multiplicative</p>
+</li>
+<li>
+<p>remove calendar effects (e.g. number of days in month); could be seen as negative autocorrelation before correction(!)</p>
+</li>
+<li>
+<p>forecast variable y: dependent, explained variables</p>
+</li>
+<li>
+<p>predictor variable x: independent, explanatory variable</p>
+</li>
+<li>
+<p>forecast inefficient if residuals autocorrelated or correlated with target</p>
+</li>
+<li>
+<p>could use spike or step function for interventions or changes</p>
+</li>
+<li>
+<p>lagged values can be useful</p>
+</li>
+<li>
+<p>for seasons of period <span class=""><img src="http://localhost:50550/afx/cache/6f8f57715090da2632453988d9a1501b.png" alt=""></span> could use first Fourier features <span class=""><img src="http://localhost:50550/afx/cache/53f80ea2537e989ea21b9d131305ca24.png" alt=""></span>,[cos]] (2*pi*t*k/m)]</p>
+</li>
+<li>
+<p>regression with Fourier terms: "harmonic regression"</p>
+</li>
+<li>
+<p><a href="https://otexts.org/fpp2/regression-matrices.html" class="bare">https://otexts.org/fpp2/regression-matrices.html</a></p>
+</li>
+<li>
+<p>CV statistics can be calculated directly from hat matrix <span class=""><img src="http://localhost:50550/afx/cache/591211cf5ffb3ec9eb0a8ee38555f1b8.png" alt=""></span> with <span class=""><img src="http://localhost:50550/afx/cache/14e267a3398a63f9b284f1c74e6209ec.png" alt=""></span> where <span class=""><img src="http://localhost:50550/afx/cache/6c4ff69dbcc329835a33b80fe3a145c7.png" alt=""></span> are diagonal elements of hat matrix [hence not needed to fit many models]</p>
+</li>
+<li>
+<p>when multi-collinearity: coefficient estimates unreliable, relation between features unreliable; for good software not a problem [unless perfect collinearity?]</p>
+</li>
+<li>
+<p>forecast unreliable of new features outside previous range</p>
+</li>
+<li>
+<p>"seasonally adjusted": remove seasonal</p>
+</li>
+<li>
+<p>if season order 4: 2x4 MA (moving average, first 2 then 4) will give weights (1/8,1/4,1/4,1/4,1/8) and hence remove quarterly season; MA is centered here</p>
+</li>
+<li>
+<p>classical decomposition: detrend with MA (m for odd, 2xm for even order season) &#8594; remove averaged curve from original; average out months</p>
+</li>
+<li>
+<p>for monthly/quarterly seasons, some institutions have developed simple averagine methods: <a href="https://otexts.org/fpp2/x11.html" class="bare">https://otexts.org/fpp2/x11.html</a></p>
+</li>
+<li>
+<p><a href="https://otexts.org/fpp2/stl.html">STL Seasonal and Trend decomposition using Loess</a></p>
+</li>
+<li>
+<p>FPP prefers to use AICc for minimization</p>
+</li>
+<li>
+<p>one could plot complex root with unit circle (<a href="https://otexts.org/fpp2/arima-r.html" class="bare">https://otexts.org/fpp2/arima-r.html</a>) to see how stationary and invertible the model is &#8594; roots close to unit circle may make the model unstable (but many implementations only return well-behaved models)</p>
+</li>
+<li>
+<p>for forecasting: use predicted values as features; use zero for future errors; <a href="https://otexts.org/fpp2/arima-forecasting.html" class="bare">https://otexts.org/fpp2/arima-forecasting.html</a></p>
+</li>
+<li>
+<p>forecasting with co-integrated: "Applied time series modelling and forecasting" (Richard Harris and Robert Sollis)</p>
+</li>
+<li>
+<p>almost all model give too narrow(!) prediction intervals since some uncertainty not considered (e.g. ETS 95% may cover only 70%)</p>
+</li>
+<li>
+<p>Bagging: predict many bootstrapped versions and average</p>
+</li>
+<li>
+<p>one could need 13 Fourier terms with <span class=""><img src="http://localhost:50550/afx/cache/5ed0e4d3a22279520f871999afef5aed.png" alt=""></span> if you have weekly data and yearly seasons</p>
+</li>
+<li>
+<p>for holiday effects use dummy variable (but STL, ETC, TBATS do not allow features) &#8594; rather use dynamic regression models</p>
+</li>
+<li>
+<p>for predicting low integer counts: <a href="https://otexts.org/fpp2/counts.html" class="bare">https://otexts.org/fpp2/counts.html</a></p>
+<div class="ulist">
+<ul>
+<li>
+<p>Croston&#8217;s method: often used, even though not great; predict non-zero values and also length of zero count runs</p>
+</li>
+<li>
+<p>better methods for low count data: Christou, V., &amp; Fokianos, K. (2015). On count time series prediction. Journal of Statistical Computation and Simulation, 85(2), 357–373.</p>
+</li>
+</ul>
+</div>
+</li>
+<li>
+<p>to limit forecasts to a range, one could transform them <a href="https://otexts.org/fpp2/limits.html" class="bare">https://otexts.org/fpp2/limits.html</a> (e.g. log for positive counts)</p>
+</li>
+<li>
+<p>if you want to predict aggregates (e.g. 3 month sum when having monthly data), you can just sum, but may need to correct prediction intervals (possible correlations)</p>
+</li>
+<li>
+<p>ETS and ARIMA with differencing allow for condition changes, but dynamic regression models have no evolution</p>
+</li>
+<li>
+<p>think of if you want 1 or multi step forecasts in train/test data</p>
+</li>
+<li>
+<p>missing values can be estimated</p>
+</li>
+<li>
+<p>you could replace outliers with missing values</p>
+</li>
+<li>
+<p>ideally do not use the future information to decide on missing or outlier values</p>
+</li>
+<li>
+<p>more possible time series issues: last chapter of "Principles of business forecasting" (Ord, J. K., Fildes, R., &amp; Kourentzes, N. (2017))</p>
+</li>
+<li>
+<p>hard to beat SARIMAX (e.g. Python <a href="https://github.com/tgsmith61591/pyramid" class="bare">https://github.com/tgsmith61591/pyramid</a>)</p>
+</li>
+<li>
+<p>explore: time series itself, histogram of y, ACF, PACF(!)</p>
+</li>
+<li>
+<p>weak stat: first two moments constant (mean, [co]var)</p>
+</li>
+<li>
+<p>LSTM: does not need stationarity</p>
+</li>
+<li>
+<p>model revert to mean (zero), but unit root (i.e. non-stationary)? &#8594; coefs should reflect cointegration and obey some constraints</p>
+</li>
+<li>
+<p>level shifts affect unit root and cointegration test and implication for VAR and causality tests(?)</p>
+</li>
+</ul>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="truetime-series-classification"><a class="anchor" href="#truetime-series-classification"></a>Time Series Classification</h2>
+<div class="sectionbody">
+<div class="ulist">
+<ul>
+<li>
+<p>Nearest neighbor with Dynamic Time Warping hard to beat; also <a href="http://www.cs.ucr.edu/~eamonn/DTW_myths.pdf">DTW myths</a></p>
+</li>
+<li>
+<p><a href="http://link.springer.com/article/10.1007/s10618-014-0377-7">BOSS</a> <a href="https://arxiv.org/abs/1602.01711">successful</a></p>
+</li>
+<li>
+<p><a href="https://www.quora.com/What-are-some-time-series-classification-methods" class="bare">https://www.quora.com/What-are-some-time-series-classification-methods</a></p>
+</li>
+<li>
+<p><a href="http://sites.google.com/site/waleedkadous/publications/phd.pdf" class="bare">http://sites.google.com/site/waleedkadous/publications/phd.pdf</a> pages 30-54</p>
+</li>
+<li>
+<p><a href="https://www.amazon.com/Neural-Networks-Speech-Sequence-Recognition/dp/1850321701" class="bare">https://www.amazon.com/Neural-Networks-Speech-Sequence-Recognition/dp/1850321701</a></p>
+</li>
+</ul>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="truetrend-estimation"><a class="anchor" href="#truetrend-estimation"></a>Trend estimation</h2>
+<div class="sectionbody">
+<div class="ulist">
+<ul>
+<li>
+<p>simple moving average: not robust to outlier</p>
+</li>
+<li>
+<p>median filtering: could shadow mid-term change if large window</p>
+</li>
+<li>
+<p>EWMA: not robust to outliers</p>
+</li>
+<li>
+<p>bandpass filtering: similar to Hodrick-Prescott filter</p>
+</li>
+<li>
+<p>Hodrick-Prescott filter: decomposes into trend and cyclical component; multi-variable optimization of mean-square-error</p>
+</li>
+<li>
+<p>also Baxter-King and Christiano-Fitzgerald filter
+*! could also do same by L1 minimization: good when noise exponential, piece-wise linear, kinks in result show changes</p>
+</li>
+</ul>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="truebayesian-dynamic-linear-models-dlm"><a class="anchor" href="#truebayesian-dynamic-linear-models-dlm"></a>Bayesian Dynamic Linear Models - DLM</h2>
+<div class="sectionbody">
+<div class="ulist">
+<ul>
+<li>
+<p>estimation by Kalman filter recursion</p>
+</li>
+</ul>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="truelomb-scargle-periodigrams"><a class="anchor" href="#truelomb-scargle-periodigrams"></a>Lomb-Scargle periodigrams</h2>
+<div class="sectionbody">
+<div class="ulist">
+<ul>
+<li>
+<p>least-squares spectral analysis</p>
+</li>
+<li>
+<p>data as least squares of sines (DFT special case with orthogonal basis)</p>
+</li>
+<li>
+<p>can have missing values</p>
+</li>
+<li>
+<p>gatspy has fast implementation (faster than scipy or astroml); fast when regular grid of frequencies</p>
+</li>
+</ul>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="truechange-detection-2"><a class="anchor" href="#truechange-detection-2"></a>Change detection</h2>
+<div class="sectionbody">
+<div class="ulist">
+<ul>
+<li>
+<p><a href="https://stats.stackexchange.com/questions/139660/detecting-changes-in-time-series-r-example" class="bare">https://stats.stackexchange.com/questions/139660/detecting-changes-in-time-series-r-example</a></p>
+</li>
+</ul>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="truevideo"><a class="anchor" href="#truevideo"></a>Video</h2>
+<div class="sectionbody">
+<div class="ulist">
+<ul>
+<li>
+<p><a href="https://vimeo.com/274421819" class="bare">https://vimeo.com/274421819</a></p>
+</li>
+<li>
+<p>multi-variate time series</p>
+</li>
+<li>
+<p>to model effects from y on x: use vector for y &#8594; components affect each other</p>
+</li>
+<li>
+<p>Vector Autoregressive Models</p>
+<div class="ulist">
+<ul>
+<li>
+<p>only for stationary; but sometimes differencing makes stationary</p>
+</li>
+<li>
+<p>if non-stat. but linear combination is stat (co-integration): can do "Vector error correction model")</p>
+</li>
+<li>
+<p>sm.tsa.VARMAX</p>
+</li>
+</ul>
+</div>
+</li>
+</ul>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="trueanomaly-detection"><a class="anchor" href="#trueanomaly-detection"></a>Anomaly detection</h2>
+<div class="sectionbody">
+<div class="ulist">
+<ul>
+<li>
+<p>"Time Series Discord" proved to be best; for performance use <a href="http://www.cs.ucr.edu/~eamonn/MatrixProfile.html">Matrix Profile</a></p>
+</li>
+<li>
+<p><a href="https://www.elen.ucl.ac.be/Proceedings/esann/esannpdf/es2015-56.pdf">LSTM</a>, <a href="https://arxiv.org/pdf/1607.00148.pdf">LSTM</a></p>
+</li>
+<li>
+<p><a href="https://stats.stackexchange.com/questions/152644/what-algorithm-should-i-use-to-detect-anomalies-on-time-series" class="bare">https://stats.stackexchange.com/questions/152644/what-algorithm-should-i-use-to-detect-anomalies-on-time-series</a></p>
+</li>
+</ul>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="truecausality"><a class="anchor" href="#truecausality"></a>Causality</h2>
+<div class="sectionbody">
+<div class="ulist">
+<ul>
+<li>
+<p><a href="https://stats.stackexchange.com/questions/94200/causality-in-microeconometrics-versus-granger-causality-in-time-series-econometr" class="bare">https://stats.stackexchange.com/questions/94200/causality-in-microeconometrics-versus-granger-causality-in-time-series-econometr</a></p>
+</li>
+<li>
+<p><a href="https://stats.stackexchange.com/questions/144328/what-are-the-main-differences-between-grangers-and-pearls-causality-frameworks" class="bare">https://stats.stackexchange.com/questions/144328/what-are-the-main-differences-between-grangers-and-pearls-causality-frameworks</a></p>
+</li>
+<li>
+<p><a href="https://stats.stackexchange.com/questions/24753/interpreting-granger-causality-tests-results" class="bare">https://stats.stackexchange.com/questions/24753/interpreting-granger-causality-tests-results</a></p>
+</li>
+</ul>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="truegarch-model-autoregressive-conditionally-heteroskedastic-model"><a class="anchor" href="#truegarch-model-autoregressive-conditionally-heteroskedastic-model"></a>GARCH model (Autoregressive Conditionally Heteroskedastic Model)</h2>
+<div class="sectionbody">
+<div class="ulist">
+<ul>
+<li>
+<p><a href="https://www.quora.com/What-is-an-intuitive-explanation-of-ARCH-GARCH-models" class="bare">https://www.quora.com/What-is-an-intuitive-explanation-of-ARCH-GARCH-models</a></p>
+</li>
+<li>
+<p><a href="http://www.blackarbs.com/blog/time-series-analysis-in-python-linear-models-to-garch/11/1/2016" class="bare">http://www.blackarbs.com/blog/time-series-analysis-in-python-linear-models-to-garch/11/1/2016</a></p>
+</li>
+<li>
+<p>most often rather variance bursts instead of trends</p>
+</li>
+<li>
+<p>ARCH: AR(p) model for Variance; only MA in noise sequence (?)</p>
+</li>
+<li>
+<p>GARCH(n,m): ARMA for variance; i.e. based on estimated noise amplitude and also instance specific noise</p>
+</li>
+<li>
+<p>check PACF of squared values</p>
+</li>
+<li>
+<p><a href="https://onlinecourses.science.psu.edu/stat510/node/85/" class="bare">https://onlinecourses.science.psu.edu/stat510/node/85/</a></p>
+</li>
+<li>
+<p>Tsay book recommended for this</p>
+</li>
+<li>
+<p>ARCH: moving average of hidden noise; noise has to be estimated from autoregression</p>
+</li>
+<li>
+<p>ARCH finite impulse response in noise power &#8594; large variance effects disappear quickly</p>
+</li>
+<li>
+<p>GARCH infinite impulse response in noise power &#8594; impact from high variance in past can be longer than order of equation</p>
+</li>
+<li>
+<p>"stochastic volatility model"</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p><span class=""><img src="http://localhost:50550/afx/cache/224c16367e3402c096950ee2a5c219fa.png" alt=""></span></p>
+</div>
+<div class="paragraph">
+<p>After centering (remove mean or trend) to zero mean:</p>
+</div>
+<div class="paragraph">
+<p><span class=""><img src="http://localhost:50550/afx/cache/8988c64e11c4a7ba94a8902582124f6d.png" alt=""></span>
+<span class=""><img src="http://localhost:50550/afx/cache/97a5fe055584c0e9086385548c809f83.png" alt=""></span></p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>this model is causal (can be converted to MA model) only when <span class=""><img src="http://localhost:50550/afx/cache/70b2f4ebd20aa11e80340e28ea6407d3.png" alt=""></span></p>
+</li>
+<li>
+<p><span class=""><img src="http://localhost:50550/afx/cache/a568bf104397bd8311073893dff24222.png" alt=""></span> white noise when <span class=""><img src="http://localhost:50550/afx/cache/f75ad56061696e59d77653f697dacfc3.png" alt=""></span></p>
+</li>
+</ul>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="truetransfer-function"><a class="anchor" href="#truetransfer-function"></a>Transfer function</h2>
+<div class="sectionbody">
+<div class="ulist">
+<ul>
+<li>
+<p>model y in terms of lags of y and x</p>
+</li>
+</ul>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="trueintervention-quantification"><a class="anchor" href="#trueintervention-quantification"></a>Intervention quantification</h2>
+<div class="sectionbody">
+<div class="ulist">
+<ul>
+<li>
+<p><a href="https://onlinecourses.science.psu.edu/stat510/node/76/" class="bare">https://onlinecourses.science.psu.edu/stat510/node/76/</a></p>
+</li>
+<li>
+<p>determine how much mean jumped after a known intervention</p>
+</li>
+</ul>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="trueother-methods"><a class="anchor" href="#trueother-methods"></a>Other methods</h2>
+<div class="sectionbody">
+<div class="ulist">
+<ul>
+<li>
+<p><a href="http://www.cs.ucr.edu/~eamonn/SAX.htm">SAX</a>: motif discovery(?)</p>
+</li>
+<li>
+<p><a href="http://www.scholarpedia.org/article/Slow_feature_analysis">Slow feature analysis</a>: extract parameters behind chaotic models</p>
+</li>
+<li>
+<p>Filtering:</p>
+<div class="ulist">
+<ul>
+<li>
+<p>Savitzky-Golay: try to preserve shape and intensity</p>
+</li>
+<li>
+<p>Loess: try to preserve area under curve</p>
+</li>
+</ul>
+</div>
+</li>
+</ul>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="truecookbook"><a class="anchor" href="#truecookbook"></a>Cookbook</h2>
+<div class="sectionbody">
+<div class="ulist">
+<ul>
+<li>
+<p>check ACF of residuals</p>
+<div class="ulist">
+<ul>
+<li>
+<p>see tests above</p>
+</li>
+<li>
+<p>helpful if normal, for easier prediction intervals</p>
+</li>
+</ul>
+</div>
+</li>
+<li>
+<p>residuals correlate with feature &#8594; may need non-linear feature transformation</p>
+</li>
+<li>
+<p>any feature which is not in model correlates with residuals? &#8594; include</p>
+</li>
+<li>
+<p>residuals vs fitted values &#8594; if pattern, then heteroscedacticity and maybe transform target</p>
+</li>
+<li>
+<p>outliers which are "influential observations"?</p>
+</li>
+<li>
+<p>for ARIMA:</p>
+<div class="ulist">
+<ul>
+<li>
+<p><a href="https://otexts.org/fpp2/arima-r.html" class="bare">https://otexts.org/fpp2/arima-r.html</a></p>
+</li>
+<li>
+<p>plot</p>
+</li>
+<li>
+<p>stabilize variance if needed</p>
+</li>
+<li>
+<p>check stationary with ACF (needs to drop quickly)</p>
+</li>
+<li>
+<p>make stationary by differencing if needed</p>
+</li>
+<li>
+<p>check ACF/PACF if (p,0) or (0,q) model appropriate &#8594; use AICc to find better models</p>
+</li>
+<li>
+<p>check residuals by ACF and Portmanteau test to verify that they are white noise</p>
+</li>
+</ul>
+</div>
+</li>
+<li>
+<p>for CV test set you can use business metric again and also different differencing parameters</p>
+<div class="literalblock">
+<div class="content">
+<pre>from statsmodels.tsa.stattools import kpss
+p_values = kpss(s)[1]
+if p_value &gt; 0.05:
+    print("Stationary. Good!")</pre>
+</div>
+</div>
+</li>
+<li>
+<p>alternatively <code>adfuller(s)[1] &lt; 0.05</code> wanted (but this test is weaker)</p>
+</li>
+</ul>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="truestationarity"><a class="anchor" href="#truestationarity"></a>Stationarity</h2>
+<div class="sectionbody">
+<div class="ulist">
+<ul>
+<li>
+<p>need for models which rely on a process of constant conditions</p>
+</li>
+<li>
+<p>could be due to global trend, seasonality</p>
+</li>
+<li>
+<p>could have variation in: mean, variance, autocorrelation (i.e. frequency)</p>
+</li>
+<li>
+<p>could test by plot of moving average</p>
+</li>
+<li>
+<p>Dickey-Fuller test: null hyp. is the TS is non-stationary &#8594; DF statistics need to be <em>low</em> (for stationarity)</p>
+</li>
+<li>
+<p>Augmented Dickey-Fuller test:</p>
+<div class="ulist">
+<ul>
+<li>
+<p>NULL: has unit root</p>
+</li>
+<li>
+<p>alternative: stationary or trend-stationary (depends on version)</p>
+</li>
+<li>
+<p>ADF version is DF version for larger and more complicating data</p>
+</li>
+<li>
+<p>statistic is negative and more negative is better for not having a unit root</p>
+</li>
+<li>
+<p>p-value should be low</p>
+</li>
+<li>
+<p><code>statsmodels.tsa.stattools.adfuller(ts, autolag="AIC")</code></p>
+</li>
+</ul>
+</div>
+</li>
+<li>
+<p>for details wee "Brockwell and Davis"</p>
+</li>
+<li>
+<p>make stationary:</p>
+<div class="ulist">
+<ul>
+<li>
+<p>differencing</p>
+</li>
+<li>
+<p>or decomposition (subtract trend)</p>
+</li>
+<li>
+<p>scaling (e.g. log) to equalize variance</p>
+</li>
+</ul>
+</div>
+</li>
+<li>
+<p><a href="http://people.duke.edu/~rnau/whatuse.htm" class="bare">http://people.duke.edu/~rnau/whatuse.htm</a></p>
+</li>
+<li>
+<p>colored noise is stationary; hitting a guitar is not</p>
+</li>
+<li>
+<p><strong>model</strong> is stationary if coefs obey some relation for complex roots of a determinante</p>
+</li>
+</ul>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="truetrend-estimation-in-time-series-signals"><a class="anchor" href="#truetrend-estimation-in-time-series-signals"></a>Trend estimation in time series signals</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p><a href="https://www.youtube.com/watch?v=likDxYXhNQY" class="bare">https://www.youtube.com/watch?v=likDxYXhNQY</a>
+* median filtering: more robust to outliers, non-linear; could shadow mid-term if large window
+* exponential weighted moving average: not robust to outliers; pd.stats
+* bandpass filtering: extract mid-term (high=noise; low=bias); similar to Hodrick-Prescott filter; scipy.signal
+* hodrick-prescott filter:
+<strong> one of best for trends
+</strong> decompose into trend (mid-term growth) and cyclical component
+<strong> minimize optimization function with smoothness constraint
+</strong> good when noise Gaussian
+<strong> bandpass at heart
+</strong> cycle: short term; trend: medium term
+<strong> linear
+</strong> Python statsmodels
+* L1 trend filtering:
+<strong> L1 error
+</strong> more robust
+<strong> piecewise linear!
+</strong> nonlinear
+<strong> good when noise exponentially distr.
+</strong> computationally expensive
+** library from Bugra</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="trueother-packages"><a class="anchor" href="#trueother-packages"></a>Other packages</h2>
+<div class="sectionbody">
+<div class="ulist">
+<ul>
+<li>
+<p><a href="https://github.com/blue-yonder/pydse" class="bare">https://github.com/blue-yonder/pydse</a></p>
+</li>
+</ul>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="truetips"><a class="anchor" href="#truetips"></a>Tips</h2>
+<div class="sectionbody">
+<div class="ulist">
+<ul>
+<li>
+<p>GARCH, ARCH, regression, ARIMA</p>
+</li>
+<li>
+<p>Theta method: Theta method was equivalent to an average of a linear regression and simple exponential smoothing with drift</p>
+</li>
+<li>
+<p>outlier removal (e.g. once-off events)</p>
+<div class="ulist">
+<ul>
+<li>
+<p>local smoother; use residuals to determine seasonality; compare double smoothed to original data and drop outside 3 sigma</p>
+</li>
+</ul>
+</div>
+</li>
+<li>
+<p>MASE can be very sensitive to a few series; worth concentrating on these if you really have to optimize for MASE</p>
+<div class="ulist">
+<ul>
+<li>
+<p>maybe then use only linear growth (not exponential); additive seasonality (not multiplicative) - otherwise small weights</p>
+</li>
+</ul>
+</div>
+</li>
+<li>
+<p>include a global trend (e.g. from across all series; if data from one industry)</p>
+</li>
+<li>
+<p>for products consider it&#8217;s production life-cycle (how long ago it was first produced); maybe assume some shape on top of this time scale</p>
+</li>
+</ul>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="truefilters"><a class="anchor" href="#truefilters"></a>Filters</h2>
+<div class="sectionbody">
+<div class="ulist">
+<ul>
+<li>
+<p><code>tsa.filters.*</code></p>
+</li>
+</ul>
+</div>
+<div class="sect2">
+<h3 id="truehodrick-prescott-filter"><a class="anchor" href="#truehodrick-prescott-filter"></a>Hodrick-Prescott filter</h3>
+<div class="ulist">
+<ul>
+<li>
+<p>separate into trend and cyclical component</p>
+</li>
+<li>
+<p>minimize quadratic loss</p>
+</li>
+<li>
+<p>penality term lambda of roughness (e.g. 1600 for quarterly data, 6.25 for annual data, 129600 for monthly data)</p>
+</li>
+</ul>
+</div>
+</div>
+<div class="sect2">
+<h3 id="truebaxter-king-filter"><a class="anchor" href="#truebaxter-king-filter"></a>Baxter-King filter</h3>
+<div class="ulist">
+<ul>
+<li>
+<p>approximate band-pass filter that explicitely deals with periodicity of business cycle</p>
+</li>
+<li>
+<p>frequencies only exactly at business cycle</p>
+</li>
+<li>
+<p>US business cycle 1.5-8 years</p>
+</li>
+<li>
+<p>P_L=6, P_H=32 for quarterly; P_L=1.5, P_H=8 for annual data</p>
+</li>
+<li>
+<p>lead-lag length K=12</p>
+</li>
+</ul>
+</div>
+</div>
+<div class="sect2">
+<h3 id="truechristiano-fitzgerald-filter"><a class="anchor" href="#truechristiano-fitzgerald-filter"></a>Christiano-Fitzgerald filter</h3>
+<div class="ulist">
+<ul>
+<li>
+<p>asymmetric about time</p>
+</li>
+<li>
+<p>assumes random walk &#8594; allows to approximate ideal filter even if exact model not known</p>
+</li>
+</ul>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="truebenchmarking"><a class="anchor" href="#truebenchmarking"></a>Benchmarking</h2>
+<div class="sectionbody">
+<div class="ulist">
+<ul>
+<li>
+<p>turning low frequency data into higher frequency (e.g. annual to monthly)</p>
+</li>
+<li>
+<p>Denton&#8217;s method: <code>tsa.interp.dentonm</code></p>
+</li>
+</ul>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="trueindividual-solutions"><a class="anchor" href="#trueindividual-solutions"></a>Individual solutions</h2>
+<div class="sectionbody">
+<div class="ulist">
+<ul>
+<li>
+<p><a href="http://mabrek.github.io/blog/kaggle-forecasting/" class="bare">http://mabrek.github.io/blog/kaggle-forecasting/</a></p>
+</li>
+</ul>
+</div>
+<div class="sect2">
+<h3 id="truekaggle-competitions-about-time-series"><a class="anchor" href="#truekaggle-competitions-about-time-series"></a>Kaggle Competitions about Time Series</h3>
+<div class="ulist">
+<ul>
+<li>
+<p><a href="https://www.kaggle.com/c/tourism2" class="bare">https://www.kaggle.com/c/tourism2</a></p>
+</li>
+<li>
+<p><a href="https://www.kaggle.com/c/web-traffic-time-series-forecasting">Web traffic time series forecasting</a></p>
+<div class="ulist">
+<ul>
+<li>
+<p><a href="http://blog.kaggle.com/2010/11/24/how-we-did-it-jeremy-howard-on-winning-the-tourism-forecasting-competitoin/">Winner solution</a>; LSTM</p>
+</li>
+<li>
+<p>similar with CNN: <a href="https://github.com/sjvasquez/web-traffic-forecasting" class="bare">https://github.com/sjvasquez/web-traffic-forecasting</a></p>
+</li>
+<li>
+<p>median of last week a benchmark that was hard to beat</p>
+</li>
+<li>
+<p>used <a href="https://en.wikipedia.org/wiki/Symmetric_mean_absolute_percentage_error">SMAPE</a> metric which is <a href="https://www.kaggle.com/cpmpml/smape-weirdness">weird</a> (discontinuous at 0 and non-convex)</p>
+</li>
+</ul>
+</div>
+</li>
+<li>
+<p><a href="https://www.kaggle.com/c/how-much-did-it-rain">How much did it rain?</a>, <a href="https://www.kaggle.com/c/how-much-did-it-rain-ii">How much did it rain? (II)</a></p>
+<div class="ulist">
+<ul>
+<li>
+<p><a href="http://blog.kaggle.com/tag/how-much-did-it-rain/">Winners</a>; winner had large RNN</p>
+</li>
+</ul>
+</div>
+</li>
+<li>
+<p><a href="https://www.kaggle.com/c/online-sales">Online Product Sales</a></p>
+</li>
+<li>
+<p><a href="https://www.kaggle.com/c/rossmann-store-sales">Rossmann store sales</a></p>
+<div class="ulist">
+<ul>
+<li>
+<p><a href="http://blog.kaggle.com/tag/rossmann-store-sales/">Winners</a></p>
+</li>
+</ul>
+</div>
+</li>
+<li>
+<p><a href="https://www.kaggle.com/c/walmart-recruiting-store-sales-forecasting">Walmart Recruiting - Store Sales Forecasting</a></p>
+<div class="ulist">
+<ul>
+<li>
+<p><a href="https://www.kaggle.com/c/walmart-recruiting-store-sales-forecasting/discussion/8125">1st place</a>; <a href="https://www.kaggle.com/c/walmart-recruiting-store-sales-forecasting/discussion/8023">2nd place</a></p>
+</li>
+</ul>
+</div>
+</li>
+<li>
+<p>(list from <a href="https://machinelearningmastery.com/challenging-machine-learning-time-series-forecasting-problems/" class="bare">https://machinelearningmastery.com/challenging-machine-learning-time-series-forecasting-problems/</a>)</p>
+</li>
+<li>
+<p><a href="https://www.kaggle.com/c/ams-2014-solar-energy-prediction-contest">AMS 2013-2014 Solar Energy Prediction Contest</a></p>
+<div class="ulist">
+<ul>
+<li>
+<p><a href="https://www.kaggle.com/c/ams-2014-solar-energy-prediction-contest/discussion/6321#33783">1st place</a>; ensemble of GBM</p>
+</li>
+</ul>
+</div>
+</li>
+<li>
+<p><a href="https://www.kaggle.com/c/GEF2012-wind-forecasting">Global Energy Forecasting Competition 2012 - Wind Forecasting</a></p>
+</li>
+<li>
+<p><a href="https://www.kaggle.com/c/dsg-hackathon">EMC Data Science Global Hackathon (Air Quality Prediction)</a></p>
+<div class="ulist">
+<ul>
+<li>
+<p><a href="http://blog.kaggle.com/2012/05/01/chucking-everything-into-a-random-forest-ben-hamner-on-winning-the-air-quality-prediction-hackathon/">1st place</a>; ensemble of RFs on lagged data</p>
+</li>
+</ul>
+</div>
+</li>
+</ul>
+</div>
+</div>
+<div class="sect2">
+<h3 id="truekaggle-tourism-forecasting"><a class="anchor" href="#truekaggle-tourism-forecasting"></a>Kaggle Tourism Forecasting</h3>
+<div class="paragraph">
+<p>I then fitted a weighted regression (weighted the most recent observations the most heavily) combined with weighted additive seasonality (again weighting the most recent observations the most heavily) on all but the last 2 years of each series. A simple optimiser found the optimal weighting of each in order to predict the final 2 years. This weighted model was then applied to the full data set to create predictions. The intercept of the weighted regression was adjusted such that the residual on the final observation was always zero - this was important for ensuring that the series with a low denominator in the MASE metric were forecast as accurately as possible.</p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="truekaggle-air-quality-predition"><a class="anchor" href="#truekaggle-air-quality-predition"></a>Kaggle Air Quality predition</h3>
+<div class="paragraph">
+<p>I took the lagging N components from the full time series (N=8 for the winning submission, which was selected arbitrarily) as features, then each of the 10 prediction times and 39 pollutant measures as targets. I then trained 390 Random Forests over the entire training data, one for each predicted offset time-pollutant combination. The Random Forest parameters were selected so that the models would be quick to train. <a href="https://github.com/benhamner/Air-Quality-Prediction-Hackathon-Winning-Model">code</a></p>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="truevector-error-correction-model-vecm"><a class="anchor" href="#truevector-error-correction-model-vecm"></a>Vector Error Correction Model VECM</h2>
+<div class="sectionbody">
+<div class="ulist">
+<ul>
+<li>
+<p>since differencing (of integrated series) eliminates valuable information &#8594; VECM</p>
+</li>
+<li>
+<p>use differences and extra term <span class=""><img src="http://localhost:50550/afx/cache/f12e794dc43e2cb31f45ee7b301138f0.png" alt=""></span> where <span class=""><img src="http://localhost:50550/afx/cache/7ab849be2ad21432322198855b02752d.png" alt=""></span></p>
+</li>
+<li>
+<p>not non-stationary modeling(?)</p>
+</li>
+</ul>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="truegranger-causality"><a class="anchor" href="#truegranger-causality"></a>Granger causality</h2>
+<div class="sectionbody">
+<div class="ulist">
+<ul>
+<li>
+<p><a href="http://web.vu.lt/mif/a.buteikis/wp-content/uploads/2018/04/Lecture_07.pdf" class="bare">http://web.vu.lt/mif/a.buteikis/wp-content/uploads/2018/04/Lecture_07.pdf</a></p>
+</li>
+<li>
+<p>cause needs to precede effect</p>
+</li>
+<li>
+<p>"Granger causality" not necessarily real causality</p>
+</li>
+<li>
+<p>test that non-zero coef if we include past values of anothe feature</p>
+</li>
+<li>
+<p>Null hypothesis = no Granger causality</p>
+</li>
+<li>
+<p>unrestricted model: lagged values of self, lagged values of other, linear time (trend) term</p>
+</li>
+<li>
+<p>&#8594; no Granger if all coef of lagged other values zero</p>
+</li>
+<li>
+<p>can do OLS when no unit root</p>
+</li>
+<li>
+<p>&#8594; do model without lagged values of other and do F-test (for SSR)
+*! if variables cointegrated &#8594; use ECM model (see above: extra term &#8594; do same test on coefs [incl. new coef])</p>
+</li>
+<li>
+<p>read <a href="https://davegiles.blogspot.com/2011/04/testing-for-granger-causality.html" class="bare">https://davegiles.blogspot.com/2011/04/testing-for-granger-causality.html</a></p>
+</li>
+<li>
+<p>magnitude of G-causality = log(F-statistics) [Geweke 1982] Geweke, J. 1982 Measurement of linear dependence and feedback between multiple time series. Journal of the American Statistical Association 77, 304-313</p>
+</li>
+<li>
+<p>use AIC to determine max order
+spectral G-causality: fraction of contributed total power</p>
+</li>
+<li>
+<p><a href="http://www.scholarpedia.org/article/Granger_causality" class="bare">http://www.scholarpedia.org/article/Granger_causality</a></p>
+</li>
+<li>
+<p>usually only for linear, since other less understood</p>
+</li>
+<li>
+<p>assumes covariance stationary (otherwise use windowing - Hesse, W., Moller, E., Arnold, M. &amp; Schack, B. 2003 The use of time-variant EEG Granger causality for inspecting directed interdependencies of neural assemblies. J Neurosci Methods 124, 27-44)</p>
+</li>
+<li>
+<p>detailed review of the theory and application of G-causality can be found in - Ding, M., Chen, Y., &amp; Bressler, S.L. 2006 Granger causality: Basic theory and application to neuroscience. In Schelter. S., Winterhalder, N., &amp; Timmer, J. Handbook of Time Series Analysis. Wiley, Wienheim</p>
+</li>
+</ul>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="truecausality-with-information-theory"><a class="anchor" href="#truecausality-with-information-theory"></a>Causality with Information Theory</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>Schreiber, T. 2000 Measuring information transfer. Phys Rev Lett 85, 461-4. -  introduced the concept of transfer entropy which is a version of mutual information operating on conditional probabilities. It is designed to detect the directed exchange of information between two variables, conditioned to common history and inputs. For a comparison of transfer entropy with other causal measures, including various implementations of G-causality, see -Methods for Quantifying the Causal Structure of
+Bivariate Time Series (Lungarella).  An advantage of information theoretic measures, as compared to standard G-causality, is that they are sensitive to nonlinear signal properties. A limitation of transfer entropy, as compared to G-causality, is that it is currently restricted to bivariate situations. Also, information theoretic measures often require substantially more data than regression methods such as G-causality - Pereda, E., Quiroga, R. Q. &amp; Bhattacharya, J. 2005 Nonlinear multivariate analysis of neurophysiological signals. Prog Neurobiol 77, 1-37.</p>
+</div>
+<div class="sect2">
+<h3 id="truetoda-yamamoto-procedure"><a class="anchor" href="#truetoda-yamamoto-procedure"></a>Toda-Yamamoto procedure</h3>
+<div class="ulist">
+<ul>
+<li>
+<p><a href="https://davegiles.blogspot.com/2011/04/testing-for-granger-causality.html" class="bare">https://davegiles.blogspot.com/2011/04/testing-for-granger-causality.html</a></p>
+</li>
+<li>
+<p>Toda, H. Y and T. Yamamoto (1995). "Statistical inferences in vector autoregressions with possibly integrated processes." Journal of Econometrics, 66, 225-250.</p>
+</li>
+<li>
+<p>find orders of integration for both series; M = max order</p>
+</li>
+<li>
+<p>find max lag by VAR on undifferenced(!) original series; increase order until no serial autocorrelation(!),e.g. LM test; P = best lag</p>
+</li>
+<li>
+<p>do VAR with P+M lags on undifferenced series; e.g. one could include additional lags as exog variable</p>
+</li>
+<li>
+<p>test P coef with Wald test for non-zero (other M coefs are only to "fix up the asymptotics") &#8594; chi(p) under null</p>
+</li>
+<li>
+<p>rejecting test supports Granger causality</p>
+</li>
+<li>
+<p>if some series have same order of integration &#8594; Johansen&#8217;s method for check for cointegration &#8594; cointegrated series must have some Granger causality (if conflicting answer, maybe sample too small for assumptions)</p>
+</li>
+<li>
+<p>F-test no valid since lags enter model as regressors</p>
+</li>
+<li>
+<p>invalid to use t-tests to select max lag</p>
+</li>
+<li>
+<p>not considering the P+M lag (Y-T approach) will make results meaningless (but for m=0 could do the simple way)</p>
+</li>
+</ul>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="truelearning-material"><a class="anchor" href="#truelearning-material"></a>Learning material</h2>
+<div class="sectionbody">
+<div class="sect2">
+<h3 id="trueunchecked"><a class="anchor" href="#trueunchecked"></a>Unchecked</h3>
+<div class="paragraph">
+<p>Books:
+* Modeling Financial Time Series (Taylor)
+* Introduction to Time Series and Forecasting (Brockwell)
+* Analysis of Financial Time Series (Tsay)
+* Time Series Analysis and its Applications with R Examples (Shumway)
+* Econometric Analysis (Green)
+* Econometrics (Hayashi)
+* Almost None of the theory of stochastic processes (Shalizi)
+* Ch7 of: New Introduction to Multiple Time Series Analysis (Lütkepohl)
+* causality, probability, and time book cover Causality, Probability, and Time  (Kleinberg)
+* <a href="https://www.cambridge.org/core/books/causal-inference-for-statistics-social-and-biomedical-sciences/71126BE90C58F1A431FE9B2DD07938AB" class="bare">https://www.cambridge.org/core/books/causal-inference-for-statistics-social-and-biomedical-sciences/71126BE90C58F1A431FE9B2DD07938AB</a></p>
+</div>
+<div class="paragraph">
+<p>Courses:
+* <a href="https://courses.edx.org/courses/course-v1:GTx+ISYE6402+2T2018/course/" class="bare">https://courses.edx.org/courses/course-v1:GTx+ISYE6402+2T2018/course/</a></p>
+</div>
+<div class="paragraph">
+<p>Other:
+* <a href="http://stat565.cwick.co.nz/" class="bare">http://stat565.cwick.co.nz/</a></p>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div id="footer">
+<div id="footer-text">
+Last updated 2019-01-09 11:08:57 MZ
+</div>
+</div>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/8.9.1/styles/github.min.css">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/8.9.1/highlight.min.js"></script>
+<script>hljs.initHighlighting()</script>
+</body>
+</html>

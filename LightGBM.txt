@@ -1,0 +1,65 @@
+
+
+    import lightgbm as lgb
+
+    data = lgb.Dataset(...,
+        label="..",
+        feature_name=["..", ..],
+        categorical_feature=["..", ..],  # should be positive int32 (ideally 0..n)
+        )
+    data.save_binary("train.lgb")
+    
+    param = {..}
+    
+    model = lgb.train(param, train_data, num_round=10, valid_set=[..],
+        early_stopping_rounds=5,   # score needs to improve every 5 rounds; returns best fit; best_iteration has index
+        )
+        
+    pred = model.predict(test_data)
+    
+    lgb.plot_importance(model, ...)
+
+
+* `dart`: MART with Dropout https://arxiv.org/abs/1505.01866
+* Python API: https://lightgbm.readthedocs.io/en/latest/Python-API.html
+* `lgb.LGBMModel`: sklearn API
+* https://lightgbm.readthedocs.io/en/latest/FAQ.html[FAQ]
+
+|===
+| num_leaves                                | 30
+| min_data_in_leaf                          | depends on num_leaves too
+| max_depth                                 |
+| objective                                 | binary
+| metric                                    | auc
+| max_bin                                   | larger for acc
+| learning_rate                             | smaller for acc
+|===
+    
+|===
+| lgb.cv(param, train_data, num_round, nfold=5) |
+| json_model = model.dump_model()               |
+| model.save_model("lgb_model.txt") +
+  model = lgb.Booster(model_file="lgb_model.txt")   |
+|===
+
+== Tuning
+
+https://lightgbm.readthedocs.io/en/latest/Parameters-Tuning.html
+
+
+== Features
+
+* https://lightgbm.readthedocs.io/en/latest/Features.html
+* missing value handling (default `use_missing=True`)
+* categorical value handling (optimal split with https://lightgbm.readthedocs.io/en/latest/Features.html#optimal-split-for-categorical-features)
+* lambdarank when label ordered
+* parallel learning https://lightgbm.readthedocs.io/en/latest/Parallel-Learning-Guide.html
+* GPU training https://lightgbm.readthedocs.io/en/latest/GPU-Tutorial.html
+    
+    
+    
+== Save memory
+
+* `free_raw_data = True` when constructing
+* `raw_data = None` after constructed
+* call `gc`

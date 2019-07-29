@@ -31,7 +31,7 @@ imbalanced:
 * scale_pos_weight: param for weight ratio
 
 Suggestions1:
-around 100..500 trees; play with eta: 0.01..0.3
+around 100..500 trees; play with learning_rate: 0.01..0.3
 max_depth: start with 6; or max_leaf_nodes instead
 min_child_weight: start with 1/sqrt(eventrate)
 colsample_bytree: 0.3-1.0
@@ -42,12 +42,12 @@ alpha: L1 on weights; some feature selection (e.g. on high dim)
 max_delta_step: usually not needed; can help with logreg and imbalanced
 colsample_bylevel: usually subsample/colsample_bytree instead
 scale_pos_weight: faster convergence if imbalance
-too complex, overfitting (test error rises; large gap) -> eta-, max_depth-, min_child_weight+
+too complex, overfitting (test error rises; large gap) -> learning_rate-, max_depth-, min_child_weight+
 too simple (test and training error close and fall continuously) -> opposite
 just right -> test error levels off
 
 Example:
-eta = 0.01 (small shrinkage)
+learning_rate = 0.01 (small shrinkage)
 max_depth = 9 (default max_depth=6 which is not deep enough)
 sub_sample = 0.9 (giving some randomness for preventing overfitting)
 num_rounds = 3000 (because of slow shrinkage, many trees are needed)
@@ -86,7 +86,7 @@ Warm restart
 * use Taylor of loss with 1st and 2nd derivative
 * add regularization = gamma * [number of leaves] + 1/2 * lambda * sum (leafweight_i)^2
 * find decision tree along gradient
-* combination of boosted trees with conditional random field 
+* combination of boosted trees with conditional random field
 * https://github.com/dmlc/xgboost/blob/master/demo/README.md
 
 * test data set: https://archive.ics.uci.edu/ml/datasets/Covertype (7 classes)
