@@ -1,5 +1,5 @@
 ////
-Status: 0.23.4
+Status: 0.25
 Skipped: Time series, Time deltas
 ////
 
@@ -286,6 +286,10 @@ http://pandas.pydata.org/pandas-docs/stable/io.html
 | MultiIndex.*set_names*([..], inplace=True)    | Rename levels
 | index.*name*                              | set index name; referable in *query*(); column name can shadow index name
 | s.*set_axis*(labels)                      | Set desired index to given axis http://pandas.pydata.org/pandas-docs/stable/generated/pandas.Series.set_axis.html#pandas.Series.set_axis[Ref]
+| index.*difference*(..)                    |
+| index.*symmetric_difference*(..)          |
+| index.*union*(..)                         |
+| index.*intersection*(..)                  |
 |===
 
 Index types:
@@ -308,6 +312,7 @@ http://pandas.pydata.org/pandas-docs/stable/api.html#multiindex[MultiIndex]
 | multiindex.*is_lexsorted*()               | http://pandas.pydata.org/pandas-docs/stable/generated/pandas.MultiIndex.is_lexsorted.html#pandas.MultiIndex.is_lexsorted[Ref]
 | multiindex.*droplevel*(level=0)           | http://pandas.pydata.org/pandas-docs/stable/generated/pandas.MultiIndex.droplevel.html#pandas.MultiIndex.droplevel[Ref]
 | multiindex.*remove_unused_levels*()       | http://pandas.pydata.org/pandas-docs/stable/generated/pandas.MultiIndex.remove_unused_levels.html#pandas.MultiIndex.remove_unused_levels[Ref]
+| multiindex.*to_flat_index*()              | https://pandas.pydata.org/pandas-docs/stable/reference/api/pandas.MultiIndex.to_flat_index.html#pandas.MultiIndex.to_flat_index[Ref]
 |===
 
 * repr of MultiIndex shows all levels, even those that not used due to slicing (shown to avoid recomputation); to see values use `df.colums.values`
@@ -339,6 +344,7 @@ http://pandas.pydata.org/pandas-docs/stable/api.html#multiindex[MultiIndex]
 | s.*drop*(_labels_, errors="raise")        |
 | s.*rename*(func, inplace=False)           | rename index (row names); if dict passed can use only values that are replaced
 | df.*rename*(index=.., columns=..)         |
+| _errors_="raise"                          |
 | s.*rename*(new_series_name, inplace=True) |
 | .*set_index*(..)                          | columns or list of columns
 | _append_=True                             | to add new levels
@@ -492,6 +498,20 @@ Fastest way to subselect:
 | .*union*(i2)                              |
 | .*difference*(i2)                         |
 | .*symmetric_difference*(i2)               |
+| .*to_list*()                              |
+| .*ravel*()                                |
+| .*asof_locs*(where, mask)                 | https://pandas.pydata.org/pandas-docs/stable/reference/api/pandas.Index.asof_locs.html[Ref]
+|===
+
+IntervalIndex
+
+[cols="m,d"]
+|===
+| .*left* +
+  .*right* +
+  .*mid*                                    | Get points
+| .*values*                                 |
+| .*length*                                 |
 |===
 
 * slicing always on values of index unless `iloc` where it is positional
@@ -547,6 +567,7 @@ Fastest way to subselect:
 
 `.query`:
 
+* backticks for cols with spaces
 * "ilevel_0" or "index" possible
 * "and" or "&" possible
 * "not" or "~" to negate
@@ -598,6 +619,7 @@ Fastest way to subselect:
 | pd.*to_datetime*(df[["year","month","day"]])  | Automatically combines date parts
 | s.*astype*("category")                    | Do categorical format
 | pd.to_datetime(df.index, format='%Y')     |
+| format="%Z"                               |
 | pd.datetime.strptime(f"{year}-{week}1", "%Y-%W-%w")   | Parse week numbers into date (Mondays)
 |===
 
@@ -672,6 +694,7 @@ Fastest way to subselect:
 * joining columns on columns will discard any indices
 * joining single index with multi-index possible (will use same index name)
 * joining on two multi-indices currently not with join -> need to reset_index() instead
+* merging can use column and index names
 
 == Combine data
 
@@ -891,6 +914,8 @@ http://pandas.pydata.org/pandas-docs/stable/api.html#groupby
 | gr.*boxplot*()                            | Get OrderedDict of plots
 | gr.*ngroup*()                             | Number each group http://pandas.pydata.org/pandas-docs/stable/generated/pandas.core.groupby.GroupBy.ngroup.html#pandas.core.groupby.GroupBy.ngroup[Ref]
 | GroupBy.pipe                              |
+| .agg(new_col=pd.*NamedAgg*(column="..", aggfunc="..") +
+  .agg(new_col=(..,..)                      | Named aggregation when multiple
 |===
 
 * Groupby also accepts Grouper https://pandas.pydata.org/pandas-docs/stable/groupby.html#groupby-specify[Ref]
@@ -1005,6 +1030,7 @@ Can do fixed row number window or timedelta window (on index or column). `.expan
 | *skew*(), *kurt*()                        |
 | *cov*(), *corr*()                         | Series/Series -> pair stats; DataFrame/Series -> each DF col to Series; DataFrame/DataFrame -> matching col names
 | *apply*(func)                             | Generic apply func on ndarray to give single values
+| _raw_=True                                | Pass ndarray
 | s.*rolling*(window=.., win_type="boxcar").*sum*() | Weighting
 | s.*rolling*(.., win_type="..").*mean*()   | Weighting
 | s.*rolling*(.., win_type=[..]).*sum*()    | Custom weights; no normalization
@@ -1224,6 +1250,7 @@ http://pandas.pydata.org/pandas-docs/version/0.15.2/options.html#list-of-options
 | Period("2011-11")                         | Frequency "M" infered
 | ts.to_period()                            | Index to period
 | ps.to_timestamp()                         | Index from period to timestamp
+| how="end"                                 |
 | pd.to_datetime(..)                        | Parse into datetime suitable for Pandas; many formats understood
 | pd.to_datetime(pd.Series([.., ..]))       | Creates series of Datetime64
 | pd.to_datetime([.., ..])                  | Creates DatetimeIndex
@@ -1260,6 +1287,7 @@ http://pandas.pydata.org/pandas-docs/version/0.15.2/options.html#list-of-options
 * resample cookbook: http://pandas.pydata.org/pandas-docs/stable/cookbook.html#cookbook-resample
 * time zone: http://pandas.pydata.org/pandas-docs/stable/timeseries.html#time-zone-handling
 * `datetime` and `Timestamp` have exactly seconds, and behave like this for indexing
+* period - period = dateoffset
 
 * Time operations usually work on
 ** http://pandas.pydata.org/pandas-docs/stable/api.html#datetimeindex[`DatetimeIndex`]
@@ -1281,17 +1309,19 @@ http://pandas.pydata.org/pandas-docs/version/0.15.2/options.html#list-of-options
 | pd.date_range(.., freq="MS")              | Month start range
 | _periods_=.., _freq_==..                  | Number of periods starting from a start time
 | pd.*bdate_range*(..)                      | Business day date index (also custom holiday masks possible)
-| pd.*to_timedelta*(..)                     |
+| pd.*to_timedelta*("..")                   |
 | pd.*period_range*(..)                     |
 | pd.*timedelta_range*(..)                  |
 | pd.*infer_freq*(..)                       |
 | s.*asfreq*(freq)                          |
 | s.*asof*(_where_)                         | Return last good non-NA value
 | s.*shift*(period=1, freq=None)            |
+| _fill_value_=..                           |
 | s.*tz_convert*(_tz_)                      |
 | s.*tz_localize*(_tz_)                     |
 | dt.*weekday*                              | Monday=0, Sunday=6 (same as `dt.dayofweek`)
-| dt.*weekday_name*                         | e.g. `s"Friday"`
+| dt.*weekday_name*                         | e.g. `"Friday"`
+| dt.*day_name*                             |
 | dt.*is_month_start*                       |
 | dt.*is_leap_year*                         |
 | dt.*tz*                                   |
@@ -1300,7 +1330,7 @@ http://pandas.pydata.org/pandas-docs/version/0.15.2/options.html#list-of-options
 | dt.*freq*                                 | Get/set frequency
 | dt.*to_period*()                          |
 | dt.*to_pydatetime*()                      |
-| dt.*normalize*()                          |
+| dt.*normalize*()                          | Convert to midnight
 | dt.*round*()                              |
 | dt.*floor*() +
   dt.*ceil*()                               |
@@ -1444,6 +1474,7 @@ Use `DataFrame.style` to apply conditional formatting for Jupyter notebook. Retu
 | df.*set_caption*("..")                    | Add new caption
 | style.*set_table_style*(..)               |
 | style.*clear*()                           | Reset styler http://pandas.pydata.org/pandas-docs/stable/generated/pandas.io.formats.style.Styler.clear.html#pandas.io.formats.style.Styler.clear[Ref]
+| style.*pipe*(..)                          |
 |===
 
 * you can also do row highlight on hover (http://pandas.pydata.org/pandas-docs/stable/style.html#Table-Styles)
@@ -1542,6 +1573,9 @@ Some testing functions are in https://pandas.pydata.org/pandas-docs/stable/api.h
 
 [cols="m,d"]
 |===
+| df.*explode*(col)                         | list-like to rows
+| df.*between_time*(start_time, end_time)   | https://pandas.pydata.org/pandas-docs/stable/reference/api/pandas.DataFrame.between_time.html[Ref]
+| df.*at_time*(time)                        | https://pandas.pydata.org/pandas-docs/stable/reference/api/pandas.DataFrame.at_time.html[Ref]
 | df.*pop*(col)                             | Return and drop columns from frames (`KeyError` if not found)
 | *is_monotonic*                            | Series, Index
 | *is_monotonic_increasing* +
@@ -1579,8 +1613,16 @@ Some testing functions are in https://pandas.pydata.org/pandas-docs/stable/api.h
 | pd.api.types.*union_categoricals*([cats1, cats2, ..]) | http://pandas.pydata.org/pandas-docs/stable/generated/pandas.api.types.union_categoricals.html#pandas.api.types.union_categoricals[Ref]
 |===
 
+datetimeindex, timedeltaindex: mean
+
 * http://pandas.pydata.org/pandas-docs/stable/api.html#interval[pd.Interval]
 * pd.read_csv: parse_dates much faster than converters np.datetime; slightly faster with date_parser=ciso8601.parse_datetime
+
+set_option:
+
+|===
+| plotting.backend                          | Alternative to matplotlib
+|===
 
 ++++++++++++
 Pandas cookbook
