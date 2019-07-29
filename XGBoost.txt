@@ -106,3 +106,31 @@ parameters (https://xgboost.readthedocs.org/en/latest/parameter.html#parameters-
 * max tree depth: [4,6,8,10] grid search
 * min split gain: 0
 * http://datascience.stackexchange.com/questions/9364/hypertuning-xgboost-parameters
+
+------
+https://www.analyticsvidhya.com/blog/2016/03/complete-guide-parameter-tuning-xgboost-with-codes-python/
+eta=0.01-0.2
+min_child_weight
+max_depth=3-10  (alternative max_leaf_nodes)
+gamma (min_split)
+subsample 0.5-1
+colsample_bytree: 0.5-1
+alpha: for speed when high dim
+scale_pos_weight: faster when imbalanced
+
+1. tune number of trees with lr 0.1
+2. tune tree param (max_deoth, min_child_weight maybe also: gamma; next: subsample, colsample_bytree)
+3. tune regularization (lambda, alpha)
+4. lower lr
+--------
+if calibrated needed: max_delta_step
+
+https://docs.aws.amazon.com/sagemaker/latest/dg/xgboost-tuning.html
+
+special:
+max_delta_step: for LogReg when unbalanced(?)
+--------
+https://medium.com/data-design/xgboost-hi-im-gamma-what-can-i-do-for-you-and-the-tuning-of-regularization-a42ea17e6ab6
+gamma: depends on data and also other param!
+regul -> high gamma (e.g. 10;20 already extremely high); changes -20% or +2
+if trainCV>>testCV: gamma instead of min_child_weight (or max_depth)
