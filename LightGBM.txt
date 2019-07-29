@@ -24,6 +24,7 @@
 * Python API: https://lightgbm.readthedocs.io/en/latest/Python-API.html
 * `lgb.LGBMModel`: sklearn API
 * https://lightgbm.readthedocs.io/en/latest/FAQ.html[FAQ]
+* Winning solutions: https://github.com/Microsoft/LightGBM/blob/master/examples/README.md#machine-learning-challenge-winning-solutions
 
 |===
 | num_leaves                                | 30
