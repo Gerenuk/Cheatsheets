@@ -560,6 +560,12 @@ https://www.youtube.com/watch?v=XQfxndJH4UA
 * use non-negative weights for stacking [6]
 * netflix features: number of movies rated by user, number of users rated for a movie, log/binary versions, mean user rating with bayesian shrink to overall mean, norm of 10-factor SVD trained on residuals of global effects,
   correlations, ... (see table 1)
+  
+== Feature selection
+* usually does not help in tree (esp. not in boosted trees)
+* may help in MLP or NaiveBayes or distance based
+* in J48 helps a bit
+* usefulness may depend on number of attributes (e.g. >50 features) and class entropy
 
 == Class imbalance
 * different reason for problem possible [_2]
@@ -618,6 +624,14 @@ https://www.youtube.com/watch?v=XQfxndJH4UA
 * fast and intuitive
 * combine HMM, GMM, NB, Graphical, ...
 * even faster than numpy, scipy, sklearn... for prob tasks
+
+== Curse of dimensionality
+http://homes.cs.washington.edu/~pedrod/papers/cacm12.pdf
+* most of the mass of a multivariate Gaussian distribution is not near the mean, but in an increasingly distant “shell” around it; and most of the volume of a high-dimensional orange is in the skin, not the pulp
+* If a constant number of examples is distributed uniformly in a high-dimensional hypercube, beyond some dimensionality most examples are closer to a face of the hypercube than to their nearest neighbor.
+* if we approximate a hypersphere by inscribing it in a hypercube, in high dimensions almost all the volume of the hypercube is outside the hypersphere. 
+* https://bib.dbvis.de/uploadedFiles/155.pdf
+* L_(k<1) may increase contract, but violates triangle inequality
 
 == Decreasing uncertainty
 * https://www.youtube.com/watch?v=jtkSaHC6Hy0
@@ -1581,16 +1595,35 @@ exclusion restriction -> Z indep of Y given A; hatA projection of A onto space s
 
 === Mutual Information
 * KL[p(x,y)||p(x)p(y)]
-* H(X)-H(X|Y)=H(Y)-H(Y|X)=H(X,Y)-H(X|Y)-H(Y|X)
+* I(X;Y) = H(X)-H(X|Y)=H(Y)-H(Y|X)=H(X,Y)-H(X|Y)-H(Y|X)=H(X)+H(Y)-H(X,Y)
+* hence the difference between either conditional entropy and the single entropy
+* symmetric, non-negative
+* Variation of information:
+** make mutual information a metric (triangle, ...)
+** d(X,Y)=H(X,Y)-I(X;Y)
+** if all discrete variable (-> entropy>0), one could normalize by H(X,Y)
+** -> D=d/H(X,Y) is universal metric
+** also metric: 1-I(X;Y)/max(H(X),H(Y))
+** ! A=I(X;Y)*2/(H(X)+H(Y)) is monotonically related since: D=2-1/(1-A/2) -> can use normalized_mutual_info_score("arithmetic") [soon default]
+* Adjusted Mutual Information: subtract for if two sets are partitioned randomly
+* bivariate normal: I=-1/2*log(1-rho^2)
+* for categorical: same a G-test
+* conditional mutual information possible I(X;Y|Z)
+* could normalize by arithmetic, geometric, or harmonic mean
+* additive for independent variables
 
-=== Total Correlation
+=== Multi-variable generalizations
+
+==== Total Correlation
 * one generalization of Mutual Information for more than 2 inputs
 * sum H(Xi) - H(X1..Xn)
 
-=== Dual Total Correlation, Excess Entropy, Binding Information
+==== Dual Total Correlation, Excess Entropy, Binding Information
 * https://en.wikipedia.org/wiki/Dual_total_correlation[Wikipedia]
 * another generalization of Mutual Information
 * H(X1..Xn)-sum H(Xi|X\Xi)
+
+==== Interaction information
 
 === Randomized Dependence Coefficient
 
@@ -1763,3 +1796,26 @@ a = (n* sum (x*y) - sum x * sum y) / (n*sum (x**2) - (sum x)**2)
 b = (sum y * sum (x**2) - sum x * sum (x*y)) / (n*sum(x**2)-(sum x)**2)
 
 
+== Distance metric performance for KNN
+
+https://arxiv.org/pdf/1708.04321.pdf
+* best: Hassanat = asciimath::[sum (1-(1+min(x,y))/(1+max(x,y)))] when min(x,y)>0 and asciimath::[sum (1-1/(1+max(x,y)+|min(x,y)|))]
+* next best: Lorentzian = asciimath::[sum ln(1+|x-y|)]
+* next best: Canberra = asciimath::[sum (|x-y|)/(|x|+|y|)]
+* next best: Squared Chi-squared = asciimath::[sum (x-y)^2/(|x+y|)]
+* next best: Clark distance = sqrt(sum((x-y)/(|x|+|y|))^2)
+* maybe also good: Divergence distance = 2 sum (x-y)^2/(x+y)^2
+* next best Manhattan (esp. for high noise this may actually win)
+* additive_chi2_kernel from sklearn OK, but L1 was better
+
+== Some default parameters for overall good coverage
+* within 1% of best 10-fold balanced accuracy
+* RF: n_estimators=500, max_features=0.25, criterion="entropy" (all non default)
+* GBT: loss="deviance", learning_rate=0.1, n_estimators=500(!), max_depth=3, max_features="log2"(!)
+* SVC: C=0.01(!), gamma=0.1(!), kernel="poly"(!), degree=3, coef0=10.0(!)
+* ExtraTreesClassifier: n_estimators=1000(!), max_features="log2"(!), criterion="entropy"(!)
+* LogisticRegression: C=1.5(!), penalty="l1"(!), fit_intercept=True
+* generally:
+** SVC RBF: tune gamma! (too high quickly degrades); higher complexity often better (may interact with gamma)
+** RF: min_samples_leaf [usually low <5] (not min_samples_split), max_features
+** AdaBoost: max_depth [3-4 or >9 again], (learning_rate), not n_iter; uniform priors good enough

@@ -1320,3 +1320,39 @@ Choosing a good minibatch size:
 
 * https://github.com/amueller/scipy_2015_sklearn_tutorial/tree/master/notebooks[Scipy 2015 Tutorial]
 * http://scikit-learn.org/stable/developers/contributing.html#apis-of-scikit-learn-objects[Writing own estimators]
+
+== Own classifier
+
+* https://scikit-learn.org/stable/developers/contributing.html#rolling-your-own-estimator
+* estimator: `.fit(X, y)`
+* predictor: `.predict(X)`, `predict_proba(X)`
+* transformer: `.transform(X)` (when not on train set),`.fit_transform(X, y)`
+* model goodness of fit: `.score(X, y=None)` for score to be usable
+* `.decision_function`: ?
+
+=== Estimators
+
+* from `sklearn.base.BaseEstimator`: e.g. for __repr__
+* `.set_params(**paramdict)` set all data independent parameters from `__init__`; `return self`
+* `.get_params(deep=True)`: returns dict of params; `deep` whether to return parameters of sub-estimators; `get_params` not essential though
+* `__init__`:
+** must be all keywords arguments with all default values
+** all parameters must correspond to an attribute
+** no logic, no validation, parameters not changed!
+* `.fit`:
+** `.fit` throws ValueError when `X.shape[0]!=y.shape[0]`
+** `return self`
+** if kwargs used, then only for something strictly data dependent (otherwise to init)
+** only last `fit` call should matter (otherwise make parameter `warm_start`)
+** result parameters end with underscore
+** `n_iter` as name when iterative
+* `sklearn.utils.estimator_checks.check_estimator` to check (check some of above to make sure it works with GridSearchCV and Pipeline)
+* project template: https://github.com/scikit-learn-contrib/project-template/
+* `.clone()` for model_selection; just provide `get_params`; otherwise will be deep copied
+* `.classes_` if classes deduced (`self.classes_, y = np.unique(y, return_inverse=True)`)
+* tags to inspect capabilities: https://scikit-learn.org/stable/developers/contributing.html#estimator-tags
+
+    def set_params(self, **parameters):
+        for parameter, value in parameters.items():
+            setattr(self, parameter, value)
+        return self

@@ -1,3 +1,7 @@
+== Tuning
+
+== General
+
 GBM Generlized Boosted Machines: loss function suitable for optimization
 AdaBoost: GBT with exp loss
 watchlist: show performance on these sets while training

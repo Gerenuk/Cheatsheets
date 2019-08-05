@@ -50,7 +50,7 @@ http://pandas.pydata.org/pandas-docs/stable/io.html
 | _decimal_=..                              |
 | _error_bad_lines_=False                   | Drop lines with too many fields
 | pd.*read_fwf*(..)                         | Fixed-width columns
-| pd.*to_csv*(file_or_path)                 |
+| df.*to_csv*(file_or_path)                 |
 | df.*to_string*(..)                        |
 | df.*to_json*(.., orient="table")          | Round-tripable
 | _compression_="gzip"                      | Directly compress
@@ -498,7 +498,6 @@ Fastest way to subselect:
 | .*difference*(i2)                         |
 | .*symmetric_difference*(i2)               |
 | .*to_list*()                              |
-| .*ravel*()                                |
 | .*asof_locs*(where, mask)                 | https://pandas.pydata.org/pandas-docs/stable/reference/api/pandas.Index.asof_locs.html[Ref]
 |===
 
@@ -511,6 +510,8 @@ IntervalIndex
   .*mid*                                    | Get points
 | .*values*                                 |
 | .*length*                                 |
+| .*contains*(val)                          | Check where val contained https://pandas.pydata.org/pandas-docs/stable/reference/api/pandas.IntervalIndex.contains.html#pandas.IntervalIndex.contains[Ref]
+| .*to_tuples*()                            | https://pandas.pydata.org/pandas-docs/stable/reference/api/pandas.IntervalIndex.to_tuples.html#pandas.IntervalIndex.to_tuples[Ref]
 |===
 
 * slicing always on values of index unless `iloc` where it is positional
@@ -534,6 +535,49 @@ IntervalIndex
 * .iloc: position 0-based, end NOT included if slice
 * IndexError if any indexer out-of-bounds (unless slice)
 * assignment to non-existent label/index can enlarge/append data!
+
+=== Index operations
+
+[cols="m,d"]
+|===
+| .*duplicated*()                           | Indicate duplicate index values
+| .*reindex*(iter)                          | https://pandas.pydata.org/pandas-docs/stable/reference/api/pandas.Index.reindex.html#pandas.Index.reindex[Ref]
+| .*outmask*(mask, val)                     | Values set with mask https://pandas.pydata.org/pandas-docs/stable/reference/api/pandas.Index.putmask.html#pandas.Index.putmask[Ref]
+| .*get_loc*(key)                           | https://pandas.pydata.org/pandas-docs/stable/reference/api/pandas.Index.get_loc.html#pandas.Index.get_loc[Ref]
+| tolerance=_val_                           | Max distance for inexact match
+|===
+
+
+[cols="m,d"]
+|===
+| .*is_monotonic* +                        
+| .*is_monotonic_increasing* +
+  .*is_monotonic_decreasing* +
+  .*is_unique* +
+  .*hasnans* +
+  .*is_numeric*                             |
+| index.*repeat*(repeats)                   | Repeat elements of indexs
+| index.*identical*(other)                  | Check also other comparable attributes http://pandas.pydata.org/pandas-docs/stable/generated/pandas.Index.identical.html#pandas.Index.identical[Ref]
+| .*inferred_type*                     |
+| dateindex.*inferred_freq*                 |
+| index.*putmask*(mask, val)                | http://pandas.pydata.org/pandas-docs/stable/generated/pandas.Index.putmask.html#pandas.Index.putmask[Ref]
+| index.*get_indexer*(target)               |
+| index.*get_indexer_non_unique*(target)    |
+| index.*get_loc*(key)                      | Get integer location, slice or boolean mask for requested label http://pandas.pydata.org/pandas-docs/stable/generated/pandas.Index.get_loc.html#pandas.Index.get_loc[Ref]
+| *argmax*()                                | Numpy array of max argument indexer
+| index.*slice_indexer*(..)                 | For ordered index http://pandas.pydata.org/pandas-docs/stable/generated/pandas.Index.slice_indexer.html#pandas.Index.slice_indexer[Ref]
+| index.*slice_locs*(..)                    | Compute slice http://pandas.pydata.org/pandas-docs/stable/generated/pandas.Index.slice_locs.html#pandas.Index.slice_locs[Ref]
+|===
+
+* most operations supported (`argmin`, `all`,...)
+
+=== MultiIndex
+
+[cols="m,d"]
+|===
+| .*set_names*(names)                       | https://pandas.pydata.org/pandas-docs/stable/reference/api/pandas.Index.set_names.html#pandas.Index.set_names[Ref]
+| .*droplevel*(level=0)                     | Would squeeze to Index when 1 level left https://pandas.pydata.org/pandas-docs/stable/reference/api/pandas.Index.droplevel.html#pandas.Index.droplevel[Ref]
+|===
 
 
 == Row selection
@@ -686,7 +730,7 @@ IntervalIndex
   _rsuffix_=..                              | Suffixes for same-name columns
 | *ordered_merge*(left, right, fill_method="ffill") | For combining time series/ordered data
 | df1.*combine_first*(df2)                  | To overwrite NA values from first by values of second
-| s1.*update*(s2)                           |
+| s1.*update*(s2)                           | Modify in place using non-NA values from s2 https://pandas.pydata.org/pandas-docs/stable/reference/api/pandas.Series.update.html#pandas.Series.update[Ref]
 | df1.*update*(df2)                         | Update all values from second in first
 |===
 
@@ -1234,6 +1278,13 @@ http://pandas.pydata.org/pandas-docs/version/0.15.2/options.html#list-of-options
 * https://pandas.pydata.org/pandas-docs/stable/user_guide/timeseries.html#anchored-offsets[Anchored Offset]
 * Indexing behaviour depends on resolution (`df.index.resolution`). Less exact resolution selects all from this (e.g. day
 
+Common  or forgotten:
+
+[cols="m,d"]
+|===
+|
+|===
+
 [cols="m,d"]
 |===
 | pd.Series(.., index=pd.date_range(start, periods=.., freq=..) |
@@ -1341,6 +1392,8 @@ http://pandas.pydata.org/pandas-docs/version/0.15.2/options.html#list-of-options
 | *inferred_freq*                           |
 | periodindex.*start_time*                  |
 | periodindex.*end_time*                    |
+| dti.*dayofweek*                           |
+| per.*daysinmonth*                         |
 |===
 
 * DatetimeIndex optimizations https://pandas.pydata.org/pandas-docs/stable/timeseries.html#indexing[Ref]:
@@ -1576,20 +1629,6 @@ Some testing functions are in https://pandas.pydata.org/pandas-docs/stable/api.h
 | df.*between_time*(start_time, end_time)   | https://pandas.pydata.org/pandas-docs/stable/reference/api/pandas.DataFrame.between_time.html[Ref]
 | df.*at_time*(time)                        | https://pandas.pydata.org/pandas-docs/stable/reference/api/pandas.DataFrame.at_time.html[Ref]
 | df.*pop*(col)                             | Return and drop columns from frames (`KeyError` if not found)
-| *is_monotonic*                            | Series, Index
-| *is_monotonic_increasing* +
-  *is_monotonic_decreaseing*                |
-| index.*repeat*(repeats)                   | Repeat elements of indexs
-| index.*identical*(other)                  | Check also other comparable attributes http://pandas.pydata.org/pandas-docs/stable/generated/pandas.Index.identical.html#pandas.Index.identical[Ref]
-| index.*inferred_type*                     |
-| dateindex.*inferred_freq*                 |
-| index.*putmask*(mask, val)                | http://pandas.pydata.org/pandas-docs/stable/generated/pandas.Index.putmask.html#pandas.Index.putmask[Ref]
-| index.*get_indexer*(target)               |
-| index.*get_indexer_non_unique*(target)    |
-| index.*get_loc*(key)                      | Get integer location, slice or boolean mask for requested label http://pandas.pydata.org/pandas-docs/stable/generated/pandas.Index.get_loc.html#pandas.Index.get_loc[Ref]
-| *argmax*()                                | Numpy array of max argument indexer
-| index.*slice_indexer*(..)                 | For ordered index http://pandas.pydata.org/pandas-docs/stable/generated/pandas.Index.slice_indexer.html#pandas.Index.slice_indexer[Ref]
-| index.*slice_locs*(..)                    | Compute slice http://pandas.pydata.org/pandas-docs/stable/generated/pandas.Index.slice_locs.html#pandas.Index.slice_locs[Ref]
 | ts.*resolution*                           | equal `datetime.timedelta(0, 0, 1)`
 | ts.*ctime*()                              | ctime string format; `pd.Timestamp(1e18).ctime() = "Sun Sep  9 01:46:40 2001"`
 | pd.Timestamp.*fromtimestamp*()            |
@@ -1610,12 +1649,22 @@ Some testing functions are in https://pandas.pydata.org/pandas-docs/stable/api.h
 | timedelta.*to_timedelta64*()              | Return `numpy.timedelta64` with nanosecond precision
 | periodindex.*qyear*                       |
 | pd.api.types.*union_categoricals*([cats1, cats2, ..]) | http://pandas.pydata.org/pandas-docs/stable/generated/pandas.api.types.union_categoricals.html#pandas.api.types.union_categoricals[Ref]
+| s.*ravel*()                               | Return flattened underlying data https://pandas.pydata.org/pandas-docs/stable/reference/api/pandas.Series.ravel.html#pandas.Series.ravel[Ref]
+| s.*squeeze*()                             | Squeeze 1-dim axis into scalars
+| s.*replace*(to_replace, val)              | https://pandas.pydata.org/pandas-docs/stable/reference/api/pandas.Series.replace.html#pandas.Series.replace[Ref]
+| to_replace=_regex_, regex=True            | to_replace is regex (using `re.sub`)
+| regex=_regex_                             | alternative for regex
+| to_replace=[..,..], value=[..,..]         | can be both regex
+| to_replace={v1:v2, ..}                    | multi-value replacement (value=None)
+| to_replace={col1:v1, ..}                  | diff replace in multi cols
+| to_replace={col1:{v1:v2,..}, ..}          | multi-value in multi-col
 |===
 
 datetimeindex, timedeltaindex: mean
 
 * http://pandas.pydata.org/pandas-docs/stable/api.html#interval[pd.Interval]
 * pd.read_csv: parse_dates much faster than converters np.datetime; slightly faster with date_parser=ciso8601.parse_datetime
+* many fill operations have parameter `limit` to specify how much to forward/back fill; also a `method="pad"` parameter
 
 set_option:
 
@@ -1727,3 +1776,10 @@ index.get_loc(..)
 df.loc[]=..
 
 most functions trigger block consolidation
+
+
+from pandas.api.types import is_numeric_dtype
+dtype.kind  : first letter of bool, int, float, complex
+
+
+df[[..]].values.tolist()  creates [[..],[..],..]  which could be added as a single new column

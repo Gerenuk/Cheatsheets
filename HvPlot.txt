@@ -23,6 +23,7 @@
 
 * use `*` and `+` to compose plots like in Holoviews (e.g. scatter and line)
 * more options on https://hvplot.pyviz.org/user_guide/Customization.html[Customization]
+* xarray data for more than 2D (https://hvplot.pyviz.org/user_guide/Gridded_Data.html[Ref])
 
 == Plots
 
@@ -53,9 +54,29 @@ Namespace for `hvplot`
 | where="mid"                               | `"pre"`, `"mid"`, `"post"`
 | .table(columns=[..])                      | https://hvplot.pyviz.org/user_guide/Plotting.html#Tables[SlickGrid table]
 | .violin()                                 |
+| violin_color=..                           |
 |===
 
 * specify `x`, `y` (also lists) or `columns`, `index`
+
+== Statistical plots
+
+|===
+| hvplot.scatter_matrix(..)                 |
+| hvplot.parallel_coordinates(..)           |
+| hvplot.andrews_curves(..)                 |
+| hvplot.lag_plot(..)                       | y(n) vs y(n+d)
+|===
+
+== Geographical plots
+
+https://hvplot.pyviz.org/user_guide/Geographic_Data.html
+* need geoviews or cartopy: conda install -c pyviz geoviews
+
+
+|===
+| 
+|===
     
 == Explicit
 
@@ -70,6 +91,10 @@ Namespace for `hvplot`
     df.hvplot()
     
     df.table(backlog=10)
+    
+== Network plot
+
+* hvplot.networkx instead of networkx.draw https://hvplot.pyviz.org/user_guide/NetworkX.html[Guide]
     
 == Other
 
