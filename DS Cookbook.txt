@@ -365,6 +365,8 @@ F-test to compare models that are _nested_. Generally cross-validation also migh
     fig, ax = plt.subplots(figsize=(20, 80))
     denres=dendrogram(link, labels=dd.columns, orientation="right", ax=ax, color_threshold=8, leaf_font_size=8, above_threshold_color="lightgray");
     
+    pipe(zip(fcluster(linkage_data, 0.9, "distance"), labels), groupby(0))  # get clusters
+    
 You can use https://docs.scipy.org/doc/scipy/reference/generated/scipy.cluster.hierarchy.to_tree.html[to_tree] to get a traversable tree with functions like https://docs.scipy.org/doc/scipy/reference/generated/scipy.cluster.hierarchy.ClusterNode.pre_order.html[pre_order]
 
 == Scikit-learn tools
@@ -2181,3 +2183,14 @@ You cannot subtract `dt.time()` instances.
 
     df.isna().sum()    # check missing values
 
+
+Join string columns:
+
+    reduce(add, [..])
+    
+    
+=== Varios
+
+Powerset:
+
+    for num in range(len(a)) for choice in combinations(a, num)
