@@ -2194,3 +2194,15 @@ Join string columns:
 Powerset:
 
     for num in range(len(a)) for choice in combinations(a, num)
+    
+== BeakerX
+
+* has a lot of toolkit features
+* useful: table display
+* but no docs; only notebooks: https://nbviewer.jupyter.org/github/twosigma/beakerx/blob/master/doc/python/TableAPI.ipynb
+
+    df=pd.DataFrame(np.random.rand(100, 10), columns=list(string.ascii_letters[:10]))
+    table = TableDisplay(df)
+    for col in df.columns:
+        table.addCellHighlighter(TableDisplayCellHighlighter.getUniqueEntriesHighlighter(col, HighlightStyle.SINGLE_COLUMN))
+    table
