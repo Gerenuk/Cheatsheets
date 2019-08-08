@@ -7,18 +7,7 @@ AdaBoost: GBT with exp loss
 watchlist: show performance on these sets while training
 native xgb and xgboost.sklearn wrapper
 
-high variance (score band in CV) ->
-* feature selection
-* more training samples; e.g. generated
-* reduce max_depth
-* increase min_child_weight
-* increase gamma
-* randomness by subsamle or colsample_bytree
-* increase lambda and alpha reg.
-
 custom metric possible
-
-early_stopping_rounds=
 
 train returns last model, not best!
 bst.best_score, bst.best_iteration, bst.best_ntree_limit
@@ -29,62 +18,7 @@ missing data:
 * xgb.DMatrix(.., missing=np.nan)
 * in sklearn: np.nan
 
-imbalanced:
-* small min_child_weight
-* weights to instances of DMatrix(..., weight=..)
-* scale_pos_weight: param for weight ratio
 
-Suggestions1:
-around 100..500 trees; play with eta: 0.01..0.3
-max_depth: start with 6; or max_leaf_nodes instead
-min_child_weight: start with 1/sqrt(eventrate)
-colsample_bytree: 0.3-1.0
-subsample: 1.0; 0.5-1.0
-gamma: 0.0; min required loss reduction; regularization (use if train error >> test error; e.g. gamma 5); 20 would be very high (use if fast overfitting or dominating features); use gamma [complexity from loss] instead of min_child_weight [loss derivative]) when train CV skyrockets; https://medium.com/data-design/xgboost-hi-im-gamma-what-can-i-do-for-you-and-the-tuning-of-regularization-a42ea17e6ab6#.t243a3kp9
-lambda: L2 reg on weight to prevent overfitting
-alpha: L1 on weights; some feature selection (e.g. on high dim)
-max_delta_step: usually not needed; can help with logreg and imbalanced
-colsample_bylevel: usually subsample/colsample_bytree instead
-scale_pos_weight: faster convergence if imbalance
-too complex, overfitting (test error rises; large gap) -> eta-, max_depth-, min_child_weight+
-too simple (test and training error close and fall continuously) -> opposite
-just right -> test error levels off
-
-Example:
-eta = 0.01 (small shrinkage)
-max_depth = 9 (default max_depth=6 which is not deep enough)
-sub_sample = 0.9 (giving some randomness for preventing overfitting)
-num_rounds = 3000 (because of slow shrinkage, many trees are needed)
-
-Approach1:
-* train with default
-* if bad, eta=0.1 and tune n_trees
-* tune rest (max_depth, gamma, subsample, colsample_bytree); for gbtree dont use gamma unless test error diff
-* tune alpha, lambda if needed
-* change eta and repeat
-
-Approach2:
-* high learning rate 0.05-0.3 (eg. start max_depth=5, min_child_weight=1 [since Imb], gamma=0, subsample=colsample_bytree=0.8, scale_pos_weight=1 [since Imb])
-* find n_trees (use CV)
-* tune max_depth (3-10), min_child_weight (1-6); complexity
-* tune gamma (0.0-0.4); complexity
-* tune subsample, colsample_bytree (0.6-0.9); randomness vs noise
-* tune lambda, alpha (1e-5..1e2)
-* lower learning rate (e.g. 0.01); find n_trees (e.g. up 5000)
-
-Imbalanced:
-* only AUC (rank) -> scale_pos_weight
-* calibrated proba -> no rebalance; use max_delta_step (e.g. 1)
-
-Trains trees and then prunes (unlike greedy GBM)
-Regularization
-Custom objective
-Parallelized
-Missing values
-CV at each iteration -> opt num of boosting iterations
-Warm restart
-
---------
 * CART: score at each leaf
 * Winning competitions: Avito Context Ad Click, Crowdflower, WWW2015 Microsoft Malware
 * use Taylor of loss with 1st and 2nd derivative
@@ -95,46 +29,7 @@ Warm restart
 
 * test data set: https://archive.ics.uci.edu/ml/datasets/Covertype (7 classes)
 
-Performance:
-* sketch_eps to consider only top splits
-* approximation on split points
-
 parameters (https://xgboost.readthedocs.org/en/latest/parameter.html#parameters-for-tree-booster):
 * sketch_eps: consider only the best splits
 * shrinkage only effects score of leaf nodes, not tree shape
-* num trees: 100-1000, depending on data size
-* learning rate: [2-10] / #trees, fine tune
-* row sampling: [0.5, 0.75, 1.0] grid search
-* column sampling: [0.4, 0.6, 0.8, 1.0] grid search
-* min leaf weight: 3/[%rare events] fine tune
-* max tree depth: [4,6,8,10] grid search
-* min split gain: 0
-* http://datascience.stackexchange.com/questions/9364/hypertuning-xgboost-parameters
 
-------
-https://www.analyticsvidhya.com/blog/2016/03/complete-guide-parameter-tuning-xgboost-with-codes-python/
-eta=0.01-0.2
-min_child_weight
-max_depth=3-10  (alternative max_leaf_nodes)
-gamma (min_split)
-subsample 0.5-1
-colsample_bytree: 0.5-1
-alpha: for speed when high dim
-scale_pos_weight: faster when imbalanced
-
-1. tune number of trees with lr 0.1
-2. tune tree param (max_deoth, min_child_weight maybe also: gamma; next: subsample, colsample_bytree)
-3. tune regularization (lambda, alpha)
-4. lower lr
---------
-if calibrated needed: max_delta_step
-
-https://docs.aws.amazon.com/sagemaker/latest/dg/xgboost-tuning.html
-
-special:
-max_delta_step: for LogReg when unbalanced(?)
---------
-https://medium.com/data-design/xgboost-hi-im-gamma-what-can-i-do-for-you-and-the-tuning-of-regularization-a42ea17e6ab6
-gamma: depends on data and also other param!
-regul -> high gamma (e.g. 10;20 already extremely high); changes -20% or +2
-if trainCV>>testCV: gamma instead of min_child_weight (or max_depth)
