@@ -172,6 +172,15 @@ https://www.youtube.com/watch?v=MeKucat_gw8
 * t-distribution more stable and can give totally diff result; it's in the tails
 * t-distribution more robust to outliers
 
+== Stacking
+
+* make model on top of predictions from multiple models
+* use out-of-sample predictions only for output of first layer
+* blend predictions from multiple stackers
+* stacking learning also out-of-sample?!
+* https://www.kaggle.com/c/otto-group-product-classification-challenge/discussion/14335
+* https://github.com/melisgl/higgsml
+
 == Winning data science competitions
 https://www.youtube.com/watch?v=spYNo8TU0fs
 * tuning GBM:
