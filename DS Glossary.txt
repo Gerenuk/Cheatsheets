@@ -14,3 +14,6 @@ Robust PCA:: "Robust PCA" (Candes 2009); http://statweb.stanford.edu/~candes/pap
 Structured learning:: Target arbitrary structured data (not just a number); https://pystruct.github.io/intro.html#intro[Into from PyStruct]
 Guided Evolutionary search:: Making of of approximate (biased) gradient information; arXiv 1806.10230
 Entropy Weighted K-Means:: Subspace K-Means
+Interaction information: Information theory relation for multiple variables: What is present beyond which is present in subsets
+Dual total correlation (Excess entropy): Non-negative generalization of mutual information
+Total correlation: Generalization of mutual information

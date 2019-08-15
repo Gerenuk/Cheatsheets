@@ -12,11 +12,17 @@ TODO:
 == Intro
 
 * Example can be found on https://matplotlib.org/devdocs/gallery/index.html[Matplotlib Gallery]
-* Most commands here refer to http://matplotlib.org/api/pyplot_api.html[matplotlib.pyplot].
 * A summary of the pyplot command is given by https://matplotlib.org/api/pyplot_summary.html[help(plt.plotting)]
-* Axis commands are on https://matplotlib.org/api/axes_api.html[Axes API]
+
 * Axis has most `pyplot` commands; For properties they are usually called `ax.set_*`, `ax.get_*`
 * https://matplotlib.org/devdocs/thirdpartypackages/index.html[3rd party packages]
+
+Commands come from:
+
+* http://matplotlib.org/api/pyplot_api.html[Pyplot]
+* https://matplotlib.org/api/axes_api.html[Axes]
+* https://matplotlib.org/api/axis_api.html[Axis] (x or y)
+
 
 [cols="m,d"]
 |===
@@ -382,7 +388,6 @@ More low-level
 | ax = *gca*()                              | Way to get current x and y axis; Get current axis of current figure (matching given information or create new one) http://matplotlib.org/api/pyplot_api.html#matplotlib.pyplot.gca[Ref]
 | axis = ax.*xaxis*                         | Get x axis only
 | *axes*()                                  | Create new axis (like *subplot*(111)) http://matplotlib.org/api/pyplot_api.html#matplotlib.pyplot.axes[Ref]
-| *axis*()                                  | return axis http://matplotlib.org/api/pyplot_api.html#matplotlib.pyplot.axis[Ref]
 | ax.get_xaxis()                            |  Return this axis instance
 | ax.spines['left'].*set_color*('none')     |
 | ax.spines['left'].*set_linewidth*(2)      |
@@ -451,38 +456,178 @@ Hide axis:
     for label in ax.get_xticklabels():
         label.set_horizontalalignment('right')
 
+* https://matplotlib.org/3.1.1/api/pyplot_summary.html[Pyplot]
+* https://matplotlib.org/api/axis_api.html#ticks-tick-labels-and-offset-text[Axis]
+* https://matplotlib.org/api/_as_gen/matplotlib.pyplot.axes.html[Axes]
+
 * https://matplotlib.org/api/axes_api.html#ticks-and-tick-labels[Ticks and Labels]
 * https://matplotlib.org/examples/ticks_and_spines/tick-locators.html[Locator examples]
 * https://matplotlib.org/devdocs/api/ticker_api.html[Ticker API]
 * https://matplotlib.org/api/axes_api.html#twinning[Twinning]
 * https://matplotlib.org/api/axes_api.html#units[Unit support]
+* Locators and Formatters from `plt.` and also `mpl.ticker.`
 
-=== Grid
+
+==== Position
+
+[cols="m,d"]
+|===
+| ax.xaxis.*set_major_locator*(..)          | Locator of ticks (http://matplotlib.org/api/ticker_api.html#tick-locating)[Ref]
+| *xticks*(locs)                            | Sets ticks http://matplotlib.org/api/pyplot_api.html#matplotlib.pyplot.xticks[Ref]
+| ax.*set_xticks*(locs)                     |
+| _minor_=True                              |
+|===
+
+[cols="m,d"]
+|===
+| plt.MultipleLocator(..)                   |
+| plt.SymmetricalLogLocator(..)             | https://matplotlib.org/api/ticker_api.html#matplotlib.ticker.SymmetricalLogLocator[Ref]
+|===
+
+[cols="m,d"]
+|===
+| *locator_params*(axis="both")             | https://matplotlib.org/api/_as_gen/matplotlib.pyplot.locator_params.html[Ref]
+| _tight_=..                                | Passed to autoscale_view
+| **kwargs                                  | Passed to locator
+|===
+
+    # Get tick info
+    locs, labels = plt.xticks()
+
+==== Labels and Grid style
+
+[cols="m,d"]
+|===
+| ax.xaxis.*set_major_formatter*(..)        | Tick formatting (http://matplotlib.org/api/ticker_api.html#tick-formatting)[Ref]
+| *xticks*(locs)                            | Sets ticks http://matplotlib.org/api/pyplot_api.html#matplotlib.pyplot.xticks[Ref]
+| _labels_=[..]                             |
+| **kwargs                                  | https://matplotlib.org/3.1.1/api/text_api.html#matplotlib.text.Text[Text properties]
+| _rotation_=45                             |
+| _ha_="right"                              |
+| _rotation_mode_="anchor"                  |
+| ax.*set_xticks*(locs)                     |
+| _minor_=True                              | To set minor ticks
+| *tick_params*(..)                         | Change ticks and labels http://matplotlib.org/api/pyplot_api.html#matplotlib.pyplot.tick_params[Ref]
+| _axis_="x"                                | `x`, y`, `both`
+| _which_="major"                           |
+| _colors_=..                               | Tick and Label color the same
+| _color_=..                                |
+| _labelcolor_=..                           |
+| _pad_=..                                  |
+| _labelsize_=..                            |
+| _labelrotation_=..                        |
+| _grid_color_=..                           |
+| ax.xaxis.*set_tick_params*(which="major") | Parameters same as `ax.set_tickparams()` https://matplotlib.org/api/_as_gen/matplotlib.axis.Axis.set_tick_params.html[Ref]
+| ax.*set_xticklabels*(labels)              | https://matplotlib.org/3.1.1/api/_as_gen/matplotlib.axes.Axes.set_xticklabels.html[Ref]
+| _fontdict_=..                             |
+| _minor_=True                              | Set minor ticks
+| **kwargs                                  | https://matplotlib.org/3.1.1/api/text_api.html#matplotlib.text.Text[Text properties]
+| _rotation_=45                             |
+| _ha_="right"                              |
+| _rotation_mode_="anchor"                  |
+|===
+
+[cols="m,d"]
+|===
+| ax.xaxis.*grid*(which="major")            | https://matplotlib.org/api/_as_gen/matplotlib.axis.Axis.grid.html[Ref]
+| **kwargs                                  | https://matplotlib.org/api/_as_gen/matplotlib.lines.Line2D.html[Line2D]
+| axes.*grid*(..)                           |
+| **kwargs                                  | https://matplotlib.org/api/_as_gen/matplotlib.lines.Line2D.html[Line2D]
+| *grid*(which="major")                     | https://matplotlib.org/3.1.1/api/_as_gen/matplotlib.pyplot.grid.html[Ref]
+| **kwargs                                  | https://matplotlib.org/api/_as_gen/matplotlib.lines.Line2D.html[Line2D]
+|===
+
+[cols="m,d"]
+|===
+| plt.FuncFormatter(lambda x, pos:...)      | https://matplotlib.org/devdocs/api/ticker_api.html#matplotlib.ticker.FuncFormatter[Ref]
+| mpl.ticker.*PercentFormatter*()           | https://matplotlib.org/api/ticker_api.html#matplotlib.ticker.PercentFormatter[Ref]
+| mpl.ticker.*EngFormatter*(unit='', places=None, sep=' ')  | https://matplotlib.org/api/ticker_api.html#matplotlib.ticker.EngFormatter[Ref]
+|===
+
+[cols="m,d"]
+|===
+| ticklabel_format(..)                      | Some special properties (scientific, offset, ...) https://matplotlib.org/3.1.1/api/_as_gen/matplotlib.pyplot.ticklabel_format.html[Ref]
+| _axis_="both"                             |
+| _useOffset_=False                         |
+| ax.*convert_xunits*(x)                    | For axis with unit support https://matplotlib.org/api/_as_gen/matplotlib.axes.Axes.convert_xunits.html#matplotlib.axes.Axes.convert_xunits[Ref]
+| ax.*get_xticklabels*()                    |
+|===
+
+    # After df.plot()
+    ax.set_xticklabels([d.*strftime*("%y %b") for d in df.index.to_pydatetime()])
+
+* https://matplotlib.org/devdocs/api/units_api.html[Units API] for dates etc.
+
+==== Visibility
+
+[cols="m,d"]
+|===
+| *minorticks_on*() +
+  *minorticks_off*()                        |
+| axis("off")                               | Disable Axes, Ticks and Labels
+| axis(False)                               | Disable Axes, Ticks and Labels
+| xticks([])                                | Empty positions
+| plt.NullLocator()                         |
+| plt.NullFormatter()                       |
+| tick_params(..)                           |
+| _bottom_=False                            |
+| _labelbottom_=False                       |
+|===
+
+[cols="m,d"]
+|===
+| grid(True, which="major")                 |
+| _axis_="both"                             |
+| ax.xaxis.grid(False, which="major")       |
+|===
+
+==== Other
 
 [cols="m,d"]
 |===
 | *rgrids*(..)                              | Get or set radial grid lines http://matplotlib.org/api/pyplot_api.html#matplotlib.pyplot.rgrids[Ref]
 | *thetagrids*(..)                          | Add theta locations in a polar plot http://matplotlib.org/api/pyplot_api.html#matplotlib.pyplot.thetagrids[Ref]
-| ax.*get_xticklabels*()                    |
 | list_of_gridlines = ax.get_xgridlines()   | https://matplotlib.org/api/_as_gen/matplotlib.axes.Axes.get_xgridlines.html#matplotlib.axes.Axes.get_xgridlines[Ref]
-| *grid*(True)                              | Turn grid on/off http://matplotlib.org/api/pyplot_api.html#matplotlib.pyplot.grid[Ref]
-| _which_="major"                           |
-| _axis_="both"                             |
-| axes.*grid*(_color_='b', _alpha_=0.5, _linestyle_='dashed', _linewidth_=0.5)  |
 |===
 
-=== Limits and direction
+=== Scaling of  data
 
 [cols="m,d"]
 |===
+| *axes*()                                  | https://matplotlib.org/api/_as_gen/matplotlib.pyplot.axes.html[Ref]
+| _xscale_="log"                            |
 | *xlim*( (xmin, xmax) )                    | http://matplotlib.org/api/pyplot_api.html#matplotlib.pyplot.xlim[Ref]
-| *xlim*(_xmin_=.., _xmax_=..)              |
-| xmin, xmax = xlim()                       |
-| axis("equal")                             | Change limits of x/y for equal ratio
+| xlim(_xmin_=.., _xmax_=..)                |
+| ax.*set_xlim*(left=.., right=..)          | https://matplotlib.org/api/_as_gen/matplotlib.axes.Axes.set_xlim.html[Ref]
+| axis(..)                                  | https://matplotlib.org/api/_as_gen/matplotlib.pyplot.axis.html[Ref]
+| axis("equal")                             | Change limits of for equal ratio
+| axis("scaled")                            | Change box dimension of for equal ratio
+| axis("tight")                             | Just large enough to show all data
+| axis("square")                            | Like `"scaled"` but force xmax-xmin=ymax-ymin
+| axis([xmin, xmax, ymin, ymax])            |
+| ax.set(xlim=.., ylim=..)                  |
 | ax.*invert_xaxis*()                       | Invert axis
 |===
 
+    xmin, xmax = xlim()
+    xmin, xmax, ymin, ymax = axis()
+
 * https://matplotlib.org/api/axes_api.html#axis-limits-and-direction[Axis limits and direction]
+* https://matplotlib.org/api/axes_api.html#autoscaling-and-margins[Autoscaling, Margins]
+* https://matplotlib.org/api/axes_api.html#aspect-ratio[Aspect ratio]
+
+
+[cols="m,d"]
+|===
+| *loglog*(..)                              | Like `plot()` but as log-log plot. Additional parameters for scaling http://matplotlib.org/api/pyplot_api.html#matplotlib.pyplot.loglog[Ref]
+| *semilogx*(..)                            | Like plot http://matplotlib.org/api/pyplot_api.html#matplotlib.pyplot.semilogx[Ref]
+| *xscale*("log")                           | `"linear"`, `"log"`, `"logit"`  http://matplotlib.org/api/pyplot_api.html#matplotlib.pyplot.xscale[Ref]
+| xscale("symlog", linthreshx=..)           | Combination of linear and log
+| axes(aspect="equal")                      | Creates `subplot(111)`
+| ax.*set_aspect*("equal")                  | Make plot square (not axis units)
+| *autoscale*(_axis_="both")                | Autoscale http://matplotlib.org/api/pyplot_api.html#matplotlib.pyplot.autoscale[Ref]
+| *margins*(..)                             | Set or retrieve autoscaling margins http://matplotlib.org/api/pyplot_api.html#matplotlib.pyplot.margins[Ref]
+|===
 
 === Axis labels, title, legend
 
@@ -560,28 +705,6 @@ Hide axis:
 
 * `logit` axis scale log10(x/(1-x))
 * `square` parameter for axis function?
-
-=== Scaling of plots and data
-
-[cols="m,d"]
-|===
-| *loglog*(..)                              | Like `plot()` but as log-log plot. Additional parameters for scaling http://matplotlib.org/api/pyplot_api.html#matplotlib.pyplot.loglog[Ref]
-| *semilogx*(..)                            | Like plot http://matplotlib.org/api/pyplot_api.html#matplotlib.pyplot.semilogx[Ref]
-| *xscale*("log")                           | `"linear"`, `"log"`, `"logit"`  http://matplotlib.org/api/pyplot_api.html#matplotlib.pyplot.xscale[Ref]
-| xscale("symlog", linthreshx=..)           | Combination of linear and log
-| axes(aspect="equal")                      | Creates `subplot(111)`
-| *axis*()                                  | Convenience method to get/set properties http://matplotlib.org/api/pyplot_api.html#matplotlib.pyplot.axis[axis]
-| axis("scaled")                            | Change plot box to make equal ratio; also `"square"`, `"equal"`, `"off"`, `"tight"`...
-| axis([xmin, xmax, ymin, ymax])            |
-| ax.*set_aspect*("equal")                  | Make plot square (not axis units)
-| *autoscale*(_axis_="both")                | Autoscale http://matplotlib.org/api/pyplot_api.html#matplotlib.pyplot.autoscale[Ref]
-| *margins*(..)                             | Set or retrieve autoscaling margins http://matplotlib.org/api/pyplot_api.html#matplotlib.pyplot.margins[Ref]
-|===
-
-* https://matplotlib.org/api/axes_api.html#autoscaling-and-margins[Autoscaling, Margins]
-* https://matplotlib.org/api/axes_api.html#aspect-ratio[Aspect ratio]
-* https://matplotlib.org/devdocs/api/units_api.html[Units API] for dates etc.
-
 
 == Annotations
 

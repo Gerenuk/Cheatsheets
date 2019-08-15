@@ -365,6 +365,10 @@ F-test to compare models that are _nested_. Generally cross-validation also migh
     fig, ax = plt.subplots(figsize=(20, 80))
     denres=dendrogram(link, labels=dd.columns, orientation="right", ax=ax, color_threshold=8, leaf_font_size=8, above_threshold_color="lightgray");
 
+    pipe(zip(fcluster(linkage_data, 0.9, "distance"), labels), groupby(0))  # get clusters
+
+You can use https://docs.scipy.org/doc/scipy/reference/generated/scipy.cluster.hierarchy.to_tree.html[to_tree] to get a traversable tree with functions like https://docs.scipy.org/doc/scipy/reference/generated/scipy.cluster.hierarchy.ClusterNode.pre_order.html[pre_order]
+
 == Scikit-learn tools
 
 [col="m,d"]
@@ -2180,7 +2184,32 @@ You cannot subtract `dt.time()` instances.
     df.isna().sum()    # check missing values
 
 
+Join string columns:
+
+    reduce(add, [..])
+
 Reading large files:
 * Parquet
 ** engine="fastparquet", compression="uncompressed" ("snappy" not implemented): slightly faster than Pickle
 ** engine="pyarrow" (default): only a bit faster than Pickle, but Snappy compression small ("uncompressed" not supported); cannot do float16
+
+
+
+=== Various
+
+Powerset:
+
+    for num in range(len(a)) for choice in combinations(a, num)
+
+== BeakerX
+
+* has a lot of toolkit features
+* useful: table display
+* but no docs; only notebooks: https://nbviewer.jupyter.org/github/twosigma/beakerx/blob/master/doc/python/TableAPI.ipynb
+
+    df=pd.DataFrame(np.random.rand(100, 10), columns=list(string.ascii_letters[:10]))
+    table = TableDisplay(df)
+    for col in df.columns:
+        table.addCellHighlighter(TableDisplayCellHighlighter.getUniqueEntriesHighlighter(col, HighlightStyle.SINGLE_COLUMN))
+    table
+
