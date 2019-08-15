@@ -134,3 +134,5 @@ https://medium.com/data-design/xgboost-hi-im-gamma-what-can-i-do-for-you-and-the
 gamma: depends on data and also other param!
 regul -> high gamma (e.g. 10;20 already extremely high); changes -20% or +2
 if trainCV>>testCV: gamma instead of min_child_weight (or max_depth)
+
+

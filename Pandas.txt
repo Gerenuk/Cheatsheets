@@ -1630,6 +1630,9 @@ Pandas cookbook
 
 Missing values
 --------------
+To deal with NaNs and counting you could use s.astype("category").cat.codes
+
+
 General information http://pandas.pydata.org/pandas-docs/dev/missing_data.html
 
 Drop missing values
@@ -1728,3 +1731,19 @@ index.get_loc(..)
 df.loc[]=..
 
 most functions trigger block consolidation
+
+Add many columns: do not do this by column since slow; rather precreate a full dict or precreate columns and populate
+
+df.add_prefix(..) +
+df.add_suffix(..)
+
+pd.to_numeric(s)
+errors="coerce"
+
+dropna(thresh=..)
+
+s.apply(pd.Series)  -> split lists into multiple cols
+
+Accessors: https://pandas.pydata.org/pandas-docs/stable/reference/series.html#accessors
+
+df.reindex([...])  | also works when NA in list!

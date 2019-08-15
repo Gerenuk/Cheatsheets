@@ -438,12 +438,18 @@ Hide axis:
 | plt.xticks([], [])                        | Disable Ticks and Labels
 | plt.tick_params(bottom=False)             |
 | labelbottom=False                         |
+| labelrotation=..                          |
+| color=..                                  |
 |===
 
     plt.xticks(pos, labels)
 
     ax.set_xticks(pos)
     ax.set_xticklabels(labels)
+    ax.axis["left"].major_ticklabels.set_ha("center")
+
+    for label in ax.get_xticklabels():
+        label.set_horizontalalignment('right')
 
 * https://matplotlib.org/api/axes_api.html#ticks-and-tick-labels[Ticks and Labels]
 * https://matplotlib.org/examples/ticks_and_spines/tick-locators.html[Locator examples]
@@ -538,7 +544,7 @@ Hide axis:
   ax.xaxis.set_major_formatter(mpl.dates.AutoDateFormatter(mpl.dates.AutoDateLocator()))    |
 | fig.*autofmt_xdate*(bottom=0.2, rotation=30, ha='right', which=None) | https://matplotlib.org/api/_as_gen/matplotlib.figure.Figure.html#matplotlib.figure.Figure.autofmt_xdate[Ref]
 | matplotlib.dates.*DateFormatter*          | https://matplotlib.org/api/dates_api.html#matplotlib.dates.DateFormatter[Ref]
-| matplotlib.dates.*WeekLocator*            | 
+| matplotlib.dates.*WeekLocator*            |
 | mpl.dates.*num2timedelta*(x)              | Convert number of days to `timedelta` object
 | mpl.dates.*drange*(start, end, delta)     | Create date range a internal float format; `start`/`end` is `datetime`, `delta` is `timedelta`
 |===
@@ -796,9 +802,9 @@ ax.autoscale_view()
 == Rotate Ticks
 
 
-	plt.xticks(rotation=45, ha="right")
+    plt.xticks(rotation=45, ha="right")
     ax.tick_params(axis='x', rotation=45)
-    
+
     plt.setp( axs[1].xaxis.get_majorticklabels(), rotation=45)
 
     for l in ax.get_xticklabels():

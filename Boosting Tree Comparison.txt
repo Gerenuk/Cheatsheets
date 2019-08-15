@@ -33,7 +33,7 @@
 
 * learning_rate
 * depth: 1-10 (up to 16)
-* l2-leaf-reg: pos. integer; L2 regularisation 
+* l2-leaf-reg: pos. integer; L2 regularisation
 * one_hot_max_size: max size for one-hot encoding
 
 === LightGBM
@@ -185,4 +185,15 @@ For imbalanced:
 * is_unbalance: false (make your own weighting with scale_pos_weight)
 * USE A CUSTOM METRIC (to reflect reality without weighting, otherwise you have weights inside your metric with premade metrics like xgboost)
 
+
+== Laurae
+https://sites.google.com/view/lauraepp/parameters
+
+* learning_rate: 0.05 (larger for tuning); do not tune
+* nrounds, num_iterations: use large with early stopping
+* num_parallel_tree, num_iterations (when booster=rf): like RF, set to 500; not so good to use
+* early_stopping_rounds: 50, larger is better; too large may overfit
+* max_depth [1,inf]: usually [3, 12]; xgboost gpu max 16; unlimited depth is long one-sided rule expected
+* max_leaves, num_leaves: tune together with max_depth; 255, usually {15, 31, 63, 127, 255, 511, 1023, 2047, 4095}. Tips: adjust depth accordingly by allowing a slightly higher depth than the theoretical number of leaves (2^depth-1)
+* subsample ]0,1]: typical 0.7
 

@@ -394,7 +394,9 @@ https://docs.python.org/3/library/re.html#regular-expression-syntax[Python Regex
 | _datetime_ = dt.datetime.combine(time, dt.datetime.min.time())    |
 |===
 
-    seconds_since_midnight = (dd.index-pd.to_datetime(dd.index.date))/dt.timedelta(seconds=1)
+    sec_since_midnight
+       = (dti-dti.normalize())/pd.Timedelta("1s")   # For DateTimeIndex
+       = (dt.datetime.combine(datetime.min, t)-datetime.min).total_seconds()  # For time object
 
 Timestamp is UTC seconds since seconds since 1970-01-01 00:00. Hence
 dt.datetime(1970,1,1,0,0,tzinfo=pytz.timezone("CET")).timestamp() = -3600
