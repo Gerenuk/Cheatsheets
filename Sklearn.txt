@@ -1356,3 +1356,9 @@ Choosing a good minibatch size:
         for parameter, value in parameters.items():
             setattr(self, parameter, value)
         return self
+        
+        
+== UNSORTED
+
+* Decision Tree supports sparse data
+* RidgeClassifier use +/-1 as target and RMSE; but cannot do predict_proba

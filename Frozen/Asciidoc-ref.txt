@@ -33,9 +33,19 @@ TIP: special paragraph
 [glossary]
 term:: definition
 
+== Output
+
+    asciidoctor -a toc=left -a stem file.adoc             # attributes taken only this way?
+    
+=== PDF
+
+Need to install `gem install asciidoctor-pdf --pre`
+
+For math in PDF also need `gem install asciidoctor-mathematical` but it has a lot of low-level dependencies (https://github.com/asciidoctor/asciidoctor-mathematical#dependencies) and only supports latexmath mode.
+
 == Math
 
-    :stem:
+    :stem:                   # or specify `-a stem` on command line if it does work
 
     asciimath:[x^2]
 
@@ -43,4 +53,6 @@ term:: definition
     ----
     x^2
     ----
+    
+    
 

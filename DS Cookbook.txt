@@ -2189,7 +2189,7 @@ Join string columns:
     reduce(add, [..])
     
     
-=== Varios
+=== Various
 
 Powerset:
 
@@ -2206,3 +2206,7 @@ Powerset:
     for col in df.columns:
         table.addCellHighlighter(TableDisplayCellHighlighter.getUniqueEntriesHighlighter(col, HighlightStyle.SINGLE_COLUMN))
     table
+    
+== Time
+
+    date_from_iso_week = pd.to_datetime("2020-1-1", format="%G-%V-%u")   # Monday first week

@@ -53,11 +53,15 @@
 
 * find out needed order of differencing asciimath:[d]
 ** with KPSS test (difference more as long small p-value; AIC not suitable here since data different)
-** KPSS doesn't seem enough -> test with autocorrelation test
+** KPSS doesn't seem enough -> test with autocorrelation test(?)
+* could do Ljung-Box test to see if any serial autocorrelation present now (should be small p-values; esp. after seasonal lag order)
 * use AIC or CV to find ARIMAA asciimath:[p] and asciimath:[q] orders; find if including constant
 * test residuals for remaining information (Ljung-Box test)
 * ARIMA seems to work better than Prophet, but is more sensitive to "level shifts" (will think level shift jumps will repeat after one occurence)
-* auto-correlation left if Durbin-Watson statistics low(?)
+* arimaresults:
+** `.plot_diagnostics()`: Correlogram should show not more terms; other plots do not have to be perfect, but no strong pattern
+** ``.summary()`: Prob(Q) should be large (i.e. not further autocorr in residuals); p-values of coefs should be small; other unclear (JB based on Skew and Kurtosis)
+* auto-correlation left if Durbin-Watson statistics low(?); or Ljung-Box p-value large (use lags = min(2*season, T/5) or lags=min(10, T/5) for non-season)
 * interesting to distinguish deterministic trends from unit root or(?) stochastic trendsS
 ** -> Augmented Dickey-Fuller is best to test for unit root (determined my MC experiments)
 
@@ -78,6 +82,11 @@
 * usually multiplicative version (lag operators multiplied)
 * use asciimath:[d_s=1] and asciimath:[d<=1] (?) (for asciimath:[d_s=0] seasonal would face away(?))
 * suggested asciimath:[sAR + sMA <= 2] (?)
+* maybe best if p+d+q+P+D+Q <= 6
+* also needs to be invertible and stationary (-> unit roots of AR and MA parts all outside unit circle)
+* has peaks in ACF at season; e.g. for season 12 peaks at 1, 11(!), 12; but empirically also often harmonics seen (e.g. at 6)
+* even for MA(1) model: first coef<=0.5 by math; so not always clear pattern
+* do autocorr test on D12 D y
 
 === Holt-Winters summary
 
@@ -308,10 +317,14 @@ asciimath:[(lambda w_t+1)^(1/lambda) (1+(sigma_h^2 (1-lambda))/(2(lambda w_t +1)
 
 == Exponential smoothing
 
-asciimath:[hat x:(t+1)=alpha x_t + (1-alpha) hat x_t]
+asciimath:[x^t_(t+1)=alpha x_t + (1-alpha) hat x_t^(t-1)]
+
+asciimath:[hat x_(t+1)=alpha x_t + (1-alpha) hat x_t]
 
 asciimath:[hat x_(t+1)=alpha x_t+alpha (1-alpha) x_(t-1)+ alpha (1-alpha)^2 x_(t-2)+...]
 
+* simple exp. smooth just predicts a fixed mean for all of the future (do not find shocks and patterns)
+* double exp. smooth also predicts sloped line for all of the future
 * average between last observation and previous forecast
 * same as ARIMA(0,1,1) without a constant -> could fit this and then determine asciimath:[alpha=1+theta_1]
 * double exponential smoothing when trend
@@ -365,6 +378,7 @@ asciimath:[hat x_(t+1)=alpha x_t+alpha (1-alpha) x_(t-1)+ alpha (1-alpha)^2 x_(t
 * for cycles need p>=2; then asciimath:[cos omega = -phi_1(1-phi_2)/(4*phi_2)]
 * sometime possible to tell p and q from ACF/PACF plots
 * PACF is like last coef in AR(k) model
+* PACF: Correlation of residuals of regression Y, Xk both on all other X
 * finding p/q from ACF/PACF plot:
 **! ACF/PACF plot only help if only one of p>0 or q>0
 ** ARIMA(p,d,0): ACF exp decay or sine; PACF spike p, but none beyond (sharp drop)
@@ -378,6 +392,16 @@ asciimath:[hat x_(t+1)=alpha x_t+alpha (1-alpha) x_(t-1)+ alpha (1-alpha)^2 x_(t
 ** (0,1): single spike in ACF, decay in PACF
 ** (1,0): decay in ACF, single spike in PACF
 * trend can be deterministic or stochastic -> stochastic trend can be dealt with with differencing
+* sigma_z^2 of error terms can be estimated simply from ARMA coefs and Autocorrs (Yule-Walker estimator)
+
+=== Ljung-Box Q-statistic
+* test for autocorr (Null = all coefs zero)
+* p-value small -> reject null -> there is some autocorr
+* maxlag to use about log(Length TS)
+
+=== Yule-Walker equations
+* multiplying recurrence relations by X_{t-k} and averaging, yields matrix equations for autocorr coefs (has unique well-defined solution)
+
 
 === Books
 
@@ -423,7 +447,7 @@ asciimath:[hat x_(t+1)=alpha x_t+alpha (1-alpha) x_(t-1)+ alpha (1-alpha)^2 x_(t
 * if seasons -> always use seasonal differencing (otherwise seasonal pattern fades out over time)
 * but seasonal diff <= 1
 * seasonal diff + nonseasonal diff <= 2
-* if seasonal: use asciimath:[D=1] and asciimath:[d=1] (if trend)
+* !if seasonal: use asciimath:[D=1] and asciimath:[d<=1] (if trend)
 * autocorr positive at lag S -> add sAR term
 * autocorr negative at lag S -> add sMA term
 * sAR + sMA <= 2 (or overfitting and estimation problems)
@@ -946,5 +970,40 @@ Courses:
 Other:
 * http://stat565.cwick.co.nz/
 
+== Kaggle
+
+=== Tourism forecasting part 1
+http://blog.kaggle.com/2010/11/24/how-we-did-it-jeremy-howard-on-winning-the-tourism-forecasting-competitoin/
+
+=== Tourism Forecasting part 2
+http://blog.kaggle.com/2011/03/22/phil-brierley-on-winning-tourism-forecasting-part-two/
+* basic methods (ARIMA, ETS, Seasonal Naive, Damped Holt Winter) just averaged
+* main goal only to protect against predictions which are off
+
+=== Grocery Sales
+https://www.kaggle.com/c/favorita-grocery-sales-forecasting/discussion/47568
+* Wavenet
+https://www.kaggle.com/c/favorita-grocery-sales-forecasting/discussion/47560
+https://www.kaggle.com/c/favorita-grocery-sales-forecasting/discussion/47564
+* NN
+
+=== Recruit restaurant visitor forecasting
+https://www.kaggle.com/pureheart/1st-place-lgb-model-public-0-470-private-0-502/comments
+https://www.kaggle.com/c/recruit-restaurant-visitor-forecasting/discussion/49251#latest-282765
+
+=== Web traffic time series forecasting
+https://www.kaggle.com/c/web-traffic-time-series-forecasting/discussion/43795#latest-631996
+* seq2seq(!)
+https://github.com/Gerenuk/web-traffic-forecasting
+
+=== Power laws drivendata
+https://github.com/drivendataorg/power-laws-forecasting
+
 == UNSORTED
 * could do gaussian basis functions for each month
+* WaveNet interesting
+* see Kaggle above
+* seq2seq modeling https://github.com/JEddy92/TimeSeries_Seq2Seq 
+* NN https://jeddy92.github.io/
+
+If simple_differencing=True, then the time series provided as endog is literally differenced and an ARMA model is fit to the resulting new time series. This implies that a number of initial periods are lost to the differencing process, however it may be necessary either to compare results to other packages (e.g. Stata's arima always uses simple differencing) or if the seasonal periodicity is large
