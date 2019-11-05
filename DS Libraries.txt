@@ -38,6 +38,17 @@
 
 * curve smooths with automatic neighbourhood size
 
+=== Quick Table Profiling
+* https://github.com/tkrabel/edaviz[edaviz]
+* https://github.com/pandas-profiling/pandas-profiling[pandas-profiling]
+* https://pair-code.github.io/facets/[facets]
+
+=== Other
+* FastAI
+* LightGBM
+* PyTorch
+* CatBoost
+
 == Programming support
 
 * Code Formatter https://github.com/ambv/black[black]: seems to do a good job formatting highly nested structures; black was made to specify PEP8 formatting more clearly and more sensibly

@@ -18,6 +18,7 @@
 | PYTHONUNBUFFERED=x                        | "python -h"
 | PYTHONIOENCODING=utf8:surrogateescape     |
 | PYTHONUTF8=1                              | UTF8 be default everywhere; surrogateescape too
+| PYTHOBBREAKPOINT=...                      | Set to callable debugger for `breakpoint()` (or =0 to disable)
 | @functools.lru_cache                      | last recently used cache
 | str.find()                                | -1 if not found
 | str.index()                               | raises ValueError if not founds
@@ -200,6 +201,7 @@
 | open(.., "r+")                            | Open for updating
 | subprocess.Popen(['xcopy', source, dest]) | option "/Y" for overwrite without asking
 | subprocess.Popen(["ls", "-a"])            |
+| subprocess.run(.., capture_output=True)   |
 | os.path.expanduser("~")                   | Get home
 | str(pathlib.Path.home())                  | Get home (Py 3.4+)
 | os.getenv("HOME")                         | Get home on Linux
@@ -391,6 +393,10 @@ https://docs.python.org/3/library/re.html#regular-expression-syntax[Python Regex
 | _date_ = _pdts_.date()                    |
 | _datetime_ = dt.datetime.combine(time, dt.datetime.min.time())    |
 |===
+
+    sec_since_midnight
+       = (dti-dti.normalize())/pd.Timedelta("1s")   # For DateTimeIndex
+       = (dt.datetime.combine(datetime.min, t)-datetime.min).total_seconds()  # For time object
 
 Timestamp is UTC seconds since seconds since 1970-01-01 00:00. Hence
 dt.datetime(1970,1,1,0,0,tzinfo=pytz.timezone("CET")).timestamp() = -3600
@@ -780,6 +786,7 @@ But does not measure function length etc. Didn't find any better https://github.
 * `bottleneck.test()` -> 79 tests in 70.712s OK run=79 errors=0 failures=0
 * get BLAS info: `numpy.distutils.system_info.get_info('blas')` could also be atlas
 * to restore built-ins: `del myoverwritten` or `import builtins; real=builtins.real`
+* ` -X utf8` to force utf8 independent of locale
 
 == Anaconda
 

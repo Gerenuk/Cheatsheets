@@ -569,7 +569,7 @@ https://www.youtube.com/watch?v=XQfxndJH4UA
 * use non-negative weights for stacking [6]
 * netflix features: number of movies rated by user, number of users rated for a movie, log/binary versions, mean user rating with bayesian shrink to overall mean, norm of 10-factor SVD trained on residuals of global effects,
   correlations, ... (see table 1)
-  
+
 == Feature selection
 * usually does not help in tree (esp. not in boosted trees)
 * may help in MLP or NaiveBayes or distance based
@@ -638,7 +638,7 @@ https://www.youtube.com/watch?v=XQfxndJH4UA
 http://homes.cs.washington.edu/~pedrod/papers/cacm12.pdf
 * most of the mass of a multivariate Gaussian distribution is not near the mean, but in an increasingly distant “shell” around it; and most of the volume of a high-dimensional orange is in the skin, not the pulp
 * If a constant number of examples is distributed uniformly in a high-dimensional hypercube, beyond some dimensionality most examples are closer to a face of the hypercube than to their nearest neighbor.
-* if we approximate a hypersphere by inscribing it in a hypercube, in high dimensions almost all the volume of the hypercube is outside the hypersphere. 
+* if we approximate a hypersphere by inscribing it in a hypercube, in high dimensions almost all the volume of the hypercube is outside the hypersphere.
 * https://bib.dbvis.de/uploadedFiles/155.pdf
 * L_(k<1) may increase contract, but violates triangle inequality
 
@@ -1797,12 +1797,45 @@ Tested on 2D data with simple outliers with default parameters and 0.01 contamin
 * Failed:
 ** LOCI (did not finish in any time)
 
+
+== Label Noise
+https://www.youtube.com/watch?v=o2-GM2roZ_w
+"Shaky Ground (truth)- Learning with Label Noise - Yaniv Katz"
+* pretty insightful, slides saved as PDF "shaky ground"
+* Linear SVM is a bit more stable to small label noise than RF, but then (for >50%) breaks down harder; also RF a bit more stable than RBF-SVM
+* feature selection hard, models turn out more complex, need much larger data
+* types: random, random by depends only on true label, depends on features and label
+* approaches:
+** cleansing: detect suspected instances (e.g. on nearest neighbors, anomaly detection), but filters minority class
+** robust model: e.g. ResNet more robust than some other DNN, MAE loss more robust than Categorical cross entropy
+** noise tolerant learning: learn model weights and noise distribution simultaneously, prior
+* M-estimators more robust (Tukey cost, Huber cost) -> higher residuals less effect
+* -> using just any method already helps (about equally)
+* tune how many labels to filter
+
+== Pavel Pleskov Kaggle
+* you can augment all data (also NLP, tables?)
+
+= What's so special about Euclidean distance
+* Agostino: A characterization with applications to mobility and spatial voting
+* 5 requirements leading to Euclidean
+* value-sensitive: d(x,y)<d(x,y') where in y' one coordinate is d1(xj,yj)<d1(xj,y'j); like monotonic on coordinates
+* order-sensitive: if y' has yi und yj swapped, then (xi-xj)(yi-yj)>0 -> d(x,y)<d(x,y'); swaps always increase distance
+* Manhattan not order-sensitive
+* Spearman und Kendall order-sensitive but not value-sensitive
+* all Minkowsky both value- and order-sensitive
+* Euclidean is order-sensitive in a way which is monotonically related to distance between swapped values
+* permutation invariance
+* d(x,y)=d([x,z],[y,z]) (high dimensions)
+...
+
 == Simple linear regression
 
 y = a * x + b
 
 a = (n* sum (x*y) - sum x * sum y) / (n*sum (x**2) - (sum x)**2)
 b = (sum y * sum (x**2) - sum x * sum (x*y)) / (n*sum(x**2)-(sum x)**2)
+
 
 
 == Distance metric performance for KNN
@@ -1878,3 +1911,4 @@ https://arxiv.org/pdf/1208.0645v4.pdf
 * thermometer encoding of cats may help if ordinal (e.g. since mean target evolves monotonically with order)
 * binning small categories (to reduce number of features) did not help
 * cats which are only in train or test could be combined into a new cat values (but not dropped)
+

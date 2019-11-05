@@ -12,10 +12,10 @@ Skipped: Time series, Time deltas
 
     df.to_pickle("file.pkl")
     pd.read_pickle("file.pkl")
-    
+
     feather.write_dateframe(df, "file.feather") # fast write
     df=feather.read_dataframe("file.feather")
-    
+
     df.to_hdf("test.hdf", "a")
     df=pd.read_hdf("test.hdf", "a")
 
@@ -43,7 +43,7 @@ http://pandas.pydata.org/pandas-docs/stable/io.html
 | _parse_dates_=True                        | Try parsing index
 | _parse_dates_=[1,2,3]                     | Try parsing all separate columns
 | _parse_dates_=[[1,3]]                     | Combine a parse columns
-| _parse_dates_={"name":[1,3]}              | Parse columns and call result "name" 
+| _parse_dates_={"name":[1,3]}              | Parse columns and call result "name"
 | _dayfirst_=True                           | Assume day-first like `dd/mm/yyyy`
 | _chunksize_=..                            |
 | _thousands_=..                            |
@@ -54,6 +54,7 @@ http://pandas.pydata.org/pandas-docs/stable/io.html
 | df.*to_string*(..)                        |
 | df.*to_json*(.., orient="table")          | Round-tripable
 | _compression_="gzip"                      | Directly compress
+| df.*to_pickle*("file.pkl.gz")             | With zipping (gzip faster than bzip faster than xz)
 | pd.*read_html*(file_or_path)              | Return list of tables
 | df.*to_html*(..)                          |
 | pd.*read_excel*(pd.ExcelFile(..), "Sheet1") | To work with multiple sheets; Also as context manager
@@ -245,7 +246,7 @@ http://pandas.pydata.org/pandas-docs/stable/io.html
 
 [cols="m,d"]
 |===
-| MultiIndex.*from_arrays*([(..), ..], names=[..])  | 
+| MultiIndex.*from_arrays*([(..), ..], names=[..])  |
 | MultiIndex.*from_tuples*()                |
 | MultiIndex.*from_product*([[], ..], names=[..])   | Cross-product for index
 | pd.*DataFrame*(.., index=[np.*array*(..), ..])    | Convenience for multi-index
@@ -317,7 +318,7 @@ http://pandas.pydata.org/pandas-docs/stable/api.html#multiindex[MultiIndex]
 | multiindex.*to_flat_index*()              | https://pandas.pydata.org/pandas-docs/stable/reference/api/pandas.MultiIndex.to_flat_index.html#pandas.MultiIndex.to_flat_index[Ref]
 |===
 
-* repr of MultiIndex shows all levels, even those that not used due to slicing (shown to avoid recomputation); to see values use `df.colums.values` 
+* repr of MultiIndex shows all levels, even those that not used due to slicing (shown to avoid recomputation); to see values use `df.colums.values`
 * any slicing possible; can use tuple for specific position or also high level; axis need to be lex-sorted
 * specify all axis for `.loc` like `df[..,:]`, or there might be mis-interpretation
 * in tuples you need to use `*slice*(None)` for `:`; but you could use `pd.IndexSlice[..]` for using the nicer `:` notation again
@@ -343,7 +344,7 @@ http://pandas.pydata.org/pandas-docs/stable/api.html#multiindex[MultiIndex]
 | _limit_=                                  | max consecutive count in filling
 | _tolerance_=                              | max value distance in filling (e.g. "1 day"; see Timedelta)
 | df.*drop*([..], axis=..)                  | drop labels
-| s.*drop*(_labels_, errors="raise")        | 
+| s.*drop*(_labels_, errors="raise")        |
 | s.*rename*(func, inplace=False)           | rename index (row names); if dict passed can use only values that are replaced
 | df.*rename*(index=.., columns=..)         |
 | _errors_="raise"                          |
@@ -443,11 +444,11 @@ Fastest way to subselect:
 
     mask = s.values != 1
     s_new = pd.Series(s.values[mask], s.index[mask])        # 43mu.s
-    
+
     s.loc[lambda x: x!= 1]    # 173mu.s
-    
+
     s[s!=1]    # 394mu.s
-    
+
     s.where(lambda x: x!=1).dropna()    # 774mu.s
 
 [cols="m,d"]
@@ -553,7 +554,7 @@ IntervalIndex
 
 [cols="m,d"]
 |===
-| .*is_monotonic* +                        
+| .*is_monotonic* +
 | .*is_monotonic_increasing* +
   .*is_monotonic_decreasing* +
   .*is_unique* +
@@ -1083,7 +1084,7 @@ Can do fixed row number window or timedelta window (on index or column). `.expan
 | s.*rolling*(..).*corr*(s2)                | Moving window; works on any combinations of types Series and DataFrame
 | s.*rolling*(..).*cov*(s2)                 | Moving window
 | df.*rolling*(..).*cov*(.., pairwise=True) | Yields Panel with moving-window covs
-| s.*rolling*(..).*agg*(npfunc)             | 
+| s.*rolling*(..).*agg*(npfunc)             |
 | s.*rolling*(..).*agg*([func1, ..])        | Create multiple statistics; use function name for DataFrame column
 | s.*rolling*(..).*agg*({"name1":func1, ..})    | Create multiple statistics (DataFrame column name)
 | df.*rolling*(..).*agg*([..])              | Multiple statistics
@@ -1101,7 +1102,7 @@ Can do fixed row number window or timedelta window (on index or column). `.expan
 * obsolete options `freq=` and `how=` (use `.resample()` instead); use groupby like methods on rolling window instead
 * tab-completion for functions
 * win_types are boxcar, traing, .. (http://pandas.pydata.org/pandas-docs/stable/computation.html#rolling-windows)
-* some windows need parameter `s.*rolling*(window=.., win_type="gaussian").*mean*(std=0.1)` 
+* some windows need parameter `s.*rolling*(window=.., win_type="gaussian").*mean*(std=0.1)`
 * `*ewm*()` has methods mean, var, std, corr, cov
 
 == Pitfalls
@@ -1175,7 +1176,7 @@ Unfortunately, default map hard-coded in `_get_stand_colors` (https://stackoverf
 [cols="m,d"]
 |===
 | pandas.tools.plotting.                    | Complex plotting tools
-| *scatter_matrix*(df)                      | 
+| *scatter_matrix*(df)                      |
 | _ax_ = ...                                | Broken. Will overwrite previous figure
 | *andrews_curves*(df, <groupvar>)          | Sample attributes as Fourier coef
 | *parallel_coordinates*(df, <groupvar>)    |
@@ -1217,7 +1218,7 @@ http://pandas.pydata.org/pandas-docs/version/0.15.2/options.html#list-of-options
 
 * methods use regex search, therefore can pass substirng
 
-== Numpy 
+== Numpy
 
 [cols="m,d"]
 |===
@@ -1265,7 +1266,7 @@ http://pandas.pydata.org/pandas-docs/version/0.15.2/options.html#list-of-options
 ** quadratic: changing rates
 ** pchip: cumulative distributions
 ** akima: smoothing
-  
+
 == Time series
 
 |===
@@ -1421,7 +1422,7 @@ Common  or forgotten:
   yerr=..                                   | Error bars; column name, raw values or {"col":[..],..}
 | _table_=..                                | Create additional table; param True, DataFrame, Series
 | plot.*bar*                                | Easier to see plot arguments
-| plot.*bar*(stacked=True)                  | 
+| plot.*bar*(stacked=True)                  |
 | plot.*hist*(stacked=True)                 |
 | _orientation_="horizontal"                |
 | _cumulative_=True                         |
@@ -1481,7 +1482,7 @@ Common  or forgotten:
 ** fill zero: stacked-line, bar, area, pie
 ** drop: scatter, hist, box, kde, hexbin
 * asymmetric errorbars possible when passing raw values (extra dimension)
-  
+
 === Plotting tools
 
 `from pandas.tools.plotting import *`
@@ -1570,7 +1571,7 @@ Use `DataFrame.style` to apply conditional formatting for Jupyter notebook. Retu
 | s.*between*(left, right, inclusive=True)  |
 | s.*clip*(lower=None, upper=None)          |
 | s.*clip_lower*(lower=None, upper=None) +
-  s.*clip_upper*(lower=None, upper=None)    | 
+  s.*clip_upper*(lower=None, upper=None)    |
 | s.*is_unique*                             |
 | s.*diff*(_periods=1_)                     | 1st discrete difference
 | s.*last*(offset)                          | e.g. "5M" for 5 months
@@ -1591,7 +1592,7 @@ Use `DataFrame.style` to apply conditional formatting for Jupyter notebook. Retu
 | Index.*                                   | Many other normal values
 | DatetimeIndex.*snap*([freq])              | Snap to closest frequency
 | DatetimeIndex.*floor*(freq) +
-  DatetimeIndex.*ceil*(freq) | 
+  DatetimeIndex.*ceil*(freq) |
 | DatetimeIndex.*normalize*()               | Return with times to midnight
 | DatetimeIndex.*to_pydatetime*()           | Return ndarry of datetime.datetime
 | GroupBy.*ohlc*()                          |
@@ -1695,6 +1696,9 @@ Pandas cookbook
 
 Missing values
 --------------
+To deal with NaNs and counting you could use s.astype("category").cat.codes
+
+
 General information http://pandas.pydata.org/pandas-docs/dev/missing_data.html
 
 Drop missing values
@@ -1702,11 +1706,11 @@ Drop missing values
 Use http://pandas.pydata.org/pandas-docs/stable/generated/pandas.DataFrame.dropna.html
 
     df.dropna(subset=["col1", "col2"])
-    
+
 or
 
     df=df[pd.notnull(df.col1) & pd.notnull(df.col2)]
-    
+
 http://docs.scipy.org/doc/numpy/reference/generated/numpy.unique.html
 np.unique() find unique elements on array (returns sorted)
 can also return the indices
@@ -1721,14 +1725,14 @@ Call ``pd.describe_option()`` to list all options (http://pandas.pydata.org/pand
     pd.set_option('display.width', 1000)
 
     with pd.option_context("display.max_rows",10,"display.max_columns", 5):
-    
+
 Selecting data
 --------------
 Make sure to use parenthesis ``(df.a == 1) & (df.b == 1)`` or you get ``The truth value of a Series is ambiguous``.
 ::
     df[df.col.map(lambda x:<cond>)]   # select by function
     df.ix[df.groupby("GROUP").VAR.idxmax()]   # select row where VAR is max within GROUP
-    
+
 Write data
 ----------
 ::
@@ -1738,37 +1742,37 @@ Write data
     df.apply(func_return_series, axis=1)  # multi col to multi col
     df.ix[df.groupby("GROUP").COL.idxmax(),["COL"]]=True
     df.ix[CONDITION, ["COL"]]=DATA
-    
+
 Index
 -----
 ::
     df.reset_index()   # make all indices to normal data columns
-    
+
 Information
 -----------
 ::
     df.describe()
     df.cov()
     df.corr()
-    
+
 Process data
 ------------
 ::
     df.apply(lambda x:x["a"]+x["b"], axis=1)
-    
+
 Vectorized string operations: http://pandas.pydata.org/pandas-docs/stable/basics.html#vectorized-string-methods
-    
+
 Aggregating
 -----------
 ::
     df.groupby("key").myvar.agg(myfunc)
     df[...].groupby(level=0)    # groupby index
-    
+
 Columns
 -------
 ::
     df.rename(columns={"old":"new"})
-    
+
 Tips
 ----
 For sklearn us ``df.values.astype(float32)`` to avoid ``object dtype``.
@@ -1795,8 +1799,25 @@ df.loc[]=..
 most functions trigger block consolidation
 
 
+Add many columns: do not do this by column since slow; rather precreate a full dict or precreate columns and populate
+
+df.add_prefix(..) +
+df.add_suffix(..)
+
+pd.to_numeric(s)
+errors="coerce"
+
+dropna(thresh=..)
+
+s.apply(pd.Series)  -> split lists into multiple cols
+
+Accessors: https://pandas.pydata.org/pandas-docs/stable/reference/series.html#accessors
+
+df.reindex([...])  | also works when NA in list!
+
 from pandas.api.types import is_numeric_dtype
 dtype.kind  : first letter of bool, int, float, complex
 
 
 df[[..]].values.tolist()  creates [[..],[..],..]  which could be added as a single new column
+

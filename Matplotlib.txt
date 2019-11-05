@@ -411,7 +411,50 @@ Hide axis:
     # or
     frame1.axes.get_xaxis().set_ticks([])
 
-=== Ticks and Grid
+=== Ticks
+
+[cols="m,d"]
+|===
+| ax.xaxis.*set_major_locator*(mpl.ticker.*MultipleLocator*(1))     | Locator of ticks (http://matplotlib.org/api/ticker_api.html#tick-locating)[Ref]
+| ax.xaxis.*set_major_formatter*(formatter) | Tick formatting (http://matplotlib.org/api/ticker_api.html#tick-formatting)[Ref]
+| labels = [label.*get_text*() for label in ax.*get_xticklabels*()] +
+  ax.*set_xticklabels*(labels)              | Change label text
+| ax.*set_xticklabels*([d.*strftime*("%y %b") for d in df.index.to_pydatetime()])  | After df.plot()
+| ax.xaxis.labelpad = 5                     |
+| rcParams['xtick.major.pad'] = 3           |
+| *tick_params*(_labelsize_=20)             | Change ticks and labels http://matplotlib.org/api/pyplot_api.html#matplotlib.pyplot.tick_params[Ref]
+| ax.xaxis.*set_tick_params*(which='both', _rotation_=90) | https://matplotlib.org/api/_as_gen/matplotlib.axis.Axis.set_tick_params.html#matplotlib.axis.Axis.set_tick_params[Ref]
+| *locator_params*()                        | Control behavior of tick locators http://matplotlib.org/api/pyplot_api.html#matplotlib.pyplot.locator_params[Ref]
+| *minorticks_off*()                        | http://matplotlib.org/api/pyplot_api.html#matplotlib.pyplot.minorticks_off[Ref]
+| *ticklabel_format*(..)                    | Change label ScalarFormatter http://matplotlib.org/api/pyplot_api.html#matplotlib.pyplot.ticklabel_format[Ref]
+| *xticks*(positions, labels)               | Sets ticks http://matplotlib.org/api/pyplot_api.html#matplotlib.pyplot.xticks[Ref]
+| *xticks*(positions)                       |
+| loc, labels = xticks()                    | Get ticks
+| _rotation_=90                             |
+| *xticks*(_rotation_=45, _rotation_mode_="anchor", _ha_="right")   | Rotate ticks
+| ax.*set_xticks*(positions)                |
+| mpl.ticker.*PercentFormatter*             | https://matplotlib.org/api/ticker_api.html#matplotlib.ticker.PercentFormatter[Ref]
+| mpl.ticker.*EngFormatter*(unit='', places=None, sep=' ')  | https://matplotlib.org/api/ticker_api.html#matplotlib.ticker.EngFormatter[Ref]
+| mpl.ticker.*FuncFormatter*(func)          | https://matplotlib.org/devdocs/api/ticker_api.html#matplotlib.ticker.FuncFormatter[Ref]
+| ax.*convert_xunits*(x)                    | For axis with unit support shttps://matplotlib.org/api/_as_gen/matplotlib.axes.Axes.convert_xunits.html#matplotlib.axes.Axes.convert_xunits[Ref]
+| plt.xticks(rotation=45, fontsize=10, ha="right")  |
+| ax.xaxis.set_tick_params(rotation=45) |
+| plt.axis("off")                           | Disable Axes, Ticks and Labels
+| plt.xticks([], [])                        | Disable Ticks and Labels
+| plt.tick_params(bottom=False)             |
+| labelbottom=False                         |
+| labelrotation=..                          |
+| color=..                                  |
+|===
+
+    plt.xticks(pos, labels)
+
+    ax.set_xticks(pos)
+    ax.set_xticklabels(labels)
+    ax.axis["left"].major_ticklabels.set_ha("center")
+
+    for label in ax.get_xticklabels():
+        label.set_horizontalalignment('right')
 
 * https://matplotlib.org/3.1.1/api/pyplot_summary.html[Pyplot]
 * https://matplotlib.org/api/axis_api.html#ticks-tick-labels-and-offset-text[Axis]
@@ -449,7 +492,7 @@ Hide axis:
 |===
 
     # Get tick info
-    locs, labels = plt.xticks()   
+    locs, labels = plt.xticks()
 
 ==== Labels and Grid style
 
@@ -512,7 +555,7 @@ Hide axis:
 
     # After df.plot()
     ax.set_xticklabels([d.*strftime*("%y %b") for d in df.index.to_pydatetime()])
-    
+
 * https://matplotlib.org/devdocs/api/units_api.html[Units API] for dates etc.
 
 ==== Visibility
@@ -546,7 +589,7 @@ Hide axis:
 | *thetagrids*(..)                          | Add theta locations in a polar plot http://matplotlib.org/api/pyplot_api.html#matplotlib.pyplot.thetagrids[Ref]
 | list_of_gridlines = ax.get_xgridlines()   | https://matplotlib.org/api/_as_gen/matplotlib.axes.Axes.get_xgridlines.html#matplotlib.axes.Axes.get_xgridlines[Ref]
 |===
-  
+
 === Scaling of  data
 
 [cols="m,d"]
@@ -559,7 +602,7 @@ Hide axis:
 | axis(..)                                  | https://matplotlib.org/api/_as_gen/matplotlib.pyplot.axis.html[Ref]
 | axis("equal")                             | Change limits of for equal ratio
 | axis("scaled")                            | Change box dimension of for equal ratio
-| axis("tight")                             | Just large enough to show all data    
+| axis("tight")                             | Just large enough to show all data
 | axis("square")                            | Like `"scaled"` but force xmax-xmin=ymax-ymin
 | axis([xmin, xmax, ymin, ymax])            |
 | ax.set(xlim=.., ylim=..)                  |
@@ -646,7 +689,7 @@ Hide axis:
   ax.xaxis.set_major_formatter(mpl.dates.AutoDateFormatter(mpl.dates.AutoDateLocator()))    |
 | fig.*autofmt_xdate*(bottom=0.2, rotation=30, ha='right', which=None) | https://matplotlib.org/api/_as_gen/matplotlib.figure.Figure.html#matplotlib.figure.Figure.autofmt_xdate[Ref]
 | matplotlib.dates.*DateFormatter*          | https://matplotlib.org/api/dates_api.html#matplotlib.dates.DateFormatter[Ref]
-| matplotlib.dates.*WeekLocator*            | 
+| matplotlib.dates.*WeekLocator*            |
 | mpl.dates.*num2timedelta*(x)              | Convert number of days to `timedelta` object
 | mpl.dates.*drange*(start, end, delta)     | Create date range a internal float format; `start`/`end` is `datetime`, `delta` is `timedelta`
 |===
@@ -882,9 +925,9 @@ ax.autoscale_view()
 == Rotate Ticks
 
 
-	plt.xticks(rotation=45, ha="right")
+    plt.xticks(rotation=45, ha="right")
     ax.tick_params(axis='x', rotation=45)
-    
+
     plt.setp( axs[1].xaxis.get_majorticklabels(), rotation=45)
 
     for l in ax.get_xticklabels():
