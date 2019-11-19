@@ -31,10 +31,60 @@
 
 === CatBoost
 
-* learning_rate
+* learning_rate (automatic!)
 * depth: 1-10 (up to 16)
 * l2-leaf-reg: pos. integer; L2 regularisation
 * one_hot_max_size: max size for one-hot encoding
+* missings need to declared as Min or Max!
+* automatically creates combinations of feats (cat/cat, cat/num?)
+* cross validation: https://catboost.ai/docs/concepts/python-reference_cv.html ; but cannot be used for tuning (cannot get best model) -> can only see number of iterations
+* predefined datasets to test: https://catboost.ai/docs/concepts/python-reference_datasets.html
+* faster creation of Pool from FeatureData (https://catboost.ai/docs/concepts/python-features-data__desc.html)
+* visualize metrics from stored files: https://catboost.ai/docs/concepts/python-reference_catboostipythonwidget.html
+* faster way to pass features https://catboost.ai/docs/concepts/python-reference_pool.html
+* numpy float32 also fast if only numeric
+* models be be exported and applied on many way: https://catboost.ai/docs/concepts/applying__models.html
+* loss functions: https://catboost.ai/docs/concepts/loss-functions.html
+* feature importance: https://catboost.ai/docs/concepts/fstr.html#fstr
+* shap values: https://catboost.ai/docs/concepts/shap-values.html
+* feat analysis graph(!): https://catboost.ai/docs/concepts/feature-analysis-graph.html ; but only OH cat cols (-> maybe increase max_onehot)
+* feat interactions(!): https://catboost.ai/docs/concepts/feature-interaction.html
+* object importance: https://catboost.ai/docs/concepts/ostr.html
+* use Pandas Categorical type
+* https://catboost.ai/docs/features/visualization_jupyter-notebook.html
+* .fit(..., plot=True)  | plot while training
+* model.randomized_search(...)
+* tensorboard can also display live plots
+* cat feat have incremental encoding on train, but fixed encoding on val
+* for weights use Pool(...)
+* float and NaN value forbidden for cat features for consistency logic reasons
+* To use sklearn gridsearch use cat_features:
+
+    model = catboost.CatBoostRegressor(cat_features=[0,1,2])
+    grid_search = sklearn.model_selection.GridSearchCV(model, param_grid)
+    
+* reduce size of final model
+* missing values: https://catboost.ai/docs/concepts/algorithm-missing-values-processing.html
+
+==== Tuning
+
+* check for strong over/under fitting
+* find best iterations by early stopping (use_best_model)
+* if train does not converge -> increase learning_rate
+* overfitting detect -> decrease learning_rate
+* tree depth 6-10
+* try l2_leaf_reg, random_strength, bagging_temperature
+* for best quality increase max_bin (border_count) to 254
+* SymmetricTree about 10x faster than regular tree and good quality; but also try other growing strategies
+* increase pre-quantization for Golden features
+
+==== Performance
+
+save quantized data:
+
+    train_dataset = Pool(train_data, train_labels)
+    train_dataset.quantize()
+    train_dataset.save(quantized_dataset_path)
 
 === LightGBM
 
