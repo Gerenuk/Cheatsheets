@@ -380,6 +380,8 @@ https://distill.pub/2019/visual-exploration-gaussian-processes/
 
 
 
+
+
 == Tensorflow
 * Python and C++ frontend to specify computations graph
 * all data flows are tensors (N-dim arrays)
@@ -1862,3 +1864,35 @@ https://arxiv.org/pdf/1708.04321.pdf
 ** RF: min_samples_leaf [usually low <5] (not min_samples_split), max_features
 ** AdaBoost: max_depth [3-4 or >9 again], (learning_rate), not n_iter; uniform priors good enough
 
+
+== Various
+
+* 2^24 ~ 16.7Mio. is largest number where np.float32(x)==x
+
+== Kaggle Gold
+
+https://www.youtube.com/watch?v=XBJ2f68LuO4
+* do not tune too early
+* do not remove low ranked feat too early; may have good interactions later
+* include noise feature to see where importance threshold is
+* rather remove overfitting features if improves CV; transform if it hurts CV
+* share only important insights with team; indep mind
+* use NN even on tabular
+* new feature check when only small score increase: bagging with seeds and avg. pred (3 bags of 3 folds)
+* group(a)[b].mean() and b-group(a)[b].mean() works well
+* target outliers: windsor (cap), or remove, or cap error; find optimal threshold for cap
+* do not remove outliers in test set, unless really cannot predict
+* blend with different subsets of features
+* feats make work on some periods only -> cluster
+* for bagging overfitting a little bit helps; e.g. overtuning
+* for many features try small feature frac in trees
+* embeddings on discrete feats
+* NN can use cat when Tree cannot (see score decrease when removing a test feat from NN and GBT)-> more feateng
+* for NaN add extra NaN column (esp. when imputing for NN)
+* randomly replace some feats with null (?) in epochs
+* example: preprocess word until embedding available, ...
+*
+
+== Granger causality
+* not necessarily true causality
+* may not find GC if X affects Y through a third variable Z

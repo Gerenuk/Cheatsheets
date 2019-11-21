@@ -287,7 +287,7 @@ For all ufuncs:
 | index_exp[]                               | convert to indexing tuple (with slices); similar s_[]
 | mgrid() +
   ogrid()                                   | open grid to save space; uses broadcasting
-| ufunc.reduceat(..)                        | Local reduce with specified slices https://docs.scipy.org/doc/numpy/reference/generated/numpy.ufunc.reduceat.html[Ref]  
+| ufunc.reduceat(..)                        | Local reduce with specified slices https://docs.scipy.org/doc/numpy/reference/generated/numpy.ufunc.reduceat.html[Ref]
 |===
 
 == Masked arrays
@@ -465,3 +465,4 @@ np.dstack
 | ma.masked_greater(x, val)                 | Create mask by condition https://docs.scipy.org/doc/numpy/reference/generated/numpy.ma.masked_greater.html#numpy.ma.masked_greater[Ref]
 | ma.masked_where(conf, a)                  | Create mask by condition https://docs.scipy.org/doc/numpy/reference/generated/numpy.ma.masked_where.html#numpy.ma.masked_where[Ref]
 
+| frac, int = modf(x)                       |

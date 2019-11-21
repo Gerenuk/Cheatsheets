@@ -1246,8 +1246,23 @@ https://www.youtube.com/watch?v=tG22jrVFKpM
 * log to stdout
 * do not use filesystem! (if diff ports) -> redis, postresql, ...
 * cluster managers
-<<<<<<< HEAD
-* pypi.org as best practice example
+* pypi.org as best practice example; https://github.com/pypa/warehouse
+* https://hynek.me/talks/deploy-friendly/
+* do not put secrets in env vars: https://diogomonica.com/2017/03/27/why-you-shouldnt-use-env-variables-for-secret-data/
+* https://12factor.net/
+* managing passwords: https://coderanger.net/talks/secrets/
+* Hashicorp Vault: advanced secrets manager
+* secrets as URLs: https://pypi.org/project/yarl/
+* modern load balancing: https://blog.envoyproxy.io/introduction-to-modern-network-load-balancing-and-proxying-a57f6ff80236
+* other advice:
+** https://mvdirona.com/jrh/TalksAndPapers/JamesRH_Lisa.pdf
+* tools:
+** direnv: set envs as you enter directory
+** https://github.com/hynek/environ_config[environ_config (Python)]: env vars to dicts
+** templating env var to file: https://www.gnu.org/software/gettext/manual/html_node/envsubst-Invocation.html
+** templating from backends: https://github.com/kelseyhightower/confd
+** Hashicorp consul templating: https://github.com/hashicorp/consul-template
+
 
 == Optimization
 https://www.youtube.com/watch?v=-ofK_SMKjUY
@@ -1320,21 +1335,9 @@ https://www.infoq.com/presentations/netflix-polyglot-containers
 * commands log -> newt report-error sends out error automatically
 * multiple people can contribute
 * native/natural experience for all languages
-=======
-* pypi.org as best practice example; https://github.com/pypa/warehouse
-* https://hynek.me/talks/deploy-friendly/
-* do not put secrets in env vars: https://diogomonica.com/2017/03/27/why-you-shouldnt-use-env-variables-for-secret-data/
-* https://12factor.net/
-* managing passwords: https://coderanger.net/talks/secrets/
-* Hashicorp Vault: advanced secrets manager
-* secrets as URLs: https://pypi.org/project/yarl/
-* modern load balancing: https://blog.envoyproxy.io/introduction-to-modern-network-load-balancing-and-proxying-a57f6ff80236
-* other advice:
-** https://mvdirona.com/jrh/TalksAndPapers/JamesRH_Lisa.pdf
-* tools:
-** direnv: set envs as you enter directory
-** https://github.com/hynek/environ_config[environ_config (Python)]: env vars to dicts
-** templating env var to file: https://www.gnu.org/software/gettext/manual/html_node/envsubst-Invocation.html
-** templating from backends: https://github.com/kelseyhightower/confd
-** Hashicorp consul templating: https://github.com/hashicorp/consul-template
->>>>>>> b077e6579580db02a565e263770bb320bb286753
+
+== Window aggregations
+https://www.youtube.com/watch?v=cdWjWj82X4M
+* Flink has problem with overlapping buckets
+* https://github.com/TU-Berlin-DIMA/scotty-window-processor
+*

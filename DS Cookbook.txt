@@ -2206,6 +2206,10 @@ Powerset:
 * has a lot of toolkit features
 * useful: table display
 * but no docs; only notebooks: https://nbviewer.jupyter.org/github/twosigma/beakerx/blob/master/doc/python/TableAPI.ipynb
+* fails on float32, int8, ... though
+* scrollbars may not work in JupyterLab
+* install rubbish kernels into jupyter though
+* fails if double column names
 
     df=pd.DataFrame(np.random.rand(100, 10), columns=list(string.ascii_letters[:10]))
     table = TableDisplay(df)
