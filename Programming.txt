@@ -309,3 +309,18 @@ dependencies go only in the imperative shell
 
 == Liskov Substitution Principle
 * "mehr rein, weniger raus" (Bedingungen, Typen)
+
+Inheritance:
+https://www.stephanboyer.com/post/132/what-are-covariance-and-contravariance
+(SuperA->SubB) subtypeOf (A->B)
+[TypeScript and Eiffel got it wrong; not "sound"]
+List[SubX] subtypeOf List[X] only if list immutable
+Liskov: Can always substitute with subtype objects safely
+
+class A:
+    def f(self, x:X) -> R: pass
+    
+class SubA(A):
+    def f(self, x:SuperX) -> SubR: pass
+
+https://blog.daftcode.pl/csi-python-type-system-episode-2-baf5168038c0

@@ -1,0 +1,16 @@
+gcloud auth login  -> ssh key saved
+wget Miniconda
+
+(?):
+ubuntu-drivers-common
+ubuntu-drivers-devices
+lib-boost-all-dev
+ocl-icd-opencl-dev
+
+snap install micro --classic
+
+PYTHONPATH
+
+dstk
+
+gcloud compute ssh anton@kaggle

@@ -1,0 +1,13 @@
+https://github.com/numba/numba/tree/master/examples
+
+
+
+    @numba.jitclass([])
+    class A:
+        def __init__(self):
+            pass
+
+    @numba.jitclass([("x", A.class_type.instance_type)])
+    class B:
+        def __init__(self, x):
+            self.x = x

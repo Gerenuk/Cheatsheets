@@ -806,6 +806,17 @@ JSON worse than YAML since tuple and list become same encoding
 Performance:
 * creating lists has small overhead compared to tuples, so creating small tuples faster than small lists; but apart from that tuples are not faster
 
+Pickling namedtuple:
+* can be useful to programmatically generate namedtuple for dicts when keys often the same
+* create these types in top-level namespace (`globals().update(...)`)
+* store spec (name, fields) also
+* pickle data
+* to load: recreate types from specs on top-level, load pickle
+
+    from collections import namedtuple
+    types=pickle.load(open("types.pkl", "rb"))
+    globals().update({name:namedtuple(name, fields) for name, *fields in types})
+
 ++++++++
 
 dt.datetime.now(pytz.timezone("Europe/Berlin"))

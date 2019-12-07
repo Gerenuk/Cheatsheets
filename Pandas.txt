@@ -192,7 +192,8 @@ http://pandas.pydata.org/pandas-docs/stable/io.html
 | cat.*as_ordered*() +
   cat.*as_unordered*()                      | Create new categorical data
 | hasattr(s, "cat")                         | Check if categorical type
-| pd.*to_numeric*(s, errors="coerce")        | Convert (str) to numeric ("coerce" for NaNs)
+| pd.*to_numeric*(s, errors="coerce")       | Convert (str) to numeric ("coerce" for NaNs)
+| downcast="integer"                        | Cast to smaller type (smallest: "integer"->int8, "unsigned"->uint8, "float"->float32!)
 | Categorical.*from_codes*(codes, categories)   |
 | np.asarray(s)                             | Convert back to normal series
 | df[c]=df[c].astype("category")            |
@@ -251,6 +252,8 @@ http://pandas.pydata.org/pandas-docs/stable/io.html
 | pd.*DataFrame*(.., index=[np.*array*(..), ..])    | Convenience for multi-index
 | *Index*([..], dtype=.., name=..)          |
 |===
+
+* do not use tuples as index as they will fail with `.loc` access!
 
 == Meta data
 
@@ -880,6 +883,8 @@ IntervalIndex
 
 * stack und unstack implicitely sort
 * levels can be (list of) numbers or names, but not a mix
+* `crosstab` on passed columns is slower than operations on the original dataframe
+* groupby/count/unstack can be faster than pivottable for smaller data
 
 == Sorting
 
@@ -1157,6 +1162,7 @@ Can do fixed row number window or timedelta window (on index or column). `.expan
 | df.plot(subplots=True)                    | Plot each column in separate plot
 | df.plot(subplots=True, layout=(<rows>, <cols>), sharedx=False) | `-1` for automatic
 | _ax_=[..,..]                              | Pass in multiple pre-configured axis
+| x_compat=True                             | Turn off default Pandas formatting (e.g. to do own DateFormatter!)
 |===
 
 All methods also accept matplotlib kwargs. Also `legend=False`, `logy=True`, `logx=True`, `loglog=True`, `figsize=(..,..)`.
@@ -1676,6 +1682,19 @@ set_option:
 |===
 | plotting.backend                          | Alternative to matplotlib
 |===
+
+== Sparse data
+
+|===
+| pd.SparseArray(..)                        | Use this as content to usual pd.DataFrame
+| pd.DataFrame.sparse.from_spmatrix(scipy_sparse)   | (COO best)
+| dfs.sparse.to_dense()                     |
+| dfs.sparse.to_coo()                       |
+| dense.astype(pd.SparseDtype(int, fill_value=0))   |
+| dfs.sparse.density                        | Number of values
+|===
+
+* `pd.SparseSeries` and `pd.SparseDataFrame` deprecated
 
 ++++++++++++
 Pandas cookbook

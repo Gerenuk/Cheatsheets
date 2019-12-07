@@ -8,6 +8,7 @@
 * understand points close to decision boundary
 
 === YellowBrick
+
 * Rank/correlate features
 * parallel coordinates
 * cluster evaluation
@@ -15,12 +16,14 @@
 * some supervised learning reports
 
 === Hypertools
+
 * evaluate missing values interpolated by PPCA
 * align (rotated?) matrices
 * cluster visualization
 * explore data
 
 === ELI5
+
 * Explain ML models
 * Text model explainers
 * Feature/prediction explainer
@@ -28,9 +31,11 @@
 * Permutation importance
 
 === Xam
+
 * check out occasionally
 
 === Supersmoother
+
 * curve smooths with automatic neighbourhood size
 
 === Quick Table Profiling
@@ -48,6 +53,25 @@
 
 * Code Formatter https://github.com/ambv/black[black]: seems to do a good job formatting highly nested structures; black was made to specify PEP8 formatting more clearly and more sensibly
 ** seems better than Yapf (some weird indents after function calls and dict keys)
+
+== Dashboarding
+
+https://pyviz.org/dashboarding/index.html
+
+=== Dash (Plotly)
+
+=== Panel (Anaconda)
+
+* on Bokeh
+* many plot libraries
+
+=== Viola (QuantStack)
+
+* convert notebooks to dashboards (strip code, keep interactivity)
+
+=== Bowtie
+
+https://github.com/jwkvam/bowtie
 
 == Scipy
 
@@ -358,3 +382,7 @@
 * Expyriment
 * Experimentator
 * OpenSesame
+
+== 3D visualizer
+
+https://pyviz.org/scivis/index.html

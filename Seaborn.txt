@@ -220,3 +220,4 @@ To access cluster distance values use `cg.dendrogram_[col|row].linkage`.
 == Other
 
 * catplot `orient=` ?
+* can just do multiple plots for hue

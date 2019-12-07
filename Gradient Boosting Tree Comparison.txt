@@ -1,0 +1,28 @@
+== Speed
+
+* LightGBM: Gradient-based one-side sampling (GOSS) to filter data for split (faster than XGBoost approach)
+* XGBoost: pre-sorted, histogram based for best split; work with bins
+* GOSS: Gradient represents the slope of the tangent of the loss function, so logically if gradient of data points are large in some sense, these points are important for finding the optimal split point as they have higher error
+* CatBoost: slower?
+** vs LightGBM: but predicts faster; less overfitting (lower train score); train only slightly larger(?)
+
+== Categorical coding
+
+* LightGBM: special algorithm (http://www.csiss.org/SPACE/workshops/2004/SAC/files/fisher.pdf)
+* CatBoost: avg_target (prior smoothed); multiple random shuffling?
+* XGBoost: none
+
+++++++++++++++++++++++++++++++++++++++++++++++
+
+=== LightGBM
+
+* may overfit on small data(?)
+
+For speed:
+
+* parallel training https://github.com/Microsoft/LightGBM/blob/master/docs/Parallel-Learning-Guide.md?source=post_page---------------------------
+
+GPU:
+
+* use small max_bin=63
+
