@@ -17,3 +17,12 @@ Entropy Weighted K-Means:: Subspace K-Means
 Interaction information: Information theory relation for multiple variables: What is present beyond which is present in subsets
 Dual total correlation (Excess entropy): Non-negative generalization of mutual information
 Total correlation: Generalization of mutual information
+V-optimal histograms: https://en.wikipedia.org/wiki/V-optimal_histograms
+Bagplot: Like Boxplot for 2D/3D; encircle 50% of data etc.; https://en.wikipedia.org/wiki/Bagplot
+Tukey-Lambda distribution: Functional relation of quantiles with 1 parameter to detect whether Normal/Cauchy/Logistic; https://en.wikipedia.org/wiki/Tukey_lambda_distribution
+Kolmogorov-Zurbenko filter: Iterative MA filter; robust, nearly optimal; https://en.wikipedia.org/wiki/Kolmogorov%E2%80%93Zurbenko_filter
+Savitzky–Golay filter: Least-squares fit of local low-degree polynomials; analytical solution if equally spaced points
+Ramer–Douglas–Peucker algorithm: reduce number of segments of discrete curve
+Kalman filter: use noisy measurements over time to produce a better estimate; state vector evolves as matrix multiplication from previous state and control state vector
+
+https://en.wikipedia.org/wiki/Edge-preserving_smoothing

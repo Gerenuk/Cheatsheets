@@ -23,6 +23,11 @@
 * predict only when certain: train model with mean and confidence predictions, mask predictions below some confidence threshold such that mean predictions achieve the needed quality, evaluate models by their number of predictions made
 * try abs(x-x0) to enable tree to catch the middle?
 * create normalized versions of string fields; or parts of it
+* for large data: test on smaller part first and then maybe on all data
+* Weibull distribution: time to event/failure; scale/shape
+* Voting Classifier: for 4 classes ties become less likely starting from 11 models
+* if overfitting -> Bagging; maybe tune params such that less spread betwen train/val
+* feat generation var name: prefixtoken__...  (by knowing how many parts a token expects you can decipher again)
 
 === Eslami - Patterns for Research in Machine Learning [[http://arkitus.com/PRML/ Link]] =
 * Use version control (to collaborate, replicate, work from multiple computers)
@@ -43,3 +48,16 @@
 * Make it easy to swap in and out different models
 * Record Git revision number of code
 * Use GNU make for pipeline? (download, traning, evaluating)
+
+== Data tips
+* event data:
+** https://www.kaggle.com/olistbr/brazilian-ecommerce
+** https://www.kaggle.com/c/instacart-market-basket-analysis
+** https://www.kaggle.com/c/data-science-bowl-2019
+
+== Kaggle
+* test-time augmentation; augment test set (e.g. flip image and better get same label)
+* folds -> could overfit each a bit (otherwise folds too similar)
+* data cleaning (remove outliers)
+* "distillation" when you happen to know labels
+* Stacking

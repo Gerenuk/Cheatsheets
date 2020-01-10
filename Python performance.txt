@@ -171,3 +171,7 @@ https://www.youtube.com/watch?v=5js_-pLGqwA
 == Others
 
 * dict keys look-up slightly faster if keys str.intern
+* slotted class smaller than namedtuple (for inline e.g. `Point = type('Point', (), {'__slots__': ('x', 'y'), '__init__': init})`)
+* iterating list slightly faster than tuples
+* iterating generators faster than lists
+* list comprehension slower than map/filter (?)

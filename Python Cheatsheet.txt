@@ -220,6 +220,7 @@
 | f = path.open(mode="r")                   | Open file https://docs.python.org/3/library/pathlib.html#pathlib.Path.open[Ref]
 | path.read_text(encoding=None)             | Read decoded text https://docs.python.org/3/library/pathlib.html#pathlib.Path.read_text[Ref]
 | path.write_text(data)                     | Open, write text and close https://docs.python.org/3/library/pathlib.html#pathlib.Path.write_text[Ref]
+| f.writelines(iter)                        | Write multiple string; you need to include line separator yourself
 |===
 
 On Linux no creation time accessible, so use `os.path.getmtime()` or `os.stat().st_mtime` which is modification time. Creation time should be `os.stat().st_crtime` but currently not supported.

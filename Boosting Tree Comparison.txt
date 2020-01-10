@@ -247,3 +247,20 @@ https://sites.google.com/view/lauraepp/parameters
 * max_leaves, num_leaves: tune together with max_depth; 255, usually {15, 31, 63, 127, 255, 511, 1023, 2047, 4095}. Tips: adjust depth accordingly by allowing a slightly higher depth than the theoretical number of leaves (2^depth-1)
 * subsample ]0,1]: typical 0.7
 
+
+== CatBoost custom metric
+
+https://catboost.ai/docs/concepts/python-usages-examples.html#custom-loss-function-eval-metric
+
+    class CustomMetric(object):
+       def get_final_error(self, error, weight):
+           return 0.0
+       def is_max_optimal(self):
+           return True
+       def evaluate(self, approxes, target, weight):
+           # approxes - list of list-like objects (one object per approx dimension)
+           # target - list-like object
+           # weight - list-like object, can be None
+           return 0.0, 0.0
+           
+    CatBoostClassifier(eval_metric=CustomMetric())

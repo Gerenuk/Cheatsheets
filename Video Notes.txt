@@ -1320,6 +1320,7 @@ https://www.infoq.com/presentations/netflix-polyglot-containers
 * commands log -> newt report-error sends out error automatically
 * multiple people can contribute
 * native/natural experience for all languages
+
 =======
 * pypi.org as best practice example; https://github.com/pypa/warehouse
 * https://hynek.me/talks/deploy-friendly/
@@ -1337,4 +1338,20 @@ https://www.infoq.com/presentations/netflix-polyglot-containers
 ** templating env var to file: https://www.gnu.org/software/gettext/manual/html_node/envsubst-Invocation.html
 ** templating from backends: https://github.com/kelseyhightower/confd
 ** Hashicorp consul templating: https://github.com/hashicorp/consul-template
->>>>>>> b077e6579580db02a565e263770bb320bb286753
+
+== Zero inflated regression
+https://www.youtube.com/watch?v=-o0lpHBq85I
+* ideas:
+** plain regression
+** classify > 0 first; then regression
+** predict number of items and multiply by mean
+** Bayesian, Multitask, ...?
+* Tweedie distribution:
+** Var[Y]=phi(E[Y])^p; normal, poisson, gamma, compound poisson-gamma
+** compound poisson gamma: Sum^Poisson Gamma
+
+== Kaggle Gold Mercedes
+https://www.youtube.com/watch?v=0qHXNeuNOAE
+* add ID to boosting and see if improvements
+* remove outliers in target esp. when RSME; otherwise they determine score most
+* 
