@@ -427,7 +427,10 @@ http://pandas.pydata.org/pandas-docs/stable/api.html#multiindex[MultiIndex]
 
 [cols="m,d"]
 |===
-| df.*select_dtypes*(include=[..], exclude=[..])    | select columns by dtype; "object" for string; numpy.number for numbers; "category"; http://docs.scipy.org/doc/numpy/reference/arrays.scalars.html
+| df.*select_dtypes*(include=[..], exclude=[..])    | select columns by dtype; "category"; http://docs.scipy.org/doc/numpy/reference/arrays.scalars.html
+| include="number"                          | From np.number
+| include="object"                          |
+| include="datetime"                        |
 | df.*lookup*([row1, ..], [col1, ..])       | look up individual values
 | df.*sample*(n=..)                         | each rows at most once
 | _frac_=..                                 |
@@ -880,6 +883,8 @@ IntervalIndex
 
 * stack und unstack implicitely sort
 * levels can be (list of) numbers or names, but not a mix
+* `crosstab` on passed columns is slower than operations on the original dataframe
+* groupby/count/unstack can be faster than pivottable for smaller data
 
 == Sorting
 
@@ -1559,6 +1564,7 @@ Use `DataFrame.style` to apply conditional formatting for Jupyter notebook. Retu
 
 * http://pandas.pydata.org/pandas-docs/stable/enhancingperf.html (Cython, Numa)
 * `pd.eval()` on whole DataFrames (through `numexpr`) for larger 10,000 rows
+* fastest way to filter: reconstruct from numpy array with mask (next best is `s.loc[lambda x:...]`)
 
 == Other
 
@@ -1821,3 +1827,27 @@ dtype.kind  : first letter of bool, int, float, complex
 
 df[[..]].values.tolist()  creates [[..],[..],..]  which could be added as a single new column
 
+can assign to DF sub-slice df[[...]]=
+
+Col of list to multiple cols: s.apply(pd.Series)
+
+pd.reset_option("..")
+
+Style:
+format(..)   value formatting
+.highlight_min(..)
+.background_gradient(..)
+
+
+pd.util.testing.makeMixedDataFrame() : cols float, string, date
+pd.util.testing.makeDataFrame()
+
+.dt.tz_localize(..)    set explicit timezone
+
+
+for name, vals in df.iteritems()
+
+
+pd.set_option(backend="..") | instead of matplotlib
+
+some libraries do not like tuples in categorical values (LGBM?)

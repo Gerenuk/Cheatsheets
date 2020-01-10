@@ -21,3 +21,14 @@
 |===
 
 * `n_jobs=None` (unset) and defaults can be set with `joblib.Parallel` context
+
+
+class Estimator(BaseEstimator, ClassifierMixin):
+    def __init__(self, ...): # all params with defaults
+        self...  # same name parameters
+
+    def fit(self, X, y):
+        X, y =check_X_y(X, y)
+
+    def predict(self, X):
+        X = check_array(X)

@@ -107,6 +107,7 @@
 | reverse(it)                               |
 | seq.count(x)                              |
 | seq.index(x[, from[, to]])                |
+| seq += ..                                 | same as .extend
 | set1 ^ set2                               | xor
 | set.__contains__                          | usable as a function
 | set.discard(..)                           | Remove if present
@@ -129,6 +130,7 @@
 | str.rpartition                            |
 | str.splitlines                            | No extra empty strings, like with split()
 | str.split(sep=None, maxsplit=-1)          |
+| str.find(..)                              | -1 if not found
 | sum(..., start=...)                       | However consider `join`, `math.fsum`, `chain`
 | while: ... else: ...                      | one final statement; skipped by "break"
 | ContextDecorator                          | to use CM as decorator
@@ -817,3 +819,16 @@ Pickling namedtuple:
     globals().update({name:namedtuple(name, fields) for name, *fields in types})
 
 ++++++++
+
+dt.datetime.now(pytz.timezone("Europe/Berlin"))
+
+def __getattribute__(self, item):
+  if item in self.__class__.__dict__:
+    v = self.__class__.__dict__[item]
+  elif item in self.__dict__:
+    v = self.__dict__[item]
+  else:
+    v = self.__getattr__(item)
+  if hasattr(v, '__get__'):
+    v = v.__get__(self, type(self))
+  return v

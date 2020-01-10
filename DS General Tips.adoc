@@ -49,6 +49,7 @@
 * Record Git revision number of code
 * Use GNU make for pipeline? (download, traning, evaluating)
 
+
 == Data tips
 * event data:
 ** https://www.kaggle.com/olistbr/brazilian-ecommerce
@@ -61,3 +62,20 @@
 * data cleaning (remove outliers)
 * "distillation" when you happen to know labels
 * Stacking
+
+
+== Kaggle
+* check for overfitting (train/val gap); esp. when adding feats
+* check patterns: 2D + color (target)
+* LB should correlate with CV
+* start with subsample=0.7
+* increase min_child_weight if train/val large
+* regularization of LB way below CV
+* single great model better than ensemble (?)
+* adversarial most imp feat? (maybe only one LB visible)
+* may be bias in train data
+* learn features from autoencoder
+* more data augmentation
+* SMAPE close to MAE when log
+*
+
