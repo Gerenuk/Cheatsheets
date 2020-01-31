@@ -1586,6 +1586,10 @@ exclusion restriction -> Z indep of Y given A; hatA projection of A onto space s
 
 == Correlation
 
+=== Categorical coorelation
+
+* use sklearn.metrics.normalized_mutual_info_score (with arithmetic)?
+
 === Maximum Information Criterion (MIC)
 
 * seems bad https://arxiv.org/abs/1401.7645
@@ -1948,9 +1952,16 @@ https://arxiv.org/pdf/1208.0645v4.pdf
 * cats which are only in train or test could be combined into a new cat values (but not dropped)
 
 == Anomaly detection in time series
+
 * https://github.com/arundo/adtk (mostly hard-coded simple methods)
 * simple hypothesis test if normal: https://en.wikipedia.org/wiki/Grubbs%27s_test_for_outliers
 * band on normal: https://en.wikipedia.org/wiki/Chauvenet%27s_criterion
+
+== Anomaly detection
+
+* "Time Series Discord" proved to be best; for performance use http://www.cs.ucr.edu/~eamonn/MatrixProfile.html[Matrix Profile]
+* https://www.elen.ucl.ac.be/Proceedings/esann/esannpdf/es2015-56.pdf[LSTM], https://arxiv.org/pdf/1607.00148.pdf[LSTM]
+* https://stats.stackexchange.com/questions/152644/what-algorithm-should-i-use-to-detect-anomalies-on-time-series
 
 == Data science teams
 https://www.youtube.com/watch?v=2v9uwedgBxU
@@ -2007,3 +2018,65 @@ https://www.youtube.com/watch?v=2v9uwedgBxU
 ** -> scipy.stats.ttest_rel to determine significance between models (check normalily first)
 ** multiple comparison test though
 
+== Production web app Flask
+
+https://www.youtube.com/watch?v=z-Ue9T0MpVs
+* nightly: Snowflake, Databricks + PySpark
+* data: MySQL, Amazon RDS
+* Web: Flask, SQLAlchemy, Gunicorn
+* other: Docker, Terraform, Jenkins, Amazon ECS
+* Gunicorn: Python Web Server Gateway Interface (WSGI) [Flask web server scaled badly]
+* precomputed or not? (when limited number of combinations)
+* flask-sqlalchemy
+* combine flask and gunicorn logs (handlers)
+* what when updating data? dont just drop data
+* FilteredRequest class: consider URI length limits -> allow GET and POST (latter for large JSON)
+* 404: when endpoint does not exist
+* just empty list: if only results empty, but endpoint fine
+* ideally no JOIN
+* query caching
+* Gunicorn settings: number of workers, worker type (async?), timeout
+* Postman: store test cases, development
+* Flasgger: Swagger for Flask
+* DataDog: metrics and monitoring
+
+== Nested Cross-Validation
+https://www.youtube.com/watch?v=DuDtXtKNpZs
+* how to choose best model, but also estimate how good it will be really
+* could have val data and separate test data
+* or also do loop over different test set (and CV inside non-test sets)
+* but now getting many models
+
+== Kaggle Camera Model Indentification
+https://www.youtube.com/watch?v=ETh8bJ_xKGA
+* image -> device
+
+== Imbalanced data
+https://www.youtube.com/watch?v=6M2d2n-QXCc
+* ensemble undersampled
+* focal loss: down-weight well classified
+
+== Vaex
+https://www.youtube.com/watch?v=85f9SWgWj1Q
+* DataFrame library
+* remote data frames
+* vaex-viz
+* vaex-ml
+* very memory efficient due to expression system
+* JIT, numba
+* free pipelines
+* lazy operations
+* HDF5 + arrow spec; open large files instantly with memory mapping
+* handle large data
+* accelerating string processing a lot
+* no cluster need
+* just saves operations and add virtual columns (e.g. combine filter and new col creation)
+* -> pretty good for large data!
+* S3 support
+* supports progress bar for operations
+* can use CUDA GPU or JIT
+* vaex-ml: PCA, vaex.ml.lightgbm wrapper
+* all operations/transformations/pipeline can be exported as "state" JSON
+
+== Clustering performance
+https://scikit-learn.org/stable/modules/clustering.html#clustering-performance-evaluation

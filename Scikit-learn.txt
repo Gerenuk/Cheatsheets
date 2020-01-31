@@ -18,6 +18,11 @@
 
 |===
 | sklearn.show_versions()                   | Print versions (sklearn, Python, BLAS, ...)
+| ColumnTransformer(transformers)           | https://scikit-learn.org/stable/modules/generated/sklearn.compose.ColumnTransformer.html[Ref]
+| TransformedTargetRegressor(regressor, func, inverse_func)     | https://scikit-learn.org/stable/modules/generated/sklearn.compose.TransformedTargetRegressor.html[Ref]
+| datasets.dump_svllight_file(X, y, f)      |
+| datasets.load_svmlight_file(f)            |
+| datasets.get_data_home()                  |
 |===
 
 * `n_jobs=None` (unset) and defaults can be set with `joblib.Parallel` context
@@ -32,3 +37,6 @@ class Estimator(BaseEstimator, ClassifierMixin):
 
     def predict(self, X):
         X = check_array(X)
+
+        
+        

@@ -77,5 +77,13 @@
 * learn features from autoencoder
 * more data augmentation
 * SMAPE close to MAE when log
-*
-
+* plot value distr, cat val counts, distr to target, difference train/test (shared features)
+* feature: can also related to info from column or row
+* bin numeric feats
+* residues of linear fit
+* SVD
+* xgbfir for interactions?
+* first make sure than CV correlates with Public LB (not tuning before)
+* first test ideas with 1-fold
+* save full run and parameters
+* logbook of ideas and CV/LB scores

@@ -832,3 +832,8 @@ def __getattribute__(self, item):
   if hasattr(v, '__get__'):
     v = v.__get__(self, type(self))
   return v
+
+  
+Numpy implements buffer protocol:
+Could make arrays immutable with `ndarray.flags.writeable`
+StaticFrame (pypi static-frame) manages an immutable Pandas DataFrame
