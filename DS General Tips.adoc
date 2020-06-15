@@ -87,3 +87,4 @@
 * first test ideas with 1-fold
 * save full run and parameters
 * logbook of ideas and CV/LB scores
+* include non-linear cat vars to OHE

@@ -550,6 +550,19 @@ asciimath:[|d|<0.5]
 ** The reconciliation methods were developed in a series of papers, which are best read in the following order: Hyndman et al. (2011), Athanasopoulos et al. (2009), Hyndman, Lee, & Wang (2016), Wickramasuriya et al. (2018).
 ** Athanasopoulos, Hyndman, Kourentzes, & Petropoulos (2017) extends the reconciliation approach to deal with temporal hierarchies.
 
+=== "Optimal combination forecasts for hierarchical time series"
+
+* find linear combination of all level forecasts to get minimum variance overall (bottom-up and top-down is just a subclass)
+* summation matrix is defined by (eq1); how to get all levels from bottom level only
+* all linear methods could be written with (eq2)
+* for unbiased forecasts, P needs to satisfy (eq5); bottom-up is unbiased; top-down is never unbiased
+* with a simplifying assumption one can derive a method independent of the data ->(eq10)
+** tilde(Y) = S(S^TS)^(-1)S^T Y
+* for example if just 1 top level y_0 and m bottom levels y_i:
+** tilde(y0) = (y0 + sum(y_i)/m)/(1+1/m)
+** tilde(yi) = (yi + (y0 - sum{j!=i} y_j)/m)/(1+1/m)
+* may need tricks if S very large matrix
+
 == Complex, multiple seasonality
 
 * https://otexts.org/fpp2/complexseasonality.html
@@ -999,7 +1012,32 @@ https://github.com/Gerenuk/web-traffic-forecasting
 === Power laws drivendata
 https://github.com/drivendataorg/power-laws-forecasting
 
+== ARIMA order
+
+https://people.duke.edu/~rnau/arimrule.htm
+* a lot of autocorr -> probably increase differencing
+* lag-1 autocorr <=0 -> no more differencing
+* lag-1 <=-0.5 -> overdifferenced
+* best differencing often has smallest stdev
+* d=1: constant avg trend (e.g. random walk, mean-reverting)
+* d=2: time-varying trend (e.g. random trend, LES-type)
+* d=0: usually include constant
+* d=1: include constant of non-zero avg trend
+* d=2: usually no constant
+* PACF cutoff and/or AC(1)>0: increase AR
+* ACF cutoff and/or AC(1)<0: increase MA
+* if AR and MA terms -> trying one less of either too (esp. when takes long to converge); ideally min(AR, MA)<=1
+* unit root in AR (sum AR ~ 1) -> AR -1, d +1
+* unit root in MA (sum MA ~ 1) -> AR -1, d -1
+* if long-term unstable: maybe unit root in AR or MA
+* season -> D=1 (otherwise season fades away)
+* d+D<=2
+* AC(s) of differenced >0 -> SAR +1
+* AC(s) of differenced <0 -> SMA +1
+* SAR + SMA <= 2 (otherwise overfitting and estimation problem)
+
 == UNSORTED
+
 * could do gaussian basis functions for each month
 * WaveNet interesting
 * see Kaggle above
@@ -1007,3 +1045,8 @@ https://github.com/drivendataorg/power-laws-forecasting
 * NN https://jeddy92.github.io/
 
 If simple_differencing=True, then the time series provided as endog is literally differenced and an ARMA model is fit to the resulting new time series. This implies that a number of initial periods are lost to the differencing process, however it may be necessary either to compare results to other packages (e.g. Stata's arima always uses simple differencing) or if the seasonal periodicity is large
+
+Metrics:
+* percentage error behaves very differently that others and probably a bad metric
+* many metrics have same ranking as RMSE
+* use RMSE, SMAPE, MASE (scaled by mean diff)

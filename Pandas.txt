@@ -1886,3 +1886,31 @@ type="boolean"
 | .convert_dtypes()             |
 
 | DataFrame.attrs               | dict of global attributes of object
+| model_selection.cross_val_score(..)   | Just CV scores from a single metric
+| model_selection.cross_validate(..)    | Can do multiple metrics, train scores, fit times, fitted estimators
+| model_selection.cross_val_predict(..) | CV predictions (only)
+| _method_=".."                         | Change name of method called
+| model_selection.learning_curve(..)    | CV-learning curve based on train_sizes
+| model_selection.validation_curve(..)  | CV-validation curve vs a parameter
+| model_selection.permutation_test_score(..)    | Permutation score https://scikit-learn.org/stable/modules/generated/sklearn.model_selection.permutation_test_score.html[Ref]
+| utils.resample(..)            | Resample multiple matrices https://scikit-learn.org/stable/modules/generated/sklearn.utils.resample.html[Ref]
+| utils.shuffle(..)             | Shuffle multiple https://scikit-learn.org/stable/modules/generated/sklearn.utils.shuffle.html[Ref]
+| impute.KNNImputer(..)         | https://scikit-learn.org/stable/modules/generated/sklearn.impute.KNNImputer.html[Ref]
+| inspection.permutation_importance(..) | https://scikit-learn.org/stable/modules/generated/sklearn.inspection.permutation_importance.html[Ref]
+| metrics.plot_roc_curve(..)                | https://scikit-learn.org/stable/modules/generated/sklearn.metrics.plot_roc_curve.html[Ref]
+| metrics.plot_precision_recall_curve(..)   | https://scikit-learn.org/stable/modules/generated/sklearn.metrics.plot_precision_recall_curve.html[Ref]
+| metrics.plot_confusion_matrix(..)         | https://scikit-learn.org/stable/modules/generated/sklearn.metrics.plot_confusion_matrix.html[Ref]
+
+can use `cv = iter((train_idx, test_idx))`
+
+Multiple columns to a single list:
+Fast:
+* `list(df.itertuples(index=False, name=None))`
+* `list(zip(df["a"], df["b"]))`
+
+Slow:
+* itertuples without parameters
+* apply/map
+
+Fastest:
+* x.values.tolist()  # but result is list of lists

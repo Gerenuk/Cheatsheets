@@ -39,4 +39,10 @@ class Estimator(BaseEstimator, ClassifierMixin):
         X = check_array(X)
 
         
-        
+
+
+Reproduce:
+num_comp = 3
+pca=PCA()
+X_pca=pca.fit_transform(X)
+(X_pca[:,:num_comp] @ pca.components_[:num_comp]) + pca.mean_        

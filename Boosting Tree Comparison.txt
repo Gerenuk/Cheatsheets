@@ -264,3 +264,6 @@ https://catboost.ai/docs/concepts/python-usages-examples.html#custom-loss-functi
            return 0.0, 0.0
            
     CatBoostClassifier(eval_metric=CustomMetric())
+    
+    
+custom_metric='AUC:hints=skip_train~false', metric_period=20

@@ -17,6 +17,7 @@ C:\Users\anton\Google Drive\Math
 * Condition number: The ratio  of the largest to smallest singular value in the singular value decomposition of a matrix. The base-logarithm of  is an estimate of how many base- digits are lost in solving a linear system with that matrix. In other words, it estimates worst-case loss of precision
 * Tetrahedra pack tightly, even when jumbled together 
 * Bernstein polynomials: Used for approxating functions
+* anti-social jogger problem: can you go on straight line from a corner of platonic solid and come back without touching any other corner. you can do that only for dodecahedron, not the others (which tile a plane)
 
 = Curiosities
 

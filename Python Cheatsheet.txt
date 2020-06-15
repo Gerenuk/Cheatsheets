@@ -55,6 +55,8 @@
 | o.__subclasses__()                        |
 | isinstance(x, numbers.Real)               | Check for number (int and float)
 | open(.., "w", buffering=1)                | Line flush
+| traceback.print_exc()                     | Print last last traceback (can be automatic by good logging system)
+| traceback.format_exc()                    |
 |===
 
 * object `True` unless `__len__==0`, `__bool__=False`, zero

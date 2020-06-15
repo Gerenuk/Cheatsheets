@@ -1,0 +1,5 @@
+https://deepctr-doc.readthedocs.io/en/latest/Features.html
+* categorical usually embed
+* numerical usually discretize or normalize
+* low-order interactions through vector products
+* high-order interactions through complex neutral networks

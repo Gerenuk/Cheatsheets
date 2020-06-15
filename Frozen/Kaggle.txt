@@ -265,4 +265,56 @@ http://blog.kaggle.com/2015/12/03/dato-winners-interview-1st-place-mad-professor
 * https://mlwave.com/how-we-won-3rd-prize-in-crowdanalytix-copd-competition/
 * http://blog.kaggle.com/2016/08/31/avito-duplicate-ads-detection-winners-interview-2nd-place-team-the-quants-mikel-peter-marios-sonny/
 * http://blog.kaggle.com/2016/12/15/bosch-production-line-performance-competition-winners-interview-3rd-place-team-data-property-avengers-darragh-marios-mathias-stanislav/
-*
+
+== LANL Earth quake predictions
+
+https://www.linkedin.com/pulse/my-team-won-20000-1st-place-kaggles-earthquake-corey-levinson/?trackingId=yAsezLzPTDyCuR6z0e4a1g%3D%3D
+https://www.kaggle.com/c/LANL-Earthquake-Prediction/discussion/94390
+https://www.kaggle.com/dkaraflos/1-geomean-nn-and-6featlgbm-2-259-private-lb
+LGB only: https://www.kaggle.com/ilu000/1-private-lb-kernel-lanl-lgbm/
+* predict time to a laboratory earthquake (shear stress on rock)
+* continuous training data; only few point for time to event prediction
+* segment of vibration data for features
+* `base_score` parameter tricky to set right (esp. with MAE; e.g. guess base score without many tree; OR iterate long with worse performance)
+* LOO CV not working (on LB) -> better Leave out something that resembles test set (feature distribution); here (at first) leave out 1 long, 1 medium, 2 small earthquakes
+* test set had more cycles than train set that lasted longer 
+* remove median from features (after adding noise), since increasing over time
+* noise since(?): e.g. z->z-mean(z); now median(abs(z)) would be skewed unless you first add noise to z?!
+https://www.kaggle.com/c/LANL-Earthquake-Prediction/discussion/94390
+* posting all zeros showed that test and LB were different on target
+* -> before validation, remove short cycles (remove data)
+* features on peak and volatility (like other participants)
+* 4 features in LGB very good:
+** number of peak of support >=2 (in denoised signal)
+** 20% percentile of rolling std window 50
+** 4th and 18th Mel-frequency spectral coef mean
+** a rolling standard deviation, two Mel-frequency cepstral coefficients, number of peaks, autocorrelation, and the rate of the sum of the Hanning Window Fast Fourier Transformation between the raw and denoised signal
+** The neural network model used more features. It used the number of times the signal crossed the x-axis, lots of Mel-frequency cepstral coefficients, number of peaks features, rolling standard deviation features, 95th and 99th quantiles, and some FFT features. Some of these were fit on denoised versions of the segments.
+* other features only if p>0.05 on KS of train vs test
+* sub-select only some earthquakes (out of all 17):
+** calculate 9 good features
+** sample 10 out of 17 earthquakes 10k times
+** compare KS statistic of all selected features (sampled 10 vs test)
+** for target>=6 feature distr. look similar (p<=0.05), for all but one feature (-> disregard)
+** -> use only 10 specific earthquakes (do 3 fold CV on it); best avg. KS across features
+* final models: LGB (objective="fair"; better than optimizing MAE itself), SVR, NN
+* multi-task learning by specifying additional losses; other loss for target<0.5; new MAE loss on time-since-failure
+* some outliers at ends
+* NN best single model; LGB+NN better; SVR helps a bit
+* distribution of test preds very similar to OOF preds
+* denoise:
+def denoise_signal_simple(x, wavelet='db4', level=1):
+    coeff = pywt.wavedec(x, wavelet, mode="per")
+    #univeral threshold
+    uthresh = 10
+    coeff[1:] = (pywt.threshold(i, value=uthresh, mode='hard') for i in coeff[1:])
+    # Reconstruct the signal using the thresholded coefficients
+    return pywt.waverec(coeff, wavelet, mode='per')
+    
+Mel features:
+mfcc = librosa.feature.mfcc(z)
+mfcc_mean = mfcc.mean(axis=1)
+mfcc[18], mfcc[4]
+* Anyway, the architecture of this network is fascinating. It is essentially feed-forward (even though it uses LSTM and Conv1D layers). The unusual technique however is that it is fit to multiple objectives: Time to Failure, Time since Failure, and binary indicator TTF < 0.5 seconds. The model is trained to fit to all three of these objectives at once with objectives weights of 8, 1, and 1 respectively.
+
+Because of the multi-objective, the model is forced to create weights that optimize for Time Since Failure and the binary indicator, while focusing mostly on TTF. I think this allowed the model to generalize better to the signal. The performance was better using multi-objective than just fitting to TTF alone.

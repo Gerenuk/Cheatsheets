@@ -20,6 +20,14 @@ http://git.huit.harvard.edu/guide/
 |===
 
 |===
+| git remove -v                             | list remote sources
+| git remove set-url origin ....            | set remote (e.g. to change from https to ssh)
+| git branch -a                             | show all branches
+| git fetch --all +                         
+  git reset --hard origin/<branch>          | pull changes and overwrite local
+|===
+
+|===
 | git init                                  | Init new repo
 | git remote add origin <server>            | Connect (if not cloned)
 | git tag <tag> <hex>                       | Tag (e.g. with version); <hex> needs to be unique

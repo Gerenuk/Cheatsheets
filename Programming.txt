@@ -324,3 +324,6 @@ class SubA(A):
     def f(self, x:SuperX) -> SubR: pass
 
 https://blog.daftcode.pl/csi-python-type-system-episode-2-baf5168038c0
+
+
+NaN always compares to False, but NaN!=... is always True

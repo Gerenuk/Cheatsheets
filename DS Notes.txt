@@ -1586,7 +1586,7 @@ exclusion restriction -> Z indep of Y given A; hatA projection of A onto space s
 
 == Correlation
 
-=== Categorical coorelation
+=== Categorical correlation
 
 * use sklearn.metrics.normalized_mutual_info_score (with arithmetic)?
 
@@ -1947,9 +1947,11 @@ https://arxiv.org/pdf/1208.0645v4.pdf
 
 * for cyclic features sin(x) and cos(x) make sense because a*sin(x)+b*cos(x)=c*cos(x-d) allows for translation
 * for categoricals it may be best to just OH encode all and use LR (adding cartesian products may help; sparsifying by taking col differences did not help)
-* thermometer encoding of cats may help if ordinal (e.g. since mean target evolves monotonically with order)
+* thermometer encoding of cats may help if ordinal (e.g. since mean target evolves monotonically with order)?
 * binning small categories (to reduce number of features) did not help
 * cats which are only in train or test could be combined into a new cat values (but not dropped)
+* target encoding instead of LGBM native way when complex trees (large num_leaves)?
+* target encoding suffers less from high cardinality; also less affected from useless features
 
 == Anomaly detection in time series
 
@@ -2080,3 +2082,38 @@ https://www.youtube.com/watch?v=85f9SWgWj1Q
 
 == Clustering performance
 https://scikit-learn.org/stable/modules/clustering.html#clustering-performance-evaluation
+
+== AutoML
+
+* deals with tables with numbers, classes, text, timestamps, lists of values (e.g. event lists), nested fields
+* wants to deal with imbalanced, missing, outliers, correlated, high cardinality
+* automatically search through Google model library
+* only compute costs
+
+== Better than XGBoost
+https://www.youtube.com/watch?v=5CWwwtEM2TA
+CatBoost:
+* prevent overfitting more
+* fight "gradient bias"
+* oblivious tree: at each level all decision the same
+* observations permuted and calculcated only on preceding samples
+* default params often better than tuned LGBM or XGB
+* without categorical features very fast due to oblivious trees
+
+XGBoost:
+* lossguide growth (same as LightGBM) may overfit earlier and faster than depthwise growth
+
+== FFT on Window
+
+http://download.ni.com/evaluation/pxi/Understanding%20FFTs%20and%20Windowing.pdf
+* finite window (D)FFT has spectral leakage if frequency not aligned with window size
+* -> use window to make window edges converge to zero
+* !!window: lower side lobes reduce leakage, but increase bandwidth of major lobe
+* side lobes decrease: roll-off rate
+* optimize for roll-off rate (distant freq), max (1st) side lobe (near freq), narrow main lobe (resolution)
+* if amplitude more important than position: wide main lobe
+* spectrum flat: uniform or no window
+* Hann window good overall! (cos^2)
+* Hamming window: better at cancelling nearest side lobe, but worse at others
+* Blackman-Harris window (4 term or 7 term) good side lobe compression
+* Kaiser-Bessel good balance

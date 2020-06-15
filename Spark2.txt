@@ -1164,3 +1164,14 @@ Spark 2.0.0 and 1.6.2 (both in HDP 2.5) have data corruption for >200 columns us
 
 
 fillna(2e10) will lose rows depending on cache or no cache! even if column type is LongType
+
+
+Map column values:
+
+    from pyspark.sql.functions import col, create_map, lit
+    from itertools import chain
+
+    mapping_expr = create_map([lit(x) for x in chain(*mapping.items())])
+
+    df.withColumn("value", mapping_expr[col("key")])
+    #  df.withColumn("value", mapping_expr.getItem(col("key")))  # Spark < 3.0
