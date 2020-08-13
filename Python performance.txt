@@ -175,3 +175,9 @@ https://www.youtube.com/watch?v=5js_-pLGqwA
 * iterating list slightly faster than tuples
 * iterating generators faster than lists
 * list comprehension slower than map/filter (?)
+
+== Regex
+
+* `.compile` faster
+* making lower yourself instead if IGNORE case faster
+* own loop usually slower

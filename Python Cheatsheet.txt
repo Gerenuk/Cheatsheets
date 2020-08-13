@@ -298,6 +298,9 @@ On Linux no creation time accessible, so use `os.path.getmtime()` or `os.stat().
 | regex_match.groupdict()                   |
 |===
 
+* regex only captures the last of a multi-match (+ or *) https://stackoverflow.com/questions/5060659/regexes-how-to-access-multiple-matches-of-a-group
+* -> regex module `m.capture`
+
 == Math
 
 [cols="m,d"]

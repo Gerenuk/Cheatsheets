@@ -374,3 +374,9 @@ host github.com
  HostName github.com
  IdentityFile ~/.ssh/id_rsa_github
  User git
+
+ 
+| git commit --amend                | Replace previous commit
+| git reset HEAD <file>             | Undo a `git add` (also shown in `git status` help text)
+| git checkout -- <file>            | Reload file from last commit
+| git diff --name-status master     | Show filename changes to master

@@ -326,4 +326,12 @@ class SubA(A):
 https://blog.daftcode.pl/csi-python-type-system-episode-2-baf5168038c0
 
 
-NaN always compares to False, but NaN!=... is always True
+=== NaNs
+
+* NaN always compares to False (e.g. `NaN==NaN -> False`), but NaN!=... is always True
+* NaN can have a sign and have 23 bits for extra information
+* quiet vs signalling NaN
+* 1^x and x^0 always 1
+* (-1)^(+-inf)=1
+* (-2)^inf=inf because all large floats are even
+* there are `pown` and `powr` function if you need other behavior
