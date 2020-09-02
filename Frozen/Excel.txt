@@ -16,3 +16,5 @@ Excel: multiple format copy: double-click
 VERGEICH(wert;bereich;0)   -> gibt Zeilennummer zur�ck (engl. MATCH)
 
 IF(ISNUMBER(SEARCH("word", field));"yes";"no")
+
+B2=WENN(B1="block";0;WENN(A2=A1;B1;1-B1))   # to make blocks of alternating color and same color for same A2

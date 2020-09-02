@@ -1,0 +1,148 @@
+== Naive models
+* mean/median over same from last year
+* linear fit with dummies for weeks/months
+* if multiple stores and multiple weeks: (avg. in week[all stores]) * (avg. in store[all weeks])/ (sum.stores)
+* average naive models
+* STL decompositions -> predict trend -> add past season; R package stlf
+
+== Notes
+* special days (e.g. christmas) may be in different weeks -> shift fraction of sales into next weeks (by days)
+* "Fibonacci median": compute medians in [-phi^(k+k0),0] and then take median of these
+** https://www.kaggle.com/safavieh/median-estimation-by-fibonacci-et-al-lb-44-9
+* use global learn across some time series where possible?
+* use baseline and predict deviation from baseline (e.g. in a global model)
+
+== Methods
+
+=== STL
+* season: avg. per month (over years)?
+* trend: moving avg. over 12 months
+* error: y - trend - season
+* seasonally adjusted: y - season
+
+== Kaggle
+
+=== Walmart I - 1st place
+https://www.kaggle.com/c/walmart-recruiting-store-sales-forecasting/discussion/8125
+Best single model: https://github.com/davidthaler/Walmart_competition_code/blob/master/grouped.forecast.R#L142
+* STLF model from R: decompose, predict trend with ES, extend season naively
+* additional denoise data by truncated PCA and inverse_transform before (non-std?)
+Holiday adjustment: https://github.com/davidthaler/Walmart_competition_code/blob/master/postprocess.R#L58
+* move Christmas sales partially to other week
+* Overall best single model and some trivial models were ensembled
+
+=== Walmart I - 3rd place
+
+https://www.kaggle.com/c/walmart-recruiting-store-sales-forecasting/discussion/8023#43821
+https://ideone.com/pUw773
+* naive seasonal model
+* for holidays rather use previous holiday value (e.g. predict thanksgiving by thanksgiving indep. of week)
+* future is weighted avg. to two prior weeks
+* add hard-coded trend adjustment of store and department ("geometric mean of quarters"? some kind of (factor ** (weeks/52)) equation)
+
+=== Walmart II - 5th place
+https://www.kaggle.com/c/walmart-recruiting-sales-in-stormy-weather/overview
+* Not proper forecasting, as only bad weather gaps were to forecast
+* Winner: https://www.kaggle.com/c/walmart-recruiting-sales-in-stormy-weather/discussion/14452
+* mostly Time series model; but 3rd place GBDT
+* 5th place Gaussian Process:
+** https://www.kaggle.com/c/walmart-recruiting-sales-in-stormy-weather/discussion/14358#80104
+** Gaussian process with some hyperparameter sharing
+* Predict sales per product/store/day
+* A lot of zeros
+
+=== Walmart II - 3rd place
+https://www.kaggle.com/c/walmart-recruiting-sales-in-stormy-weather/discussion/14358#80198
+* weather data for that days and past/future 7 days avg.
+* dates as numeric (day of month, week)
+* include total time as numeric
+* make random runs; save indices to reproduce later
+* XGB "boost from prediction" feature
+
+=== Walmart II - 1st place
+https://www.kaggle.com/c/walmart-recruiting-sales-in-stormy-weather/discussion/14452
+https://github.com/threecourse/kaggle-walmart-recruiting-sales-in-stormy-weather
+* first curve fitting with R ppr (projection pursuit regression)
+* then train linear model on y2=log1p(y) - ppr_fitted (vowpal L1 with interactions; global model)
+* add special day (e.g. Black Friday) +-1..3 categorical features
+* zero treatment
+* predict exp(y2(x) + ppr_fitted(x))-1
+
+=== Rossmann
+* ensembles of global ML models
+
+=== Wikipedia Web Traffic - 1st place
+https://www.kaggle.com/c/web-traffic-time-series-forecasting/discussion/43795
+https://github.com/Arturus/kaggle-web-traffic
+https://github.com/Gerenuk/kaggle-web-traffic/blob/master/how_it_works.md
+seq2seq model
+
+=== Rossmann - 1st place
+https://www.kaggle.com/c/rossmann-store-sales/discussion/18024
+https://storage.googleapis.com/kaggle-forum-message-attachments/102102/3454/Rossmann_nr1_doc.pdf
+
+=== Rossman - 3rd place
+https://www.kaggle.com/c/rossmann-store-sales/discussion/17974
+https://github.com/entron/entity-embedding-rossmann
+https://arxiv.org/abs/1604.06737
+
+=== Rossmann - 4th place
+
+=== Rossmann - 10th place
+https://www.kaggle.com/c/rossmann-store-sales/discussion/17896#101447
+
+
+
+=== Wikipedia Web Traffic - 2nd place
+https://www.kaggle.com/c/web-traffic-time-series-forecasting/discussion/39395
+https://github.com/jfpuget/Kaggle/tree/master/WebTrafficPrediction
+"In order to remove the yearly trend and keep seasonality I substracted the median of the last 20 weeks of train data from the train and test data. Once medians are substracted, value ranges are comparable year to year. This deals with the fact that XGBoost cannot really extrapolate"
+
+"The second idea is to not use RMSE and to approximate SMAPE with log1p transformed data. SMAPE is about ignoring outliers. Using a log1p transform of all views data is a first step towards ignoring outliers."
+
+...
+
+=== Wikipedia Web Traffic - 29th place
+https://www.kaggle.com/c/web-traffic-time-series-forecasting/discussion/39876
+* kNN Classifier(metric="canberra") -> predict median of neighbors!
+* 9 week moving window
+
+=== Wikipedia Web Traffic - 4th place
+https://www.kaggle.com/c/web-traffic-time-series-forecasting/discussion/39367#220898
+"I used a single sliding window feed-forward network with a look-back period of 120 days. I fed two FC layers with two parallel tracks - one for the direct input, and one for a CNN processing the input. Input features included the log-transformed count data, day-of-week, week-of-year, and embeddings of the page project, access, and agent."
+
+=== Wikipedia Web Traffic - 5th place
+https://www.kaggle.com/c/web-traffic-time-series-forecasting/discussion/43603
+https://github.com/naterm60/KaggleWebTrafficForecasting
+* polynomial autoregression
+
+
+=== Wikipedia Web Traffic - 6th place
+https://github.com/sjvasquez/web-traffic-forecasting
+
+=== Wikipedia Web Traffic - 7th place
+"The submission is weighted average of several nn models. Each model have 1 lstm layer and 2 fc layers. The differences are their inputs or objectives.
+The input may be raw numbers or be transformed by log1p or be normalized by average. The objective may be either MAE or SMAPE. Although SMAPE is not convex, but it still works with SGD.
+The solution does not count yearly seasonality, which I think is the major cause for the gap away from the lead."
+
+The models were trained only against 8/31 data because of hurricane irma.
+
+
+=== Wikipedia Web Traffic - 8th place
+https://www.kaggle.com/c/web-traffic-time-series-forecasting/discussion/43727
+* Kalman filters
+* most noisy predicted with "Fibonacci median" scheme
+* Kalman smoother (diff. smoothing param) on log1p data; diff; test if prediction good from |dy1-dy2|/(|dy1|+|dy2|)*0.5<0.95
+* 8-state Kalman filter
+
+=== Wikipedia Web Traffic - 11th place
+https://www.kaggle.com/c/web-traffic-time-series-forecasting/discussion/39367#220741
+https://github.com/louis925/kaggle-web-traffic-time-series-forecasting
+
+== Using NN
+
+* e.g. Transformer NN
+* categorical as embedding
+* use lags
+* encoder-decoder can overfit
+* seasonality with tensor flow probability tfp.sts.Seasonal

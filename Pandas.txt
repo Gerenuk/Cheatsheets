@@ -54,6 +54,7 @@ http://pandas.pydata.org/pandas-docs/stable/io.html
 | df.*to_string*(..)                        |
 | df.*to_json*(.., orient="table")          | Round-tripable
 | _compression_="gzip"                      | Directly compress
+| _indent_=..                               |
 | df.*to_pickle*("file.pkl.gz")             | With zipping (gzip faster than bzip faster than xz)
 | pd.*read_html*(file_or_path)              | Return list of tables
 | df.*to_html*(..)                          |
@@ -293,6 +294,7 @@ http://pandas.pydata.org/pandas-docs/stable/io.html
 | index.*symmetric_difference*(..)          |
 | index.*union*(..)                         |
 | index.*intersection*(..)                  |
+| index.*format*(..)                        | Return string representation https://pandas.pydata.org/pandas-docs/stable/reference/api/pandas.Index.format.html[Ref]
 |===
 
 Index types:
@@ -324,6 +326,14 @@ http://pandas.pydata.org/pandas-docs/stable/api.html#multiindex[MultiIndex]
 * in tuples you need to use `*slice*(None)` for `:`; but you could use `pd.IndexSlice[..]` for using the nicer `:` notation again
 * you can assign to selections with MultiIndex too; also with index alignment
 * you need to manually sort indices by e.g. `df.*sort_index*(level=1)`; otherwise operations might be slow and create unneccessary copies; you can check `MultiIndex.lexsort_depth`
+
+=== Methods
+
+[cols="m,d"]
+|===
+| multiindex.unique(level="..")             | https://pandas.pydata.org/pandas-docs/stable/reference/api/pandas.Index.unique.html[Ref]
+| index.asi8                                | int64 representation of index
+|===
 
 === Reindex
 
@@ -377,6 +387,7 @@ http://pandas.pydata.org/pandas-docs/stable/api.html#multiindex[MultiIndex]
 | _normalize_=True                          | Give relative frequencies
 | _bins_=_int_                              | Group into half-open bins; convenience for `pd.cut`
 | df.*to_string*(na_rep="")                 | Nicer rendering
+| df.to_markdown(..)                        |
 |===
 
 === Display options
@@ -897,6 +908,7 @@ IntervalIndex
 | df.*sort_values*(columns=..)              | sorts
 | _na_position_="first"                     |
 | _kind_=..                                 | See `np.sort`; only `mergesort` is stable
+| _ignore_index=True                        | reset_index after sorting
 | s.*sort_values*()                         |
 | s.*searchsorted*([..], side="left", sorter=..)  | like np.ndarray.searchsorted
 | s.*nsmallest*(n)                          | faster than by sorting
@@ -912,6 +924,7 @@ IntervalIndex
 |===
 | df.*drop_duplicates*([col1, ..], keep="first") |
 | _keep_=False                              | Drop all duplicates
+| _ignore_index_=True                       | reset index too
 | df.*any*()                                | summarize bool result
 | df.*all*()                                |
 | axis=None                                 | Over all axis
@@ -1084,6 +1097,7 @@ Can do fixed row number window or timedelta window (on index or column). `.expan
 | *cov*(), *corr*()                         | Series/Series -> pair stats; DataFrame/Series -> each DF col to Series; DataFrame/DataFrame -> matching col names
 | *apply*(func)                             | Generic apply func on ndarray to give single values
 | _raw_=True                                | Pass ndarray
+| _engine_="numba"                          |
 | s.*rolling*(window=.., win_type="boxcar").*sum*() | Weighting
 | s.*rolling*(.., win_type="..").*mean*()   | Weighting
 | s.*rolling*(.., win_type=[..]).*sum*()    | Custom weights; no normalization
@@ -1101,6 +1115,7 @@ Can do fixed row number window or timedelta window (on index or column). `.expan
 | df.*ewm*(alpha=.., adjust=True).*mean*()  | Exponentially weighted (http://pandas.pydata.org/pandas-docs/stable/computation.html#exponentially-weighted-windows)
 | _span_=, com=, halflife=, alpha=          | Specifying factor by different methods
 | _ignore_na_=True                          | how intermediate NaN values affect result
+| pandas.api.indexers.BaseIndexer           | Custom indexer for windwows https://pandas.pydata.org/pandas-docs/version/1.0.0/reference/api/pandas.api.indexers.BaseIndexer.html#pandas.api.indexers.BaseIndexer[Ref]
 |===
 
 
@@ -1260,6 +1275,9 @@ http://pandas.pydata.org/pandas-docs/version/0.15.2/options.html#list-of-options
 | pd.*isna*(...)                            | Use this for test since np.isnan would break for NaT
 |===
 
+* `pd.NA` (since Pandas 1.0) as universal missing value; new
+** propagates "missing" in comparison operations
+** in logic operation 3-value Kneene logic
 * currently np.nan used; not liked masked approach from scikits.timeseries
 * need better support from Numpy for better types; now casting int->float, bool->object if missing encountered
 * np.nan!=np.nan, but None==None
@@ -1552,7 +1570,7 @@ Use `DataFrame.style` to apply conditional formatting for Jupyter notebook. Retu
 |===
 | s.*to_sparse*(fill_value=..)              |
 | s.*to_dense*()                            |
-| pd.*SparseArray*()                        |
+| pd.arrays.*SparseArray*()                 |
 | pd.*SparkList*()                          |
 | s.*to_coo*()                              | Transform to `scipy.sparse.coo_matrix`
 | s.*from_coo*(..)                          | Read from `scipy.sparse.coo_matrix`
@@ -1853,6 +1871,7 @@ pd.set_option(backend="..") | instead of matplotlib
 
 some libraries do not like tuples in categorical values (LGBM?)
 
+<<<<<<< HEAD
 
 Pitfalls:
 * columns with duplicate names
@@ -1864,3 +1883,49 @@ eval:
 * support attribute and getitem access
 * assignment in df.eval("Y = ..", inplace=True)
 * df.eval supports @
+=======
+duplicate column names can cause a lot of trouble (dimension confusion)
+Also having same name in columns and index can confuse .query()
+
+| index.get_value(series, key)          | Fast method to get value? https://pandas.pydata.org/pandas-docs/stable/reference/api/pandas.Index.get_value.html[Ref]
+
+
+type="string"
+* does not store mixed object anymore; just string
+* select_dtype("string") works
+
+type="boolean"
+* boolean only; uses mask
+
+| .convert_dtypes()             |
+
+| DataFrame.attrs               | dict of global attributes of object
+| model_selection.cross_val_score(..)   | Just CV scores from a single metric
+| model_selection.cross_validate(..)    | Can do multiple metrics, train scores, fit times, fitted estimators
+| model_selection.cross_val_predict(..) | CV predictions (only)
+| _method_=".."                         | Change name of method called
+| model_selection.learning_curve(..)    | CV-learning curve based on train_sizes
+| model_selection.validation_curve(..)  | CV-validation curve vs a parameter
+| model_selection.permutation_test_score(..)    | Permutation score https://scikit-learn.org/stable/modules/generated/sklearn.model_selection.permutation_test_score.html[Ref]
+| utils.resample(..)            | Resample multiple matrices https://scikit-learn.org/stable/modules/generated/sklearn.utils.resample.html[Ref]
+| utils.shuffle(..)             | Shuffle multiple https://scikit-learn.org/stable/modules/generated/sklearn.utils.shuffle.html[Ref]
+| impute.KNNImputer(..)         | https://scikit-learn.org/stable/modules/generated/sklearn.impute.KNNImputer.html[Ref]
+| inspection.permutation_importance(..) | https://scikit-learn.org/stable/modules/generated/sklearn.inspection.permutation_importance.html[Ref]
+| metrics.plot_roc_curve(..)                | https://scikit-learn.org/stable/modules/generated/sklearn.metrics.plot_roc_curve.html[Ref]
+| metrics.plot_precision_recall_curve(..)   | https://scikit-learn.org/stable/modules/generated/sklearn.metrics.plot_precision_recall_curve.html[Ref]
+| metrics.plot_confusion_matrix(..)         | https://scikit-learn.org/stable/modules/generated/sklearn.metrics.plot_confusion_matrix.html[Ref]
+
+can use `cv = iter((train_idx, test_idx))`
+
+Multiple columns to a single list:
+Fast:
+* `list(df.itertuples(index=False, name=None))`
+* `list(zip(df["a"], df["b"]))`
+
+Slow:
+* itertuples without parameters
+* apply/map
+
+Fastest:
+* x.values.tolist()  # but result is list of lists
+>>>>>>> e483949a526c922669cbbc8b219ac3f6cd03ed30

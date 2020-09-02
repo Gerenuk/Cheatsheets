@@ -55,11 +55,16 @@
 | o.__subclasses__()                        |
 | isinstance(x, numbers.Real)               | Check for number (int and float)
 | open(.., "w", buffering=1)                | Line flush
+<<<<<<< HEAD
 | random.sample(x, len(x))                  | To return new
 | functools.TopologicalSorter               | https://docs.python.org/3.9/library/functools.html#functools.TopologicalSorter[Ref]
 | str.removeprefix("..") +
   str.removesuffix("..")                    |
 | d1 \| d2                                  |
+=======
+| traceback.print_exc()                     | Print last last traceback (can be automatic by good logging system)
+| traceback.format_exc()                    |
+>>>>>>> e483949a526c922669cbbc8b219ac3f6cd03ed30
 |===
 
 * object `True` unless `__len__==0`, `__bool__=False`, zero
@@ -232,6 +237,7 @@
 | f = path.open(mode="r")                   | Open file https://docs.python.org/3/library/pathlib.html#pathlib.Path.open[Ref]
 | path.read_text(encoding=None)             | Read decoded text https://docs.python.org/3/library/pathlib.html#pathlib.Path.read_text[Ref]
 | path.write_text(data)                     | Open, write text and close https://docs.python.org/3/library/pathlib.html#pathlib.Path.write_text[Ref]
+| f.writelines(iter)                        | Write multiple string; you need to include line separator yourself
 |===
 
 On Linux no creation time accessible, so use `os.path.getmtime()` or `os.stat().st_mtime` which is modification time. Creation time should be `os.stat().st_crtime` but currently not supported.
@@ -304,6 +310,9 @@ On Linux no creation time accessible, so use `os.path.getmtime()` or `os.stat().
 | regex_match.expand(template)              |
 | regex_match.groupdict()                   |
 |===
+
+* regex only captures the last of a multi-match (+ or *) https://stackoverflow.com/questions/5060659/regexes-how-to-access-multiple-matches-of-a-group
+* -> regex module `m.capture`
 
 == Math
 
@@ -844,6 +853,7 @@ def __getattribute__(self, item):
   return v
 
   
+<<<<<<< HEAD
 * pylint detects subclass without overwriting abstract method even of only NotImplementedError() used
 * mypy detects instantiation of abstract class, when @abstractmethod used
 * Python prohibits instantiation of abstract class if ABC used
@@ -860,3 +870,8 @@ import unicodedata
 def remove_accents(input_str):
     nfkd_form = unicodedata.normalize('NFKD', input_str)
     return u"".join([c for c in nfkd_form if not unicodedata.combining(c)])
+=======
+Numpy implements buffer protocol:
+Could make arrays immutable with `ndarray.flags.writeable`
+StaticFrame (pypi static-frame) manages an immutable Pandas DataFrame
+>>>>>>> e483949a526c922669cbbc8b219ac3f6cd03ed30

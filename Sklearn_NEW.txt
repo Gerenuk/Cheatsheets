@@ -1430,3 +1430,17 @@ Choosing a good minibatch size:
 
 * Decision Tree supports sparse data
 * RidgeClassifier use +/-1 as target and RMSE; but cannot do predict_proba
+
+RandomForestClassifier:
+| ccp_alpha = ...                       | Complexity pruning
+
+| feature_selection.SelectFromModel(..) | Select from importance weights
+| inspection.permutation_importance(model, X, y)    | Permutation importance
+| inspection.partial_dependence(model, X, feats)    |
+| score, params, n_test = model_selection.fit_grid_point(X, y, model, param, train_mask, test_mask, scorer, verbosity_level)    |
+| model_selection.cross_validate(model, X, y)       | Eval train/test metrics, score-time
+| utils.gen_even_slices(n, n_packs)         | Returns list of slices
+| utils.graph.single_source_shortest_path_length(graph, source) |
+
+from sklearn.model_selection import PredefinedSplit
+split = PredefinedSplit(np.random.choice([-1, 0], p=[0.8, 0.2], size=X_train.shape[0]))

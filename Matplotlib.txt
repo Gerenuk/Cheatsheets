@@ -956,3 +956,11 @@ ax.autoscale_view()
 == Set Tick thousands separator
 
     ax.xaxis.set_major_formatter(mpl.ticker.FuncFormatter(lambda x,i:format(x, "6,.0f").replace(",", ".")))
+
+    
+    
+    
+fig, ax = plt.subplots()
+poly=mpl.collections.PolyCollection([[(0,1),(1,1),(2,2)]], facecolors=["r"])
+ax.add_collection(poly)
+ax.autoscale_view()

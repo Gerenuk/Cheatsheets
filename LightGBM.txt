@@ -66,6 +66,28 @@ https://lightgbm.readthedocs.io/en/latest/Parameters-Tuning.html
 * call `gc`
 
 
+<<<<<<< HEAD
 Start from Miniconda and do `conda install nomkl` (if AMD CPU?)
 
 device_type="gpu" does not support setting seed unless gpu_use_dp=True
+=======
+== OTHER
+
+to limit LGBM initial memory spike:
+
+* convert all data to np.ndarray float32 first
+* use lgb.Dataset and pass `feature_name=`
+
+== Recompile with native optimization
+
+https://www.kaggle.com/c/m5-forecasting-accuracy/discussion/148273
+https://lightgbm.readthedocs.io/en/latest/gcc-Tips.html
+
+    git clone --recursive https://github.com/microsoft/LightGBM ; cd LightGBM
+    mkdir build ; cd build
+    export CMAKE_CXX_FLAGS='-O3 -mtune=native'
+    cmake ..
+    make -j$(nproc)
+    cd ../python-package/
+    python setup.py install --precompile
+>>>>>>> e483949a526c922669cbbc8b219ac3f6cd03ed30

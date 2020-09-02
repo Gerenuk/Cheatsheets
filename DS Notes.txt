@@ -1586,6 +1586,10 @@ exclusion restriction -> Z indep of Y given A; hatA projection of A onto space s
 
 == Correlation
 
+=== Categorical correlation
+
+* use sklearn.metrics.normalized_mutual_info_score (with arithmetic)?
+
 === Maximum Information Criterion (MIC)
 
 * seems bad https://arxiv.org/abs/1401.7645
@@ -1943,9 +1947,10 @@ https://arxiv.org/pdf/1208.0645v4.pdf
 
 * for cyclic features sin(x) and cos(x) make sense because a*sin(x)+b*cos(x)=c*cos(x-d) allows for translation
 * for categoricals it may be best to just OH encode all and use LR (adding cartesian products may help; sparsifying by taking col differences did not help)
-* thermometer encoding of cats may help if ordinal (e.g. since mean target evolves monotonically with order)
+* thermometer encoding of cats may help if ordinal (e.g. since mean target evolves monotonically with order)?
 * binning small categories (to reduce number of features) did not help
 * cats which are only in train or test could be combined into a new cat values (but not dropped)
+<<<<<<< HEAD
 
 == Categorical encoding
 
@@ -2002,3 +2007,172 @@ maximum likelihood estimate follows asymptotically a normal distribution with th
 * for large function spaces cov(f(X),g(y))=0 -> X indep Y
 * true causal order invariant under right sort of intervention (Simon)
 *
+=======
+* target encoding instead of LGBM native way when complex trees (large num_leaves)?
+* target encoding suffers less from high cardinality; also less affected from useless features
+
+== Anomaly detection in time series
+
+* https://github.com/arundo/adtk (mostly hard-coded simple methods)
+* simple hypothesis test if normal: https://en.wikipedia.org/wiki/Grubbs%27s_test_for_outliers
+* band on normal: https://en.wikipedia.org/wiki/Chauvenet%27s_criterion
+
+== Anomaly detection
+
+* "Time Series Discord" proved to be best; for performance use http://www.cs.ucr.edu/~eamonn/MatrixProfile.html[Matrix Profile]
+* https://www.elen.ucl.ac.be/Proceedings/esann/esannpdf/es2015-56.pdf[LSTM], https://arxiv.org/pdf/1607.00148.pdf[LSTM]
+* https://stats.stackexchange.com/questions/152644/what-algorithm-should-i-use-to-detect-anomalies-on-time-series
+
+== Data science teams
+https://www.youtube.com/watch?v=2v9uwedgBxU
+* hire strong opinions, but also compromise
+* each person comes up with own tasks
+* time-box exploratory tasks
+* long term planning outside sprint planning
+* tracking per data scientist, one-place (jira, trello, asana): what working on, what next, potential future projects, requests from other teams
+* project scaffolding: cookiecutter, yeoman
+* common utilities:
+** SQL, database connections
+** data transformations
+** logging, unittest, visualization
+* align coding standards with engineers
+* linters
+* code review: decide what should be checked; who merges it in after approval
+* PR checklist (paths, titles, links, update files, ...)
+* API for predictions so others can run it (e.g. Bottle, Falcon, Flask)
+* Load testing (e.g. locust), monitoring, logging; spread among team
+* document: workflow, code review, deployment, how to access things, onboarding information (e.g. confluence, gitbook, google docs)
+
+== Tweedie distribution
+* Var(Y)=sigma^2 * mu^p; p = Tweedie power parameter
+* normal, gamma, inverse gaussian, purely discrete poisson, zero-inflated compound possion
+* special case of expoential dispersion models
+* Tweedie convergence theorem (foci of convergence)
+
+== Kaggle Mercedez
+
+* https://www.youtube.com/watch?v=0qHXNeuNOAE
+* R2 sensitive to outliers -> tuning to outliers on targets
+* many tried to hard-code target "leak" values, but dropped a lot
+* a lot of binary features; some categorical features
+* Public kernel:
+** feats -> F0
+** PCA/SVD/ICA/RandomProj -> F1
+** F0 + F1 -> both into XGB -> X
+** F0 -> LassoLars -> L0
+** F0 -> GBRegr -> GB
+** L0 + GB  -> LassoLars -> L1
+** X + L1 -> Weighted Avg
+* https://www.kaggle.com/hakeem/stacked-then-averaged-models-0-5697
+* dim reduction for XGB
+* LassoLars since many binary features (also some categorical)
+* questionable:
+** Dim reduction did not standardize feats (didnt see this on public LB, but on Private)
+** GBReg did not fix Random Seed
+* but actually this public kernel became 3rd (but only lucky random seed); "Golden seed"?
+* some good script used information from row just before and after
+* check if there is smooth relation between cat feat and target mean
+* but LGBM, CatBoost, H20 can encode cats
+* his CV method (min 19:00):
+** 10 splits, 5 folds -> 50 scores
+** -> scipy.stats.ttest_rel to determine significance between models (check normalily first)
+** multiple comparison test though
+
+== Production web app Flask
+
+https://www.youtube.com/watch?v=z-Ue9T0MpVs
+* nightly: Snowflake, Databricks + PySpark
+* data: MySQL, Amazon RDS
+* Web: Flask, SQLAlchemy, Gunicorn
+* other: Docker, Terraform, Jenkins, Amazon ECS
+* Gunicorn: Python Web Server Gateway Interface (WSGI) [Flask web server scaled badly]
+* precomputed or not? (when limited number of combinations)
+* flask-sqlalchemy
+* combine flask and gunicorn logs (handlers)
+* what when updating data? dont just drop data
+* FilteredRequest class: consider URI length limits -> allow GET and POST (latter for large JSON)
+* 404: when endpoint does not exist
+* just empty list: if only results empty, but endpoint fine
+* ideally no JOIN
+* query caching
+* Gunicorn settings: number of workers, worker type (async?), timeout
+* Postman: store test cases, development
+* Flasgger: Swagger for Flask
+* DataDog: metrics and monitoring
+
+== Nested Cross-Validation
+https://www.youtube.com/watch?v=DuDtXtKNpZs
+* how to choose best model, but also estimate how good it will be really
+* could have val data and separate test data
+* or also do loop over different test set (and CV inside non-test sets)
+* but now getting many models
+
+== Kaggle Camera Model Indentification
+https://www.youtube.com/watch?v=ETh8bJ_xKGA
+* image -> device
+
+== Imbalanced data
+https://www.youtube.com/watch?v=6M2d2n-QXCc
+* ensemble undersampled
+* focal loss: down-weight well classified
+
+== Vaex
+https://www.youtube.com/watch?v=85f9SWgWj1Q
+* DataFrame library
+* remote data frames
+* vaex-viz
+* vaex-ml
+* very memory efficient due to expression system
+* JIT, numba
+* free pipelines
+* lazy operations
+* HDF5 + arrow spec; open large files instantly with memory mapping
+* handle large data
+* accelerating string processing a lot
+* no cluster need
+* just saves operations and add virtual columns (e.g. combine filter and new col creation)
+* -> pretty good for large data!
+* S3 support
+* supports progress bar for operations
+* can use CUDA GPU or JIT
+* vaex-ml: PCA, vaex.ml.lightgbm wrapper
+* all operations/transformations/pipeline can be exported as "state" JSON
+
+== Clustering performance
+https://scikit-learn.org/stable/modules/clustering.html#clustering-performance-evaluation
+
+== AutoML
+
+* deals with tables with numbers, classes, text, timestamps, lists of values (e.g. event lists), nested fields
+* wants to deal with imbalanced, missing, outliers, correlated, high cardinality
+* automatically search through Google model library
+* only compute costs
+
+== Better than XGBoost
+https://www.youtube.com/watch?v=5CWwwtEM2TA
+CatBoost:
+* prevent overfitting more
+* fight "gradient bias"
+* oblivious tree: at each level all decision the same
+* observations permuted and calculcated only on preceding samples
+* default params often better than tuned LGBM or XGB
+* without categorical features very fast due to oblivious trees
+
+XGBoost:
+* lossguide growth (same as LightGBM) may overfit earlier and faster than depthwise growth
+
+== FFT on Window
+
+http://download.ni.com/evaluation/pxi/Understanding%20FFTs%20and%20Windowing.pdf
+* finite window (D)FFT has spectral leakage if frequency not aligned with window size
+* -> use window to make window edges converge to zero
+* !!window: lower side lobes reduce leakage, but increase bandwidth of major lobe
+* side lobes decrease: roll-off rate
+* optimize for roll-off rate (distant freq), max (1st) side lobe (near freq), narrow main lobe (resolution)
+* if amplitude more important than position: wide main lobe
+* spectrum flat: uniform or no window
+* Hann window good overall! (cos^2)
+* Hamming window: better at cancelling nearest side lobe, but worse at others
+* Blackman-Harris window (4 term or 7 term) good side lobe compression
+* Kaiser-Bessel good balance
+>>>>>>> e483949a526c922669cbbc8b219ac3f6cd03ed30
