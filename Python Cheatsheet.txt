@@ -55,11 +55,20 @@
 | o.__subclasses__()                        |
 | isinstance(x, numbers.Real)               | Check for number (int and float)
 | open(.., "w", buffering=1)                | Line flush
+| random.sample(x, len(x))                  | To return new
+| functools.TopologicalSorter               | https://docs.python.org/3.9/library/functools.html#functools.TopologicalSorter[Ref]
+| str.removeprefix("..") +
+  str.removesuffix("..")                    |
+| d1 \| d2                                  |
 |===
 
 * object `True` unless `__len__==0`, `__bool__=False`, zero
 * most string commands have `start=` and `end=` option
 * for set operations `-` is stronger than `|`
+* dataclasses:
+** use `=field(default_factory=list)` for mutable default values!
+** support non-init variables with `=field(init=False)` (and `__post_init__` setting)
+** support init-only variables with `:InitVar[<type>]`
 
 == Forgotten
 
@@ -141,6 +150,7 @@
 | str.*(.., _start_=.., _end_=..)           | Start, end position
 | str.replace(.., _count_=..)               | Replace only that often
 | str.zfill(_width_)                        | Prepend zeros until width; consider sign too
+| zip(.., strict=True)                      | ValueError of length mismatch
 |===
 
 * `isdecimal` to check for `[0-9]+`;  `isnumeric` for other languages, `isdigit` also does `^2`
@@ -389,7 +399,7 @@ https://docs.python.org/3/library/re.html#regular-expression-syntax[Python Regex
 [cols="m,d"]
 |===
 | ts = date.timestamp()                     | float (from platform mktime())
-| date = dt.datetime.fromtimestamp(ts)      | from time.time() timestamp
+| date = dt.datetime.fromtimestamp(ts, tz=dt.timezone.utc)      | from time.time() timestamp
 | _pdts_ = pd.Timestamp(_dt_)               |
 | _dt_ = _pdts_.to_pydatetime()             |
 | _date_ = _pdts_.date()                    |
@@ -409,6 +419,9 @@ Timedelta multiplied by float is rounded to timedelta resolution.
 
 Pandas timestamps are 64bit nanoseconds, hence they only work years 1678-2261.
 
+Do not use `utcnow` or `utcfromtimestamp` (https://blog.ganssle.io/articles/2019/11/utcnow.html)
+From Python 2 to 3 naive times underwent a change in meaning. Python 3 sometimes automatically assumes system local time.
+
 https://stackoverflow.com/questions/13703720/converting-between-datetime-timestamp-and-datetime64
 
 
@@ -419,7 +432,6 @@ https://stackoverflow.com/questions/13703720/converting-between-datetime-timesta
 | "{:%Y-%m-%d}".format(datetimeobj)         | object can support own formatting by __format__
 | date.replace(year,month,day)              |
 | dt.timedelta.total_seconds()              |
-| dt.datetime.utcnow()                      | date+time tzinfo as None
 | date.today()                              | today
 | dateutil.relativedelta(years=, months=)   | for all parameter specs https://labix.org/python-dateutil
 | calendar.month_abbr[i]                    |
@@ -461,7 +473,6 @@ https://docs.python.org/3.4/library/datetime.html#strftime-and-strptime-behavior
 
 [cols="m,d"]
 |===
-| datetime.utcnow()                         | Timezone naive current time in UTC timestamp
 | _dttz_ = _dt_.replace(tzinfo==pytz.timezone("UTC"))   | Make UTC time timezone aware (use this only for UTC!)
 | tz = pytz.timezone("..")                  | Create timezone object
 | tz = pytz.utc                             |
@@ -831,3 +842,21 @@ def __getattribute__(self, item):
   if hasattr(v, '__get__'):
     v = v.__get__(self, type(self))
   return v
+
+  
+* pylint detects subclass without overwriting abstract method even of only NotImplementedError() used
+* mypy detects instantiation of abstract class, when @abstractmethod used
+* Python prohibits instantiation of abstract class if ABC used
+
+* Python doesn't have a sign function due to disagreement about edges case (zero, nan); you could use `math.copysign` for limited functionality or `np.sign`
+
+dataclasses:
+* to derive from class where you want a default value use `field(init=False, default=None)` and `__post_init__`; otherwise dataclass will complain that non-default in subclass follow default value field from super class
+* to set fields (e.g. in post_init) for frozen: object.__setattr__(self, "var", value)
+
+unicode normalize:
+import unicodedata
+
+def remove_accents(input_str):
+    nfkd_form = unicodedata.normalize('NFKD', input_str)
+    return u"".join([c for c in nfkd_form if not unicodedata.combining(c)])

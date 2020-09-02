@@ -366,3 +366,13 @@ host github.com
  HostName github.com
  IdentityFile ~/.ssh/id_rsa_github
  User git
+
+ 
+ 
+| git branch -a | Show all branches
+| git pull |
+| git checkout -b <newbranch> master |
+| git push --set-upstream origin <branch> |
+| git checkout --ours <file> |
+| git fetch --all +
+  git reset --hard origin/<branch> |

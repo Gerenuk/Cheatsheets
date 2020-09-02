@@ -1,0 +1,29 @@
+Voila:
+* turn notebooks simply into dashboards
+* use ipywidgets
+* tied to Jupyter cells; shows cell exactly?
+
+Panel:
+* can import py-files which generate plots
+* slow to load?
+* errors don't show
+* can use any plotting
+* for custom data science tasks
+
+Streamlit:
+* errors shown in UI
+* shows spinner when busy
+* re-rendered stuff is grey
+* every interactions re-runs code?
+
+Dash:
+* mostly standalone apps
+* reveals more HTML
+* mostly Plotly for plots
+
+Compare:
+https://panel.holoviz.org/Comparisons.html
+* Dash user session at client; can be more scalable
+* Panel allows user/session in client/server
+* Dash logic only reactive with callbacks
+* Panel server-side caching, easier for server-side data

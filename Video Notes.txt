@@ -1340,4 +1340,16 @@ https://www.infoq.com/presentations/netflix-polyglot-containers
 https://www.youtube.com/watch?v=cdWjWj82X4M
 * Flink has problem with overlapping buckets
 * https://github.com/TU-Berlin-DIMA/scotty-window-processor
-*
+
+
+== Panel
+https://www.youtube.com/watch?v=L91rd1D6XTA
+-> use Panel for quick Jupyter to Dashboard solutions
+* on Bokeh, but could be anything
+* notebook to dashboard fast
+* even without Jupyter
+* in notebook mark with `.servable()` to tag what a server call will use
+* param lib good
+* vs dash: more concise, more python-only, more plotting libs, usable from notebooks, full life cycle to deployment
+* vs voila + ipywidgets: can be used without jupyter, no new kernel for each visitor
+* in voila: only include whats shown

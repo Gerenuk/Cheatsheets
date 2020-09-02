@@ -885,6 +885,7 @@ IntervalIndex
 * levels can be (list of) numbers or names, but not a mix
 * `crosstab` on passed columns is slower than operations on the original dataframe
 * groupby/count/unstack can be faster than pivottable for smaller data
+* `pivot_table` cannot have same column in index and columns (1-d error since will groupby on both)
 
 == Sorting
 
@@ -1851,3 +1852,15 @@ for name, vals in df.iteritems()
 pd.set_option(backend="..") | instead of matplotlib
 
 some libraries do not like tuples in categorical values (LGBM?)
+
+
+Pitfalls:
+* columns with duplicate names
+* merge/join with duplicate names will get suffixes
+
+| pd.eval("...")        | work on global dataframe variables
+
+eval:
+* support attribute and getitem access
+* assignment in df.eval("Y = ..", inplace=True)
+* df.eval supports @

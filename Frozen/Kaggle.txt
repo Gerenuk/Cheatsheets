@@ -108,7 +108,7 @@ http://blog.kaggle.com/2016/04/08/homesite-quote-conversion-winners-write-up-1st
 * tips:
   * use stratified k-fold
   * usually should have only one peak in hyperparameters
-  
+
 == Yelp photo classification - 1st place
 
 http://blog.kaggle.com/2016/04/28/yelp-restaurant-photo-classification-winners-interview-1st-place-dmitrii-tsybulevskii/
@@ -265,4 +265,14 @@ http://blog.kaggle.com/2015/12/03/dato-winners-interview-1st-place-mad-professor
 * https://mlwave.com/how-we-won-3rd-prize-in-crowdanalytix-copd-competition/
 * http://blog.kaggle.com/2016/08/31/avito-duplicate-ads-detection-winners-interview-2nd-place-team-the-quants-mikel-peter-marios-sonny/
 * http://blog.kaggle.com/2016/12/15/bosch-production-line-performance-competition-winners-interview-3rd-place-team-data-property-avengers-darragh-marios-mathias-stanislav/
-*
+
+
+== 2019 Data Science Bowl 1st place
+https://www.kaggle.com/c/data-science-bowl-2019/discussion/127469
+* 1st place
+* many useful agg feats
+* just 5 seed x 5 GroupKFold LGBM
+* use RMSE instead of actual QWK metric
+* include test for training
+* feat select by Null importance https://www.kaggle.com/ogrellier/feature-selection-with-null-importances
+

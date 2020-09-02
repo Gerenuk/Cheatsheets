@@ -1,0 +1,130 @@
+= Plotly
+
+== General
+
+* online functionality now in `chart-studio`
+* for Jupyter need `ipywidgets`
+* for JupyterLab
+
+    jupyter labextension install jupyterlab-plotly
+    jupyter labextension install @jupyter-widgets/jupyterlab-manager plotlywidget
+    
+* for image export: `plotly-orca psutil requests`
+* for geo: `plotly-geo`
+
+== Basic example
+
+    import plotly.graph_objects as go
+    fig = go.Figure(data=go.Bar(y=[2, 3, 1]))
+    # fig = go.FigureWidget(data=go.Bar(y=[2, 3, 1]))
+    fig.show()
+    
+== Basic
+
+* plotly express more high-level
+* figures are dicts or plotly.graph_objects.Figure
+
+|===
+| fig.to_dict()                         |
+|===
+
+== Figures
+
+* Figure reference: https://plotly.com/python/reference/
+* Tree with top-level `data`, `layout`, `frames`
+* set attributes by dotted attributes access or with magic underscores (e.g. `fig.update_layout(title_font_family="Open Sans")`)
+* `layout.template` for defaults
+
+=== `data` attribute
+
+* `data` has list of typed `traces` (dicts) with `type` attribute
+* each trace drawn on single subplot
+* single legend (except of pie and funnelarea)
+* colorbar by attributes in trace or in layout coloraxis
+
+=== `layout` attribute
+
+=== `frames` attribute
+
+* list of frames for animation
+
+=== `config` parameter
+
+* https://plotly.com/python/configuration-options/
+* keyword argument to `.show()`
+
+=== Positioning
+
+* paper coordinates / normalized coordinates `.x` `.y`
+* refer to `(0,0)` at `(layout.margin.l, layout.margin.b)` and a point `(1,1)` at `(layout.width-layout.margin.r, layout.height-layout.margin.t)`
+* if trace specifies `xaxis="x"` and `yaxis="y3"` then traces drawn on `layout.xaxis` and `layout.yaxis3`
+
+=== Axes types
+
+* https://plotly.com/python/axes/
+
+=== Multiple axis
+
+https://plotly.com/python/multiple-axes/
+
+=== Trace types, legend, color bars
+
+* `legend` attribute
+* shown with `showlegend`
+* can click on legend to hide
+* `legendgroup` to react as group on click
+* if discrete color: one trace per color for legend
+* if continuous color: `coloraxis` attribute
+
+=== Discrete colors
+
+https://plotly.com/python/discrete-color/
+
+=== Plot size
+
+* set both(!) `layout_width` and `layout_height`
+
+== Plotly Express
+
+    `import plotly.express as px` 
+    
+* returns `Figure` 
+* Figures: https://plotly.com/python-api-reference/plotly.express.html
+* Demo data: https://plotly.com/python-api-reference/generated/plotly.data.html#module-plotly.data
+
+== Facet plots
+
+https://plotly.com/python/facet-plots/
+
+== WebGL instead of SVG for speed
+
+https://plotly.com/python/webgl-vs-svg/
+* `render_mode="webgl"`
+
+== Common plots
+
+* Histogram: https://plotly.com/python/histograms/
+* Density map: https://plotly.com/python/2D-Histogram/
+* Density contour: https://plotly.com/python/2d-histogram-contour/
+* Box plots: https://plotly.com/python/box-plots/
+* Heatmap: https://plotly.com/python/heatmaps/
+
+== Special plots
+
+* Funnel: https://plotly.com/python/funnel-charts/
+* Waterfall: https://plotly.com/python/waterfall-charts/
+* Imshow: https://plotly.com/python/imshow/
+* Contour plots: https://plotly.com/python/contour-plots/
+* OHLC charts (finance): https://plotly.com/python/ohlc-charts/
+* Candle stick (finance): https://plotly.com/python/candlestick-charts/
+* Carpet plot (non-affine mapping): https://plotly.com/python/carpet-plot/
+* Scatterplot matrix: https://plotly.com/python/splom/
+* 3D: https://plotly.com/python/3d-charts/
+* Polar: https://plotly.com/python/polar-chart/
+* Ternary (triangle): https://plotly.com/python/ternary-plots/
+* Sunburst: https://plotly.com/python/sunburst-charts/
+* Treemap: https://plotly.com/python/treemaps/
+* Parallel coordinates: https://plotly.com/python/parallel-coordinates-plot/
+* Parallel categories: https://plotly.com/python/parallel-categories-diagram/
+* Sankey: https://plotly.com/python/sankey-diagram/
+* Tables: https://plotly.com/python/table/

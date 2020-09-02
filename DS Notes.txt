@@ -1864,8 +1864,6 @@ https://arxiv.org/pdf/1708.04321.pdf
 ** RF: min_samples_leaf [usually low <5] (not min_samples_split), max_features
 ** AdaBoost: max_depth [3-4 or >9 again], (learning_rate), not n_iter; uniform priors good enough
 
-<<<<<<< HEAD
-
 == Various
 
 * 2^24 ~ 16.7Mio. is largest number where np.float32(x)==x
@@ -1897,7 +1895,8 @@ https://www.youtube.com/watch?v=XBJ2f68LuO4
 == Granger causality
 * not necessarily true causality
 * may not find GC if X affects Y through a third variable Z
-=======
+
+
 == AUC optimization and consistency
 
 https://arxiv.org/pdf/1208.0645v4.pdf
@@ -1948,4 +1947,58 @@ https://arxiv.org/pdf/1208.0645v4.pdf
 * binning small categories (to reduce number of features) did not help
 * cats which are only in train or test could be combined into a new cat values (but not dropped)
 
->>>>>>> bd00013402469c088da29dae16d695a5e71851ca
+== Categorical encoding
+
+* OH often good
+* make ordinal features ordinal; maybe add (x-0.5)^2 term
+* tried from sklearn BaseN, James, LOO, Target, WOE (other trivial or out of memory):
+** equally good: LOO, BaseN, James, CatBoost
+** bad: Target, WOE
+* no parameter changes were helpful
+* KFold Target encoding not better when used with LogReg; but maybe helpful for trees with sharp cuts
+
+== UMAP
+
+https://pair-code.github.io/understanding-umap/
+* UMAP constructs a high dimensional graph representation of the data then optimizes a low-dimensional graph to be as structurally similar as possible
+* n_neighbors: number of approximate nearest neighbors used to construct the initial high-dimensional graph. It effectively controls how UMAP balances local versus global structure - low values will push UMAP to focus more on local structure by constraining the number of neighboring points considered when analyzing the data in high dimensions, while high values will push UMAP towards representing the big-picture structure while losing fine detail.
+* min_dist: minimum distance between points in low-dimensional space. This parameter controls how tightly UMAP clumps points together, with low values leading to more tightly packed embeddings. Larger values of min_dist will make UMAP pack points together more loosely, focusing instead on the preservation of the broad topological structure.
+* increasing min_dist makes islands spread and group; too small may break island connections
+* UMAP often better at preserving global structure than t-SNE
+* UMAP yields same appearance with multiple runs much more often then t-SNE
+* however, only t-SNE manages to separate 2 clusters when one is overlapping inside another
+* spurious clusters with low n_neighbors
+
+== Bayesian Optimization
+
+https://distill.pub/2020/bayesian-optimization/
+* Use acquisition function on posterior to determine next point to query
+* Examples of acquisition functions:
+** highest probability of improvement (PI) over current max -> just upper-tail of surrogate posterior; to be more precise also include a gap epsilon argmax(P(f(x) > f_max + eps)) to increase exploration (large uncertainty)
+** highest expected improvement (EI) over current max; need some assumption since do not know ground truth; again epsilon increases exploration
+** Thompson sampling: sample a function(!) from surrogate posterior and optimize it
+* in test: UCB and EI seemed best, PI and Thompson had earlier gains and still reached optimum fast after
+* in other test: all very similar; random had earlier gains, but converged below optimum
+* if gradient available -> can optimize more http://papers.nips.cc/paper/7111-bayesian-optimization-with-gradients.pdf (Wu, Poloczek)
+* multi-objective acquistion function: https://gpflowopt.readthedocs.io/en/latest/notebooks/multiobjective.html
+* you might consider safety (e.g. staying about some threshold for robots)
+* some hyperparameters may depend on target scaling
+* GP highly sensitive on kernel used
+* Gradient descent: needs gradient, finds local optima, usually more evaluations, often better scaling in high dimensions
+* BO: cubic in number of point, so careful when many queries
+https://stats.stackexchange.com/questions/161923/bayesian-optimization-or-gradient-descent/161936#161936
+* https://scikit-learn.org/stable/modules/gaussian_process.html#matern-kernel assumes differentiability of function
+* sample params which are close reduce conditioning -> maybe add noise alpha to GaussianProcessRegressor
+
+== Various
+
+maximum likelihood estimate follows asymptotically a normal distribution with the mean being the estimated value and the variance being the inverse of the Fisher Information multiplied by the number of observations.
+
+== MLSS 2020 Causality
+* indep. if all subsets prob factored
+* RV indep if {X<=a} and {Y<=b} indep
+* densities factorize
+* exp. values factorize and cov=0
+* for large function spaces cov(f(X),g(y))=0 -> X indep Y
+* true causal order invariant under right sort of intervention (Simon)
+*

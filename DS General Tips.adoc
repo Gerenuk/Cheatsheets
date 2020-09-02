@@ -45,6 +45,12 @@
 * Use GNU make for pipeline? (download, traning, evaluating)
 
 
+* HDF faster than CSV
+* cuDF for performance
+* remove values which have large diff between train vs test
+
+
+
 == Kaggle
 * check for overfitting (train/val gap); esp. when adding feats
 * check patterns: 2D + color (target)
@@ -58,4 +64,19 @@
 * learn features from autoencoder
 * more data augmentation
 * SMAPE close to MAE when log
-*
+* insights for non-interacting categoricals from dedicated competitions:
+** onehot even of high-cardinality with LogReg worked best
+** for ordinal you could label encode too (minmax scale for better LogReg convergence)
+** maybe play with CV seed (diff subset) for a little extra performance
+* for tiny performance gain: gave good CV (mayb multiple checks) and change some randomness
+* trust local CV if LB small and unstable
+* 5 seed * 6 GroupKFold for CV
+* for unstable score metric -> use a simpler more theoretically sound one?
+* feats:
+** mean, max, last, std, slope, sum, exp. weighted mean; agg counts and numerical vars
+** time diff between same events
+** density: count / time
+** time diff feat
+** groupby cat
+** delete highly corr feats (0.99)
+

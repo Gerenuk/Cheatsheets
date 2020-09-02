@@ -314,13 +314,53 @@ Inheritance:
 https://www.stephanboyer.com/post/132/what-are-covariance-and-contravariance
 (SuperA->SubB) subtypeOf (A->B)
 [TypeScript and Eiffel got it wrong; not "sound"]
-List[SubX] subtypeOf List[X] only if list immutable
+List[SubX] subtypeOf List[X] only if list immutable; because otherwise a program thinking of List[X] might add an arbitrary different SubX
 Liskov: Can always substitute with subtype objects safely
+Sound = all type-checked programs are correct
+Complete = all correct programs can be accepted by type checker
+Cannot have both (if can represent natural numbers); Soundness preferable
+Soundness: cannot get into an invalid state -> declared types guaranteed
+
+Allowed:
 
 class A:
-    def f(self, x:X) -> R: pass
-    
+    def f(X) -> R
+
 class SubA(A):
-    def f(self, x:SuperX) -> SubR: pass
+    def f(SuperX) -> SubR
+
+a:X = b:SubX (upcasting allowed)
+
+If you want to subtype arguments, you need to use Generic with variable types
 
 https://blog.daftcode.pl/csi-python-type-system-episode-2-baf5168038c0
+
+--------
+* return early
+* max indent in method 2
+* max 7 instance variables
+* consider to use "Data Transfer Object"
+
+https://symfony.com/doc/current/best_practices.html
+https://williamdurand.fr/2013/06/03/object-calisthenics/
+
+
+
+Dependency inversion (my interpretation):
+type annotations should be interfaces (abstract classes) = definition of names
+concrete classes (used for instantiation) in different file = definition of code
+interfaces rather owned by the higher layer (where used as type annotation) and not by concrete implementation
+interface: start with letter I?!
+
+
+type state-system:
+
+    class MyEnum(Enum):
+        A = auto()
+        B = auto()
+
+    _T =TypeVar("_T", bound=MyEnum)
+
+    class MyClass(Generic[_T]):
+        def func(self: "MyClass[Literal[MyEnum.A]") -> "MyClass[Literal[MyEnum.B]":
+            return cast(MyClass[Literal[MyEnum.B], self)

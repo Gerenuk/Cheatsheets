@@ -171,3 +171,18 @@ https://www.youtube.com/watch?v=5js_-pLGqwA
 == Others
 
 * dict keys look-up slightly faster if keys str.intern
+
+
+== Profiler
+
+=== Mozilla Functiontrace
+
+    > cargo install functiontrace-server
+    > pip install functiontrace
+    > /home/anton/.cargo/bin/functiontrace script.py
+    
+    wait a bit and load json to https://profiler.firefox.com
+    
+=== vprof
+
+https://github.com/nvdv/vprof

@@ -152,7 +152,7 @@ There are also
 == Durbin-Watson
 
 * Auto-correlation of residuals; 0..4
-* d=2 none; d<1 considerable positive corr; 
+* d=2 none; d<1 considerable positive corr;
 * d<2 successive terms much different (-> possibly underestimation of statistical significance)
 * complex derivations for thresholds (depending on significance and num. of samples)
 * affects ability for statistical test:
@@ -167,3 +167,34 @@ There are also
 * JB=(n-k)/6(S^2+(K-3)^2/4)
 * chi^2 with df=2 (for n>2000)
 * tests S=0, K-3=0; for small n rejects Null too much
+
+== Stable distributions (Levy alpha-stable)
+* linear of two indep. RV again same distr (up to scale and location)
+* attractors of normed sums - esp. when infinite variance
+* sum of symmetric distribution of power-law tails |x|^(-alpha-1) converge to stable distr.
+* other possiblities to converge to stable distr too
+* characteristic function expressible for no analytic expression for all parameters
+* 4 parameters:
+** stability: 0<alpha<=2
+** skew beta (not usual skew): -1 <= beta <= 1
+** scale c: (0, inf); variance=2c^2
+** location: (-inf, inf)
+* all heavy tailed (apart from normal)
+* closed under convolution with fixed alpha
+* support:
+** all reals unless
+** beta=1, alpha<1: [mean, inf)
+** beta=-1, alpha<1: (-inf, mean]
+* variance only for alpha=2
+* mean only for alpha>1
+* skew, kurt only for normal (alpha=2)
+* when adding k_i(X_i-mu), new scale is power alpha mean of k_i
+* special cases:
+** Gaussian: alpha=2
+** Cauchy: alpha=1, beta=0; A/(1+x^2)
++** Levy: alpha=1/2, beta=1; only positive x; exp(-A/x)/x^(3/2); special case of inverse gamma distr
+** beta=0: f=exp(-t^alpha)
+** Cauchy = Mixture of Gaussian with Levy variance
+** some other expressible by special functions
+* Application:
+** financial (e.g. prices)

@@ -64,3 +64,8 @@ https://lightgbm.readthedocs.io/en/latest/Parameters-Tuning.html
 * `free_raw_data = True` when constructing
 * `raw_data = None` after constructed
 * call `gc`
+
+
+Start from Miniconda and do `conda install nomkl` (if AMD CPU?)
+
+device_type="gpu" does not support setting seed unless gpu_use_dp=True
